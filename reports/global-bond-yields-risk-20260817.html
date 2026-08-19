@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>全球 10Y 国债收益率创高全景与风险分层评估</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<style>
+  :root{
+    --bg:#f5f6f8; --card:#ffffff; --ink:#1a2332; --sub:#5a6b7f; --line:#e3e7ee;
+    --red:#c0392b; --orange:#e67e22; --blue:#2c5f8a; --green:#1e8449; --teal:#0e7c7b;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.7;padding:28px 16px;}
+  .wrap{max-width:980px;margin:0 auto;}
+  .muted{color:var(--sub);}
+  .tag{display:inline-block;font-size:12px;padding:2px 10px;border-radius:10px;background:#eef2f7;color:var(--sub);margin-bottom:10px;}
+
+  /* header */
+  h1{font-size:26px;line-height:1.4;margin-bottom:8px;}
+  .meta{font-size:13px;color:var(--sub);margin-bottom:22px;}
+
+  /* cards */
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:20px;box-shadow:0 1px 3px rgba(20,30,50,.05);}
+  .card h2{font-size:18px;margin-bottom:14px;padding-left:10px;border-left:4px solid var(--blue);}
+  .card h3{font-size:15px;margin:18px 0 10px;}
+
+  /* TLDR */
+  .tldr{background:linear-gradient(135deg,#fdf7f5,#fff);border:1px solid #f0dcd4;}
+  .tldr h2{border-left-color:var(--red);}
+  .tldr .point{display:flex;gap:12px;margin-bottom:12px;font-size:14.5px;}
+  .tldr .num{flex:0 0 30px;height:30px;width:30px;border-radius:50%;background:var(--red);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;}
+  .tldr .num.g2{background:var(--orange);}
+  .tldr .num.g3{background:var(--teal);}
+
+  /* tables */
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:8px;}
+  th{background:#eef2f7;color:#3d4c5e;font-weight:600;text-align:left;padding:8px 10px;border-bottom:2px solid var(--line);white-space:nowrap;}
+  td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top;}
+  tr:last-child td{border-bottom:none;}
+  .hi{color:var(--red);font-weight:600;}
+  .ok{color:var(--green);font-weight:600;}
+  .mid{color:var(--orange);font-weight:600;}
+  .chartbox{width:100%;height:380px;margin-top:10px;}
+
+  /* chain */
+  .chain{display:flex;flex-wrap:wrap;align-items:stretch;gap:8px;margin:14px 0;}
+  .chain .node{flex:1 1 150px;background:#f0f5fa;border:1px solid #d5e2ee;border-radius:8px;padding:10px 12px;font-size:12.5px;}
+  .chain .node b{display:block;font-size:13.5px;margin-bottom:3px;color:var(--blue);}
+  .chain .arrow{display:flex;align-items:center;color:var(--sub);font-size:18px;flex:0 0 14px;}
+
+  /* risk layers */
+  .layer{border-radius:10px;padding:16px 18px;margin-bottom:12px;border:1px solid;}
+  .layer h4{font-size:15px;margin-bottom:6px;display:flex;align-items:center;gap:8px;}
+  .layer .lv{font-size:11px;padding:1px 8px;border-radius:8px;color:#fff;font-weight:600;}
+  .layer p, .layer li{font-size:13.5px;}
+  .layer ul{margin:6px 0 0 18px;}
+  .layer .watch{margin-top:8px;font-size:12.5px;color:var(--sub);}
+  .l1{background:#fdf3f1;border-color:#f0c9c2;}
+  .l1 .lv{background:var(--red);}
+  .l2{background:#fef8ef;border-color:#f2ddbc;}
+  .l2 .lv{background:var(--orange);}
+  .l3{background:#f2f7f7;border-color:#c8dcdc;}
+  .l3 .lv{background:var(--teal);}
+
+  /* reverse voice */
+  .rev{background:#f4f8f5;border:1px solid #cfe3d4;border-radius:10px;padding:16px 18px;margin-bottom:10px;}
+  .rev h4{color:var(--green);font-size:15px;margin-bottom:6px;}
+  .rev p{font-size:13.5px;}
+
+  .src{font-size:12px;color:var(--sub);}
+  .src a{color:var(--blue);text-decoration:none;}
+  .disc{font-size:12px;color:#8a94a3;border-top:1px solid var(--line);padding-top:12px;margin-top:18px;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  @media(max-width:760px){.grid2{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>全球 10Y 国债收益率创高全景与风险分层评估</h1>
+  <div class="meta">数据时点：2026-08-14 ~ 2026-08-17 ｜ 覆盖：美 / 英 / 日 / 德 / 法 / 意 / 中 ｜ 风险框架：三层分级 + 反向声音</div>
+
+  <!-- ============ TLDR ============ -->
+  <div class="card tldr">
+    <h2>先给结论</h2>
+    <div class="point"><div class="num">1</div><div><b>是的，但不是"所有国家"。</b>美（10Y 4.68%、30Y 破 5.2% 创 2007 年来新高）、英（~5.1%，近 30 年高位）、日（2.93%，1996 年 10 月以来新高）、德（3.07%，15 年高点）四大发达经济体长债收益率<b>同步处于数十年高位</b>；但<b>中国完全相反</b>（10Y 仅 1.70%，全球低位），法意（~3.85-3.88%）距欧债危机时的历史极值也还有很大距离。准确说法是「<b>主要发达经济体</b>」创高，不是全球普涨。</div></div>
+    <div class="point"><div class="num g2">2</div><div><b>风险真实存在，但要分层看。</b>第一层「估值重定价」已在发生（高估值成长股、长久期债券、加密全面承压，股债对冲失效）；第二层「滞胀 + 财政可持续」正在积聚（油价→通胀→加息预期，美债利息支出破万亿美元）；第三层「主权 / 金融尾部冲击」（日本债务率 250%+ 遇利率上行、英国外资持 1/3 国债、利率急升×杠杆×期限错配重演 2022 LDI / 2023 SVB）概率低但破坏大。<b>"创新高"本身不是危机前夜，危机通常来自"急升 + 脆弱环节"三要素同现。</b></div></div>
+    <div class="point"><div class="num g3">3</div><div><b>别忽视反向声音。</b>油价已从冲突期 110+ 回落至 ~70 美元，输入性通胀压力缓解；市场对 2026-2027 加息预期可能过度（美国经济是 K 型而非过热）；中期选举前执政党不愿长端利率高企引发财政金融震荡。若加息预期证伪，10Y 或回 4.2-4.8% 区间震荡。<b>关键分叉变量：油价（地缘）与美联储（沃什）政策路径。</b></div></div>
+  </div>
+
+  <!-- ============ 数据看板 ============ -->
+  <div class="card">
+    <h2>一、各国 10Y 国债收益率全景（2026-08 中旬）</h2>
+    <div id="chart1" class="chartbox"></div>
+    <p class="src" style="margin:6px 0 12px;">数据来源：neodata 全球利率（2026-07-31 月度值）、westock 宏观指标（2026-08-14 实时）、市场报道（2026-08-17，非一手来源需核实）。历史分位为媒体口径。</p>
+    <table>
+      <thead><tr><th>国家</th><th>10Y 收益率</th><th>时点 / 来源</th><th>历史位置</th><th>备注</th></tr></thead>
+      <tbody>
+        <tr><td><b>美国</b></td><td class="hi">4.68%</td><td>2026-08-14（westock）</td><td class="hi">30Y 破 5.2% = 2007 年来新高；10Y 接近 18 个月高位</td><td>10Y-2Y 利差 +51bp，曲线熊陡（长端上行更快）</td></tr>
+        <tr><td><b>英国</b></td><td class="hi">~5.1%</td><td>2026-05 4.93% → 近期报道 ~5.1%</td><td class="hi">近 30 年高位</td><td>30Y 升至 5.56-5.86%，近 30 年最高</td></tr>
+        <tr><td><b>日本</b></td><td class="hi">2.93%</td><td>2026-08-17 盘中（报道）</td><td class="hi">1996 年 10 月以来近 30 年新高</td><td>30Y ~4.06% 接近历史纪录；7 月末月值 2.77%</td></tr>
+        <tr><td><b>德国</b></td><td class="mid">3.07%</td><td>2026-07-31（neodata）</td><td class="mid">15 年高点（媒体口径 ~3.2%）</td><td>欧元区基准，法意利差相对走阔</td></tr>
+        <tr><td><b>法国</b></td><td class="mid">3.85%</td><td>2026-07-31（neodata）</td><td>高位但非极值</td><td>距欧债危机历史极值仍有距离</td></tr>
+        <tr><td><b>意大利</b></td><td class="mid">3.88%</td><td>2026-07-31（neodata）</td><td>高位但非极值</td><td>与德债利差扩大</td></tr>
+        <tr><td><b>中国</b></td><td class="ok">1.70%</td><td>2026-08-14（neodata 日度）</td><td class="ok">历史性低位</td><td>2Y 1.23%，曲线牛陡；中美利差倒挂一度逼近 300bp，全球唯一反向</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ============ 美债走势 ============ -->
+  <div class="card">
+    <h2>二、美债 10Y 年内走势：中枢系统性抬升</h2>
+    <div id="chart2" class="chartbox"></div>
+    <p class="src" style="margin:6px 0;">数据来源：neodata 月度值（2026-02 ~ 2026-07）、westock 实时（2026-08-14）。参考线：2023-10 周期峰值 ~5.0%（媒体口径）。</p>
+    <p style="font-size:14px;margin-top:10px;">路径拆解：2026 年初 10Y 约 4.1% → 5 月沃什上任美联储主席后升至 ~4.5% → 7 月末 4.65% → 8 月突破 4.7%。<b>值得注意的是 10Y 升幅温和、30Y 却创新高</b>——市场定价的不是"短期加息"（2Y 仅 4.17%），而是<b>长期通胀黏性 + 财政赤字 + 期限溢价</b>的结构性上移。这决定了本轮是"长端问题"，不是"短端流动性问题"。</p>
+  </div>
+
+  <!-- ============ 原因 ============ -->
+  <div class="card">
+    <h2>三、为什么同步上行：三重力量共振</h2>
+    <p style="font-size:14px;margin-bottom:12px;">高盛框架：2008 年后"储蓄多、项目少、利率低"的框架运行了近二十年（央行 QE 兜底、政府借钱几乎不付息），<b>2026 年这个框架被击穿</b>——供给、需求、财政三端同时反转：</p>
+    <div class="chain">
+      <div class="node"><b>① 地缘 → 通胀</b>中东冲突推升油价（布伦特一度 110-114 美元），输入性通胀反弹：美 3 月 PCE 3.5%、CPI 3.8%</div>
+      <div class="arrow">→</div>
+      <div class="node"><b>② 央行转向鹰派</b>降息预期逆转、加息预期重燃（美年内加息概率一度 91%）；欧央行 6 月加息、日央行 9 月加息概率 ~80%；美联储换帅沃什偏鹰 + 缩表</div>
+      <div class="arrow">→</div>
+      <div class="node"><b>③ 长端利率上行</b>市场从"安全资产溢价"转向索取"财政风险溢价"，期限溢价抬升</div>
+    </div>
+    <div class="chain">
+      <div class="node"><b>供给端：央行撤退</b>全球央行从美债净买家变成净卖家（QT），海外买方持续萎缩，"去美债化"加速</div>
+      <div class="arrow">→</div>
+      <div class="node"><b>需求端：资本竞争</b>AI 基建（超大规模云厂商 2026 资本开支预期 7200 亿美元，6 个月上调 30%）、再工业化、国防、能源转型四路万亿级资本需求同时释放；高盛：AI 资本开支对利率上行压力最显著</div>
+      <div class="arrow">→</div>
+      <div class="node"><b>财政端：赤字高企</b>美债总额 39.83 万亿美元（负债率 &gt;125% GDP），FY2026 净利息支出预计破 1 万亿美元；日本债务率 250%+，英欧国防与利息支出赤字回升</div>
+    </div>
+    <div class="chain">
+      <div class="node"><b>放大器</b>量化 / 算法交易的止损指令在收益率快速上行时自动抛售，放大上行斜率，形成"上行自我强化"</div>
+    </div>
+    <p style="font-size:14px;margin-top:12px;"><b>一句话传导链</b>：地缘冲突 → 油价 → 通胀反弹 → 加息预期 + 央行 QT + 财政供给 → 期限溢价 → 长端利率 → 全球资产定价之锚抬升。</p>
+  </div>
+
+  <!-- ============ 风险分层 ============ -->
+  <div class="card">
+    <h2>四、风险分层评估：三层结构，别混为一谈</h2>
+
+    <div class="layer l1">
+      <h4><span class="lv">L1</span> 估值重定价风险 —— <span class="hi">已在发生，确定性最高</span></h4>
+      <ul>
+        <li><b>DCF 分母上行</b>：10Y 是股票估值模型的无风险利率 r，r 越高、远期现金流折现越少。高估值成长股 / AI 板块 / 长久期债券 / 加密货币首当其冲——7 月 A 股科创50 暴跌 25.90%、创业板指跌 23% 即是先例。</li>
+        <li><b>股债对冲失效</b>：过去五年美股与 10Y 日回报相关性平均 +7%，疫情前十年为 -43%（贝莱德）。"股跌债涨"的避险逻辑阶段性失效，组合"压舱石"功能减弱。</li>
+      </ul>
+      <div class="watch">验证指标：高估值板块估值分位、10Y-2Y 利差走向、股债相关性。</div>
+    </div>
+
+    <div class="layer l2">
+      <h4><span class="lv">L2</span> 滞胀 + 财政可持续风险 —— <span class="mid">正在积聚，中高概率</span></h4>
+      <ul>
+        <li><b>滞胀组合</b>：油价高企推高成本、压缩消费投资，IMF / 世行同步下修增长、上修通胀，IMF 总裁直言"所有道路都通向更高价格和更慢增长"。这对股债都不利。</li>
+        <li><b>财政螺旋</b>：美国 15 万亿美元债务一年内到期需续发 + FY2026 新增约 2 万亿国债，每月需从市场吸纳数千亿美元；利息支出破万亿后进一步推高赤字，市场要求更高期限溢价 → 利率越高、赤字越大、利率再高。</li>
+      </ul>
+      <div class="watch">验证指标：油价中枢、美债拍卖需求 / 倍数、期限溢价（TIPS 拆解）、财政部发债计划。</div>
+    </div>
+
+    <div class="layer l3">
+      <h4><span class="lv">L3</span> 主权 / 金融尾部冲击 —— <span class="mid">概率低、破坏大</span></h4>
+      <ul>
+        <li><b>日本两难</b>：债务率 250%+，利率显著上行 → 付息成本急剧膨胀 + 金融机构持有国债巨额浮亏；但日元贬值 → 输入性通胀 → 被迫加息，形成政策两难，骤然加息可能股债双杀。</li>
+        <li><b>英国结构</b>：外资持有约 1/3 国债，政治 / 财政危机时外资易出逃（2022 特拉斯式风险重演的可能）。</li>
+        <li><b>脆弱环节</b>：利率急升 × 高杠杆 × 期限错配三要素同现才会引爆危机——2022 英国养老金 LDI、2023 硅谷银行皆是此模式。当前高杠杆的 AI 资本开支链是潜在薄弱点。</li>
+      </ul>
+      <div class="watch">触发条件：日本央行超预期加息 / 英国财政事件 / 美债拍卖显著疲软 / AI 融资链条断裂。概率低，但一旦触发是跳跃式冲击。</div>
+    </div>
+
+    <p style="font-size:14px;"><b>判断</b>：L1 是当下主线（定价问题，市场正在消化）；L2 决定中期方向（滞胀证伪或证实）；L3 是黑天鹅保险（不应对冲常态，但要知道它在哪）。<b>"创新高"不等于"危机前夜"——当前更接近"长期利率中枢的重新定价"而非"流动性危机"</b>，因为短端（2Y 4.17%）并未失控，问题在长端结构性溢价。</p>
+  </div>
+
+  <!-- ============ 资产含义 ============ -->
+  <div class="card">
+    <h2>五、对各类资产的含义</h2>
+    <table>
+      <thead><tr><th>资产类别</th><th>影响方向</th><th>逻辑</th></tr></thead>
+      <tbody>
+        <tr><td>美股高估值成长 / AI 算力链</td><td class="hi">承压最大</td><td>长久期现金流占比高，折现率敏感；2026 年市场从"供给扩张叙事"转向"现金流验证"，FCF 折价直接计入估值</td></tr>
+        <tr><td>美股价值 / 现金流型（公用事业、电力、必需消费）</td><td class="ok">相对抗跌</td><td>盈利增长 &gt; 融资成本上升幅度即可跑赢；但高杠杆电力股（如 D/E 6 倍的 IPP）仍受利率压制</td></tr>
+        <tr><td>长久期国债（20-30Y）</td><td class="hi">价格风险最大</td><td>久期放大利率冲击，且期限溢价结构性上行意味着"持有到期吃票息"也未必跑赢通胀</td></tr>
+        <tr><td>黄金</td><td class="ok">脱敏偏强</td><td>央行购金（连续 20 个月增持、占储备 27% 超美债）托底，实际利率压制减弱，4000 美元附近被普遍视为本轮底部——黄金不跌本身就是"财政 / 货币贬值风险"的投票</td></tr>
+        <tr><td>新兴市场</td><td class="hi">资本外流压力</td><td>美债收益率上行吸引资金回流美元资产，利差收窄 + 本币贬值；能源进口依赖高的中低收入国家叠加输入性通胀</td></tr>
+        <tr><td>A 股（成长风格）</td><td class="mid">结构分化</td><td>高估值成长承压（7 月已体现）；但 5 月境外机构持有银行间债券 3.21 万亿、环比转增，外资回流迹象出现，中美利差倒挂收窄后压力边际缓解</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ============ 反向声音 ============ -->
+  <div class="card">
+    <h2>六、反向声音：市场可能过度定价了什么</h2>
+    <div class="rev">
+      <h4>① 加息预期可能被高估</h4>
+      <p>东吴证券芦哲：当前美国经济并非"过热"，而是 AI 与能源双轮驱动的 K 型结构，传统劳务部门仍疲软——市场对 2026 底-2027 的加息定价可能过度，打破错误定价只需油价中枢回落 + 美联储安抚。NIFD（2026-08-14）同样指出：油价已从冲突期 100+ 回落至 ~70 美元，CPI 进一步上行空间有限，2026 下半年加息次数或有限、甚至维持利率不变。</p>
+    </div>
+    <div class="rev">
+      <h4>② 政治约束：中期选举前"利率不友好"</h4>
+      <p>2026 年底美国中期选举临近，执政党不愿长端利率高企引发财政金融震荡（既加剧财政可持续担忧、又打压 AI 高估值板块），可能在资产负债表操作上更谨慎，避免长期利率继续上升。</p>
+    </div>
+    <div class="rev">
+      <h4>③ 相对历史峰值仍有距离</h4>
+      <p>美 10Y 4.68% 仍低于 2023-10 的 ~5.0% 峰值；日 / 德 / 英的"新高"更多是从极低基数向正常化回归（日本 10Y 曾在 0% 附近徘徊十年）。名义高位 ≠ 实际利率极端（通胀同步抬升）。历史上利率高位本身不引发危机，危机来自急升 + 杠杆 + 错配。</p>
+    </div>
+    <div class="rev">
+      <h4>④ 场景分叉</h4>
+      <p>若油价中枢回落 + 美联储按兵不动 → 10Y 或回 4.2-4.8% 区间震荡（芦哲）；若地缘升级 + 通胀黏性 → 10Y 冲 5%+，L2/L3 风险升级。当前最该盯的是<b>油价和 9 月日本央行议息</b>两个变量。</p>
+    </div>
+  </div>
+
+  <!-- ============ 观察清单 ============ -->
+  <div class="card">
+    <h2>七、后续观察清单</h2>
+    <table>
+      <thead><tr><th>指标</th><th>关键阈值 / 信号</th><th>含义</th></tr></thead>
+      <tbody>
+        <tr><td>布伦特油价</td><td>是否再上 100 美元</td><td>通胀与加息预期的总开关</td></tr>
+        <tr><td>美联储（沃什）路径</td><td>加息 vs 按兵不动；缩表节奏</td><td>短端锚，决定 L2 是否升级</td></tr>
+        <tr><td>日本央行 9 月议息</td><td>加息幅度（市场预期概率 ~80%）</td><td>日本股债双杀尾部风险触发器</td></tr>
+        <tr><td>美债拍卖需求</td><td>10Y / 30Y 拍卖倍数、间接投标占比</td><td>财政供给消化能力的直接证据</td></tr>
+        <tr><td>10Y 实际利率 vs 盈亏平衡通胀</td><td>拆分期限溢价与通胀预期</td><td>判断上行是"财政溢价"还是"通胀定价"</td></tr>
+        <tr><td>股债相关性</td><td>是否持续为正</td><td>对冲失效是否固化</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="src">
+    <b>数据来源：</b>neodata 全球利率（2026-07-31 月度 / 2026-08-14 中国日度）、westock 宏观指标 us_term_spread_10y2y（2026-08-14，10Y 4.68% / 2Y 4.17% / 利差 51bp）、证券时报（10Y 破 4.7% / 30Y 破 5.2% 及高盛框架）、贝莱德智库（股债相关性、实际收益率、资本开支数据）、新浪财经 NIFD 季报（2026-08-14，美债 39.83 万亿、加息预期与美元展望）、东吴证券芦哲观点（区间判断 4.2-4.8%）、华泰证券（滞胀情景）。历史新高口径（日本 1996 年来新高、英国近 30 年高位、德国 15 年高点等）来自市场媒体报道，<b>非一手来源，需核实原文</b>。不同来源口径（月度 / 日度 / 盘中）略有差异，以交易所及央行官方数据为准。
+  </div>
+
+  <div class="disc">
+    <b>免责声明：</b>以上内容基于公开数据和量化分析，仅供参考，不构成投资建议。市场有风险，投资需谨慎。任何投资决策应结合个人风险承受能力、资金状况和投资目标独立判断，必要时咨询持牌专业机构。过往表现不预示未来收益。
+  </div>
+
+</div>
+
+<script>
+// ===== Chart1: 各国 10Y 收益率对比 =====
+(function(){
+  var el = document.getElementById('chart1');
+  if(!el || typeof echarts === 'undefined') return;
+  var chart = echarts.init(el);
+  var data = [
+    {name:'英国', value:5.10, cls:'hi'},
+    {name:'美国', value:4.68, cls:'hi'},
+    {name:'意大利', value:3.88, cls:'mid'},
+    {name:'法国', value:3.85, cls:'mid'},
+    {name:'德国', value:3.07, cls:'mid'},
+    {name:'日本', value:2.93, cls:'hi'},
+    {name:'中国', value:1.70, cls:'ok'}
+  ];
+  var colors = {
+    hi:'#c0392b',
+    mid:'#e67e22',
+    ok:'#1e8449'
+  };
+  chart.setOption({
+    tooltip: { trigger:'axis', axisPointer:{type:'shadow'},
+      formatter: function(params){
+        var p = params[0];
+        return p.name + ' 10Y：<b>' + p.value.toFixed(2) + '%</b>';
+      }
+    },
+    grid: { left:70, right:40, top:40, bottom:30 },
+    xAxis: { type:'value', name:'%', nameTextStyle:{color:'#5a6b7f'}, axisLine:{lineStyle:{color:'#c9d2dd'}} },
+    yAxis: { type:'category', data: data.map(function(d){return d.name;}),
+      axisLine:{lineStyle:{color:'#c9d2dd'}}, axisLabel:{color:'#3d4c5e'} },
+    series: [{
+      type:'bar', barWidth:22,
+      label: { show:true, position:'right', formatter:function(p){return p.value.toFixed(2) + '%';}, color:'#1a2332', fontSize:12 },
+      data: data.map(function(d){
+        return { value:d.value, itemStyle:{ color:colors[d.cls], borderRadius:[0,4,4,0] } };
+      })
+    }]
+  });
+  window.addEventListener('resize', function(){ chart.resize(); });
+})();
+
+// ===== Chart2: 美债 10Y 月度走势 =====
+(function(){
+  var el = document.getElementById('chart2');
+  if(!el || typeof echarts === 'undefined') return;
+  var chart = echarts.init(el);
+  var months = ['2026-02','2026-03','2026-04','2026-05','2026-06','2026-07','2026-08'];
+  var yields = [4.16, 4.29, 4.36, 4.53, 4.52, 4.65, 4.68];
+  chart.setOption({
+    tooltip: { trigger:'axis',
+      formatter: function(params){
+        var p = params[0];
+        return p.name + '：10Y <b>' + p.value.toFixed(2) + '%</b>';
+      }
+    },
+    legend: { data:['10Y 收益率','2023-10 峰值参考'], top:0, textStyle:{color:'#3d4c5e'} },
+    grid: { left:50, right:30, top:36, bottom:30 },
+    xAxis: { type:'category', data:months, boundaryGap:false,
+      axisLine:{lineStyle:{color:'#c9d2dd'}}, axisLabel:{color:'#3d4c5e'} },
+    yAxis: { type:'value', min:4.0, max:5.2, name:'%', nameTextStyle:{color:'#5a6b7f'},
+      axisLine:{lineStyle:{color:'#c9d2dd'}}, splitLine:{lineStyle:{color:'#edf0f4'}} },
+    series: [
+      {
+        name:'10Y 收益率', type:'line', smooth:true, symbolSize:8,
+        lineStyle:{width:3, color:'#c0392b'},
+        itemStyle:{color:'#c0392b'},
+        areaStyle:{color:'rgba(192,57,43,0.08)'},
+        data: yields,
+        markPoint:{
+          data:[
+            {type:'max', name:'高点', label:{formatter:'4.68%', color:'#c0392b'}}
+          ]
+        },
+        markLine:{
+          silent:true,
+          lineStyle:{type:'dashed', color:'#8a94a3'},
+          data:[
+            { yAxis:5.00, label:{formatter:'2023-10 峰值 ~5.0%', color:'#8a94a3', position:'insideEndTop'} },
+            { yAxis:4.70, label:{formatter:'4.7% 关口', color:'#8a94a3', position:'insideEndTop'} }
+          ]
+        }
+      }
+    ]
+  });
+  window.addEventListener('resize', function(){ chart.resize(); });
+})();
+</script>
+</body>
+</html>

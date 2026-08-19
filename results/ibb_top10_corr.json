@@ -1,0 +1,856 @@
+{
+ "split": "2026-02-01",
+ "d715": "2026-07-15",
+ "holdings": [
+  {
+   "ticker": "AMGN",
+   "name": "安进 Amgen",
+   "weight": 8.55,
+   "n_total": 2920,
+   "start": "2015-01-05",
+   "end": "2026-08-14",
+   "all": {
+    "n": 2920,
+    "pearson": 0.6486,
+    "spearman": 0.6363,
+    "beta": 0.677,
+    "resid_vol": 1.21,
+    "r2": 0.4207,
+    "x_ret": 94.47,
+    "y_ret": 162.81,
+    "excess": 68.34
+   },
+   "pre": {
+    "n": 2785,
+    "pearson": 0.6539,
+    "spearman": 0.6376,
+    "beta": 0.676,
+    "resid_vol": 1.196,
+    "r2": 0.4275,
+    "x_ret": 69.13,
+    "y_ret": 116.39,
+    "excess": 47.26
+   },
+   "post": {
+    "n": 135,
+    "pearson": 0.5523,
+    "spearman": 0.6071,
+    "beta": 0.7,
+    "resid_vol": 1.464,
+    "r2": 0.305,
+    "x_ret": 13.85,
+    "y_ret": 20.46,
+    "excess": 6.61
+   },
+   "fisher": {
+    "z": 1.801,
+    "p": 0.0718
+   },
+   "all_strong": {
+    "strong": 1454,
+    "n": 2920,
+    "pct": 49.8,
+    "x_cum": 94.47,
+    "y_cum": 162.81
+   },
+   "after_strong": {
+    "strong": 66,
+    "n": 135,
+    "pct": 48.9,
+    "x_cum": 13.85,
+    "y_cum": 20.46
+   },
+   "d715_strong": {
+    "strong": 12,
+    "n": 23,
+    "pct": 52.2,
+    "x_cum": 4.4,
+    "y_cum": 15.88
+   },
+   "ytd_pre": {
+    "n": 20,
+    "x_ret": 2.03,
+    "y_ret": 4.35,
+    "excess": 2.32,
+    "label": "2026分界前"
+   },
+   "ytd": {
+    "n": 155,
+    "x_ret": 17.31,
+    "y_ret": 26.73,
+    "excess": 9.41,
+    "label": "2026以来"
+   },
+   "seesaw_after": {
+    "seesaw": 29,
+    "n": 135,
+    "pct": 21.5
+   }
+  },
+  {
+   "ticker": "VRTX",
+   "name": "福泰制药 Vertex",
+   "weight": 8.12,
+   "n_total": 2920,
+   "start": "2015-01-05",
+   "end": "2026-08-14",
+   "all": {
+    "n": 2920,
+    "pearson": 0.6499,
+    "spearman": 0.6556,
+    "beta": 0.92,
+    "resid_vol": 1.638,
+    "r2": 0.4224,
+    "x_ret": 94.47,
+    "y_ret": 317.87,
+    "excess": 223.4
+   },
+   "pre": {
+    "n": 2785,
+    "pearson": 0.6494,
+    "spearman": 0.6522,
+    "beta": 0.92,
+    "resid_vol": 1.646,
+    "r2": 0.4217,
+    "x_ret": 69.13,
+    "y_ret": 288.25,
+    "excess": 219.12
+   },
+   "post": {
+    "n": 135,
+    "pearson": 0.6636,
+    "spearman": 0.7213,
+    "beta": 0.931,
+    "resid_vol": 1.454,
+    "r2": 0.4404,
+    "x_ret": 13.85,
+    "y_ret": 7.15,
+    "excess": -6.7
+   },
+   "fisher": {
+    "z": -0.28,
+    "p": 0.7793
+   },
+   "all_strong": {
+    "strong": 1462,
+    "n": 2920,
+    "pct": 50.1,
+    "x_cum": 94.47,
+    "y_cum": 317.87
+   },
+   "after_strong": {
+    "strong": 58,
+    "n": 135,
+    "pct": 43.0,
+    "x_cum": 13.85,
+    "y_cum": 7.15
+   },
+   "d715_strong": {
+    "strong": 10,
+    "n": 23,
+    "pct": 43.5,
+    "x_cum": 4.4,
+    "y_cum": 6.01
+   },
+   "ytd_pre": {
+    "n": 20,
+    "x_ret": 2.03,
+    "y_ret": 3.93,
+    "excess": 1.9,
+    "label": "2026分界前"
+   },
+   "ytd": {
+    "n": 155,
+    "x_ret": 17.31,
+    "y_ret": 11.86,
+    "excess": -5.45,
+    "label": "2026以来"
+   },
+   "seesaw_after": {
+    "seesaw": 32,
+    "n": 135,
+    "pct": 23.7
+   }
+  },
+  {
+   "ticker": "GILD",
+   "name": "吉利德 Gilead",
+   "weight": 6.99,
+   "n_total": 2920,
+   "start": "2015-01-05",
+   "end": "2026-08-14",
+   "all": {
+    "n": 2920,
+    "pearson": 0.5761,
+    "spearman": 0.5667,
+    "beta": 0.621,
+    "resid_vol": 1.342,
+    "r2": 0.3319,
+    "x_ret": 94.47,
+    "y_ret": 42.95,
+    "excess": -51.52
+   },
+   "pre": {
+    "n": 2785,
+    "pearson": 0.5793,
+    "spearman": 0.5716,
+    "beta": 0.621,
+    "resid_vol": 1.335,
+    "r2": 0.3356,
+    "x_ret": 69.13,
+    "y_ret": 46.66,
+    "excess": -22.47
+   },
+   "post": {
+    "n": 135,
+    "pearson": 0.5151,
+    "spearman": 0.4927,
+    "beta": 0.638,
+    "resid_vol": 1.472,
+    "r2": 0.2653,
+    "x_ret": 13.85,
+    "y_ret": -3.17,
+    "excess": -17.02
+   },
+   "fisher": {
+    "z": 1.03,
+    "p": 0.303
+   },
+   "all_strong": {
+    "strong": 1420,
+    "n": 2920,
+    "pct": 48.6,
+    "x_cum": 94.47,
+    "y_cum": 42.95
+   },
+   "after_strong": {
+    "strong": 56,
+    "n": 135,
+    "pct": 41.5,
+    "x_cum": 13.85,
+    "y_cum": -3.17
+   },
+   "d715_strong": {
+    "strong": 12,
+    "n": 23,
+    "pct": 52.2,
+    "x_cum": 4.4,
+    "y_cum": 5.06
+   },
+   "ytd_pre": {
+    "n": 20,
+    "x_ret": 2.03,
+    "y_ret": 16.74,
+    "excess": 14.71,
+    "label": "2026分界前"
+   },
+   "ytd": {
+    "n": 155,
+    "x_ret": 17.31,
+    "y_ret": 13.78,
+    "excess": -3.53,
+    "label": "2026以来"
+   },
+   "seesaw_after": {
+    "seesaw": 46,
+    "n": 135,
+    "pct": 34.1
+   }
+  },
+  {
+   "ticker": "REGN",
+   "name": "再生元 Regeneron",
+   "weight": 5.96,
+   "n_total": 2920,
+   "start": "2015-01-05",
+   "end": "2026-08-14",
+   "all": {
+    "n": 2920,
+    "pearson": 0.6507,
+    "spearman": 0.6519,
+    "beta": 0.883,
+    "resid_vol": 1.568,
+    "r2": 0.4234,
+    "x_ret": 94.47,
+    "y_ret": 94.8,
+    "excess": 0.33
+   },
+   "pre": {
+    "n": 2785,
+    "pearson": 0.6537,
+    "spearman": 0.6541,
+    "beta": 0.884,
+    "resid_vol": 1.565,
+    "r2": 0.4273,
+    "x_ret": 69.13,
+    "y_ret": 79.76,
+    "excess": 10.63
+   },
+   "post": {
+    "n": 135,
+    "pearson": 0.5836,
+    "spearman": 0.5974,
+    "beta": 0.849,
+    "resid_vol": 1.637,
+    "r2": 0.3406,
+    "x_ret": 13.85,
+    "y_ret": 6.42,
+    "excess": -7.43
+   },
+   "fisher": {
+    "z": 1.278,
+    "p": 0.2013
+   },
+   "all_strong": {
+    "strong": 1465,
+    "n": 2920,
+    "pct": 50.2,
+    "x_cum": 94.47,
+    "y_cum": 94.8
+   },
+   "after_strong": {
+    "strong": 66,
+    "n": 135,
+    "pct": 48.9,
+    "x_cum": 13.85,
+    "y_cum": 6.42
+   },
+   "d715_strong": {
+    "strong": 13,
+    "n": 23,
+    "pct": 56.5,
+    "x_cum": 4.4,
+    "y_cum": 20.92
+   },
+   "ytd_pre": {
+    "n": 20,
+    "x_ret": 2.03,
+    "y_ret": -4.49,
+    "excess": -6.52,
+    "label": "2026分界前"
+   },
+   "ytd": {
+    "n": 155,
+    "x_ret": 17.31,
+    "y_ret": 3.5,
+    "excess": -13.81,
+    "label": "2026以来"
+   },
+   "seesaw_after": {
+    "seesaw": 40,
+    "n": 135,
+    "pct": 29.6
+   }
+  },
+  {
+   "ticker": "ARGX",
+   "name": "argenx",
+   "weight": 3.37,
+   "n_total": 2322,
+   "start": "2017-05-19",
+   "end": "2026-08-14",
+   "all": {
+    "n": 2322,
+    "pearson": 0.3824,
+    "spearman": 0.4811,
+    "beta": 0.832,
+    "resid_vol": 2.937,
+    "r2": 0.1462,
+    "x_ret": 104.78,
+    "y_ret": 3796.06,
+    "excess": 3691.29
+   },
+   "pre": {
+    "n": 2187,
+    "pearson": 0.3768,
+    "spearman": 0.4746,
+    "beta": 0.831,
+    "resid_vol": 2.991,
+    "r2": 0.142,
+    "x_ret": 78.1,
+    "y_ret": 3746.68,
+    "excess": 3668.58
+   },
+   "post": {
+    "n": 135,
+    "pearson": 0.5476,
+    "spearman": 0.5857,
+    "beta": 0.87,
+    "resid_vol": 1.842,
+    "r2": 0.2999,
+    "x_ret": 13.85,
+    "y_ret": 1.87,
+    "excess": -11.98
+   },
+   "fisher": {
+    "z": -2.439,
+    "p": 0.0147
+   },
+   "all_strong": {
+    "strong": 1180,
+    "n": 2322,
+    "pct": 50.8,
+    "x_cum": 104.78,
+    "y_cum": 3796.06
+   },
+   "after_strong": {
+    "strong": 59,
+    "n": 135,
+    "pct": 43.7,
+    "x_cum": 13.85,
+    "y_cum": 1.87
+   },
+   "d715_strong": {
+    "strong": 8,
+    "n": 23,
+    "pct": 34.8,
+    "x_cum": 4.4,
+    "y_cum": -1.35
+   },
+   "ytd_pre": {
+    "n": 20,
+    "x_ret": 2.03,
+    "y_ret": 0.06,
+    "excess": -1.97,
+    "label": "2026分界前"
+   },
+   "ytd": {
+    "n": 155,
+    "x_ret": 17.31,
+    "y_ret": 1.35,
+    "excess": -15.97,
+    "label": "2026以来"
+   },
+   "seesaw_after": {
+    "seesaw": 35,
+    "n": 135,
+    "pct": 25.9
+   }
+  },
+  {
+   "ticker": "NTRA",
+   "name": "Natera",
+   "weight": 3.2,
+   "n_total": 2796,
+   "start": "2015-07-02",
+   "end": "2026-08-14",
+   "all": {
+    "n": 2796,
+    "pearson": 0.4492,
+    "spearman": 0.503,
+    "beta": 1.143,
+    "resid_vol": 3.471,
+    "r2": 0.2018,
+    "x_ret": 60.6,
+    "y_ret": 1621.83,
+    "excess": 1561.23
+   },
+   "pre": {
+    "n": 2661,
+    "pearson": 0.446,
+    "spearman": 0.5016,
+    "beta": 1.133,
+    "resid_vol": 3.487,
+    "r2": 0.1989,
+    "x_ret": 39.68,
+    "y_ret": 1184.11,
+    "excess": 1144.44
+   },
+   "post": {
+    "n": 135,
+    "pearson": 0.5234,
+    "spearman": 0.5301,
+    "beta": 1.384,
+    "resid_vol": 3.123,
+    "r2": 0.274,
+    "x_ret": 13.85,
+    "y_ret": 34.11,
+    "excess": 20.26
+   },
+   "fisher": {
+    "z": -1.136,
+    "p": 0.2559
+   },
+   "all_strong": {
+    "strong": 1404,
+    "n": 2796,
+    "pct": 50.2,
+    "x_cum": 60.6,
+    "y_cum": 1621.83
+   },
+   "after_strong": {
+    "strong": 70,
+    "n": 135,
+    "pct": 51.9,
+    "x_cum": 13.85,
+    "y_cum": 34.11
+   },
+   "d715_strong": {
+    "strong": 11,
+    "n": 23,
+    "pct": 47.8,
+    "x_cum": 4.4,
+    "y_cum": 11.74
+   },
+   "ytd_pre": {
+    "n": 20,
+    "x_ret": 2.03,
+    "y_ret": 1.01,
+    "excess": -1.02,
+    "label": "2026分界前"
+   },
+   "ytd": {
+    "n": 155,
+    "x_ret": 17.31,
+    "y_ret": 35.44,
+    "excess": 18.12,
+    "label": "2026以来"
+   },
+   "seesaw_after": {
+    "seesaw": 44,
+    "n": 135,
+    "pct": 32.6
+   }
+  },
+  {
+   "ticker": "RVMD",
+   "name": "Revolution Medicines",
+   "weight": 2.89,
+   "n_total": 1633,
+   "start": "2020-02-14",
+   "end": "2026-08-14",
+   "all": {
+    "n": 1633,
+    "pearson": 0.4871,
+    "spearman": 0.5462,
+    "beta": 1.311,
+    "resid_vol": 3.587,
+    "r2": 0.2373,
+    "x_ret": 61.88,
+    "y_ret": 619.57,
+    "excess": 557.68
+   },
+   "pre": {
+    "n": 1498,
+    "pearson": 0.4937,
+    "spearman": 0.5406,
+    "beta": 1.31,
+    "resid_vol": 3.545,
+    "r2": 0.2438,
+    "x_ret": 40.79,
+    "y_ret": 242.46,
+    "excess": 201.66
+   },
+   "post": {
+    "n": 135,
+    "pearson": 0.4172,
+    "spearman": 0.6236,
+    "beta": 1.328,
+    "resid_vol": 4.008,
+    "r2": 0.1741,
+    "x_ret": 13.85,
+    "y_ret": 109.66,
+    "excess": 95.81
+   },
+   "fisher": {
+    "z": 1.064,
+    "p": 0.2872
+   },
+   "all_strong": {
+    "strong": 827,
+    "n": 1633,
+    "pct": 50.6,
+    "x_cum": 61.88,
+    "y_cum": 619.57
+   },
+   "after_strong": {
+    "strong": 70,
+    "n": 135,
+    "pct": 51.9,
+    "x_cum": 13.85,
+    "y_cum": 109.66
+   },
+   "d715_strong": {
+    "strong": 10,
+    "n": 23,
+    "pct": 43.5,
+    "x_cum": 4.4,
+    "y_cum": 10.45
+   },
+   "ytd_pre": {
+    "n": 20,
+    "x_ret": 2.03,
+    "y_ret": 22.69,
+    "excess": 20.66,
+    "label": "2026分界前"
+   },
+   "ytd": {
+    "n": 155,
+    "x_ret": 17.31,
+    "y_ret": 157.8,
+    "excess": 140.48,
+    "label": "2026以来"
+   },
+   "seesaw_after": {
+    "seesaw": 30,
+    "n": 135,
+    "pct": 22.2
+   }
+  },
+  {
+   "ticker": "ALNY",
+   "name": "Alnylam",
+   "weight": 2.21,
+   "n_total": 2920,
+   "start": "2015-01-05",
+   "end": "2026-08-14",
+   "all": {
+    "n": 2920,
+    "pearson": 0.5496,
+    "spearman": 0.6248,
+    "beta": 1.246,
+    "resid_vol": 2.884,
+    "r2": 0.302,
+    "x_ret": 94.47,
+    "y_ret": 139.73,
+    "excess": 45.26
+   },
+   "pre": {
+    "n": 2785,
+    "pearson": 0.56,
+    "spearman": 0.6316,
+    "beta": 1.266,
+    "resid_vol": 2.861,
+    "r2": 0.3136,
+    "x_ret": 69.13,
+    "y_ret": 254.43,
+    "excess": 185.3
+   },
+   "post": {
+    "n": 135,
+    "pearson": 0.3205,
+    "spearman": 0.48,
+    "beta": 0.785,
+    "resid_vol": 3.215,
+    "r2": 0.1027,
+    "x_ret": 13.85,
+    "y_ret": -32.57,
+    "excess": -46.42
+   },
+   "fisher": {
+    "z": 3.375,
+    "p": 0.0007
+   },
+   "all_strong": {
+    "strong": 1451,
+    "n": 2920,
+    "pct": 49.7,
+    "x_cum": 94.47,
+    "y_cum": 139.73
+   },
+   "after_strong": {
+    "strong": 66,
+    "n": 135,
+    "pct": 48.9,
+    "x_cum": 13.85,
+    "y_cum": -32.57
+   },
+   "d715_strong": {
+    "strong": 13,
+    "n": 23,
+    "pct": 56.5,
+    "x_cum": 4.4,
+    "y_cum": -18.09
+   },
+   "ytd_pre": {
+    "n": 20,
+    "x_ret": 2.03,
+    "y_ret": -15.52,
+    "excess": -17.55,
+    "label": "2026分界前"
+   },
+   "ytd": {
+    "n": 155,
+    "x_ret": 17.31,
+    "y_ret": -42.86,
+    "excess": -60.18,
+    "label": "2026以来"
+   },
+   "seesaw_after": {
+    "seesaw": 50,
+    "n": 135,
+    "pct": 37.0
+   }
+  },
+  {
+   "ticker": "BIIB",
+   "name": "渤健 Biogen",
+   "weight": 2.26,
+   "n_total": 2920,
+   "start": "2015-01-05",
+   "end": "2026-08-14",
+   "all": {
+    "n": 2920,
+    "pearson": 0.5453,
+    "spearman": 0.6411,
+    "beta": 0.929,
+    "resid_vol": 2.175,
+    "r2": 0.2974,
+    "x_ret": 94.47,
+    "y_ret": -37.69,
+    "excess": -132.16
+   },
+   "pre": {
+    "n": 2785,
+    "pearson": 0.5512,
+    "spearman": 0.6516,
+    "beta": 0.939,
+    "resid_vol": 2.173,
+    "r2": 0.3038,
+    "x_ret": 69.13,
+    "y_ret": -46.58,
+    "excess": -115.71
+   },
+   "post": {
+    "n": 135,
+    "pearson": 0.3983,
+    "spearman": 0.4581,
+    "beta": 0.684,
+    "resid_vol": 2.182,
+    "r2": 0.1586,
+    "x_ret": 13.85,
+    "y_ret": 17.16,
+    "excess": 3.31
+   },
+   "fisher": {
+    "z": 2.228,
+    "p": 0.0259
+   },
+   "all_strong": {
+    "strong": 1409,
+    "n": 2920,
+    "pct": 48.3,
+    "x_cum": 94.47,
+    "y_cum": -37.69
+   },
+   "after_strong": {
+    "strong": 62,
+    "n": 135,
+    "pct": 45.9,
+    "x_cum": 13.85,
+    "y_cum": 17.16
+   },
+   "d715_strong": {
+    "strong": 10,
+    "n": 23,
+    "pct": 43.5,
+    "x_cum": 4.4,
+    "y_cum": 6.38
+   },
+   "ytd_pre": {
+    "n": 20,
+    "x_ret": 2.03,
+    "y_ret": 1.16,
+    "excess": -0.87,
+    "label": "2026分界前"
+   },
+   "ytd": {
+    "n": 155,
+    "x_ret": 17.31,
+    "y_ret": 18.0,
+    "excess": 0.69,
+    "label": "2026以来"
+   },
+   "seesaw_after": {
+    "seesaw": 43,
+    "n": 135,
+    "pct": 31.9
+   }
+  },
+  {
+   "ticker": "ILMN",
+   "name": "因美纳 Illumina",
+   "weight": 2.16,
+   "n_total": 2920,
+   "start": "2015-01-05",
+   "end": "2026-08-14",
+   "all": {
+    "n": 2920,
+    "pearson": 0.5988,
+    "spearman": 0.6349,
+    "beta": 1.045,
+    "resid_vol": 2.128,
+    "r2": 0.3586,
+    "x_ret": 94.47,
+    "y_ret": 2.89,
+    "excess": -91.58
+   },
+   "pre": {
+    "n": 2785,
+    "pearson": 0.6113,
+    "spearman": 0.6484,
+    "beta": 1.063,
+    "resid_vol": 2.102,
+    "r2": 0.3737,
+    "x_ret": 69.13,
+    "y_ret": -21.95,
+    "excess": -91.08
+   },
+   "post": {
+    "n": 135,
+    "pearson": 0.3183,
+    "spearman": 0.3791,
+    "beta": 0.611,
+    "resid_vol": 2.521,
+    "r2": 0.1013,
+    "x_ret": 13.85,
+    "y_ret": 35.26,
+    "excess": 21.41
+   },
+   "fisher": {
+    "z": 4.28,
+    "p": 0.0
+   },
+   "all_strong": {
+    "strong": 1468,
+    "n": 2920,
+    "pct": 50.3,
+    "x_cum": 94.47,
+    "y_cum": 2.89
+   },
+   "after_strong": {
+    "strong": 70,
+    "n": 135,
+    "pct": 51.9,
+    "x_cum": 13.85,
+    "y_cum": 35.26
+   },
+   "d715_strong": {
+    "strong": 13,
+    "n": 23,
+    "pct": 56.5,
+    "x_cum": 4.4,
+    "y_cum": 2.0
+   },
+   "ytd_pre": {
+    "n": 20,
+    "x_ret": 2.03,
+    "y_ret": 7.79,
+    "excess": 5.76,
+    "label": "2026分界前"
+   },
+   "ytd": {
+    "n": 155,
+    "x_ret": 17.31,
+    "y_ret": 42.08,
+    "excess": 24.77,
+    "label": "2026以来"
+   },
+   "seesaw_after": {
+    "seesaw": 49,
+    "n": 135,
+    "pct": 36.3
+   }
+  }
+ ]
+}

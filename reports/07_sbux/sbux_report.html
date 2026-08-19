@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>星巴克（SBUX）财报与估值研究：PE 虚高之谜 · 2021 高点突破 · 2015 年对比复盘</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<script src="sbux_data.js"></script>
+<style>
+  :root {
+    --ink: #1a1a1a; --sub: #5a6472; --line: #e3e6ea; --bg: #f7f8fa;
+    --card: #ffffff; --green: #00754a; --red: #d0342c; --amber: #b7791f;
+    --blue: #2f6db3; --purple: #7b4fa6;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif; background: var(--bg); color: var(--ink); line-height: 1.7; }
+  .wrap { max-width: 1060px; margin: 0 auto; padding: 0 20px 60px; }
+  .hero { background: linear-gradient(135deg, #0b3d2e 0%, #00754a 60%, #0e8a5f 100%); color: #fff; padding: 40px 36px 34px; border-radius: 0 0 14px 14px; }
+  .hero .tag { display: inline-block; background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.3); padding: 2px 12px; border-radius: 20px; font-size: 12.5px; letter-spacing: 1px; margin-bottom: 14px; }
+  .hero h1 { font-size: 27px; font-weight: 700; line-height: 1.45; letter-spacing: .5px; }
+  .hero .meta { margin-top: 14px; font-size: 12.5px; color: rgba(255,255,255,.85); }
+  .section { background: var(--card); border: 1px solid var(--line); border-radius: 12px; margin-top: 22px; padding: 26px 30px; }
+  .section h2 { font-size: 20px; font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 10px; }
+  .section h2 .no { display: inline-flex; width: 30px; height: 30px; border-radius: 8px; background: var(--green); color: #fff; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+  .section .sub { color: var(--sub); font-size: 13.5px; margin-bottom: 18px; }
+  .verdict { background: #eef7f1; border: 1px solid #cfe8da; border-left: 5px solid var(--green); border-radius: 10px; padding: 16px 20px; margin: 14px 0 20px; font-size: 14.5px; }
+  .verdict b { color: var(--green); }
+  .verdict.warn { background: #fdf6ec; border-color: #ecd9b8; border-left-color: var(--amber); }
+  .verdict.warn b { color: var(--amber); }
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 16px 0 8px; }
+  .kpi { border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; background: #fbfcfd; }
+  .kpi .k { font-size: 12px; color: var(--sub); }
+  .kpi .v { font-size: 22px; font-weight: 700; margin-top: 4px; }
+  .kpi .v.up { color: var(--red); } .kpi .v.down { color: var(--green); }
+  .kpi .d { font-size: 12px; color: var(--sub); margin-top: 2px; }
+  table { width: 100%; border-collapse: collapse; margin: 14px 0 6px; font-size: 13.5px; }
+  th { background: #f0f2f5; text-align: left; padding: 9px 12px; font-weight: 600; border-bottom: 2px solid var(--line); white-space: nowrap; }
+  td { padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .up { color: var(--red); } .down { color: var(--green); }
+  .chart { width: 100%; height: 380px; margin: 16px 0 4px; }
+  .chart.tall { height: 420px; }
+  .src { font-size: 11.5px; color: var(--sub); margin-top: 6px; }
+  .note { font-size: 13px; color: var(--sub); margin: 10px 0; }
+  .tag-r { display: inline-block; background: #fdecea; color: var(--red); padding: 1px 9px; border-radius: 5px; font-size: 12px; font-weight: 600; }
+  .tag-g { display: inline-block; background: #e6f4ee; color: var(--green); padding: 1px 9px; border-radius: 5px; font-size: 12px; font-weight: 600; }
+  .tag-a { display: inline-block; background: #fdf3e0; color: var(--amber); padding: 1px 9px; border-radius: 5px; font-size: 12px; font-weight: 600; }
+  .tag-b { display: inline-block; background: #e8f0fa; color: var(--blue); padding: 1px 9px; border-radius: 5px; font-size: 12px; font-weight: 600; }
+  .tl { position: relative; padding-left: 22px; margin: 10px 0; }
+  .tl::before { content: ""; position: absolute; left: 7px; top: 6px; bottom: 6px; width: 2px; background: var(--line); }
+  .tl .it { position: relative; padding: 5px 0 12px; font-size: 14px; }
+  .tl .it::before { content: ""; position: absolute; left: -19px; top: 13px; width: 9px; height: 9px; border-radius: 50%; background: var(--green); }
+  .tl .it.warn::before { background: var(--amber); }
+  .tl .dt { font-weight: 700; color: var(--green); font-size: 13px; }
+  .tl .warn .dt { color: var(--amber); }
+  .tl .tx { margin-top: 2px; }
+  .foot { margin-top: 30px; font-size: 12px; color: var(--sub); border-top: 1px solid var(--line); padding-top: 16px; }
+  .disclaimer { margin-top: 14px; background: #f4f5f7; border-radius: 8px; padding: 14px 18px; font-size: 12.5px; color: #444; }
+  .pill { display: inline-block; padding: 3px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; }
+  @media (max-width: 760px) { .grid3 { grid-template-columns: 1fr; } .hero h1 { font-size: 21px; } }
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="tag">个股深度 · 估值拆解 · 历史对比</div>
+  <h1>星巴克（SBUX）财报研究：<br>PE 为何"虚高"？能否突破 2021 年高点？2015 年困境给了什么答案？</h1>
+  <div class="meta">报告日期：2026-08-18 ｜ 数据截至：2026-08-14 收盘（Yahoo Finance 日线）｜ 财报：FY2026 Q3（2026-07-29 发布）</div>
+</div>
+
+<div class="wrap">
+
+<!-- ============ 结论先行 ============ -->
+<div class="section">
+  <h2><span class="no">✓</span> 结论先行（TL;DR）</h2>
+  <div class="sub">三个问题，三句话结论，详情见后文逐层展开</div>
+
+  <div class="verdict">
+    <b>① PE 高 ≠ 泡沫，是"分母滞后型虚高"。</b>TTM PE ≈ 62 倍（股价 $107.69 ÷ TTM EPS ≈ $1.73）的根源是：股价（P）已从 2024 年复权低点 $68.01 修复 <b>+58.3%</b>，而盈利（E）仍停留在 FY2025 低谷（GAAP EPS $1.63，仅为峰值 $3.58 的 46%）。市场实际用前瞻定价——FY2026 指引 $2.60 对应 41 倍、FY2027E ~$3.2 对应 ~34 倍，仍高于历史中枢 25-30 倍。说"虚高"有道理：Q3 利润率扩张含关税退款、中国交易等一次性成分，且股东权益为负（-$84.6 亿）、股息支付率 142%，62 倍已高于 2015/2021 两次大顶的 35-40 倍；说"不虚"也有道理：同店销售连续 4 季真实客流增长、利润率连续 2 季扩张、指引连续上调。判断：<b>静态口径确实虚高，动态口径"贵但可解释"，风险全部压在盈利兑现节奏上</b>。
+  </div>
+
+  <div class="verdict warn">
+    <b>② 先纠正口径：您看到的"110 左右"是复权价（前复权，扣除了 2021 年以来累计派息约 $11.5/股），2021 年历史最高复权价 = $111.54（2021-07-26；未复权真实成交价 $126.06）。</b>当前 $107.69 距复权历史最高仅 <b>-3.5%</b>，8 月 13 日盘中已到复权 $107.93（未复权 $110.51）——<b>突破 2021 高点只差再涨 ~3.6%，远比未复权口径下的 +17.3% 现实</b>。参照 2015 年先例（基本面苗头确认后复权口径 202 天即突破前高），方向可行；但当前估值起点（62 倍 TTM）远高于 2017 年突破时（约 30 倍），路径是"盈利追赶"单引擎，波动会更大。
+  </div>
+
+  <div class="verdict">
+    <b>③ 2015 年不是"问题彻底解决"后才突破，而是"改善苗头确认"后就突破了。</b>2016-11-03 股价见底（复权 $41.73，PE 已从 40 倍消化至 ~28 倍）→ 同日 Q4 FY16 创纪录财报确认 → 2017-04-27 中国同店 +7% 确认 → 2017-05-24 收盘复权 $50.55 首次突破 2015 复权高点 $50.51，全程 202 天（约 6.7 个月）。突破时全球同店仅 +3%（远未恢复 2015 年 +7%），但盈利双位数增长 + 营业利润率近十年新高 + 增长叙事切换（中国接棒美国）三要素齐备。当前同店动能（+7.9%）比当年强得多，<b>缺的是"估值出清"这一环</b>——这是与 2015 年最本质的差异。
+  </div>
+</div>
+
+<!-- ============ 数据速览 ============ -->
+<div class="section">
+  <h2><span class="no">1</span> 最新财报数据速览（FY2026 Q3，2026-07-29 发布）</h2>
+  <div class="sub">近三年最漂亮的一份财报：同店连续第 4 季增长、利润率连续第 2 季扩张、指引全面上调</div>
+  <div class="grid3">
+    <div class="kpi"><div class="k">全球同店销售</div><div class="v up">+7.9%</div><div class="d">连续第 4 季正增长（预期 +6%）｜北美 +8.1% / 国际 +5.7%</div></div>
+    <div class="kpi"><div class="k">Non-GAAP EPS</div><div class="v up">$0.85（+70%）</div><div class="d">预期 $0.66；GAAP EPS $0.91（+86%，含中国交易收益）</div></div>
+    <div class="kpi"><div class="k">Non-GAAP 营业利润率</div><div class="v up">14.4%（+430bp）</div><div class="d">连续第 2 季扩张；FY2025 低谷为 7.9%</div></div>
+    <div class="kpi"><div class="k">合并净营收</div><div class="v">$93.2 亿（-1.4%）</div><div class="d">下滑因中国业务出表（结构性，非经营性）；北美 +7%</div></div>
+    <div class="kpi"><div class="k">FY2026 指引（上调）</div><div class="v up">EPS $2.55-2.65</div><div class="d">原 2.25-2.45；全球同店"近 6%"、美国"6% 以上"</div></div>
+    <div class="kpi"><div class="k">最新股价 / 估值</div><div class="v">$107.69</div><div class="d">PE(TTM) ≈ 62x ｜ PE(Forward) ≈ 34.6x ｜ 市值 ≈ $1,230 亿</div></div>
+  </div>
+  <div class="verdict" style="margin-top:4px;">
+    <b>数据口径说明（重要）：</b>本报告价格一律采用 <b>前复权价（Yahoo adj_close）</b>，与主流看盘软件（腾讯自选股 / 同花顺 / 雪球等）默认口径一致——已把 2021 年以来累计派息约 $11.5/股（每季 $0.49 → $0.62，21 个季度）从历史价格中扣除（2015-04 的 2:1 拆股也已调整）。因此：<b>2021-07-26 历史高点 = 复权 $111.54（看盘软件显示的"111.4 左右"）＝ 未复权真实成交价 $126.06</b>，差额 11.5% 即累计股息。两者都对，只是口径不同——本报告下文统一用复权口径（用户视角）。
+  </div>
+  <div class="note">关键背景：2025-11 星巴克将中国业务 60% 股权以约 $40 亿售予博裕资本（FY2026 Q3 起出表，转为轻资产授权模式）；Niccol 主导的"Back to Starbucks（重返星巴克）"转型：三轮裁员 2,300+ 企业岗位、关停低效门店、Uplift 门店改造（单店约 $15 万，Q3 完成 1,000+ 家）、绿围裙服务模式（4 分钟出杯）。</div>
+  <div class="src">来源：星巴克 FY2026 Q3 财报（SEC 8-K，2026-07-29）；FY2026 Q2 财报（2026-04-28）；公司电话会纪要（2026-07-30 智通财经转载）；Yahoo Finance 行情（2026-08-14）。</div>
+</div>
+
+<!-- ============ PE 虚高 ============ -->
+<div class="section">
+  <h2><span class="no">2</span> PE 虚高之谜：62 倍怎么来的，虚在哪，实在哪</h2>
+  <div class="sub">核心逻辑：分子（股价）先行修复，分母（盈利）还躺在谷底——"分母滞后型虚高"，而非估值泡沫型虚高</div>
+
+  <h3 style="margin:14px 0 4px;font-size:16px;">2.1 拆解：62 倍 = 分子 +58.3% × 分母 -46%</h3>
+  <table>
+    <tr><th>口径</th><th class="num">数值</th><th>说明</th></tr>
+    <tr><td>股价（2026-08-14，复权）</td><td class="num up">$107.69</td><td>较 2024-05-07 复权低点 $68.01 修复 <span class="up">+58.3%</span>；2026 YTD（复权）<span class="up">+30.2%</span></td></tr>
+    <tr><td>TTM GAAP EPS（反推）</td><td class="num down">≈ $1.73</td><td>股价 ÷ PE(TTM) 62.4x；FY2025 全年仅 $1.63（见下图 EPS 轨迹）</td></tr>
+    <tr><td>FY2026 指引 EPS（Non-GAAP）</td><td class="num">$2.55-2.65</td><td>对应前瞻 PE ≈ <b>41 倍</b>（按指引中值 $2.60）</td></tr>
+    <tr><td>FY2027E EPS（市场一致）</td><td class="num">≈ $3.1-3.3</td><td>对应前瞻 PE ≈ <b>33-35 倍</b>；若 $126 突破，对应 FY2027E ~38-40 倍</td></tr>
+  </table>
+
+  <div id="chart3" class="chart" style="height:340px;"></div>
+  <div class="src">来源：GAAP diluted EPS 为星巴克 10-K/季报（FY2023 $3.58、FY2024 $3.31、FY2025 $1.63，SEC 文件）；FY2026E 为公司指引中值（2026-07-29 上调后）；FY2027E 为市场一致预期区间（媒体披露）。</div>
+
+  <h3 style="margin:18px 0 4px;font-size:16px;">2.2 "虚高"论点的合理内核（为什么有人说虚高）</h3>
+  <table>
+    <tr><th>论据</th><th>数据</th><th>杀伤力</th></tr>
+    <tr><td>盈利恢复含一次性成分</td><td>Q3 GAAP EPS $0.91 含中国交易收益；利润率扩张部分靠 IEEPA 关税退款（管理层承认 Q3 的 COGS 30.3% 低于更正常化的年初至今 32.3%）</td><td><span class="tag-a">中高</span></td></tr>
+    <tr><td>股东权益为负、杠杆高</td><td>合并股东权益 <span class="down">-$84.6 亿</span>，资产负债率 ≈ 127.7%（长期高回购+高分红+杠杆经营所致）→ PB 为负、ROE 失真</td><td><span class="tag-a">高</span></td></tr>
+    <tr><td>股息可持续性存疑</td><td>股息支付率 ≈ 142%（每季 $0.62，连续 65 季派息但超过当期盈利）</td><td><span class="tag-a">中</span></td></tr>
+    <tr><td>估值已超历史两次大顶</td><td>2015 年高点 TTM PE ~40x、2021 年高点 ~35-40x，当前 62x 显著更高</td><td><span class="tag-b">高</span></td></tr>
+    <tr><td>长期股东回报差</td><td>5 年维度总回报近零（vs 标普 500 约 +80%），2021 年高点买入者至今仍亏 ~15%</td><td><span class="tag-a">中</span></td></tr>
+    <tr><td>机构分歧</td><td>RBC 下调至"行业表现"（复苏已透支）、法巴首予卖出（目标 $84）；但 Wells Fargo $120、MS $111、Citi $108、中金看好</td><td><span class="tag-a">中</span></td></tr>
+  </table>
+
+  <h3 style="margin:18px 0 4px;font-size:16px;">2.3 "不虚"论点的支撑（为什么市场愿意给高估值）</h3>
+  <table>
+    <tr><th>论据</th><th>数据</th><th>说明</th></tr>
+    <tr><td>同店是真实客流增长</td><td>Q3 全球同店 +7.9%，交易量 +4.2% > 客单价 +3.5%</td><td>2016 年以来星巴克第一次靠"人多"而非"涨价"驱动，质量高</td></tr>
+    <tr><td>利润率修复有路径</td><td>Non-GAAP 营业利润率 7.9%（FY25 谷）→ 14.4%（Q3），管理层目标 13.5%-15% 于 FY2028 达成</td><td>还有 1 个点以上空间 + 销售杠杆未完全释放</td></tr>
+    <tr><td>指引连续上调</td><td>Q2 上调（同店 3%→至少 5%，EPS 2.15-2.40→2.25-2.45）→ Q3 再上调（EPS 2.55-2.65）</td><td>管理层自己在上修，非市场单方面乐观</td></tr>
+    <tr><td>中国出表是结构性利好</td><td>轻资产化后约 90% 海外门店转授权，国际分部利润率结构性增厚；还债 $18 亿后杠杆降至 2.9x</td><td>资产负债表担忧部分缓解</td></tr>
+    <tr><td>困境反转的估值规律</td><td>反转初期 E 在低位，PE 天然"虚高"（Chipotle 2023-24 反转期 PE 也曾 60-70x）；关键是看 E 能否追上来</td><td>方法论：看 Forward 而非 TTM</td></tr>
+  </table>
+
+  <div class="verdict">
+    <b>我们的判断：</b>"62 倍"作为 TTM 口径确实虚高——但它是<b>分母（E）滞后</b>造成的虚高，不是盈利见顶前的泡沫。市场实际在用 34-41 倍的前瞻定价，且要求 FY2027 盈利达到 $3.1 以上才"物有所值"。<b>真正的风险敞口不是估值本身，而是盈利兑现的节奏</b>：若 Q4 同店放缓、利润率修复慢于指引、或中国合资过渡期贡献低于预期，62 倍 TTM 没有任何缓冲，估值会向 40 倍（历史顶部）甚至更低回归。反之若 FY2027 EPS 如期到 $3.2+，当前价对应 34 倍——回到历史中枢上沿，谈不上贵。
+  </div>
+</div>
+
+<!-- ============ 2021 高点突破 ============ -->
+<div class="section">
+  <h2><span class="no">3</span> 能否突破 2021 年高点？——复权口径下高点 = $111.54，只差 3.5%</h2>
+  <div class="sub">2021-07-26 历史最高：<b>复权 $111.54</b>（用户视角，已扣累计股息）＝ 未复权真实成交价 $126.06。当前 $107.69 距复权高点仅 <b>-3.5%</b>，8/13 盘中已到复权 $107.93</div>
+
+  <div id="chart1" class="chart tall"></div>
+  <div class="src">来源：Yahoo Finance SBUX 月线（前复权价 adj_close，2014-01 ~ 2026-08），关键点位均为复权口径：2015 高点 $50.51（2015-10-28，未复权 $63.51）、2016 低点 $41.73（2016-11-03）、2017-05-24 首次收盘突破 $50.55、2021 历史最高 $111.54（2021-07-26，未复权 $126.06）、2022 低点 $62.82、2024 低点 $68.01（2024-05-07）、2026-08-13 复权高点 $107.93（未复权 $110.51）。</div>
+
+  <h3 style="margin:18px 0 4px;font-size:16px;">3.1 当前技术位置：正贴在"110 平台"上</h3>
+  <table>
+    <tr><th>位置（复权口径）</th><th class="num">价格</th><th>说明</th></tr>
+    <tr><td>最新收盘（2026-08-14）</td><td class="num">$107.69</td><td>2026 复权高点 $107.93（8/13，未复权 $110.51）后小幅回落</td></tr>
+    <tr><td>2021-07-26 历史最高（复权）</td><td class="num up">$111.54</td><td>即看盘软件显示的"111.4 左右"；未复权真实成交价 $126.06</td></tr>
+    <tr><td>距 2021 复权高点</td><td class="num">-3.5%</td><td>只差再涨 ~3.6%；8/13 盘中复权 $107.93 距高点仅 3.2%</td></tr>
+    <tr><td>52 周区间（复权）</td><td class="num">$76.51 ~ $107.93</td><td>正处于 52 周新高附近</td></tr>
+    <tr><td>2022-05 低点（复权，自高点回撤）</td><td class="num">$62.82（-43.7%）</td><td>2021 → 2024 下跌熊途，复权低点 2024-05-07 $68.01</td></tr>
+  </table>
+
+  <h3 style="margin:18px 0 4px;font-size:16px;">3.2 2015 年先例给出的"突破条件"清单</h3>
+  <div class="note">2016-11-03 见底（复权 $41.73）→ 2017-05-24 突破 2015 复权高点 $50.51，间隔 202 天。突破由三个要素共振触发（详见第 4 节）：</div>
+  <table>
+    <tr><th>2017 年突破三要素</th><th>当年状态</th><th>当前状态（2026-08）</th><th>对比</th></tr>
+    <tr><td>① 财报连续确认改善（2-3 个季度）</td><td>Q4FY16 创纪录 → Q1FY17 → Q2FY17 中国 +7%</td><td>同店已连续 4 季正增长、利润率连续 2 季扩张、指引连续 2 次上调</td><td><span class="tag-g">更强</span></td></tr>
+    <tr><td>② 新增长叙事确立（中国接棒）</td><td>中国同店 +7-8% 重新加速</td><td>北美客流恢复 + 轻资产化（中国出表后国际分部利润率增厚）</td><td><span class="tag-a">相当，但叙事换了主角</span></td></tr>
+    <tr><td>③ 估值已充分消化（低估值起点）</td><td>PE 从 40x 消化至 ~28-32x</td><td>TTM PE 62x / Forward 34-41x，<b>未消化反而更高</b></td><td><span class="tag-r">显著弱于当年</span></td></tr>
+  </table>
+
+  <div class="verdict warn">
+    <b>结论：</b>突破 2021 复权高点 <b>$111.54 只差 ~3.6%</b>，当前已站在突破线上（8/13 盘中复权 $107.93），量价与基本面（连续 4 季同店 + 指引上调）都支持，<b>大概率只是时间问题</b>；一旦突破，上方是 2021 年 7 月后的长期下跌区，无套牢盘压制。但方向可行≠坦途——基本面确认度强于 2017 年（同店 +7.9% vs +3%），而当年突破靠"低估值 + 盈利 + 估值双升"双引擎，当前只剩"盈利追赶"单引擎（62 倍 TTM 意味着估值没有扩张空间，只能靠 E 追上 P）。基准情景（FY2026 指引兑现、FY2027 EPS 达 $3.2+）：突破后打开上行空间；风险情景（同店动能衰减 / 利润率修复不及预期）：62 倍估值无缓冲，向 40 倍回归对应股价约 $70-85。
+  </div>
+</div>
+
+<!-- ============ 2015 年对比 ============ -->
+<div class="section">
+  <h2><span class="no">4</span> 2015 年对比复盘：是"彻底解决"还是"苗头出现"就突破了？</h2>
+  <div class="sub">答案：<b>苗头确认就突破，不是等彻底解决</b>——但当年有一个当前缺失的前提：估值先出清</div>
+
+  <h3 style="margin:14px 0 4px;font-size:16px;">4.1 2015 年的"困境"到底是什么</h3>
+  <div class="note">注意：2015 年困境<b>不是亏损式危机</b>，而是"增速换挡 + 估值消化"——FY2016 仍是星巴克上市以来最赚钱的财年（净利 $28.2 亿、营业利润率 19.6%）。这与 2021-2024 年的"盈利崩塌"（EPS 从 $3.58 腰斩至 $1.63）性质完全不同。</div>
+  <table>
+    <tr><th>维度</th><th>2015-2016 困境（增速换挡型）</th><th>2021-2024 困境（盈利崩塌型）</th><th>当前（2025-2026，修复中）</th></tr>
+    <tr><td>同店销售</td><td>全球 +7% → +3%（企稳）；美国客流下滑靠提价撑</td><td>连续负增长（FY2025 北美 -2%）</td><td>全球 +7.9%，连续 4 季正增长，客流主导</td></tr>
+    <tr><td>盈利</td><td>FY2016 净利创纪录，EPS $1.90（+4%）</td><td>EPS $3.58 → $1.63（-54%），营业利润率 15.0% → 7.9%</td><td>Non-GAAP 利润率 7.9% → 14.4%，EPS +70%</td></tr>
+    <tr><td>核心市场</td><td>中国增速换挡（CAP 同店 7-15% → 3%），增长叙事动摇</td><td>中国失去增长引擎（瑞幸竞争）+ 美国客流流失</td><td>北美客流回归；中国出表转轻资产</td></tr>
+    <tr><td>内部扰动</td><td>忠诚计划切换不顺、舒尔茨二度辞任</td><td>管理层频繁更替、劳资矛盾、品牌定位混乱</td><td>Niccol 稳定执掌，转型进入"兑现期"</td></tr>
+    <tr><td>股价（复权）</td><td>$50.51 → $41.73（-17.4%，2016 年全年 -8%，2008 年来首跌）</td><td>$111.54 → $62.82（-43.7%），再到 $68.01 二次探底</td><td>$68.01 → $107.69（+58.3%）</td></tr>
+  </table>
+
+  <h3 style="margin:18px 0 4px;font-size:16px;">4.2 突破全过程时间线（2015 高点 → 2016 见底 → 2017 突破）</h3>
+  <div id="chart2" class="chart" style="height:380px;"></div>
+  <div class="src">来源：Yahoo Finance SBUX 日线（前复权价，2016-01 ~ 2017-12）。标记：2015-10-28 复权高点 $50.51（未复权 $63.51）；2016-11-03 Q4 FY16 创纪录财报（营收 +16%、Non-GAAP EPS $0.56、中国同店 +6%）+ 同日复权见底 $41.73；2017-04-27 Q2 FY17 财报（中国同店 +7%、营业利润率 17.7% 近十年高）；2017-05-24 收盘复权 $50.55 首次突破 2015 复权高点（距见底 202 天）。</div>
+
+  <div class="tl">
+    <div class="it"><div class="dt">2015-10-28 ｜ 高点（复权 $50.51 / 未复权 $63.51）</div><div class="tx">FY2015 业绩巅峰（营收 +17%、全球同店 +7%、营业利润率 18.8%），TTM PE ≈ 40 倍，历史最高估值分位</div></div>
+    <div class="it warn"><div class="dt">2015-10 ~ 2016-11 ｜ 阴跌 12 个月，复权 -17.4%</div><div class="tx">Q4 FY15 中国/亚太同店从 +11% 骤降至 +6%（首次低于美洲），市场担忧中国放缓；美国客流持续下滑；2016 全年 -8%（2008 年以来首个下跌年）。<b>注意：期间盈利并未恶化，跌的是估值——PE 从 40 倍消化到 ~28 倍</b></div></div>
+    <div class="it"><div class="dt">2016-11-03 ｜ Q4 FY16 创纪录财报 + 见底</div><div class="tx">营收 +16%、Non-GAAP EPS $0.56（+16%）、营业利润率 21.5%（+180bp）、中国同店 +6% —— 当天股价复权见底 $41.73。基本面"苗头"首次确认</div></div>
+    <div class="it"><div class="dt">2017-01 ~ 2017-04 ｜ 二次确认</div><div class="tx">Q1 FY17（2017-01）美国同店仅 +3%（上年 +9%）引发 -7% 单日大跌——突破前还有一次"惊吓"；2017-04-27 Q2 FY17：中国同店 +7%、营业利润率 17.7% 近十年高，叙事正式切换到"中国接棒美国"</div></div>
+    <div class="it"><div class="dt">2017-05-24 ｜ 突破（复权 $50.55，距见底 202 天）</div><div class="tx">距见底 202 天（约 6.7 个月）。突破时全球同店仅 +3%（远未恢复 2015 年 +7%），但：<b>非 GAAP EPS +11.4% 双位数增长 + 营业利润率 ~19.7% 近十年新高 + 中国同店 +7-8% 重新加速</b>。2017 全年 +14-15%，后续两年续创新高</div></div>
+  </div>
+
+  <h3 style="margin:18px 0 4px;font-size:16px;">4.3 突破当时的基本面画像：苗头 vs 彻底解决</h3>
+  <table>
+    <tr><th>维度</th><th>2015 年高点时</th><th>2017-06 突破前高时</th><th>差距说明</th></tr>
+    <tr><td>全球同店销售</td><td class="num up">+7%</td><td class="num">+3%</td><td>顶线动能只有 2015 年的四成——<b>问题远未"彻底解决"</b></td></tr>
+    <tr><td>中国同店</td><td class="num up">+6%（Q4，已在下滑）</td><td class="num up">+7~8%（重新加速）</td><td>新增长引擎确立——"解决苗头"的关键</td></tr>
+    <tr><td>营收增速</td><td class="num up">+17%</td><td class="num">+5~7%</td><td>腰斩有余</td></tr>
+    <tr><td>Non-GAAP EPS 增速</td><td class="num">—</td><td class="num up">+11.4%</td><td>盈利双位数增长，与股价形成共振</td></tr>
+    <tr><td>营业利润率</td><td class="num">18.8%</td><td class="num up">~19.7%</td><td>近十年新高——盈利质量比 2015 更好</td></tr>
+    <tr><td>TTM / 前瞻 PE</td><td class="num">~40x</td><td class="num down">~28-32x / 25-31x</td><td>估值已完成消化，突破=低估值+苗头共振</td></tr>
+  </table>
+
+  <div class="verdict">
+    <b>4.4 对当前的直接映射：</b>2015 年案例证明，突破前高<b>不需要</b>同店恢复到危机前水平——只需"盈利质量改善（双位数增长 + 利润率高位）+ 新增长叙事确立 + 连续财报确认"三要素。按此标准，当前三要素中前两项（同店 +7.9% 连续 4 季、利润率连续 2 季扩张）<b>强于</b>2017 年突破时，第三项（估值）<b>大幅弱于</b>当年（62x vs 30x）。<br><br>
+    <b>最本质的差异：</b>2015-2016 年市场先花 12 个月把估值从 40 倍挤到 28 倍（股价复权 -17.4%），然后用"低估值 + 苗头"双引擎突破；本轮 2024-2026 股价 +58.3% 的过程中估值不降反升（PE 一路走高到 62 倍），<b>少了"出清"环节</b>。因此这轮突破若发生，性质是"盈利追赶股价"（E 追 P），而非"股价追赶盈利"（P 追 E）——前者对盈利兑现的容错率远低于后者。
+  </div>
+</div>
+
+<!-- ============ PE 位置图 ============ -->
+<div class="section">
+  <h2><span class="no">5</span> 估值位置全景：62 倍放在历史坐标里看</h2>
+  <div class="sub">当前 TTM PE 已高于 2015 / 2021 两次大顶；Forward 视角（FY2027E）才回到历史中枢上沿</div>
+  <div id="chart4" class="chart" style="height:330px;"></div>
+  <div class="src">来源：PE 为多方汇总（Yahoo/第三方 2026-08；2015/2021 顶部与 2017 突破时 PE 依据当时股价与财年 EPS 测算）；麦当劳 PE ≈ 20.7x（同期）；历史中枢 25-30x 为星巴克 2013-2023 常态区间（公司长期两位数 EPS 增长阶段的均值附近）。测算口径不同来源间存在差异，仅供参考。</div>
+  <div class="note">读图要点：① TTM 62x 是"异常值"，因为它把谷底盈利（$1.73）与修复后的股价（$107.69）直接相除；② 真正的估值分歧在"FY2027E 34x"这一档——历史顶部（2015/2021）都在 35-40x，34x 意味着市场已按"回到历史巅峰"定价，几乎没有为执行失误留余地；③ 麦当劳 20.7x 是市场常用参照，但星巴克历史估值中枢本就高于麦当劳（品牌/成长属性差异），简单对比会夸大"贵"的程度。</div>
+</div>
+
+<!-- ============ 风险 ============ -->
+<div class="section">
+  <h2><span class="no">6</span> 主要风险与反向声音</h2>
+  <div class="sub">把市场"普遍知道"与"还没充分定价"的分开</div>
+  <table>
+    <tr><th>风险</th><th>逻辑</th><th>定价程度</th></tr>
+    <tr><td>盈利兑现不及预期</td><td>62 倍 TTM 意味着股价已定价"完美转型"。若 Q4 同店增速回落（下半年基数抬高）、或 13.5-15% 利润率目标推迟，估值将直接向 40 倍回归（对应 $70-85）</td><td><span class="tag-r">未充分定价</span></td></tr>
+    <tr><td>一次性因素退潮</td><td>关税退款（IEEPA）已基本收回、中国交易收益落袋——FY2027 起利润率同比基数抬高，"水分"消失后增速会显著放缓</td><td><span class="tag-a">部分定价</span></td></tr>
+    <tr><td>资产负债表约束</td><td>股东权益为负、股息支付率 142%：若自由现金流不足以支撑，可能面临削减股息或放缓回购——对 2.3% 股息 + 股东回报逻辑是实质利空</td><td><span class="tag-a">部分定价</span></td></tr>
+    <tr><td>中国合资过渡期</td><td>出表后中国营收仅剩授权费+40% 股权收益（Q3 约 $5,300 万），若合资公司放量慢于预期，国际分部贡献会低于模型假设</td><td><span class="tag-a">部分定价</span></td></tr>
+    <tr><td>竞争与执行</td><td>瑞幸（3.6 万+ 店）、库迪价格战；7 Brew / Dutch Bros 分流；韩国市场 27 年来首次季度亏损暴露执行与声誉风险</td><td><span class="tag-g">已定价</span></td></tr>
+    <tr><td>宏观与利率</td><td>咖啡/糖价上涨（咖啡约 +$1/磅 YoY）、关税推高包装与运费；美债利率若走高，62 倍估值的高久期属性首当其冲</td><td><span class="tag-a">部分定价</span></td></tr>
+  </table>
+  <div class="note" style="margin-top:12px;"><b>反向声音（市场还没充分定价的乐观面）：</b>① 早间时段客流恢复只是第一步，午后时段（Refreshers 年销 $20 亿、两位数增长）是尚未兑现的期权价值；② 中国合资 + 90% 海外授权化后的轻资产模式，长期利润率中枢可能系统性上移（参照麦当劳授权模式）；③ 若 FY2027 EPS 真到 $3.2+，当前股价对应 34 倍——历史顶部估值，但若盈利继续增长到 FY2028 $3.8-4.0，估值会自然消化到 30 倍以下。</div>
+</div>
+
+<div class="foot">
+  <b>关键数据来源：</b>
+  <br>· 股价/点位：Yahoo Finance SBUX 日线 & 月线（2014-01-02 ~ 2026-08-14），本机拉取
+  <br>· 财报：星巴克 FY2026 Q3 财报（SEC 8-K，2026-07-29）、FY2026 Q2 财报（2026-04-28）、FY2025 10-K（2025-11-14）、FY2016 Q4 财报（2016-11-03，SEC EX-99.1）、FY2017 财报（SEC）
+  <br>· 估值与分析师观点：Yahoo Finance / 第三方数据（2026-08-18）；Wells Fargo $120、Morgan Stanley $111、Citi $108、Mizuho $110、法巴卖出 $84、共识目标 ~$112（媒体披露，2026-07 前后）
+  <br>· 2015-2017 基本面细节：SEC 10-K/10-Q、公司新闻稿、财经媒体报道（智通财经/新浪财经/Forbes/Fool.com 等，均标注于图注）
+  <br>· 口径说明：星巴克财年 9 月底截止；FY2026 Q3 截至 2026-06-28；TTM EPS ≈ $1.73 由 PE(TTM) 62.4x 与股价反推，含 Q3 中国交易一次性收益
+  <br>· <b>复权口径</b>：全部价格点位用 Yahoo 前复权价（adj_close，含股息与拆股调整），与主流看盘软件一致；未复权真实成交价在 2021-07-26 高点为 $126.06（复权 $111.54），差额 11.5% ≈ 2021 年以来累计每股派息 $11.5
+</div>
+
+<div class="disclaimer">
+  <b>免责声明</b>：以上内容基于公开数据和量化分析，仅供参考，不构成投资建议。市场有风险，投资需谨慎。任何投资决策应结合个人风险承受能力、资金状况和投资目标独立判断，必要时咨询持牌专业机构。过往表现不预示未来收益。
+</div>
+
+</div>
+
+<script>
+(function () {
+  var D = window.SBUX_DATA;
+  function mk(id) { return echarts.init(document.getElementById(id)); }
+  function axisStyle() { return { axisLine: { lineStyle: { color: "#c9cfd8" } }, axisLabel: { color: "#5a6472", fontSize: 11 }, splitLine: { lineStyle: { color: "#eef0f3" } } }; }
+
+  // ========== Chart 1: 全历史月线 + 关键点 ==========
+  var c1 = mk("chart1");
+  c1.setOption({
+    tooltip: { trigger: "axis", valueFormatter: function (v) { return "$" + v; } },
+    grid: { left: 55, right: 20, top: 50, bottom: 45 },
+    title: { text: "SBUX 2014-2026 月线：三轮大顶大底", left: 0, textStyle: { fontSize: 14, fontWeight: 600, color: "#1a1a1a" } },
+    xAxis: Object.assign({ type: "category", data: D.monthly.map(function (p) { return p.d; }) }, axisStyle()),
+    yAxis: Object.assign({ type: "value", scale: true, name: "USD" }, axisStyle()),
+    series: [{
+      type: "line", data: D.monthly.map(function (p) { return p.c; }),
+      smooth: false, showSymbol: false, lineStyle: { color: "#00754a", width: 2 },
+      areaStyle: { color: { type: "linear", x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: "rgba(0,117,74,0.18)" }, { offset: 1, color: "rgba(0,117,74,0.02)" }] } },
+      markPoint: {
+        symbolSize: 46, label: { fontSize: 10, color: "#fff" },
+        data: [
+          { name: "2015高点$50.5", coord: ["2015-10", 50.51], value: "2015顶 $50.5", itemStyle: { color: "#d0342c" } },
+          { name: "2016低点$41.7", coord: ["2016-11", 41.73], value: "2016底 $41.7", itemStyle: { color: "#2f6db3" } },
+          { name: "2017突破", coord: ["2017-05", 50.55], value: "2017突破", itemStyle: { color: "#00754a" } },
+          { name: "2021历史最高$111.5", coord: ["2021-07", 111.54], value: "2021顶 $111.5", itemStyle: { color: "#d0342c" } },
+          { name: "2022低点$62.8", coord: ["2022-05", 62.82], value: "2022底 $62.8", itemStyle: { color: "#2f6db3" } },
+          { name: "2024低点$68", coord: ["2024-05", 68.01], value: "2024底 $68", itemStyle: { color: "#2f6db3" } },
+          { name: "当前$108", coord: ["2026-08", 107.69], value: "现 $108", itemStyle: { color: "#b7791f" } }
+        ]
+      },
+      markLine: {
+        silent: true, symbol: "none", label: { fontSize: 10, color: "#b7791f", position: "insideEndTop" },
+        data: [{ yAxis: 111.54, lineStyle: { color: "#d0342c", type: "dashed", width: 1 }, label: { formatter: "2021 高点(复权) $111.54" } },
+               { yAxis: 107.69, lineStyle: { color: "#b7791f", type: "dotted", width: 1 }, label: { formatter: "现价 $107.69" } }]
+      }
+    }]
+  });
+
+  // ========== Chart 2: 2016-2017 突破窗口日线 ==========
+  var c2 = mk("chart2");
+  c2.setOption({
+    tooltip: { trigger: "axis", valueFormatter: function (v) { return "$" + v; } },
+    grid: { left: 55, right: 20, top: 50, bottom: 45 },
+    title: { text: "2016-2017：见底 → 苗头确认 → 突破（202 天）", left: 0, textStyle: { fontSize: 14, fontWeight: 600, color: "#1a1a1a" } },
+    xAxis: Object.assign({ type: "category", data: D.breakout_daily.map(function (p) { return p.d; }) }, axisStyle()),
+    yAxis: Object.assign({ type: "value", scale: true, name: "USD" }, axisStyle()),
+    series: [{
+      type: "line", data: D.breakout_daily.map(function (p) { return p.c; }),
+      showSymbol: false, lineStyle: { color: "#00754a", width: 2 },
+      markPoint: {
+        symbolSize: 44, label: { fontSize: 10, color: "#fff" },
+        data: [
+          { name: "2016低点$41.7", coord: ["2016-11-03", 41.73], value: "底 $41.7", itemStyle: { color: "#2f6db3" } },
+          { name: "突破$50.55", coord: ["2017-05-24", 50.55], value: "突破 $50.55", itemStyle: { color: "#d0342c" } }
+        ]
+      },
+      markLine: {
+        silent: true, symbol: "none",
+        label: { fontSize: 10, color: "#5a6472" },
+        data: [
+          { yAxis: 50.51, lineStyle: { color: "#d0342c", type: "dashed", width: 1 }, label: { formatter: "2015 高点(复权) $50.51", position: "end" } },
+          { xAxis: "2016-11-03", lineStyle: { color: "#b7791f", type: "dashed", width: 1 }, label: { formatter: "Q4FY16 创纪录财报", position: "start" } },
+          { xAxis: "2017-04-27", lineStyle: { color: "#7b4fa6", type: "dashed", width: 1 }, label: { formatter: "Q2FY17 中国+7%", position: "start" } }
+        ]
+      }
+    }]
+  });
+
+  // ========== Chart 3: EPS 财年轨迹 ==========
+  var c3 = mk("chart3");
+  c3.setOption({
+    tooltip: { trigger: "axis", valueFormatter: function (v) { return "$" + v; } },
+    grid: { left: 50, right: 20, top: 45, bottom: 35 },
+    title: { text: "GAAP 摊薄 EPS：从峰值 $3.58 腰斩至 $1.63，再开启修复", left: 0, textStyle: { fontSize: 14, fontWeight: 600, color: "#1a1a1a" } },
+    xAxis: Object.assign({ type: "category", data: ["FY2023", "FY2024", "FY2025", "FY2026E(NG)", "FY2027E"] }, axisStyle()),
+    yAxis: Object.assign({ type: "value", name: "USD", max: 4.2 }, axisStyle()),
+    series: [{
+      type: "bar",
+      data: [
+        { value: 3.58, itemStyle: { color: "#00754a" } },
+        { value: 3.31, itemStyle: { color: "#2f9d7c" } },
+        { value: 1.63, itemStyle: { color: "#d0342c" } },
+        { value: 2.60, itemStyle: { color: "#b7791f" } },
+        { value: 3.2, itemStyle: { color: "#b7791f", opacity: 0.55 } }
+      ],
+      barWidth: 46,
+      label: { show: true, position: "top", formatter: "$" + "{c}", fontSize: 12, color: "#1a1a1a" },
+      markLine: {
+        silent: true, symbol: "none",
+        lineStyle: { color: "#d0342c", type: "dashed" },
+        label: { formatter: "峰值 $3.58", fontSize: 10, color: "#d0342c", position: "insideEndTop" },
+        data: [{ yAxis: 3.58 }]
+      }
+    }],
+    graphic: [
+      { type: "text", left: "center", top: "bottom", style: { text: "FY2026E 为指引中值（Non-GAAP）；FY2027E 为市场一致预期区间（灰色半透明）", fontSize: 11, fill: "#8a94a3" } }
+    ]
+  });
+
+  // ========== Chart 4: PE 位置 ==========
+  var c4 = mk("chart4");
+  c4.setOption({
+    tooltip: { trigger: "axis", valueFormatter: function (v) { return v + "x"; } },
+    grid: { left: 130, right: 40, top: 45, bottom: 30 },
+    title: { text: "PE 横向位置：TTM 62x 超历史双顶；Forward 回落到中枢上沿", left: 0, textStyle: { fontSize: 14, fontWeight: 600, color: "#1a1a1a" } },
+    xAxis: Object.assign({ type: "value", name: "PE (x)" }, axisStyle()),
+    yAxis: Object.assign({ type: "category", data: ["麦当劳（对照）", "历史中枢 25-30x", "2017 突破时 ~30x", "2021 顶部 ~36x", "2015 顶部 ~40x", "当前 FY2027E ~34x", "当前 FY2026E ~41x", "当前 TTM ~62x"] }, axisStyle()),
+    series: [{
+      type: "bar", barWidth: 22,
+      data: [
+        { value: 20.7, itemStyle: { color: "#8a94a3" } },
+        { value: 27.5, itemStyle: { color: "#8a94a3", opacity: 0.5 } },
+        { value: 30, itemStyle: { color: "#00754a" } },
+        { value: 36, itemStyle: { color: "#2f6db3" } },
+        { value: 40, itemStyle: { color: "#2f6db3" } },
+        { value: 34, itemStyle: { color: "#b7791f" } },
+        { value: 41, itemStyle: { color: "#e08a3c" } },
+        { value: 62, itemStyle: { color: "#d0342c" } }
+      ],
+      label: { show: true, position: "right", formatter: "{c}x", fontSize: 12, color: "#1a1a1a" },
+      markLine: {
+        silent: true, symbol: "none", lineStyle: { color: "#d0342c", type: "dashed" },
+        label: { formatter: "历史顶部 ~40x", fontSize: 10, color: "#d0342c" },
+        data: [{ xAxis: 40 }]
+      }
+    }]
+  });
+
+  window.addEventListener("resize", function () { c1.resize(); c2.resize(); c3.resize(); c4.resize(); });
+})();
+</script>
+</body>
+</html>

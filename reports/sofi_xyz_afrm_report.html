@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOFI × XYZ(Block) × AFRM 财报对比与 US10Y 敏感性 · 2026-08</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<style>
+  :root{--bg:#f7f8fa;--card:#fff;--ink:#1f2329;--sub:#6b7280;--line:#e5e7eb;
+        --red:#e03131;--green:#0aa06e;--blue:#1e66d6;--amber:#b45309;--purple:#7048e8;--orange:#e8590c;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font:14px/1.7 -apple-system,"PingFang SC","Microsoft YaHei",sans-serif;padding:24px 16px 48px;}
+  .wrap{max-width:1220px;margin:0 auto;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 24px;margin-bottom:18px;box-shadow:0 1px 3px rgba(16,24,40,.05);}
+  h1{font-size:21px;margin-bottom:4px;}
+  .meta{color:var(--sub);font-size:12.5px;margin-bottom:14px;}
+  h2{font-size:16px;margin:0 0 12px;padding-left:10px;border-left:4px solid var(--blue);}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:14px;}
+  .kpi{background:#fbfcfe;border:1px solid var(--line);border-radius:10px;padding:12px 14px;}
+  .kpi .num{font-size:19px;font-weight:700;}
+  .kpi .num.up{color:var(--red);} .kpi .num.dn{color:var(--green);} .kpi .num.bl{color:var(--blue);} .kpi .num.pu{color:var(--purple);}
+  .kpi .lab{color:var(--sub);font-size:12px;margin-top:2px;}
+  table{width:100%;border-collapse:collapse;font-size:12px;}
+  th{background:#f3f5f8;text-align:left;padding:6px 7px;border-bottom:2px solid var(--line);white-space:nowrap;font-weight:600;}
+  td{padding:5px 7px;border-bottom:1px solid #f0f1f3;white-space:normal;vertical-align:top;}
+  td.up{color:var(--red);font-weight:600;} td.dn{color:var(--green);font-weight:600;} td.na{color:#c3c8cf;}
+  .scroll{overflow-x:auto;}
+  .chart{width:100%;height:380px;}
+  .chart.sm{height:330px;}
+  .note{color:var(--sub);font-size:12px;margin-top:8px;}
+  .keypoint{background:#eef7f2;border:1px solid #cde8da;border-radius:10px;padding:12px 16px;font-size:12.5px;color:#17442f;margin-top:10px;}
+  .warn{background:#fff8ec;border:1px solid #f3dfb6;border-radius:10px;padding:12px 16px;font-size:12.5px;color:#7c4a03;}
+  .dis{color:var(--sub);font-size:12px;border-top:1px dashed var(--line);padding-top:12px;margin-top:16px;}
+  .hl{font-weight:700;color:var(--red);} .hlg{font-weight:700;color:var(--green);}
+  .lgd{display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--ink);margin:8px 0 4px;}
+  .lgd span{display:inline-flex;align-items:center;gap:5px;}
+  .dot{display:inline-block;width:9px;height:9px;border-radius:50%;}
+  .verdict{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-top:14px;}
+  .verdict .box{border-radius:10px;padding:14px 16px;border:1px solid var(--line);}
+  .verdict .box h3{font-size:14px;margin-bottom:6px;}
+  .verdict .box.g{background:#eef7f2;border-color:#cde8da;} .verdict .box.g h3{color:#17442f;}
+  .verdict .box.b{background:#eef3fb;border-color:#d5e2f7;} .verdict .box.b h3{color:#1a3a6e;}
+  .verdict .box.o{background:#fff8ec;border-color:#f3dfb6;} .verdict .box.o h3{color:#7c4a03;}
+  .score{display:inline-block;background:#1f2329;color:#fff;border-radius:6px;padding:1px 8px;font-size:12px;font-weight:700;margin-left:6px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="card">
+    <h1>三张「信用支付」面孔：SOFI × Block(XYZ) × AFRM 财报对比与 US10Y 敏感性</h1>
+    <div class="meta">数据截至 2026-08-14（Yahoo 日线 + FRED DGS10）｜财报：SOFI 2026 Q2（7/29）、XYZ 2026 Q2（8/5）、AFRM FY2026 Q3（5/7，Q4 于 8/27 待发布）｜单位：美元｜红=增长/正收益，绿=下降/负收益（A股惯例）</div>
+    <div class="verdict">
+      <div class="box g"><h3>谁增长更好 → AFRM 质量最高，SOFI 增速最快</h3>
+        AFRM：GMV +35%（连续 10 季 &gt;30%）、RLTC +41%、Card GMV +146%，<b>量价齐升、增长质量最高</b>；SOFI：净营收 +43% 最快，但更多靠净利息收入与会员渗透驱动；XYZ：总营收仅 +9.3%（比特币拖累），剔除后<b>毛利润 +25%</b>且利润弹性最大。</div>
+      <div class="box b"><h3>谁更健康 → XYZ 资产负债表最干净</h3>
+        负债率 43.8% + $88 亿流动性 + 季度自由现金流 $9.7 亿，<b>最稳健</b>；SOFI 是银行（负债率 81.8% 属常态，$455 亿低成本存款）；AFRM 依赖资本市场融资、信贷周期敞口最大（拨备 6.0%），但资金成本已降至三年半最低 5.8%。</div>
+      <div class="box o"><h3>谁更受 US10Y 影响 → AFRM 双向弹性最大</h3>
+        近 1 年 10Y 每 +10bp：AFRM 当日平均 −2.06%、XYZ −1.81%、SOFI −1.58%；10Y 大波动日（±12bp+）AFRM 双向反应最剧烈（涨息日 −2.84%，降息日 +0.56%）；<b>降息周期最受益、加息周期最受伤</b>；SOFI 对降息日几乎无反应（银行 NII 属性）。当下（2026-08）三家滚动 60 日相关均达 −0.55 ~ −0.61，利率是三家共同的最大压制项。</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>一、公司速览：三个「把钱借出去」的不同姿势</h2>
+    <div class="scroll"><table>
+      <thead><tr><th>公司</th><th>商业模式</th><th>资金端</th><th>资产端（收入引擎）</th><th>对利率的本质敞口</th></tr></thead>
+      <tbody>
+        <tr><td><b>SOFI</b> 数字银行</td><td>全能金融 App：个人贷/房贷/学生贷 + 银行牌照 + 会员订阅 + 投顾</td><td>$455 亿存款（低成本、粘性高）</td><td>净利息收入（占净营收 ~65%）+ 费用收入 + 技术平台</td><td><b>净息差敏感</b>：降息→贷款收益率与存款成本同降，NII 变化取决于利差；市场仍视为利率敏感成长股</td></tr>
+        <tr><td><b>XYZ</b> 支付生态</td><td>Square 商户收单（GPV $728 亿）+ Cash App 消费者（贷款+交易+卡片）+ Afterpay BNPL + 比特币</td><td>$88 亿现金/证券，几乎零净债务</td><td>收单费率 + 贷款利息 + 比特币价差（$18.9 亿收入但毛利薄）+ 硬件</td><td><b>敞口最小</b>：收入高度多元，比特币对冲了一部分利率敏感度；借贷业务（$189 亿发放）是利率敞口主来源</td></tr>
+        <tr><td><b>AFRM</b> BNPL 纯玩家</td><td>0% APR（商户付费）+ 利息型分期（消费者付费）+ Affirm Card；GMV $116 亿/季</td><td>证券化 ABS + 债务融资 + 资本合作（融资能力 $282 亿）</td><td>商户费 + 消费者利息（RLTC $4.98 亿）+ 卡网络费</td><td><b>融资成本敏感</b>：负债驱动放款，利率下行→资金成本降（已 −126bp 至 5.8%）+ 0% 产品更便宜→需求升，<b>双向放大</b></td></tr>
+      </tbody></table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>二、增长对比：谁增长更好</h2>
+    <div id="chart_growth" class="chart"></div>
+    <div class="note">左轴=最新季营收（十亿美元）；右轴=营收同比增速。口径：SOFI 总净营收 / XYZ 总营收（含比特币）/ AFRM 总营收。XYZ 总营收被比特币收入下滑（−12.8%）拖累，看毛利润口径更真实（+25%）。</div>
+    <div class="scroll" style="margin-top:12px;"><table>
+      <thead><tr><th>公司</th><th>最新季报</th><th>营收（同比）</th><th>毛利润（同比）</th><th>净利润（同比）</th><th>EPS</th><th>GAAP 净利率</th></tr></thead>
+      <tbody><tr><td><b>SOFI</b> SoFi Technologies</td><td>2026 Q2（截至 6/30，7/29 发布）</td><td class='up'>12.19B (+43%)</td><td>—</td><td>1.57B (+61%)</td><td>0.12</td><td>12.8%</td></tr>
+<tr><td><b>XYZ</b> Block (原 Square)</td><td>2026 Q2（截至 6/30，8/5 发布）</td><td class='up'>66.18B (+9%)</td><td>31.7B (25.0%)</td><td>0.89B (-84%)</td><td>0.15</td><td>1.3%</td></tr>
+<tr><td><b>AFRM</b> Affirm Holdings</td><td>FY2026 Q3（截至 3/31，5/7 发布；Q4 8/27 待发）</td><td class='up'>10.39B (+33%)</td><td>—</td><td>1.03B (上年仅$0.03B)</td><td>0.30</td><td>9.9%</td></tr></tbody>
+    </table></div>
+    <div class="keypoint"><b>增长质量拆解：</b>AFRM 是「量价齐升」——GMV +35% 的同时 RLTC 率占 GMV 4.3%（+16bp）、Card GMV +146%，增长由产品渗透（商户 +44%、卡户翻倍）驱动，可持续性最强；SOFI 是「规模渗透」——会员 +35%、产品渗透率 35%→51%，靠交叉销售把单客价值拉高；XYZ 是「利润优先」——用户只 +3%（Cash App 月活 5900 万）但毛利润 +31%，靠每用户变现率提升（commerce monetization +12bp），同时把经营利润率做到历史新高 27%。</div>
+  </div>
+
+  <div class="card">
+    <h2>三、盈利与健康度：谁更健康</h2>
+    <div id="chart_profit" class="chart sm"></div>
+    <div class="note">左=GAAP 净利率；右=调整后经营利润率（% of 毛利润 for XYZ / % of 营收 for AFRM；SOFI 无独立调整后经营利润率披露，用净利率）。XYZ GAAP 净利率仅 1.3% 系 $3.65 亿一次性法律拨备/重组费用，调整后经营利润率 27% 为历史新高；AFRM 刚实现 GAAP 盈利（净利 $1.03 亿 vs 上年 $280 万）。</div>
+    <div class="scroll" style="margin-top:12px;"><table>
+      <thead><tr><th>公司</th><th>调整后经营利润率</th><th>资产负债表</th><th>信贷质量</th><th>现金流 / 造血</th></tr></thead>
+      <tbody><tr><td><b>SOFI</b></td><td>—%</td><td>负债率 81.8%；存款 $455 亿（低成本资金）；流动性 速动 3.93（银行口径）</td><td>个人贷/学生贷/房贷发放量创纪录；扩展至小企业贷与房屋净值贷；管理层称信用表现良好</td><td>银行模式，存款驱动的资产负债结构；Q2 新增存款支撑贷款扩张</td></tr>
+<tr><td><b>XYZ</b></td><td>27.0%</td><td>负债率 43.8%；现金类 $88 亿流动性（其中现金 $79 亿）；回购 2026 年以来回购 1160 万股，剩余授权 $46 亿</td><td>贷款损失同比 +99%（随发放量 +59% 翻倍）；管理层称 cohort 损失率健康，短期 6 周产品为主</td><td>Q2 经营现金流 $10.2 亿、自由现金流 $9.67 亿；持续正向</td></tr>
+<tr><td><b>AFRM</b></td><td>27.0%</td><td>融资能力 $282 亿（可支撑 >$650 亿 GMV）；资金成本 5.8%（同比 -126bp，三年半最低）；证券化 ABS + 债务融资为主，3 笔年度融资均超募</td><td>30+ 天逾期（月付 ex-Peloton）2.8% 稳定；拨备/贷款 6.0%；预付款上升（报税季季节性）</td><td>自营贷款 (RLTC) 模式；融资依赖资本市场，成本随利率下行改善</td></tr></tbody>
+    </table></div>
+    <div class="keypoint"><b>健康度结论：</b>XYZ 财务结构最干净（低负债+高现金+强自由现金流+回购 $46 亿余量），且贷款损失随发放量 +59% 翻倍仍称 cohort 健康——但需盯紧；SOFI 银行模式稳健（存款 $455 亿是护城河），健康度取决于利差与贷款信用周期；AFRM 盈利刚转正、拨备 6.0% 处于高位、资金链依赖资本市场再融资——<b>在三者中经营杠杆最高、对宏观（利率+消费信用）最敏感</b>。最大回撤佐证：上市以来 AFRM −94.7%、XYZ −86.1%、SOFI −83.3%；近 1 年 XYZ −38%、SOFI −36%、AFRM −49%。</div>
+  </div>
+
+  <div class="card">
+    <h2>四、US10Y 敏感性：谁最受 10Y 影响（核心）</h2>
+    <div class="lgd">
+      <span><i class="dot" style="background:#1e66d6;"></i> SOFI</span>
+      <span><i class="dot" style="background:#7048e8;"></i> XYZ</span>
+      <span><i class="dot" style="background:#e8590c;"></i> AFRM</span>
+      <span><i class="dot" style="background:#6b7280;"></i> US10Y（右轴，%）</span>
+    </div>
+    <div id="chart_nav" class="chart"></div>
+    <div class="note">2021-01 起归一化净值（月末）与 US10Y 收益率。三家走势与 10Y 长期呈镜像：2021 低利率期普涨、2022 加息年普跌（AFRM 跌最狠）、2024-2025 利率回落期分化。XYZ 数据含 SQ 时代（2015-11 起），此处统一从 2021-01 起对齐。</div>
+
+    <div id="chart_roll" class="chart"></div>
+    <div class="note">滚动 60 日相关系数（个股日收益 vs US10Y 日变化）。负值=利率上行日股价跌。2022 加息期三家相关深度转负（−0.4~−0.5），2024 宽松预期期一度转正；<span class="hl">当前（2026-08-14）三家同时回到 −0.55 ~ −0.61 的极值区</span>，说明利率是当下三家股价的共同最大压制。</div>
+
+    <div id="chart_beta" class="chart sm"></div>
+    <div class="note">β = 个股日收益对 10Y 日变化的敏感度（% / 每 10bp）。全期（2021-01 起）与近 1 年（2025-08 起）均为负值。<b>近 1 年排序：AFRM（−2.06%/10bp）&gt; XYZ（−1.81%）&gt; SOFI（−1.58%）</b>——利率每上行 10bp，AFRM 当天平均跌 2.06%。</div>
+
+    <div id="chart_mon" class="chart sm"></div>
+    <div class="note">按自然月：US10Y 月内上行月 vs 下行月，三家平均月收益（%）。利率下行月 AFRM +8.5% 弹性最大、SOFI +5.3% 次之；上行月三家均为负（XYZ −3.3% 最弱）。利率方向月度相关系数：XYZ −0.37 &gt; AFRM −0.35 &gt; SOFI −0.26。</div>
+
+    <div id="chart_lvl" class="chart sm"></div>
+    <div class="note">按 10Y 收益率水平分档（2021-01 以来）的平均日收益（bp）。10Y 处于 4.5–5.0% 高位区间时三家平均日收益全为负（SOFI −27bp/日最惨、AFRM −10bp、XYZ −12bp）；4.0–4.5% 区间为正（SOFI +23bp 最受益）。</div>
+
+    <div class="scroll" style="margin-top:12px;"><table>
+      <thead><tr><th>10Y 单日大波动（|Δ10Y| ≥ 12bp，2021 年以来）</th><th>SOFI</th><th>XYZ</th><th>AFRM</th></tr></thead>
+      <tbody>
+        <tr><td>10Y 单日大涨日（N=43）：平均当日收益</td><td class="dn">−2.41%</td><td class="dn">−2.03%</td><td class="dn">−2.84%</td></tr>
+        <tr><td>10Y 单日大跌日（N=38）：平均当日收益</td><td class="na">−0.01%</td><td class="up">+0.36%</td><td class="up">+0.56%</td></tr>
+      </tbody></table></div>
+    <div class="keypoint"><b>US10Y 敏感性结论：</b>① <b>AFRM 是纯正的高久期信用资产</b>——加息日跌最多（−2.84%）、降息日涨最多（+0.56%），月度利率下行弹性 +8.5%，因为它既是「消费者信贷」又靠「资本市场融资」，利率同时打需求端与成本端；② <b>XYZ 相关性最高（−0.25）但振幅居中</b>——作为金融科技支付龙头，被市场当作「利率定价的成长股」，但基本面现金充裕、对融资成本不敏感，跌多属估值层面；③ <b>SOFI 最特殊：涨息日跟跌（−2.41%）、降息日几乎不动（−0.01%）</b>——银行资产负债表使降息压缩净息差预期的利空抵消了估值利好，市场只给它「利率上行恐惧」不给「利率下行弹性」；④ 当下三家滚动相关均 −0.55 以下，<b>若 10Y 继续上行，AFRM 跌幅预期最大、SOFI 次之、XYZ 相对抗跌</b>；反之 10Y 回落，AFRM 弹性最大。</div>
+  </div>
+
+  <div class="card">
+    <h2>五、估值对照（8/14 收盘，最新季年化口径）</h2>
+    <div id="chart_ps" class="chart sm"></div>
+    <div class="scroll" style="margin-top:12px;"><table>
+      <thead><tr><th>公司</th><th>收盘价</th><th>市值（估算）</th><th>最新季营收年化</th><th>PS（年化）</th><th>估值解读</th></tr></thead>
+      <tbody>
+        <tr><td><b>SOFI</b></td><td>$18.29</td><td>~$236 亿</td><td>$48.7 亿（12.19×4）</td><td class="up">~4.9x</td><td>银行属性压估值；已连续盈利，PE ~40x 隐含高增长预期</td></tr>
+        <tr><td><b>XYZ</b></td><td>$82.88</td><td>~$498 亿</td><td>$264.7 亿（66.18×4）</td><td class="up">~1.9x</td><td>三家中最便宜；P/毛利润 ~4.2x，利润率高增+回购支撑</td></tr>
+        <tr><td><b>AFRM</b></td><td>$78.35</td><td>~$248 亿</td><td>$41.6 亿（10.39×4）</td><td class="up">~6.0x</td><td>估值最贵，定价「增长+利润率爬坡」；利率下行是重估催化剂</td></tr>
+      </tbody></table></div>
+  </div>
+
+  <div class="card">
+    <div class="warn"><b>口径与局限：</b>① 三家财季不完全对齐（AFRM 为 FY 财年，最新已发为 Q3 FY26 即自然年 2026 Q1；Q4 FY26 于 8/27 发布，届时应更新）；② 市值与 PS 为 8/14 收盘估算（股本取公开最新），仅作横向相对参考；③ US10Y 敏感性为日频统计相关/回归，反映历史同频波动，<b>不构成因果与预测</b>；④ 股价敏感性受财报事件、个股 alpha 干扰，滚动相关波动大；⑤ 利率水平分档样本量不同（4.5–5.0% 区间样本最多）。</div>
+    <div class="dis">数据来源：Yahoo Finance 日线（SOFI/XYZ/AFRM，截至 2026-08-14）、FRED DGS10（10Y 美债收益率）、各公司 2026 年 7-8 月财报/电话会公开披露。量化部分由本地脚本计算。<br><br><b>免责声明：</b>以上内容基于公开数据和量化分析，仅供参考，不构成投资建议。市场有风险，投资需谨慎。任何投资决策应结合个人风险承受能力、资金状况和投资目标独立判断，必要时咨询持牌专业机构。过往表现不预示未来收益。</div>
+  </div>
+
+</div>
+<script>
+const D = {"rev": [12.187000000000001, 66.17699999999999, 10.388], "rev_yoy": [43.0, 9.3, 33.0], "labels": ["SOFI", "XYZ(Block)", "AFRM"], "nav_dates": ["2021-01-31", "2021-02-28", "2021-03-31", "2021-04-30", "2021-05-31", "2021-06-30", "2021-07-31", "2021-08-31", "2021-09-30", "2021-10-31", "2021-11-30", "2021-12-31", "2022-01-31", "2022-02-28", "2022-03-31", "2022-04-30", "2022-05-31", "2022-06-30", "2022-07-31", "2022-08-31", "2022-09-30", "2022-10-31", "2022-11-30", "2022-12-31", "2023-01-31", "2023-02-28", "2023-03-31", "2023-04-30", "2023-05-31", "2023-06-30", "2023-07-31", "2023-08-31", "2023-09-30", "2023-10-31", "2023-11-30", "2023-12-31", "2024-01-31", "2024-02-29", "2024-03-31", "2024-04-30", "2024-05-31", "2024-06-30", "2024-07-31", "2024-08-31", "2024-09-30", "2024-10-31", "2024-11-30", "2024-12-31", "2025-01-31", "2025-02-28", "2025-03-31", "2025-04-30", "2025-05-31", "2025-06-30", "2025-07-31", "2025-08-31", "2025-09-30", "2025-10-31", "2025-11-30", "2025-12-31", "2026-01-31", "2026-02-28", "2026-03-31", "2026-04-30", "2026-05-31", "2026-06-30", "2026-07-31", "2026-08-31"], "nav_sofi": [1.0, 0.7331, 0.6822, 0.6762, 0.8015, 0.7625, 0.6142, 0.564, 0.6317, 0.7991, 0.6842, 0.6289, 0.4964, 0.4554, 0.3759, 0.2434, 0.2975, 0.2096, 0.251, 0.2355, 0.1941, 0.2164, 0.1921, 0.1834, 0.2757, 0.2625, 0.2414, 0.2478, 0.2761, 0.3317, 0.4554, 0.3445, 0.3178, 0.3003, 0.29, 0.3958, 0.3115, 0.3572, 0.2904, 0.2697, 0.2745, 0.2629, 0.2999, 0.3178, 0.3126, 0.4443, 0.6527, 0.6126, 0.6277, 0.5756, 0.4626, 0.4976, 0.529, 0.7243, 0.8982, 1.0159, 1.0509, 1.1806, 1.1822, 1.0414, 0.9073, 0.7064, 0.6317, 0.6404, 0.7247, 0.7132, 0.6488, 0.7275], "nav_xyz": [1.0, 1.0652, 1.0514, 1.1336, 1.0304, 1.1289, 1.1449, 1.2413, 1.1106, 1.1785, 0.9647, 0.7479, 0.5663, 0.5904, 0.6279, 0.4609, 0.4052, 0.2846, 0.3522, 0.3191, 0.2546, 0.2782, 0.3138, 0.291, 0.3784, 0.3553, 0.3179, 0.2815, 0.2796, 0.3083, 0.3729, 0.2669, 0.2049, 0.1864, 0.2937, 0.3582, 0.301, 0.368, 0.3916, 0.338, 0.2967, 0.2986, 0.2865, 0.306, 0.3108, 0.3349, 0.41, 0.3935, 0.4205, 0.3024, 0.2516, 0.2707, 0.2859, 0.3145, 0.3578, 0.3688, 0.3346, 0.3516, 0.3093, 0.3014, 0.2798, 0.295, 0.2787, 0.3265, 0.3506, 0.3519, 0.3762, 0.3838], "nav_afrm": [1.0, 0.9344, 0.7101, 0.7079, 0.6106, 0.6763, 0.5655, 0.9674, 1.1962, 1.6317, 1.272, 1.0097, 0.6433, 0.4201, 0.4647, 0.2882, 0.2862, 0.1813, 0.2695, 0.2353, 0.1884, 0.2015, 0.1398, 0.0971, 0.1626, 0.1368, 0.1132, 0.099, 0.1492, 0.1539, 0.1947, 0.209, 0.2136, 0.1768, 0.3455, 0.4934, 0.4068, 0.3767, 0.3741, 0.3201, 0.2939, 0.3033, 0.2841, 0.4419, 0.4099, 0.4403, 0.703, 0.6115, 0.6132, 0.6441, 0.4538, 0.4996, 0.5211, 0.6942, 0.6884, 0.8882, 0.7338, 0.7218, 0.7124, 0.7474, 0.6055, 0.4717, 0.4601, 0.6454, 0.7395, 0.8189, 0.718, 0.7867], "y10_dates": ["2021-01-31", "2021-02-28", "2021-03-31", "2021-04-30", "2021-05-31", "2021-06-30", "2021-07-31", "2021-08-31", "2021-09-30", "2021-10-31", "2021-11-30", "2021-12-31", "2022-01-31", "2022-02-28", "2022-03-31", "2022-04-30", "2022-05-31", "2022-06-30", "2022-07-31", "2022-08-31", "2022-09-30", "2022-10-31", "2022-11-30", "2022-12-31", "2023-01-31", "2023-02-28", "2023-03-31", "2023-04-30", "2023-05-31", "2023-06-30", "2023-07-31", "2023-08-31", "2023-09-30", "2023-10-31", "2023-11-30", "2023-12-31", "2024-01-31", "2024-02-29", "2024-03-31", "2024-04-30", "2024-05-31", "2024-06-30", "2024-07-31", "2024-08-31", "2024-09-30", "2024-10-31", "2024-11-30", "2024-12-31", "2025-01-31", "2025-02-28", "2025-03-31", "2025-04-30", "2025-05-31", "2025-06-30", "2025-07-31", "2025-08-31", "2025-09-30", "2025-10-31", "2025-11-30", "2025-12-31", "2026-01-31", "2026-02-28", "2026-03-31", "2026-04-30", "2026-05-31", "2026-06-30", "2026-07-31", "2026-08-31"], "y10_level": [1.11, 1.44, 1.74, 1.65, 1.58, 1.45, 1.24, 1.3, 1.52, 1.55, 1.43, 1.52, 1.79, 1.83, 2.32, 2.89, 2.85, 2.98, 2.67, 3.15, 3.83, 4.1, 3.68, 3.88, 3.52, 3.92, 3.48, 3.44, 3.64, 3.81, 3.97, 4.09, 4.59, 4.88, 4.37, 3.88, 3.99, 4.25, 4.2, 4.69, 4.51, 4.36, 4.09, 3.91, 3.81, 4.28, 4.18, 4.58, 4.58, 4.24, 4.23, 4.17, 4.41, 4.24, 4.37, 4.23, 4.16, 4.11, 4.02, 4.18, 4.26, 3.97, 4.3, 4.4, 4.45, 4.44, 4.75, 4.68], "roll_dates": ["2021-03-31", "2021-04-30", "2021-05-31", "2021-06-30", "2021-07-31", "2021-08-31", "2021-09-30", "2021-10-31", "2021-11-30", "2021-12-31", "2022-01-31", "2022-02-28", "2022-03-31", "2022-04-30", "2022-05-31", "2022-06-30", "2022-07-31", "2022-08-31", "2022-09-30", "2022-10-31", "2022-11-30", "2022-12-31", "2023-01-31", "2023-02-28", "2023-03-31", "2023-04-30", "2023-05-31", "2023-06-30", "2023-07-31", "2023-08-31", "2023-09-30", "2023-10-31", "2023-11-30", "2023-12-31", "2024-01-31", "2024-02-29", "2024-03-31", "2024-04-30", "2024-05-31", "2024-06-30", "2024-07-31", "2024-08-31", "2024-09-30", "2024-10-31", "2024-11-30", "2024-12-31", "2025-01-31", "2025-02-28", "2025-03-31", "2025-04-30", "2025-05-31", "2025-06-30", "2025-07-31", "2025-08-31", "2025-09-30", "2025-10-31", "2025-11-30", "2025-12-31", "2026-01-31", "2026-02-28", "2026-03-31", "2026-04-30", "2026-05-31", "2026-06-30", "2026-07-31", "2026-08-31"], "roll_sofi": [0.0013, -0.2236, -0.1504, -0.0466, 0.0421, 0.132, 0.3426, 0.2493, 0.0246, 0.1167, 0.0335, 0.022, -0.0949, -0.1489, -0.1275, -0.0696, 0.0091, -0.1208, -0.2216, -0.4574, -0.3886, -0.2662, -0.0598, -0.0714, 0.0841, 0.1708, 0.1167, -0.0269, -0.2473, -0.2211, -0.2196, -0.2496, -0.316, -0.3722, -0.3176, -0.2202, -0.0611, -0.0891, -0.1824, -0.0471, -0.1497, 0.0832, 0.1389, 0.1673, -0.0046, -0.1477, -0.2117, -0.1418, 0.1434, 0.2891, 0.3006, 0.2044, 0.0407, 0.1125, 0.1034, 0.0849, 0.1356, 0.0494, -0.0494, 0.1095, 0.0399, -0.0791, -0.4201, -0.52, -0.5017, -0.5533], "roll_xyz": [0.2326, 0.3057, 0.2718, 0.0784, 0.1338, 0.1914, 0.2389, -0.1605, -0.1766, -0.1546, -0.216, -0.1577, -0.166, -0.073, 0.0077, 0.3252, 0.1294, -0.1567, -0.1282, 0.1635, 0.2999, 0.1138, 0.0653, 0.1151, 0.0036, 0.0743, 0.1271, 0.113, 0.1408, 0.121, 0.1454, 0.0885, 0.3176, 0.299, 0.3445, 0.4826, 0.499, 0.5376, 0.3852, 0.362, 0.2158, 0.2516, 0.3052, 0.2943, 0.2649, 0.0894, 0.0939, 0.1293, 0.0955, 0.3538, 0.375, 0.3541, 0.2036, 0.0548, 0.2066, 0.0111, -0.0315, -0.117, -0.2115, -0.2016, -0.1209, -0.2276, -0.3671, -0.3798, -0.3291, -0.018, 0.086, 0.1476, 0.1242, 0.1938, 0.3303, 0.1986, 0.1005, -0.0054, -0.0551, 0.0538, -0.0951, -0.0959, -0.2997, -0.2971, -0.433, -0.469, -0.4065, -0.3004, -0.168, 0.2432, 0.3183, 0.4097, 0.1124, -0.2532, -0.1116, -0.0847, -0.2447, -0.4319, -0.4317, -0.4446, -0.4079, -0.3134, -0.3585, -0.138, -0.0803, -0.1624, -0.0485, -0.0068, 0.0416, 0.2809, 0.0597, -0.0342, -0.076, 0.1933, 0.2891, 0.1079, 0.0335, -0.0612, -0.1577, -0.2954, -0.1646, 0.0459, 0.0356, -0.1146, 0.0202, -0.092, -0.1501, -0.487, -0.5571, -0.546, -0.5847], "roll_afrm": [-0.3612, -0.3007, -0.1826, -0.0212, 0.0124, 0.1038, 0.0656, -0.0186, -0.017, -0.0739, 0.0831, -0.035, -0.0888, -0.0042, -0.0764, 0.0389, -0.0713, -0.0943, -0.374, -0.442, -0.4052, -0.1869, -0.1024, 0.0284, 0.0996, 0.4038, 0.2467, -0.1869, -0.2768, -0.2467, -0.2896, -0.3739, -0.2815, -0.2205, -0.1626, -0.1681, -0.3217, -0.3629, -0.3019, -0.2657, 0.0102, 0.144, 0.0977, 0.0087, -0.1527, -0.1814, -0.1405, 0.0793, 0.2734, 0.3432, 0.3034, 0.1625, 0.028, -0.0576, -0.0253, 0.0507, -0.1126, -0.2216, 0.0414, -0.0291, -0.1292, -0.4019, -0.4908, -0.4835, -0.6132], "beta_full": [-0.5335175132807407, -0.7110600942943786, -0.9026431908121456], "beta_1y": [-1.5804480327313262, -1.8120972649713016, -2.0587805163886665], "corr_full": [-0.07606271696479086, -0.11482153196955426, -0.09201548797532506], "corr_1y": [-0.1772609040983593, -0.24765800646282615, -0.21604660335745138], "mon_up": [-2.588822954956262, -3.295030115776724, -1.9980618778624841], "mon_down": [5.259640065096988, 3.110192995549989, 8.543069284742069], "mon_all": [1.1596966964124542, -0.23581907753112977, 3.0365082296501393], "mon_n": {"up": 35, "down": 32}, "lvl_keys": ["<4.0%", "4.0-4.5%", "4.5-5.0%"], "lvl_sofi": [-4.4, 22.9, -27.3], "lvl_xyz": [-4.8, 5.5, -12.0], "lvl_afrm": [5.9, 24.4, -10.3], "big": {"SOFI": {"n_up": 43, "avg_ret_up": -2.4138608861321744, "n_down": 38, "avg_ret_down": -0.009412749489537391}, "XYZ": {"n_up": 43, "avg_ret_up": -2.03484285477858, "n_down": 38, "avg_ret_down": 0.35741157869352097}, "AFRM": {"n_up": 43, "avg_ret_up": -2.844192039237676, "n_down": 38, "avg_ret_down": 0.5648213671307879}}, "ps": [4.9, 1.9, 5.9], "mktcap": [23.6, 49.8, 24.8], "by_year": {"2021": {"m10_chg": 0.4099999999999999, "SOFI": -2.9481084134939253, "XYZ": -1.9725335407013431, "AFRM": 3.474245057866399}, "2022": {"m10_chg": 2.36, "SOFI": -8.13758144305199, "XYZ": -6.098348999667227, "AFRM": -14.491524900863444}, "2023": {"m10_chg": 0.0, "SOFI": 8.70523658051434, "XYZ": 4.278474139161158, "AFRM": 19.389739591467816}, "2024": {"m10_chg": 0.7000000000000002, "SOFI": 5.532943439593879, "XYZ": 1.4942398960394379, "AFRM": 4.2484444214966635}, "2025": {"m10_chg": -0.40000000000000036, "SOFI": 5.537751192027463, "XYZ": -1.3964845868864477, "AFRM": 3.013953583633457}, "2026": {"m10_chg": 0.5, "SOFI": -3.6914157526170825, "XYZ": 3.3204281711707555, "AFRM": 2.412750425151876}}, "drawdown": {"SOFI": -83.32040311790085, "XYZ": -86.08282120560733, "AFRM": -94.71279395827302}, "drawdown_1y": {"SOFI": -52.96491757482362, "XYZ": -39.477253380364495, "AFRM": -53.86201058961282}, "roll_avg": {"SOFI": -0.051379437263806935, "XYZ": 0.011695954763624302, "AFRM": -0.09433970669634689}, "roll_last": {"SOFI": -0.5532789500973179, "XYZ": -0.5847242897280331, "AFRM": -0.613223709223393}};
+const C = {sofi:'#1e66d6', xyz:'#7048e8', afrm:'#e8590c', y10:'#6b7280', red:'#e03131', green:'#0aa06e'};
+
+// 二、增长
+echarts.init(document.getElementById('chart_growth')).setOption({
+  tooltip:{trigger:'axis'},
+  legend:{data:['最新季营收($B)','营收同比(%)']},
+  grid:{left:50,right:52,top:40,bottom:40},
+  xAxis:{type:'category',data:D.labels},
+  yAxis:[{type:'value',name:'$B',splitLine:{lineStyle:{color:'#eef0f3'}}},
+         {type:'value',name:'同比%',axisLabel:{formatter:'{value}%'}}],
+  series:[
+    {name:'最新季营收($B)',type:'bar',data:D.rev,barWidth:'38%',
+      itemStyle:{color:p=>['#1e66d6','#7048e8','#e8590c'][p.dataIndex]},
+      label:{show:true,position:'top',formatter:p=>p.value.toFixed(2)+'B',fontSize:11,color:'#1f2329'}},
+    {name:'营收同比(%)',type:'bar',data:D.rev_yoy,yAxisIndex:1,barWidth:'26%',
+      itemStyle:{color:p=>D.rev_yoy[p.dataIndex]>=0?'#e03131':'#0aa06e',opacity:.75},
+      label:{show:true,position:'top',formatter:p=>(p.value>=0?'+':'')+p.value+'%',fontSize:11,color:'#1f2329'}}
+  ]
+});
+
+// 三、利润率
+echarts.init(document.getElementById('chart_profit')).setOption({
+  tooltip:{trigger:'axis',valueFormatter:v=>v+'%'},
+  legend:{data:['GAAP净利率','调整后经营利润率']},
+  grid:{left:48,right:20,top:40,bottom:40},
+  xAxis:{type:'category',data:D.labels},
+  yAxis:{type:'value',axisLabel:{formatter:'{value}%'}},
+  series:[
+    {name:'GAAP净利率',type:'bar',data:[12.8,1.3,9.9],barWidth:'32%',
+      itemStyle:{color:'#1e66d6'},label:{show:true,position:'top',formatter:'{c}%'}},
+    {name:'调整后经营利润率',type:'bar',data:[13,27,27],barWidth:'32%',
+      itemStyle:{color:'#b45309'},label:{show:true,position:'top',formatter:'{c}%'}}
+  ]
+});
+
+// 四-1 净值 vs 10Y
+echarts.init(document.getElementById('chart_nav')).setOption({
+  animation:false,
+  tooltip:{trigger:'axis',axisPointer:{type:'cross'}},
+  legend:{data:['SOFI','XYZ','AFRM','US10Y%']},
+  grid:{left:55,right:55,top:45,bottom:45},
+  xAxis:{type:'category',data:D.nav_dates,axisLabel:{fontSize:10}},
+  yAxis:[{type:'value',name:'净值(2021-01=1)',scale:true,splitLine:{lineStyle:{color:'#eef0f3'}}},
+         {type:'value',name:'10Y%',axisLabel:{formatter:'{value}%'},splitLine:{show:false}}],
+  dataZoom:[{type:'inside'},{type:'slider',height:18,bottom:2}],
+  series:[
+    {name:'SOFI',type:'line',data:D.nav_sofi,showSymbol:false,lineStyle:{width:1.6,color:C.sofi}},
+    {name:'XYZ',type:'line',data:D.nav_xyz,showSymbol:false,lineStyle:{width:1.6,color:C.xyz}},
+    {name:'AFRM',type:'line',data:D.nav_afrm,showSymbol:false,lineStyle:{width:1.6,color:C.afrm}},
+    {name:'US10Y%',type:'line',data:D.y10_level,yAxisIndex:1,showSymbol:false,lineStyle:{width:1.6,color:C.y10,type:'dashed'}}
+  ]
+});
+
+// 四-2 滚动相关
+const rollDates = D.roll_dates;
+const maxLen = Math.max(D.roll_sofi.length, D.roll_xyz.length, D.roll_afrm.length);
+echarts.init(document.getElementById('chart_roll')).setOption({
+  animation:false,
+  tooltip:{trigger:'axis',valueFormatter:v=>v==null?'—':v.toFixed(2)},
+  legend:{data:['SOFI','XYZ','AFRM']},
+  grid:{left:48,right:20,top:40,bottom:45},
+  xAxis:{type:'category',data:rollDates,axisLabel:{fontSize:10}},
+  yAxis:{type:'value',min:-0.8,max:0.8,axisLabel:{formatter:v=>v.toFixed(1)},
+    splitLine:{lineStyle:{color:'#eef0f3'}}},
+  dataZoom:[{type:'inside'},{type:'slider',height:18,bottom:2}],
+  series:[
+    {name:'SOFI',type:'line',data:D.roll_sofi,showSymbol:false,lineStyle:{width:1.4,color:C.sofi}},
+    {name:'XYZ',type:'line',data:D.roll_xyz,showSymbol:false,lineStyle:{width:1.4,color:C.xyz}},
+    {name:'AFRM',type:'line',data:D.roll_afrm,showSymbol:false,lineStyle:{width:1.4,color:C.afrm}},
+    {type:'line',data:rollDates.map(()=>0),showSymbol:false,lineStyle:{width:1,type:'dashed',color:'#c8cdd3'},tooltip:{show:false},legendHoverLink:false}
+  ]
+});
+
+// 四-3 β
+echarts.init(document.getElementById('chart_beta')).setOption({
+  tooltip:{trigger:'axis',valueFormatter:v=>v+'%/10bp'},
+  legend:{data:['全期β','近1年β']},
+  grid:{left:50,right:20,top:40,bottom:40},
+  xAxis:{type:'category',data:D.labels},
+  yAxis:{type:'value',axisLabel:{formatter:'{value}'}},
+  series:[
+    {name:'全期β',type:'bar',data:D.beta_full.map(v=>+v.toFixed(2)),barWidth:'30%',
+      itemStyle:{color:'#9aa2ab'},label:{show:true,position:'top',formatter:'{c}'}},
+    {name:'近1年β',type:'bar',data:D.beta_1y.map(v=>+v.toFixed(2)),barWidth:'30%',
+      itemStyle:{color:p=>['#1e66d6','#7048e8','#e8590c'][p.dataIndex]},
+      label:{show:true,position:'top',formatter:'{c}',fontWeight:'bold'}}
+  ]
+});
+
+// 四-4 月度方向
+echarts.init(document.getElementById('chart_mon')).setOption({
+  tooltip:{trigger:'axis',valueFormatter:v=>v+'%'},
+  legend:{data:['10Y上行月(共'+D.mon_n.up+'个)','10Y下行月(共'+D.mon_n.down+'个)','全部月份']},
+  grid:{left:48,right:20,top:40,bottom:40},
+  xAxis:{type:'category',data:D.labels},
+  yAxis:{type:'value',axisLabel:{formatter:'{value}%'}},
+  series:[
+    {name:'10Y上行月(共'+D.mon_n.up+'个)',type:'bar',data:D.mon_up.map(v=>+v.toFixed(2)),barWidth:'22%',
+      itemStyle:{color:'#e03131'},label:{show:true,position:'top',formatter:'{c}%'}},
+    {name:'10Y下行月(共'+D.mon_n.down+'个)',type:'bar',data:D.mon_down.map(v=>+v.toFixed(2)),barWidth:'22%',
+      itemStyle:{color:'#0aa06e'},label:{show:true,position:'top',formatter:'{c}%'}},
+    {name:'全部月份',type:'bar',data:D.mon_all.map(v=>+v.toFixed(2)),barWidth:'22%',
+      itemStyle:{color:'#9aa2ab'},label:{show:true,position:'top',formatter:'{c}%'}}
+  ]
+});
+
+// 四-5 利率分档
+echarts.init(document.getElementById('chart_lvl')).setOption({
+  tooltip:{trigger:'axis',valueFormatter:v=>v+'bp/日'},
+  legend:{data:['SOFI','XYZ','AFRM']},
+  grid:{left:48,right:20,top:40,bottom:40},
+  xAxis:{type:'category',data:D.lvl_keys},
+  yAxis:{type:'value',axisLabel:{formatter:'{value}bp'}},
+  series:[
+    {name:'SOFI',type:'bar',data:D.lvl_sofi,barWidth:'20%',itemStyle:{color:C.sofi}},
+    {name:'XYZ',type:'bar',data:D.lvl_xyz,barWidth:'20%',itemStyle:{color:C.xyz}},
+    {name:'AFRM',type:'bar',data:D.lvl_afrm,barWidth:'20%',itemStyle:{color:C.afrm}}
+  ]
+});
+
+// 五、PS
+echarts.init(document.getElementById('chart_ps')).setOption({
+  tooltip:{trigger:'axis',valueFormatter:v=>v+'x'},
+  grid:{left:48,right:20,top:40,bottom:40},
+  xAxis:{type:'category',data:D.labels},
+  yAxis:{type:'value',axisLabel:{formatter:'{value}x'}},
+  series:[{type:'bar',data:D.ps.map(v=>+v.toFixed(1)),barWidth:'40%',
+    itemStyle:{color:p=>['#1e66d6','#7048e8','#e8590c'][p.dataIndex]},
+    label:{show:true,position:'top',formatter:'{c}x',fontSize:13,fontWeight:'bold'}}]
+});
+</script>
+</body>
+</html>

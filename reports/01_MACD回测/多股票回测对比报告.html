@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>多股票 MACD 水下金叉回测对比（严格口径 + 实盘化买入收益）</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<style>
+  :root{--bg:#f7f8fa;--card:#fff;--ink:#1f2329;--sub:#6b7280;--line:#e5e7eb;
+        --red:#e03131;--green:#0aa06e;--blue:#1e66d6;--amber:#d97706;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font:14px/1.7 -apple-system,"PingFang SC","Microsoft YaHei",sans-serif;padding:24px 16px 48px;}
+  .wrap{max-width:1200px;margin:0 auto;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 24px;margin-bottom:18px;box-shadow:0 1px 3px rgba(16,24,40,.05);}
+  h1{font-size:21px;margin-bottom:4px;}
+  .meta{color:var(--sub);font-size:12.5px;margin-bottom:14px;}
+  h2{font-size:16px;margin:0 0 12px;padding-left:10px;border-left:4px solid var(--blue);}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-top:14px;}
+  .kpi{background:#fbfcfe;border:1px solid var(--line);border-radius:10px;padding:12px 14px;}
+  .kpi .num{font-size:21px;font-weight:700;}
+  .kpi .num.up{color:var(--red);} .kpi .num.dn{color:var(--green);}
+  .kpi .lab{color:var(--sub);font-size:12px;margin-top:2px;}
+  table{width:100%;border-collapse:collapse;font-size:12px;}
+  th{background:#f3f5f8;text-align:left;padding:6px 7px;border-bottom:2px solid var(--line);white-space:nowrap;font-weight:600;}
+  td{padding:5px 7px;border-bottom:1px solid #f0f1f3;white-space:nowrap;text-align:right;}
+  td:first-child,td:nth-child(2){text-align:left;}
+  td.up{color:var(--red);font-weight:600;} td.dn{color:var(--green);font-weight:600;}
+  .scroll{overflow-x:auto;}
+  .chart{width:100%;height:400px;}
+  .chart.sm{height:380px;}
+  .note{color:var(--sub);font-size:12px;margin-top:8px;}
+  .conc{background:#eef7f2;border:1px solid #cde8da;border-radius:10px;padding:14px 18px;font-size:13px;color:#17442f;margin-top:10px;}
+  .dis{color:var(--sub);font-size:12px;border-top:1px dashed var(--line);padding-top:12px;margin-top:16px;}
+  .hl{font-weight:700;color:var(--red);} .hlg{font-weight:700;color:var(--green);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="card">
+    <h1>MACD 水下金叉 · 站上 EMA10/20 · 站稳5天 —— 10 只股票统一回测（严格口径 + 买入收益）</h1>
+    <div class="meta">标的：AMZN/BRK.B/GE/GS/IBKR/JNJ/MS/NVDA/SPY/UNH（BATS 日线，用户提供 CSV）｜严格口径：水下金叉→3日内收盘同时站上 EMA10/20（上穿）→站稳5天为「完全符合」标签｜<b>买入规则：站稳3天即可考虑买入（hold3母集），买点=（金叉前10日盘整最高价+确认日EMA20）/2，回踩到买点才成交，30日内未回踩=错过</b>｜收益不含成本</div>
+    <div class="kpis">
+      <div class="kpi"><div class="num">465</div><div class="lab">合并后水下金叉（10日窗口）</div></div>
+      <div class="kpi"><div class="num dn">179</div><div class="lab">未能站上均线（38%）</div></div>
+      <div class="kpi"><div class="num up">186</div><div class="lab">hold5 完全符合信号（严格标签）</div></div>
+      <div class="kpi"><div class="num">230</div><div class="lab">hold3 母集（站稳3天即可考虑买入）</div></div>
+      <div class="kpi"><div class="num">190</div><div class="lab">实际回踩成交（错过 37，成交率 83%）</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>一、各股票回测总览（严格口径 + 买入）</h2>
+    <div class="scroll">
+    <table>
+      <thead><tr><th>股票</th><th>数据区间</th><th>交易日</th><th>合并金叉</th><th>未站上</th><th>占比</th><th>hold5(完全符合)</th><th>hold3母集</th><th>成交/错过</th><th>成交率</th><th>hold5 T+5胜率</th><th>金叉日买入T+5(同批)</th><th>回踩买入T+5胜率</th><th>回踩买入T+5均值</th><th>hold5 T+20</th></tr></thead>
+      <tbody><tr><td><b>AMZN</b></td><td>2018-10-23~2026-08-14</td><td>1962</td><td>37</td><td>13</td><td>35%</td><td>19</td><td>21</td><td>16 / 5</td><td>76%</td><td class='up'>84.2%</td><td>75.0%</td><td class='dn'>43.8%</td><td class='dn'>-0.50%</td><td>72.2%</td></tr>
+<tr><td><b>BRK.B</b></td><td>2018-10-23~2026-08-14</td><td>1962</td><td>31</td><td>12</td><td>39%</td><td>14</td><td>17</td><td>13 / 3</td><td>76%</td><td class='up'>85.7%</td><td>69.2%</td><td class='up'>61.5%</td><td class='up'>+0.37%</td><td>100.0%</td></tr>
+<tr><td><b>GE</b></td><td>2016-10-03~2026-08-14</td><td>2480</td><td>53</td><td>20</td><td>38%</td><td>21</td><td>26</td><td>21 / 5</td><td>81%</td><td class='up'>90.5%</td><td>71.4%</td><td class='up'>52.4%</td><td class='dn'>-1.20%</td><td>61.9%</td></tr>
+<tr><td><b>GS</b></td><td>2018-10-23~2026-08-14</td><td>1962</td><td>31</td><td>10</td><td>32%</td><td>13</td><td>15</td><td>12 / 2</td><td>80%</td><td class='up'>92.3%</td><td>75.0%</td><td class='dn'>33.3%</td><td class='up'>+0.04%</td><td>53.8%</td></tr>
+<tr><td><b>IBKR</b></td><td>2009-12-29~2026-08-14</td><td>4182</td><td>77</td><td>23</td><td>30%</td><td>33</td><td>40</td><td>33 / 7</td><td>82%</td><td class='up'>84.8%</td><td>75.8%</td><td class='up'>51.5%</td><td class='up'>+0.79%</td><td>69.7%</td></tr>
+<tr><td><b>JNJ</b></td><td>2010-05-19~2026-08-14</td><td>4085</td><td>85</td><td>40</td><td>47%</td><td>30</td><td>40</td><td>34 / 6</td><td>85%</td><td class='up'>76.7%</td><td>58.8%</td><td class='up'>52.9%</td><td class='up'>+0.20%</td><td>60.0%</td></tr>
+<tr><td><b>MS</b></td><td>2016-10-03~2026-08-14</td><td>2480</td><td>41</td><td>13</td><td>32%</td><td>15</td><td>22</td><td>22 / 0</td><td>100%</td><td class='up'>100.0%</td><td>68.2%</td><td class='dn'>47.6%</td><td class='dn'>-0.27%</td><td>64.3%</td></tr>
+<tr><td><b>NVDA</b></td><td>2018-10-23~2026-08-14</td><td>1962</td><td>36</td><td>18</td><td>50%</td><td>13</td><td>15</td><td>11 / 4</td><td>73%</td><td class='up'>76.9%</td><td>54.5%</td><td class='dn'>27.3%</td><td class='dn'>-1.82%</td><td>76.9%</td></tr>
+<tr><td><b>SPY</b></td><td>2018-10-23~2026-08-14</td><td>1962</td><td>28</td><td>12</td><td>43%</td><td>11</td><td>13</td><td>9 / 3</td><td>69%</td><td class='up'>90.9%</td><td>77.8%</td><td class='up'>55.6%</td><td class='up'>+0.05%</td><td>72.7%</td></tr>
+<tr><td><b>UNH</b></td><td>2016-10-03~2026-08-14</td><td>2480</td><td>46</td><td>18</td><td>39%</td><td>17</td><td>21</td><td>19 / 2</td><td>90%</td><td class='up'>100.0%</td><td>78.9%</td><td class='up'>57.9%</td><td class='dn'>-0.06%</td><td>64.7%</td></tr></tbody>
+    </table>
+    </div>
+    <div class="note">「金叉日买入T+5(同批)」与「回踩买入T+5」统计的是<b>同一批实际成交的信号</b>，可直接对比：两者差距即入场点脱节造成的收益损耗。</div>
+  </div>
+
+  <div class="card">
+    <h2>二、入场点脱节检验：金叉日买入 vs 回踩买点买入（T+5 胜率，%）</h2>
+    <div id="chart1" class="chart"></div>
+    <div class="note">蓝色=该批信号若在金叉日收盘即买入的胜率；橙色=等到站稳确认后回踩到买点再买入的胜率。<b>10 只股票中 9 只回踩买入胜率显著低于金叉日买入</b>（BRK.B 持平），入场点脱节问题普遍存在。</div>
+  </div>
+
+  <div class="card">
+    <h2>三、结论：IBKR 结论适用性 + 买入收益修正</h2>
+    <div class="conc">
+      <b>① 信号规律跨股票成立（不变）：</b>10/10 只股票上「水下金叉+站上+站稳5天」筛选后的 T+5 胜率均大幅高于基线（76.7%~100%）。<br>
+      <b>② 但实盘化买入后收益显著缩水（新结论）：</b>站稳3天确认、回踩买点再入场（成交率 69%~100%），T+5 胜率普遍降至 27%~62%（均值 −1.8%~+0.8%），仍显著低于同批金叉日买入（55%~79%）。「入场点与收益计算脱节」在几乎所有股票上验证成立。<br>
+      <b>③ 被错过的信号不可交易：</b>成交率 69%~100%，错过的信号恰恰是金叉后强势不回踩的（其金叉日收益最好但实盘买不到）。<br>
+      <b>④ 修正后的结论：</b>站稳3天确认比5天确认更好（成交率与 T+20 收益均有改善），但 T+5 期望收益仍接近零；该信号更适用于「金叉当天/次日快进快出」或<b>趋势启动预警</b>，坚持回踩买入需叠加其他过滤（如回踩不破EMA20、量能收缩）。<br>
+      <b>⑤ 注意：</b>多数股票数据自 2016/2018 年起，成交样本 7~25 个，统计显著性有限；未计成本。
+    </div>
+    <div class="dis">数据来源：用户提供本地 CSV（BATS 日线）；指标口径经递推验证。基于历史数据回测，仅供研究参考。<br><br><b>免责声明：</b>以上内容基于公开数据和量化分析，仅供参考，不构成投资建议。市场有风险，投资需谨慎。任何投资决策应结合个人风险承受能力、资金状况和投资目标独立判断，必要时咨询持牌专业机构。过往表现不预示未来收益。</div>
+  </div>
+
+</div>
+<script>
+const D = {"tickers": ["AMZN", "BRK.B", "GE", "GS", "IBKR", "JNJ", "MS", "NVDA", "SPY", "UNH"], "h5_win": [84.2, 85.7, 90.5, 92.3, 84.8, 76.7, 100.0, 76.9, 90.9, 100.0], "orig_win": [75.0, 69.2, 71.4, 75.0, 75.8, 58.8, 68.2, 54.5, 77.8, 78.9], "buy_win": [43.8, 61.5, 52.4, 33.3, 51.5, 52.9, 47.6, 27.3, 55.6, 57.9]};
+const RED='#e03131', GREEN='#0aa06e', BLUE='#1e66d6', AMBER='#d97706';
+
+echarts.init(document.getElementById('chart1')).setOption({
+  tooltip:{trigger:'axis',valueFormatter:v=>v+'%'},
+  legend:{data:['金叉日买入·T+5胜率','回踩买点买入·T+5胜率']},
+  grid:{left:48,right:20,top:40,bottom:50},
+  xAxis:{type:'category',data:D.tickers},
+  yAxis:{type:'value',min:0,max:110,axisLabel:{formatter:'{value}%'}},
+  series:[
+    {name:'金叉日买入·T+5胜率',type:'bar',data:D.orig_win,itemStyle:{color:BLUE},barGap:'20%'},
+    {name:'回踩买点买入·T+5胜率',type:'bar',data:D.buy_win,itemStyle:{color:AMBER}}
+  ]
+});
+</script>
+</body>
+</html>

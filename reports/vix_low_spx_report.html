@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VIX 低位 · 标普500 后续行情与低位持续性分析</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<style>
+  :root{--bg:#f7f8fa;--card:#fff;--ink:#1f2329;--sub:#6b7280;--line:#e5e7eb;
+        --red:#e03131;--green:#0aa06e;--blue:#1e66d6;--amber:#b45309;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font:14px/1.7 -apple-system,"PingFang SC","Microsoft YaHei",sans-serif;padding:24px 16px 48px;}
+  .wrap{max-width:1220px;margin:0 auto;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 24px;margin-bottom:18px;box-shadow:0 1px 3px rgba(16,24,40,.05);}
+  h1{font-size:21px;margin-bottom:4px;}
+  .meta{color:var(--sub);font-size:12.5px;margin-bottom:14px;}
+  h2{font-size:16px;margin:0 0 12px;padding-left:10px;border-left:4px solid var(--blue);}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-top:14px;}
+  .kpi{background:#fbfcfe;border:1px solid var(--line);border-radius:10px;padding:12px 14px;}
+  .kpi .num{font-size:21px;font-weight:700;}
+  .kpi .num.up{color:var(--red);} .kpi .num.dn{color:var(--green);}
+  .kpi .lab{color:var(--sub);font-size:12px;margin-top:2px;}
+  table{width:100%;border-collapse:collapse;font-size:12px;}
+  th{background:#f3f5f8;text-align:left;padding:6px 7px;border-bottom:2px solid var(--line);white-space:nowrap;font-weight:600;}
+  td{padding:5px 7px;border-bottom:1px solid #f0f1f3;white-space:nowrap;}
+  td.up{color:var(--red);font-weight:600;} td.dn{color:var(--green);font-weight:600;} td.na{color:#c3c8cf;}
+  .scroll{overflow-x:auto;}
+  .chart{width:100%;height:380px;}
+  .chart.sm{height:320px;}
+  .note{color:var(--sub);font-size:12px;margin-top:8px;}
+  .keypoint{background:#eef7f2;border:1px solid #cde8da;border-radius:10px;padding:12px 16px;font-size:12.5px;color:#17442f;margin-top:10px;}
+  .warn{background:#fff8ec;border:1px solid #f3dfb6;border-radius:10px;padding:12px 16px;font-size:12.5px;color:#7c4a03;}
+  .dis{color:var(--sub);font-size:12px;border-top:1px dashed var(--line);padding-top:12px;margin-top:16px;}
+  .hl{font-weight:700;color:var(--red);} .hlg{font-weight:700;color:var(--green);}
+  .tag{display:inline-block;background:#eef3fb;color:var(--blue);border:1px solid #d5e2f7;border-radius:6px;padding:1px 8px;font-size:12px;font-weight:600;margin-right:6px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="card">
+    <h1>VIX 低位 · 标普500 后续行情与低位持续性分析</h1>
+    <div class="meta">数据：CBOE VIX 指数（^VIX）+ 标普500 指数（^GSPC）日线，1990-01-02 ~ 2026-08-14，共 9222 个交易日（Yahoo Finance 收盘口径）｜分析框架：VIX 低位定义 = 收盘 &lt; 15（低）/ &lt; 13（极低）/ &lt; 12（罕见极低）｜前瞻收益按「连续低位区间起点」入场（独立样本）与「低位日」入场（全样本）双口径</div>
+    <div class="kpis">
+      <div class="kpi"><div class="num up">14.25</div><div class="lab">当前 VIX（2026-08-14）· 历史分位 26.8%</div></div>
+      <div class="kpi"><div class="num">-0.2%</div><div class="lab">标普500 距历史高点（7,786 点，接近新高）</div></div>
+      <div class="kpi"><div class="num">3 天</div><div class="lab">当前 VIX 连续 &lt; 15 的天数（8/12 起）</div></div>
+      <div class="kpi"><div class="num">17.61</div><div class="lab">VIX 全期中位数（均值 19.45）</div></div>
+      <div class="kpi"><div class="num">32.0%</div><div class="lab">1990 年以来 VIX&lt;15 时间占比</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>核心结论</h2>
+    <div class="keypoint">
+      <b>① VIX 低位不是看跌信号，而是「确定性更高的慢环境」。</b>VIX&lt;15 的交易日入场，T+20 上涨概率 65.7%（基线 63.7%），T+120 上涨概率 <b>80.9%</b>（基线 73.8%）；VIX&lt;12 时 T+120 胜率高达 84.1%。但<b>平均收益并不更高</b>（T+20 均值 0.62% vs 基线 0.77%）——低波动期涨幅温和、缺少危机后的暴力反弹。
+      <br><b>② 风险不在「VIX 低」，而在「VIX 低位结束」。</b>VIX&lt;15 区间结束后 20 日内，标普平均 <b>-0.05%</b>（胜率仅 54%，最差 -29.2%），60 日才修复至 +1.25%。2018-02、2018-Q4、2020-02 三次大回调均发生在 VIX 长期低位区间的尾声。
+      <br><b>③ VIX&lt;15 低位维持：中位仅 3 天、均值 13.7 天。</b>当前已连续 3 天，历史上「已持续 3 天时」再维持 ≥5 天概率 66.1%、≥10 天 47.1%、≥20 天 32.2%；VIX 从 &lt;15 回升至 ≥20 中位需 60.0 天。
+      <br><b>④ 当前形态 = 低波动 + 标普接近新高</b>，历史上同形态 200 例中 T+120 胜率仍达 80.3%，但存在 11 例 120 日内跌超 5%（最差 -20.24%，2019-09 起 COVID 案例），尾部不可忽视。
+      <br><b>⑤ 若低位终结，「跌最多的时候」有时点规律可循</b>：从 VIX 脱离低位日 E 算起，SPX 谷底中位出现在 <b>E+18 个交易日</b>，且谷底时 VIX 中位 20.5——<b>VIX 冲破 20 前后即历史上股市最痛的位置</b>（谷底与 VIX 首破 20 日中位差 0 天）；86.8% 的事件峰谷回撤 ≤10%，深跌（&gt;10%）仅 COVID、2015 两例。
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>一、当前状态定位：VIX 历史分布</h2>
+    <div id="chart_hist" class="chart sm"></div>
+    <div class="note">VIX 1990~2026 收盘分布（2 点/桶）。当前 14.25 落在「14-16」桶，低于全期中位数 17.61 与均值 19.45，处于 <b>26.8% 分位</b>——比历史 73% 的时间低，属于「偏低但远未到极端」：VIX&lt;12（罕见极低，占 8.7%）和 &lt;10 才是真正的极端区。</div>
+    <div id="chart_trend" class="chart"></div>
+    <div class="note">2014 年以来 VIX 月均（蓝线，左轴）与标普500（红线，右轴）。VIX 长期在 14~20 区间运行，14 以下是「顺风区」，多数牛市月份（2017、2021 大部分时间、2023 下半年）VIX 都压在 15 以下。</div>
+  </div>
+
+  <div class="card">
+    <h2>二、VIX 低位后，标普500 的后续行情（核心问题 1）</h2>
+    <div class="scroll">
+    <table>
+      <thead><tr><th>持有期</th><th>基线·全期均值</th><th>基线·胜率</th>
+        <th>VIX&lt;15 均值</th><th>胜率</th><th>中位</th><th>最差</th><th>n</th>
+        <th>VIX&lt;13 均值</th><th>胜率</th><th>中位</th><th>最差</th><th>n</th>
+        <th>VIX&lt;12 均值</th><th>胜率</th><th>中位</th><th>最差</th><th>n</th></tr></thead>
+      <tbody><tr><td>T+5</td><td>+0.19%</td><td>57.8%</td><td class="up">+0.17%</td><td>58.4%</td><td>+0.35%</td><td>-3.8</td><td>214</td><td class="up">+0.16%</td><td>62.3%</td><td>+0.28%</td><td>-5.8</td><td>199</td><td class="up">+0.06%</td><td>51.4%</td><td>+0.03%</td><td>-4.8</td><td>144</td></tr><tr><td>T+10</td><td>+0.39%</td><td>60.4%</td><td class="up">+0.35%</td><td>62.4%</td><td>+0.62%</td><td>-11.9</td><td>213</td><td class="up">+0.29%</td><td>66.8%</td><td>+0.53%</td><td>-10.0</td><td>199</td><td class="up">+0.38%</td><td>63.2%</td><td>+0.54%</td><td>-5.2</td><td>144</td></tr><tr><td>T+20</td><td>+0.77%</td><td>63.7%</td><td class="up">+0.68%</td><td>67.1%</td><td>+1.25%</td><td>-26.6</td><td>213</td><td class="up">+0.61%</td><td>66.3%</td><td>+0.89%</td><td>-8.0</td><td>199</td><td class="up">+0.70%</td><td>68.8%</td><td>+0.95%</td><td>-7.3</td><td>144</td></tr><tr><td>T+60</td><td>+2.32%</td><td>70.3%</td><td class="up">+2.06%</td><td>68.5%</td><td>+2.58%</td><td>-15.0</td><td>213</td><td class="up">+2.18%</td><td>75.4%</td><td>+2.63%</td><td>-21.7</td><td>199</td><td class="up">+1.98%</td><td>76.4%</td><td>+2.25%</td><td>-14.3</td><td>144</td></tr><tr><td>T+120</td><td>+4.64%</td><td>73.8%</td><td class="up">+4.65%</td><td>80.8%</td><td>+5.32%</td><td>-20.2</td><td>213</td><td class="up">+4.24%</td><td>76.9%</td><td>+4.24%</td><td>-12.5</td><td>199</td><td class="up">+5.15%</td><td>84.7%</td><td>+4.32%</td><td>-8.6</td><td>144</td></tr></tbody>
+    </table>
+    </div>
+    <div class="note">口径：以每个<b>连续低位区间的起点</b>（VIX 首次跌破阈值的交易日）入场，独立样本，无重叠。VIX 越低，T+20 以后胜率抬升越明显；但均值普遍不高于基线——低波动环境的收益特征是「涨得稳、跌得少」而非「涨得猛」。</div>
+    <div id="chart_win" class="chart sm"></div>
+    <div class="note">胜率对比（按区间起点入场）。VIX&lt;12 时 T+60 胜率 76.4% / T+120 84.7%，显著高于基线。</div>
+  </div>
+
+  <div class="card">
+    <h2>三、按日口径（任何一天看到 VIX 低就持有）：全样本重叠口径</h2>
+    <div class="scroll">
+    <table>
+      <thead><tr><th>持有期</th><th>基线均值</th><th>基线胜率</th><th>基线P25</th>
+        <th>VIX&lt;15 均值</th><th>胜率</th><th>P25</th>
+        <th>VIX&lt;13 均值</th><th>胜率</th><th>P25</th>
+        <th>VIX&lt;12 均值</th><th>胜率</th><th>P25</th></tr></thead>
+      <tbody><tr><td>T+5</td><td>+0.19%</td><td>57.8%</td><td>-0.9</td><td>+0.11%</td><td>58.6%</td><td>-0.6</td><td>+0.15%</td><td>58.7%</td><td>-0.4</td><td>+0.14%</td><td>58.1%</td><td>-0.4</td></tr><tr><td>T+10</td><td>+0.39%</td><td>60.4%</td><td>-1.1</td><td>+0.25%</td><td>62.0%</td><td>-0.7</td><td>+0.33%</td><td>65.2%</td><td>-0.4</td><td>+0.36%</td><td>66.5%</td><td>-0.4</td></tr><tr><td>T+20</td><td>+0.77%</td><td>63.7%</td><td>-1.4</td><td>+0.62%</td><td>65.7%</td><td>-0.8</td><td>+0.67%</td><td>67.5%</td><td>-0.7</td><td>+0.70%</td><td>68.0%</td><td>-0.6</td></tr><tr><td>T+60</td><td>+2.32%</td><td>70.3%</td><td>-1.0</td><td>+2.04%</td><td>73.6%</td><td>-0.3</td><td>+2.08%</td><td>74.8%</td><td>-0.1</td><td>+2.15%</td><td>75.4%</td><td>+0.1</td></tr><tr><td>T+120</td><td>+4.64%</td><td>73.8%</td><td>-0.4</td><td>+4.84%</td><td>80.9%</td><td>+1.5</td><td>+4.94%</td><td>81.8%</td><td>+1.5</td><td>+5.12%</td><td>84.1%</td><td>+1.8</td></tr></tbody>
+    </table>
+    </div>
+    <div class="note">P25 = 最差四分之一分位（尾部风险参考）。VIX&lt;15 时 T+120 胜率 80.9%、VIX&lt;12 时 84.1% vs 基线 73.8%；P25 也显著更厚（-0.4%~-1.5% vs 基线 -0.4% 以上，最差档 -6% 以内 vs 基线最差 -45%）。<b>核心含义：VIX 低时买入并长期持有，是「低尾部 + 高确定性」的组合，代价是平均弹性略低。</b></div>
+  </div>
+
+  <div class="card">
+    <h2>四、VIX 低位能维持多久（核心问题 2）</h2>
+    <div class="scroll">
+    <table>
+      <thead><tr><th>阈值</th><th>低位区间段数</th><th>区间长度 中位</th><th>均值</th><th>P90</th><th>最长</th><th>占全期时间</th></tr></thead>
+      <tbody>
+        <tr><td>VIX &lt; 15</td><td>215</td><td>3 天</td><td>13.7 天</td><td>34 天</td><td>205 天</td><td>32.0%</td></tr>
+        <tr><td>VIX &lt; 13</td><td>199</td><td>4 天</td><td>7.9 天</td><td>17 天</td><td>115 天</td><td>17.2%</td></tr>
+        <tr><td>VIX &lt; 12</td><td>144</td><td>3 天</td><td>5.6 天</td><td>14 天</td><td>47 天</td><td>8.7%</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div id="chart_len" class="chart sm"></div>
+    <div class="note">VIX&lt;15 区间长度分布：<b>41% 只维持 1-3 天</b>（短暂下探），但尾部存在超长段——205 天（1994-12~1995-10）、135 天（2005-11~2006-05）、136 天（2006-08~2007-02）、115 天（2017-08~2018-02）。</div>
+    <h2 style="margin-top:18px;">条件剩余寿命：已持续 D 天，还能再维持 ≥K 天的历史概率（VIX&lt;15）</h2>
+    <div class="scroll">
+    <table>
+      <thead><tr><th>已持续 ↓ / 再维持 →</th><th>≥3 天</th><th>≥5 天</th><th>≥10 天</th><th>≥20 天</th><th>≥40 天</th><th>≥60 天</th></tr></thead>
+      <tbody><tr><td>1</td><td>56.3%</td><td>44.2%</td><td>28.8%</td><td>19.1%</td><td>8.8%</td><td>6.0%</td></tr><tr><td>3</td><td>78.5%</td><td>66.1%</td><td>47.1%</td><td>32.2%</td><td>15.7%</td><td>9.9%</td></tr><tr><td>5</td><td>84.2%</td><td>70.5%</td><td>54.7%</td><td>36.8%</td><td>20.0%</td><td>11.6%</td></tr><tr><td>10</td><td>91.9%</td><td>83.9%</td><td>66.1%</td><td>48.4%</td><td>27.4%</td><td>14.5%</td></tr><tr><td>20</td><td>95.1%</td><td>85.4%</td><td>73.2%</td><td>48.8%</td><td>31.7%</td><td>19.5%</td></tr><tr><td>40</td><td>100.0%</td><td>100.0%</td><td>89.5%</td><td>68.4%</td><td>42.1%</td><td>42.1%</td></tr></tbody>
+    </table>
+    </div>
+    <div class="note">读法：当前已连续 3 天（D=3 行），再维持 ≥5 天概率 66.1%、≥10 天 47.1%、≥20 天（一个月）32.2%。<b>VIX 低位有强「自我强化」特征</b>：持续越久，再维持的概率越高（D=10 后 ≥10 天概率升至 66%），因为长时间低波动往往对应稳定的宏观环境。</div>
+    <h2 style="margin-top:18px;">回归速度：从低位到 VIX 首次升破 20（均值附近）需要多久</h2>
+    <div class="scroll">
+    <table>
+      <thead><tr><th>起点阈值</th><th>样本</th><th>中位</th><th>均值</th><th>P25</th><th>最长</th></tr></thead>
+      <tbody><tr><td>VIX &lt; 15</td><td>213</td><td>60.0</td><td>114.99</td><td>24.0</td><td>551.0</td></tr><tr><td>VIX &lt; 13</td><td>199</td><td>82.0</td><td>124.69</td><td>43.0</td><td>458.0</td></tr><tr><td>VIX &lt; 12</td><td>144</td><td>157.5</td><td>172.97</td><td>72.0</td><td>441.0</td></tr></tbody>
+    </table>
+    </div>
+    <div class="note">VIX 均值回归极慢：从 &lt;15 到重新 &gt;20，一半情形要 <b>60 个交易日（约 3 个月）</b>以上；VIX&lt;12 后中位更是要 7 个月。这也是「低波动期可以按季度而非按周来规划持仓」的统计依据。</div>
+  </div>
+
+  <div class="card">
+    <h2>五、风险点：VIX 低位结束 ≠ 利空出尽，反而是回调高发窗口</h2>
+    <div id="chart_end" class="chart sm"></div>
+    <div class="note">对每个 VIX&lt;15 区间，统计「区间结束日（VIX 重新站上 15）」之后标普的 T+20 / T+60。T+20 平均 -0.05%、胜率仅 54%（最差 -29.2%），明显弱于基线 T+20（+0.77%、63.7%）；T+60 才修复到 +1.25%。<b>低波动结束时往往伴随波动率跳升和指数回调</b>——历史上 2018-02（2017 低位区后）、2018-Q4、2020-02（COVID）均是「长期低位 → VIX 快速抬升 → 指数急跌」的路径。</div>
+    <div class="warn"><b>操作含义：</b>与其问「VIX 低位能撑多久再跑」，不如盯「VIX 是否开始快速脱离低位」——VIX 连续 3 日抬升或单日跳升 &gt;3 点，往往才是低位环境终结的领先信号；届时再评估减仓比在低位时提前离场更科学。</div>
+  </div>
+
+  <div class="card">
+    <h2>五之二、那么「跌最多的时候」具体在什么时候发生？—— 回撤时点解剖</h2>
+    <div class="keypoint">对 197 段「VIX 从低位回升至 ≥20」的完整周期解剖：<b>标普的谷底（从低位结束日 E 起算的最大回撤点）中位出现在 E+18 个交易日</b>（P25=5 天，P75=39 天），<b>37.6% 在 10 天内见底、26.9% 在 11~30 天、23.9% 在 31~60 天，只有 11.7% 拖到 60 天以后</b>。谷底时 VIX 中位 <b>20.5</b>（P25=18 / P75=24）——<b>即「跌得最狠的一刻」几乎与 VIX 冲破 20 同步发生</b>（谷底相对 VIX 首次破 20 日的中位差为 0 天；相对 VIX 峰值日的中位差也为 0 天）。深度上：从 E 起算的最低累计收益中位 <b>-3.0%</b>，但窗口内峰谷回撤中位 <b>-6.8%</b>；回撤 &gt;3% 占 92.9%、&gt;5% 占 70.6%、&gt;10% 占 13.2%。</div>
+    <div id="chart_dd_timing" class="chart sm"></div>
+    <div class="note">SPX 谷底相对「VIX 脱离低位日 E」的天数分布（197 例）。<b>中位 18 天、P90=65 天</b>——若按「E 之后 VIX 中位还需 39 天才能到 20」推算，跌得最狠的时刻通常出现在 VIX 回升行程的前半程末端（约 40% 位置），而非等到 VIX 真正摸到 20 才爆发。</div>
+    <div id="chart_dd_vix" class="chart sm"></div>
+    <div class="note">谷底日的 VIX 水平分布：<b>64% 的谷底发生在 VIX 18~26 区间</b>（18-20 与 20-23 两桶合计 42%）。操作上可理解为：<b>VIX 从 15 开始回升、走到 20 上下时，是历史上股市最痛的位置</b>——这也是为什么「VIX 破 20」常被当作恐慌确认而非抄底信号的统计原因。</div>
+    <div class="scroll">
+    <table>
+      <thead><tr><th>低波动区间</th><th>脱离日 E</th><th>VIX首破20日</th><th>E→20(天)</th><th>谷底 E+N(天)</th><th>谷底VIX</th><th>谷底累计收益</th><th>窗口峰谷回撤</th></tr></thead>
+      <tbody><tr><td>2020-02-12 ~ 2020-02-19</td><td>2020-02-20</td><td>2020-02-24</td><td>3</td><td>22</td><td>61.6</td><td class="dn">-33.7%</td><td class="dn">-33.7%</td></tr><tr><td>2015-02-13 ~ 2015-02-13</td><td>2015-02-17</td><td>2015-08-21</td><td>131</td><td>132</td><td>36.0</td><td class="dn">-11.1%</td><td class="dn">-12.4%</td></tr><tr><td>1990-06-21 ~ 1990-06-21</td><td>1990-06-22</td><td>1990-07-23</td><td>21</td><td>39</td><td>27.5</td><td class="dn">-7.8%</td><td class="dn">-11.1%</td></tr><tr><td>2025-02-14 ~ 2025-02-14</td><td>2025-02-18</td><td>2025-02-27</td><td>8</td><td>17</td><td>24.7</td><td class="dn">-9.9%</td><td class="dn">-10.1%</td></tr><tr><td>2007-07-06 ~ 2007-07-06</td><td>2007-07-09</td><td>2007-07-26</td><td>14</td><td>27</td><td>30.7</td><td class="dn">-8.2%</td><td class="dn">-9.4%</td></tr><tr><td>2023-07-11 ~ 2023-08-01</td><td>2023-08-02</td><td>2023-10-19</td><td>56</td><td>61</td><td>21.3</td><td class="dn">-8.8%</td><td class="dn">-8.9%</td></tr><tr><td>2018-07-05 ~ 2018-10-05</td><td>2018-10-08</td><td>2018-10-10</td><td>3</td><td>15</td><td>24.7</td><td class="dn">-8.4%</td><td class="dn">-8.4%</td></tr><tr><td>2015-12-01 ~ 2015-12-01</td><td>2015-12-02</td><td>2015-12-11</td><td>8</td><td>25</td><td>27.0</td><td class="dn">-7.6%</td><td class="dn">-8.1%</td></tr><tr><td>1996-05-14 ~ 1996-05-14</td><td>1996-05-15</td><td>1996-07-15</td><td>42</td><td>48</td><td>21.4</td><td class="dn">-5.8%</td><td class="dn">-7.6%</td></tr><tr><td>2012-10-04 ~ 2012-10-05</td><td>2012-10-08</td><td>2012-12-28</td><td>56</td><td>26</td><td>18.0</td><td class="dn">-7.0%</td><td class="dn">-7.4%</td></tr></tbody>
+    </table>
+    </div>
+    <div class="note">回撤最深的 10 段（按 VIX 首破 20 日去重）。<b>COVID（2020-02，-33.7%）与 2015 年中国股灾（-11.1%）</b>是仅有的两段回撤超 10% 的系统性案例，且谷底都比 VIX 见顶滞后（COVID 滞后 19 天、2015 滞后 1 天）——事件冲击型下跌中，VIX 先见顶、股市后见底。</div>
+    <div class="warn"><b>结合当前状态：</b>当前 VIX 14.25、刚进入低位第 3 天。若历史模式重演：脱离低位（E）后中位 18 个交易日见底、谷底 VIX 约 20.5。从「VIX 重新站上 15」算起，<b>未来 1~6 周是历史上回撤最集中的窗口</b>，其中 VIX 在 18~24 区间时风险最大；但需同时记住 86.8% 的历史事件峰谷回撤 ≤10%、且中位仅 -6.8%——多数「低波动结束」是温和修正而非崩盘。</div>
+  </div>
+
+  <div class="card">
+    <h2>六、当前形态复盘：低波动 + 标普接近历史高点</h2>
+    <div class="keypoint">标普当前距历史高点仅 -0.2%，同时 VIX&lt;15——这是 1990 年以来出现过的「低波动 + 高位」组合（200 例）。历史上该形态：<b>T+20 胜率 65.2%、T+120 胜率 80.3%、T+120 均值 +4.7%</b>——长期仍偏正面，与「高位就该跌」的直觉相悖；但 T+120 最差 -20.2%，尾部风险集中在宏观拐点（COVID、2015-07 新兴市场冲击、2018）。</div>
+    <div id="chart_high" class="chart sm"></div>
+    <div class="note">低波动+高位形态 vs 所有 VIX&lt;15 起点 vs 基线：长期（T+120）三者胜率 80.3% / 80.9% / 73.8%，高位并未显著恶化长期胜率。</div>
+    <h2 style="margin-top:18px;">历史危险案例（低波动+高位后 120 日内跌超 5%）</h2>
+    <div class="scroll">
+    <table>
+      <thead><tr><th>起点</th><th>VIX</th><th>距250日高点</th><th>后20日</th><th>后60日</th><th>后120日</th></tr></thead>
+      <tbody><tr><td>2019-09-23</td><td>14.91</td><td>-1.1%</td><td class="up">+0.5%</td><td class="up">+6.7%</td><td class="dn">-20.2%</td></tr><tr><td>2019-10-14</td><td>14.57</td><td>-2.0%</td><td class="up">+4.1%</td><td class="up">+10.4%</td><td class="dn">-10.2%</td></tr><tr><td>2015-07-28</td><td>13.44</td><td>-1.8%</td><td class="dn">-10.8%</td><td class="dn">-3.5%</td><td class="dn">-10.1%</td></tr><tr><td>2011-04-28</td><td>14.62</td><td>+0.4%</td><td class="dn">-2.6%</td><td class="dn">-1.7%</td><td class="dn">-9.9%</td></tr><tr><td>2018-07-05</td><td>14.97</td><td>-4.7%</td><td class="up">+3.3%</td><td class="up">+6.5%</td><td class="dn">-9.8%</td></tr><tr><td>2011-04-21</td><td>14.69</td><td>-0.4%</td><td class="dn">-0.3%</td><td class="dn">-0.8%</td><td class="dn">-9.7%</td></tr><tr><td>2024-11-08</td><td>14.94</td><td>+0.4%</td><td class="up">+1.0%</td><td class="up">+0.5%</td><td class="dn">-6.5%</td></tr><tr><td>2015-04-02</td><td>14.67</td><td>-2.4%</td><td class="up">+2.0%</td><td class="dn">-0.5%</td><td class="dn">-6.2%</td></tr><tr><td>2015-03-18</td><td>13.97</td><td>-0.8%</td><td class="up">+0.3%</td><td class="dn">-0.3%</td><td class="dn">-6.2%</td></tr><tr><td>2015-03-30</td><td>14.51</td><td>-1.5%</td><td class="up">+1.4%</td><td class="up">+1.1%</td><td class="dn">-6.1%</td></tr><tr><td>2004-02-25</td><td>14.93</td><td>-1.2%</td><td class="dn">-4.6%</td><td class="dn">-4.8%</td><td class="dn">-5.4%</td></tr><tr><td>2020-02-06</td><td>14.96</td><td>+0.3%</td><td class="dn">-11.2%</td><td class="dn">-15.0%</td><td class="dn">-2.6%</td></tr><tr><td>2020-02-12</td><td>13.74</td><td>+0.6%</td><td class="dn">-26.6%</td><td class="dn">-13.3%</td><td class="dn">-2.2%</td></tr></tbody>
+    </table>
+    </div>
+    <div class="note">11 例中 3 例（2019-09、2019-10、2018-07）对应 COVID/2018 系统性回调，其余多为 2015、2011 的中期震荡。触发因素几乎都是<b>外部宏观冲击而非估值本身</b>——低波动状态下市场的脆弱性来自「波动率压缩 → 杠杆累积 → 事件冲击放大」。</div>
+  </div>
+
+  <div class="card">
+    <h2>七、历史 VIX&lt;15 长区间（≥20 天）复盘</h2>
+    <div class="scroll" style="max-height:480px;overflow-y:auto;">
+    <table>
+      <thead><tr><th>起点</th><th>结束</th><th>持续</th><th>起VIX</th><th>末VIX</th><th>期间SPX</th><th>结束后T+20</th><th>结束后T+60</th></tr></thead>
+      <tbody><tr><td>1992-07-09</td><td>1992-08-10</td><td>23</td><td>14.6</td><td>14.51</td><td class="up">+1.3%</td><td class="dn">-1.2%</td><td class="up">+0.1%</td></tr><tr><td>1992-08-26</td><td>1992-09-25</td><td>22</td><td>14.5</td><td>14.8</td><td class="up">+0.2%</td><td class="dn">-0.1%</td><td class="up">+6.4%</td></tr><tr><td>1992-11-18</td><td>1993-02-12</td><td>60</td><td>14.55</td><td>12.38</td><td class="up">+5.1%</td><td class="up">+1.5%</td><td class="">-0.0%</td></tr><tr><td>1993-03-15</td><td>1993-04-23</td><td>29</td><td>14.74</td><td>13.36</td><td class="dn">-3.2%</td><td class="up">+2.0%</td><td class="up">+2.4%</td></tr><tr><td>1993-04-27</td><td>1993-09-20</td><td>102</td><td>13.93</td><td>14.6</td><td class="up">+3.9%</td><td class="up">+2.9%</td><td class="up">+1.8%</td></tr><tr><td>1993-09-22</td><td>1993-11-15</td><td>39</td><td>13.75</td><td>14.46</td><td class="up">+1.7%</td><td class="dn">-0.1%</td><td class="up">+1.9%</td></tr><tr><td>1993-11-23</td><td>1994-02-03</td><td>51</td><td>14.27</td><td>10.75</td><td class="up">+4.3%</td><td class="dn">-3.3%</td><td class="dn">-5.8%</td></tr><tr><td>1994-05-13</td><td>1994-06-23</td><td>29</td><td>14.54</td><td>14.12</td><td class="up">+1.2%</td><td class="up">+0.8%</td><td class="up">+4.7%</td></tr><tr><td>1994-06-29</td><td>1994-09-30</td><td>66</td><td>14.42</td><td>14.28</td><td class="up">+3.4%</td><td class="up">+2.4%</td><td class="dn">-0.1%</td></tr><tr><td>1994-12-13</td><td>1995-10-04</td><td>205</td><td>14.48</td><td>14.86</td><td class="up">+29.2%</td><td class="up">+0.5%</td><td class="up">+5.9%</td></tr><tr><td>1995-10-27</td><td>1996-01-08</td><td>49</td><td>14.63</td><td>13.11</td><td class="up">+6.7%</td><td class="up">+3.7%</td><td class="up">+6.0%</td></tr><tr><td>1996-01-11</td><td>1996-02-13</td><td>24</td><td>14.69</td><td>14.94</td><td class="up">+9.6%</td><td class="dn">-3.3%</td><td class="dn">-2.3%</td></tr><tr><td>2004-09-01</td><td>2004-10-07</td><td>26</td><td>14.91</td><td>14.5</td><td class="up">+2.2%</td><td class="up">+2.7%</td><td class="up">+6.3%</td></tr><tr><td>2004-11-03</td><td>2005-04-14</td><td>112</td><td>14.04</td><td>14.53</td><td class="up">+1.6%</td><td class="dn">-0.2%</td><td class="up">+4.9%</td></tr><tr><td>2005-05-17</td><td>2005-10-07</td><td>101</td><td>14.57</td><td>14.59</td><td class="up">+1.9%</td><td class="up">+2.0%</td><td class="up">+6.5%</td></tr><tr><td>2005-11-01</td><td>2006-05-16</td><td>135</td><td>14.85</td><td>13.35</td><td class="up">+7.4%</td><td class="dn">-4.8%</td><td class="dn">-1.6%</td></tr><tr><td>2006-08-10</td><td>2007-02-26</td><td>136</td><td>14.46</td><td>11.15</td><td class="up">+14.0%</td><td class="dn">-0.8%</td><td class="up">+5.2%</td></tr><tr><td>2007-03-30</td><td>2007-06-06</td><td>47</td><td>14.64</td><td>14.87</td><td class="up">+6.8%</td><td class="up">+0.5%</td><td class="dn">-3.9%</td></tr><tr><td>2013-01-02</td><td>2013-02-20</td><td>34</td><td>14.68</td><td>14.68</td><td class="up">+3.4%</td><td class="up">+3.1%</td><td class="up">+9.2%</td></tr><tr><td>2013-03-04</td><td>2013-04-12</td><td>29</td><td>14.01</td><td>12.06</td><td class="up">+4.2%</td><td class="up">+2.8%</td><td class="up">+4.0%</td></tr><tr><td>2013-04-19</td><td>2013-05-30</td><td>29</td><td>14.97</td><td>14.53</td><td class="up">+6.4%</td><td class="dn">-2.5%</td><td class="up">+0.5%</td></tr><tr><td>2013-07-05</td><td>2013-08-16</td><td>31</td><td>14.89</td><td>14.37</td><td class="up">+1.5%</td><td class="up">+2.5%</td><td class="up">+7.0%</td></tr><tr><td>2013-10-16</td><td>2013-12-04</td><td>35</td><td>14.71</td><td>14.7</td><td class="up">+4.1%</td><td class="up">+2.2%</td><td class="up">+4.5%</td></tr><tr><td>2013-12-18</td><td>2014-01-23</td><td>24</td><td>13.8</td><td>13.77</td><td class="up">+1.0%</td><td class="up">+0.4%</td><td class="up">+2.4%</td></tr><tr><td>2014-04-16</td><td>2014-07-30</td><td>73</td><td>14.18</td><td>13.33</td><td class="up">+5.8%</td><td class="up">+1.5%</td><td class="dn">-1.0%</td></tr><tr><td>2014-08-11</td><td>2014-09-24</td><td>32</td><td>14.23</td><td>13.27</td><td class="up">+3.2%</td><td class="dn">-3.6%</td><td class="up">+3.1%</td></tr><tr><td>2014-10-30</td><td>2014-12-08</td><td>27</td><td>14.52</td><td>14.21</td><td class="up">+3.3%</td><td class="dn">-1.7%</td><td class="up">+0.5%</td></tr><tr><td>2015-04-02</td><td>2015-05-05</td><td>23</td><td>14.67</td><td>14.31</td><td class="up">+1.1%</td><td class="up">+1.2%</td><td class="up">+0.9%</td></tr><tr><td>2015-05-08</td><td>2015-06-05</td><td>20</td><td>12.86</td><td>14.21</td><td class="dn">-1.1%</td><td class="dn">-1.2%</td><td class="dn">-5.8%</td></tr><tr><td>2016-07-06</td><td>2016-09-08</td><td>46</td><td>14.96</td><td>12.51</td><td class="up">+3.9%</td><td class="dn">-0.9%</td><td class="up">+0.5%</td></tr><tr><td>2016-11-09</td><td>2017-04-10</td><td>104</td><td>14.38</td><td>14.05</td><td class="up">+9.0%</td><td class="up">+1.7%</td><td class="up">+2.2%</td></tr><tr><td>2017-04-17</td><td>2017-05-16</td><td>22</td><td>14.66</td><td>10.65</td><td class="up">+2.2%</td><td class="up">+1.6%</td><td class="up">+1.6%</td></tr><tr><td>2017-05-18</td><td>2017-08-09</td><td>58</td><td>14.66</td><td>11.11</td><td class="up">+4.6%</td><td class="dn">-0.4%</td><td class="up">+4.3%</td></tr><tr><td>2017-08-18</td><td>2018-02-01</td><td>115</td><td>14.26</td><td>13.47</td><td class="up">+16.3%</td><td class="dn">-4.6%</td><td class="dn">-6.2%</td></tr><tr><td>2018-07-05</td><td>2018-10-05</td><td>66</td><td>14.97</td><td>14.82</td><td class="up">+5.4%</td><td class="dn">-5.6%</td><td class="dn">-15.2%</td></tr><tr><td>2019-03-28</td><td>2019-05-03</td><td>26</td><td>14.43</td><td>12.87</td><td class="up">+4.6%</td><td class="dn">-6.8%</td><td class="up">+2.3%</td></tr><tr><td>2019-07-01</td><td>2019-07-30</td><td>21</td><td>14.06</td><td>13.94</td><td class="up">+1.6%</td><td class="dn">-4.8%</td><td class="dn">-0.3%</td></tr><tr><td>2019-10-14</td><td>2019-12-02</td><td>35</td><td>14.57</td><td>14.91</td><td class="up">+5.0%</td><td class="up">+3.8%</td><td class="dn">-5.1%</td></tr><tr><td>2019-12-11</td><td>2020-01-24</td><td>30</td><td>14.99</td><td>14.56</td><td class="up">+4.9%</td><td class="dn">-2.1%</td><td class="dn">-17.0%</td></tr><tr><td>2023-11-10</td><td>2024-02-12</td><td>63</td><td>14.17</td><td>13.93</td><td class="up">+13.7%</td><td class="up">+3.1%</td><td class="up">+3.3%</td></tr><tr><td>2024-05-02</td><td>2024-07-17</td><td>52</td><td>14.68</td><td>14.48</td><td class="up">+10.3%</td><td class="dn">-2.4%</td><td class="up">+3.4%</td></tr></tbody>
+    </table>
+    </div>
+    <div class="note">共 41 段。绿色 = 区间结束后仍上涨；<span class="hl">红色</span> = 结束后回调。可看到 1994-12~1995-10（205 天）、2006-08~2007-02（136 天）、2017-08~2018-02（115 天）是典型的「低波动持续 → 结束即回撤」模式。</div>
+  </div>
+
+  <div class="card">
+    <div class="warn"><b>局限与提醒：</b>① 前瞻收益未扣除任何成本/股息，也未考虑波动率相关的衍生品对冲；② VIX 与 SPX 的因果关系无法从此类统计中识别——低 VIX 更多是「结果」而非「原因」；③ 2007 年以前 VIX 定价结构（CBOE 1990 起）与 2010 后低波动时代市场结构差异大，长历史统计仅供参考；④ 本文样本为 1990-01 ~ 2026-08 收盘数据，最近区间（8/12 起）无前瞻数据，不构成对未来时点的预测。</div>
+    <div class="dis">数据来源：Yahoo Finance（^VIX / ^GSPC 日线，1990-01-02 ~ 2026-08-14，收盘口径）。仅供研究参考。<br><br><b>免责声明：</b>以上内容基于公开数据和量化分析，仅供参考，不构成投资建议。市场有风险，投资需谨慎。任何投资决策应结合个人风险承受能力、资金状况和投资目标独立判断，必要时咨询持牌专业机构。过往表现不预示未来收益。</div>
+  </div>
+
+</div>
+<script>
+const D = {"meta": {"n_days": 9222, "start": "1990-01-02", "end": "2026-08-14", "cur_vix": 14.25, "cur_spx": 7785.76, "cur_pctile": 26.8, "vix_mean_all": 19.45, "vix_median_all": 17.61, "vix_q25": 13.98, "vix_q10": 12.15, "spx_hist_high": 7798.99, "spx_drawdown_from_high": -0.17, "cur_run_days_under15": 3}, "hist": {"labels": ["10-12", "12-14", "14-16", "16-18", "18-20", "20-22", "22-24", "24-26", "26-28", "28-30", "30-32", "32-34", "34-36", "36-38", "38-40", "40-42", "42-44", "44-46", "46-48", "48-50"], "vals": [733, 1513, 1265, 1250, 965, 855, 662, 547, 356, 272, 213, 130, 75, 66, 44, 41, 41, 28, 15, 8], "cur": 14.25, "q25": 13.98, "median": 17.61}, "monthly": {"labels": ["2014-01", "2014-02", "2014-03", "2014-04", "2014-05", "2014-06", "2014-07", "2014-08", "2014-09", "2014-10", "2014-11", "2014-12", "2015-01", "2015-02", "2015-03", "2015-04", "2015-05", "2015-06", "2015-07", "2015-08", "2015-09", "2015-10", "2015-11", "2015-12", "2016-01", "2016-02", "2016-03", "2016-04", "2016-05", "2016-06", "2016-07", "2016-08", "2016-09", "2016-10", "2016-11", "2016-12", "2017-01", "2017-02", "2017-03", "2017-04", "2017-05", "2017-06", "2017-07", "2017-08", "2017-09", "2017-10", "2017-11", "2017-12", "2018-01", "2018-02", "2018-03", "2018-04", "2018-05", "2018-06", "2018-07", "2018-08", "2018-09", "2018-10", "2018-11", "2018-12", "2019-01", "2019-02", "2019-03", "2019-04", "2019-05", "2019-06", "2019-07", "2019-08", "2019-09", "2019-10", "2019-11", "2019-12", "2020-01", "2020-02", "2020-03", "2020-04", "2020-05", "2020-06", "2020-07", "2020-08", "2020-09", "2020-10", "2020-11", "2020-12", "2021-01", "2021-02", "2021-03", "2021-04", "2021-05", "2021-06", "2021-07", "2021-08", "2021-09", "2021-10", "2021-11", "2021-12", "2022-01", "2022-02", "2022-03", "2022-04", "2022-05", "2022-06", "2022-07", "2022-08", "2022-09", "2022-10", "2022-11", "2022-12", "2023-01", "2023-02", "2023-03", "2023-04", "2023-05", "2023-06", "2023-07", "2023-08", "2023-09", "2023-10", "2023-11", "2023-12", "2024-01", "2024-02", "2024-03", "2024-04", "2024-05", "2024-06", "2024-07", "2024-08", "2024-09", "2024-10", "2024-11", "2024-12", "2025-01", "2025-02", "2025-03", "2025-04", "2025-05", "2025-06", "2025-07", "2025-08", "2025-09", "2025-10", "2025-11", "2025-12", "2026-01", "2026-02", "2026-03", "2026-04", "2026-05", "2026-06", "2026-07", "2026-08"], "vix": [14.24, 15.47, 14.84, 14.2, 12.48, 11.54, 12.3, 13.5, 13.47, 18.02, 13.41, 16.31, 19.12, 15.9, 14.81, 13.49, 13.34, 14.34, 14.35, 19.43, 24.38, 16.79, 16.21, 18.03, 23.72, 22.52, 15.85, 14.3, 14.85, 17.77, 13.16, 12.4, 14.22, 14.59, 15.24, 12.47, 11.61, 11.53, 11.9, 13.14, 10.86, 10.51, 10.26, 11.98, 10.44, 10.13, 10.54, 10.26, 11.06, 22.46, 19.02, 18.27, 14.12, 13.68, 13.15, 12.55, 12.91, 19.35, 19.39, 24.95, 19.57, 15.23, 14.49, 12.95, 16.72, 15.84, 13.31, 18.98, 15.56, 15.47, 12.52, 13.76, 13.94, 19.63, 57.74, 41.45, 30.9, 31.12, 26.84, 22.89, 27.65, 29.44, 25.0, 22.37, 24.91, 23.14, 21.84, 17.42, 19.76, 16.96, 17.6, 17.48, 19.82, 17.87, 18.5, 21.35, 23.18, 25.75, 26.97, 24.37, 29.45, 28.1, 24.87, 22.17, 27.41, 30.01, 23.44, 21.78, 20.2, 20.06, 21.64, 17.82, 17.64, 13.99, 13.94, 15.85, 15.24, 18.89, 14.08, 12.72, 13.4, 13.94, 13.79, 16.14, 13.09, 12.68, 14.47, 19.31, 17.77, 19.96, 16.12, 15.87, 16.75, 17.05, 21.84, 31.97, 20.46, 18.22, 16.33, 15.75, 15.77, 18.09, 19.9, 15.55, 16.05, 19.24, 25.6, 19.81, 17.27, 17.96, 17.15, 15.24], "spx": [1782.6, 1859.4, 1872.3, 1883.9, 1923.6, 1960.2, 1930.7, 2003.4, 1972.3, 2018.1, 2067.6, 2058.9, 1995.0, 2104.5, 2067.9, 2085.5, 2107.4, 2063.1, 2103.8, 1972.2, 1920.0, 2079.4, 2080.4, 2043.9, 1940.2, 1932.2, 2059.7, 2065.3, 2096.9, 2098.9, 2173.6, 2170.9, 2168.3, 2126.1, 2198.8, 2238.8, 2278.9, 2363.6, 2362.7, 2384.2, 2411.8, 2423.4, 2470.3, 2471.6, 2519.4, 2575.3, 2647.6, 2673.6, 2823.8, 2713.8, 2640.9, 2648.1, 2705.3, 2718.4, 2816.3, 2901.5, 2914.0, 2711.7, 2760.2, 2506.9, 2704.1, 2784.5, 2834.4, 2945.8, 2752.1, 2941.8, 2980.4, 2926.5, 2976.7, 3037.6, 3141.0, 3230.8, 3225.5, 2954.2, 2584.6, 2912.4, 3044.3, 3100.3, 3271.1, 3500.3, 3363.0, 3270.0, 3621.6, 3756.1, 3714.2, 3811.1, 3972.9, 4181.2, 4204.1, 4297.5, 4395.3, 4522.7, 4307.5, 4605.4, 4567.0, 4766.2, 4515.5, 4373.9, 4530.4, 4131.9, 4132.1, 3785.4, 4130.3, 3955.0, 3585.6, 3872.0, 4080.1, 3839.5, 4076.6, 3970.1, 4109.3, 4169.5, 4179.8, 4450.4, 4589.0, 4507.7, 4288.0, 4193.8, 4567.8, 4769.8, 4845.6, 5096.3, 5254.4, 5035.7, 5277.5, 5460.5, 5522.3, 5648.4, 5762.5, 5705.5, 6032.4, 5881.6, 6040.5, 5954.5, 5611.9, 5569.1, 5911.7, 6205.0, 6339.4, 6460.3, 6688.5, 6840.2, 6849.1, 6845.5, 6939.0, 6878.9, 6528.5, 7209.0, 7580.1, 7499.4, 7489.7, 7785.8]}, "base": {"T5": {"n": 9217, "mean": 0.19, "median": 0.33, "win": 57.8, "p25": -0.95, "worst": -18.34, "best": 19.11}, "T10": {"n": 9212, "mean": 0.39, "median": 0.63, "win": 60.4, "p25": -1.13, "worst": -25.88, "best": 21.64}, "T20": {"n": 9202, "mean": 0.77, "median": 1.22, "win": 63.7, "p25": -1.4, "worst": -30.94, "best": 23.49}, "T60": {"n": 9162, "mean": 2.32, "median": 3.05, "win": 70.3, "p25": -1.04, "worst": -41.29, "best": 39.16}, "T120": {"n": 9102, "mean": 4.64, "median": 5.41, "win": 73.8, "p25": -0.41, "worst": -45.4, "best": 52.39}}, "by_start": {"15": {"T5": {"n": 214, "mean": 0.17, "median": 0.35, "win": 58.4, "p25": -0.75, "worst": -3.79, "best": 3.08}, "T10": {"n": 213, "mean": 0.35, "median": 0.62, "win": 62.4, "p25": -0.84, "worst": -11.86, "best": 4.6}, "T20": {"n": 213, "mean": 0.68, "median": 1.25, "win": 67.1, "p25": -0.87, "worst": -26.6, "best": 8.86}, "T60": {"n": 213, "mean": 2.06, "median": 2.58, "win": 68.5, "p25": -0.96, "worst": -15.04, "best": 13.2}, "T120": {"n": 213, "mean": 4.65, "median": 5.32, "win": 80.8, "p25": 1.37, "worst": -20.24, "best": 18.97}}, "13": {"T5": {"n": 199, "mean": 0.16, "median": 0.28, "win": 62.3, "p25": -0.34, "worst": -5.77, "best": 2.59}, "T10": {"n": 199, "mean": 0.29, "median": 0.53, "win": 66.8, "p25": -0.69, "worst": -10.03, "best": 4.83}, "T20": {"n": 199, "mean": 0.61, "median": 0.89, "win": 66.3, "p25": -0.97, "worst": -7.97, "best": 6.27}, "T60": {"n": 199, "mean": 2.18, "median": 2.63, "win": 75.4, "p25": 0.09, "worst": -21.72, "best": 12.34}, "T120": {"n": 199, "mean": 4.24, "median": 4.24, "win": 76.9, "p25": 0.21, "worst": -12.52, "best": 18.22}}, "12": {"T5": {"n": 144, "mean": 0.06, "median": 0.03, "win": 51.4, "p25": -0.55, "worst": -4.78, "best": 2.7}, "T10": {"n": 144, "mean": 0.38, "median": 0.54, "win": 63.2, "p25": -0.55, "worst": -5.17, "best": 3.82}, "T20": {"n": 144, "mean": 0.7, "median": 0.95, "win": 68.8, "p25": -0.73, "worst": -7.31, "best": 4.5}, "T60": {"n": 144, "mean": 1.98, "median": 2.25, "win": 76.4, "p25": 0.08, "worst": -14.31, "best": 9.83}, "T120": {"n": 144, "mean": 5.15, "median": 4.32, "win": 84.7, "p25": 1.75, "worst": -8.63, "best": 20.79}}}, "by_day": {"15": {"T5": {"n": 2948, "mean": 0.11, "median": 0.25, "win": 58.6, "p25": -0.56, "worst": -10.94, "best": 3.47}, "T10": {"n": 2947, "mean": 0.25, "median": 0.48, "win": 62.0, "p25": -0.7, "worst": -12.44, "best": 6.33}, "T20": {"n": 2947, "mean": 0.62, "median": 0.97, "win": 65.7, "p25": -0.77, "worst": -29.41, "best": 10.27}, "T60": {"n": 2947, "mean": 2.04, "median": 2.58, "win": 73.6, "p25": -0.26, "worst": -30.59, "best": 13.94}, "T120": {"n": 2947, "mean": 4.84, "median": 5.0, "win": 80.9, "p25": 1.46, "worst": -20.24, "best": 21.71}}, "13": {"T5": {"n": 1582, "mean": 0.15, "median": 0.21, "win": 58.7, "p25": -0.42, "worst": -5.83, "best": 3.47}, "T10": {"n": 1582, "mean": 0.33, "median": 0.51, "win": 65.2, "p25": -0.43, "worst": -10.03, "best": 6.33}, "T20": {"n": 1582, "mean": 0.67, "median": 1.0, "win": 67.5, "p25": -0.67, "worst": -9.69, "best": 7.09}, "T60": {"n": 1582, "mean": 2.08, "median": 2.61, "win": 74.8, "p25": -0.07, "worst": -30.59, "best": 12.34}, "T120": {"n": 1582, "mean": 4.94, "median": 4.87, "win": 81.8, "p25": 1.54, "worst": -12.52, "best": 20.79}}, "12": {"T5": {"n": 801, "mean": 0.14, "median": 0.16, "win": 58.1, "p25": -0.41, "worst": -5.19, "best": 2.77}, "T10": {"n": 801, "mean": 0.36, "median": 0.5, "win": 66.5, "p25": -0.36, "worst": -9.1, "best": 3.96}, "T20": {"n": 801, "mean": 0.7, "median": 1.03, "win": 68.0, "p25": -0.64, "worst": -7.31, "best": 7.09}, "T60": {"n": 801, "mean": 2.15, "median": 2.71, "win": 75.4, "p25": 0.1, "worst": -14.31, "best": 11.66}, "T120": {"n": 801, "mean": 5.12, "median": 4.87, "win": 84.1, "p25": 1.83, "worst": -8.63, "best": 20.79}}}, "run_stats": {"15": {"n_runs": 215, "len_mean": 13.7, "len_median": 3, "len_p75": 12, "len_p90": 34, "len_max": 205, "pct_time": 32.0}, "13": {"n_runs": 199, "len_mean": 7.9, "len_median": 4, "len_p75": 7, "len_p90": 17, "len_max": 115, "pct_time": 17.2}, "12": {"n_runs": 144, "len_mean": 5.6, "len_median": 3, "len_p75": 6, "len_p90": 14, "len_max": 47, "pct_time": 8.7}}, "life15": {"1": {"3": 56.3, "5": 44.2, "10": 28.8, "20": 19.1, "40": 8.8, "60": 6.0}, "3": {"3": 78.5, "5": 66.1, "10": 47.1, "20": 32.2, "40": 15.7, "60": 9.9}, "5": {"3": 84.2, "5": 70.5, "10": 54.7, "20": 36.8, "40": 20.0, "60": 11.6}, "10": {"3": 91.9, "5": 83.9, "10": 66.1, "20": 48.4, "40": 27.4, "60": 14.5}, "20": {"3": 95.1, "5": 85.4, "10": 73.2, "20": 48.8, "40": 31.7, "60": 19.5}, "40": {"3": 100.0, "5": 100.0, "10": 89.5, "20": 68.4, "40": 42.1, "60": 42.1}}, "break20": {"15": {"n": 213, "mean": 114.99, "median": 60.0, "win": 100.0, "p25": 24.0, "worst": 5.0, "best": 551.0}, "13": {"n": 199, "mean": 124.69, "median": 82.0, "win": 100.0, "p25": 43.0, "worst": 6.0, "best": 458.0}, "12": {"n": 144, "mean": 172.97, "median": 157.5, "win": 100.0, "p25": 72.0, "worst": 5.0, "best": 441.0}}, "high": {"5": {"n": 199, "mean": 0.11, "median": 0.27, "win": 56.8, "p25": -0.9, "worst": -3.79, "best": 2.96}, "10": {"n": 198, "mean": 0.27, "median": 0.46, "win": 60.6, "p25": -0.88, "worst": -11.86, "best": 4.6}, "20": {"n": 198, "mean": 0.55, "median": 1.1, "win": 65.2, "p25": -0.98, "worst": -26.6, "best": 8.86}, "60": {"n": 198, "mean": 1.92, "median": 2.45, "win": 66.7, "p25": -1.19, "worst": -15.04, "best": 13.2}, "120": {"n": 198, "mean": 4.66, "median": 5.73, "win": 80.3, "p25": 1.38, "worst": -20.24, "best": 17.99}}, "high_n": 200, "end20": {"n": 213, "mean": -0.05, "med": 0.3, "win": 54.0, "worst": -29.2}, "end60": {"n": 213, "mean": 1.25, "med": 1.7, "win": 64.8, "worst": -17.0}, "lenbuck": {"labels": ["1-3天", "4-10天", "11-20天", "21-40天", "41-80天", "80天以上"], "vals": [115, 42, 18, 21, 11, 8]}, "dd_timing": {"labels": ["0-5天", "6-10天", "11-20天", "21-30天", "31-60天", ">60天"], "vals": [50, 24, 30, 23, 47, 23]}, "dd_vix": {"labels": ["15-18", "18-20", "20-23", "23-26", "26-30", ">30"], "vals": [49, 29, 52, 40, 3, 24]}, "dd_meta": {"E_to_T20": {"n": 197, "mean": 70.8, "med": 39.0, "p25": 15.0, "p75": 93.0, "min": 1.0, "max": 363.0}, "valley_offset_E": {"n": 197, "mean": 27.2, "med": 18.0, "p25": 5.0, "p75": 39.0, "min": 0.0, "max": 135.0}, "vix_at_valley": {"n": 197, "mean": 22.6, "med": 20.5, "p25": 18.0, "p75": 23.9, "min": 14.3, "max": 61.6}, "valley_rel_T20": {"n": 197, "mean": -43.6, "med": 0.0, "p25": -73.0, "p75": 6.0, "min": -347.0, "max": 19.0}, "valley_rel_vixpeak": {"n": 197, "mean": -46.5, "med": 0.0, "p25": -73.0, "p75": 1.0, "min": -347.0, "max": 14.0}, "cum_min": {"n": 197, "mean": -4.2, "med": -3.0, "p25": -5.3, "p75": -1.2, "min": -33.7, "max": 0.0}, "max_dd": {"n": 197, "mean": -7.4, "med": -6.8, "p25": -8.9, "p75": -4.8, "min": -33.9, "max": -2.2}, "frac_dd_gt3": 92.9, "frac_dd_gt5": 70.6, "frac_dd_gt10": 13.2}, "dd_speed": {"fast<=10d": {"n": 40, "valley_offset_E": {"n": 40, "mean": 10.7, "med": 9.0, "p25": 6.0, "p75": 13.2, "min": 3.0, "max": 26.0}, "vix_at_valley": {"n": 40, "mean": 24.3, "med": 22.4, "p25": 20.5, "p75": 24.5, "min": 18.9, "max": 61.6}, "valley_rel_T20": {"n": 40, "mean": 4.8, "med": 2.0, "p25": -1.0, "p75": 8.2, "min": -1.0, "max": 19.0}, "cum_min": {"n": 40, "mean": -5.1, "med": -3.8, "p25": -5.3, "p75": -2.9, "min": -33.7, "max": -1.8}, "max_dd": {"n": 40, "mean": -5.4, "med": -4.3, "p25": -5.9, "p75": -3.3, "min": -33.7, "max": -2.2}, "days_E_to_T20": {"n": 40, "mean": 6.0, "med": 6.0, "p25": 3.8, "p75": 8.0, "min": 1.0, "max": 10.0}}, "slow>10d": {"n": 157, "valley_offset_E": {"n": 157, "mean": 31.4, "med": 28.0, "p25": 4.0, "p75": 43.0, "min": 0.0, "max": 135.0}, "vix_at_valley": {"n": 157, "mean": 22.1, "med": 20.3, "p25": 17.0, "p75": 23.9, "min": 14.3, "max": 61.6}, "valley_rel_T20": {"n": 157, "mean": -55.9, "med": -1.0, "p25": -82.0, "p75": 5.0, "min": -347.0, "max": 19.0}, "cum_min": {"n": 157, "mean": -3.9, "med": -2.7, "p25": -5.3, "p75": -0.9, "min": -32.8, "max": 0.0}, "max_dd": {"n": 157, "mean": -7.9, "med": -7.4, "p25": -8.9, "p75": -5.6, "min": -33.9, "max": -2.6}, "days_E_to_T20": {"n": 157, "mean": 87.4, "med": 54.0, "p25": 31.0, "p75": 115.0, "min": 11.0, "max": 363.0}}}};
+const RED='#e03131', GREEN='#0aa06e', BLUE='#1e66d6', AMBER='#b45309';
+
+// 1 直方图
+echarts.init(document.getElementById('chart_hist')).setOption({
+  tooltip:{trigger:'axis',formatter:ps=>ps[0].axisValue+' 区间：'+ps[0].value+' 天'},
+  grid:{left:48,right:24,top:30,bottom:36},
+  xAxis:{type:'category',data:D.hist.labels,axisLabel:{fontSize:10}},
+  yAxis:{type:'value',name:'交易日数',axisLabel:{fontSize:10}},
+  series:[{type:'bar',data:D.hist.vals,barWidth:'70%',
+    itemStyle:{color:p=>p.dataIndex>=11?RED:'#9db8e8'},
+    markLine:{silent:true,symbol:'none',data:[
+      {xAxis:'14-16',label:{formatter:'当前 14.25',color:RED,position:'insideEndTop'},lineStyle:{color:RED,type:'dashed'}},
+      {xAxis:'16-18',label:{formatter:'中位 17.61',color:AMBER,position:'insideEndTop'},lineStyle:{color:AMBER,type:'dashed'}},
+      {xAxis:'18-20',label:{formatter:'均值 19.45',color:'#555',position:'insideEndTop'},lineStyle:{color:'#888',type:'dashed'}}
+    ]}
+  }]
+});
+
+// 2 月度趋势
+echarts.init(document.getElementById('chart_trend')).setOption({
+  tooltip:{trigger:'axis'},
+  legend:{data:['VIX 月均','标普500'],top:0},
+  grid:{left:52,right:56,top:32,bottom:40},
+  xAxis:{type:'category',data:D.monthly.labels,axisLabel:{fontSize:9.5,interval:11}},
+  yAxis:[
+    {type:'value',name:'VIX',min:0,axisLabel:{fontSize:10}},
+    {type:'value',name:'SPX',axisLabel:{fontSize:10,formatter:v=>v/1000+'k'}}
+  ],
+  dataZoom:[{type:'inside',start:60},{type:'slider',start:60,height:16,bottom:2}],
+  series:[
+    {name:'VIX 月均',type:'line',data:D.monthly.vix,smooth:true,showSymbol:false,lineStyle:{width:1.4,color:BLUE},itemStyle:{color:BLUE},
+      markLine:{silent:true,symbol:'none',data:[{yAxis:15,label:{formatter:'15 低位线',color:AMBER,fontSize:10},lineStyle:{color:AMBER,type:'dashed'}}]}},
+    {name:'标普500',type:'line',yAxisIndex:1,data:D.monthly.spx,smooth:true,showSymbol:false,lineStyle:{width:1.4,color:RED},itemStyle:{color:RED}}
+  ]
+});
+
+// 3 胜率对比
+const winFwd = [5,10,20,60,120].map(n=>'T'+n);
+const mk = (th,key)=>winFwd.map(n=>(D.by_start[th][n]||{})[key]);
+echarts.init(document.getElementById('chart_win')).setOption({
+  tooltip:{trigger:'axis',valueFormatter:v=>v==null?'—':v+'%'},
+  legend:{data:['基线','VIX<15','VIX<13','VIX<12'],top:0},
+  grid:{left:48,right:20,top:34,bottom:36},
+  xAxis:{type:'category',data:winFwd,axisLabel:{fontSize:11}},
+  yAxis:{type:'value',min:40,max:90,axisLabel:{formatter:'{value}%'}},
+  series:[
+    {name:'基线',type:'line',data:winFwd.map(n=>D.base[n].win),lineStyle:{width:1.6,color:'#9aa2ab',type:'dashed'},symbol:'circle',symbolSize:6,itemStyle:{color:'#9aa2ab'}},
+    {name:'VIX<15',type:'line',data:mk('15','win'),lineStyle:{width:2,color:BLUE},symbolSize:7,itemStyle:{color:BLUE}},
+    {name:'VIX<13',type:'line',data:mk('13','win'),lineStyle:{width:2,color:AMBER},symbolSize:7,itemStyle:{color:AMBER}},
+    {name:'VIX<12',type:'line',data:mk('12','win'),lineStyle:{width:2,color:RED},symbolSize:7,itemStyle:{color:RED}}
+  ]
+});
+
+// 4 区间长度分布
+echarts.init(document.getElementById('chart_len')).setOption({
+  tooltip:{trigger:'axis',formatter:ps=>ps[0].axisValue+'：'+ps[0].value+' 段'},
+  grid:{left:48,right:20,top:30,bottom:36},
+  xAxis:{type:'category',data:D.lenbuck.labels,axisLabel:{fontSize:10}},
+  yAxis:{type:'value',name:'区间段数',axisLabel:{fontSize:10}},
+  series:[{type:'bar',data:D.lenbuck.vals,barWidth:'55%',itemStyle:{color:BLUE},
+    label:{show:true,position:'top',fontSize:10,formatter:p=>p.value+'段 ('+((p.value/D.run_stats['15'].n_runs)*100).toFixed(0)+'%)'}}
+  ]
+});
+
+// 5 低位结束后 SPX 表现
+echarts.init(document.getElementById('chart_end')).setOption({
+  tooltip:{trigger:'axis',valueFormatter:v=>v+'%'},
+  legend:{data:['基线 T+20','基线 T+60','低位结束 T+20','低位结束 T+60'],top:0},
+  grid:{left:48,right:20,top:34,bottom:36},
+  xAxis:{type:'category',data:['均值','胜率(右轴)'],axisLabel:{fontSize:11}},
+  yAxis:[
+    {type:'value',name:'均值 %',axisLabel:{fontSize:10}},
+    {type:'value',name:'胜率 %',min:0,max:100,axisLabel:{fontSize:10,formatter:'{value}%'}}
+  ],
+  series:[
+    {name:'基线 T+20',type:'bar',data:[D.base.T20.mean,null],itemStyle:{color:'#c8cdd3'},barGap:'30%'},
+    {name:'基线 T+60',type:'bar',data:[D.base.T60.mean,null],itemStyle:{color:'#9aa2ab'},barGap:'30%'},
+    {name:'低位结束 T+20',type:'bar',data:[D.end20.mean,null],itemStyle:{color:RED},barGap:'30%'},
+    {name:'低位结束 T+60',type:'bar',data:[D.end60.mean,null],itemStyle:{color:AMBER},barGap:'30%'},
+    {name:'基线 T+20',type:'bar',yAxisIndex:1,data:[null,D.base.T20.win],itemStyle:{color:'#c8cdd3',opacity:.5}},
+    {name:'基线 T+60',type:'bar',yAxisIndex:1,data:[null,D.base.T60.win],itemStyle:{color:'#9aa2ab',opacity:.5}},
+    {name:'低位结束 T+20',type:'bar',yAxisIndex:1,data:[null,D.end20.win],itemStyle:{color:RED,opacity:.5}},
+    {name:'低位结束 T+60',type:'bar',yAxisIndex:1,data:[null,D.end60.win],itemStyle:{color:AMBER,opacity:.5}}
+  ]
+});
+
+// 6 高位场景胜率对比
+echarts.init(document.getElementById('chart_high')).setOption({
+  tooltip:{trigger:'axis',valueFormatter:v=>v==null?'—':v+'%'},
+  legend:{data:['基线','VIX<15','低波动+高位(当前形态)'],top:0},
+  grid:{left:48,right:20,top:34,bottom:36},
+  xAxis:{type:'category',data:winFwd,axisLabel:{fontSize:11}},
+  yAxis:{type:'value',min:40,max:95,axisLabel:{formatter:'{value}%'}},
+  series:[
+    {name:'基线',type:'line',data:winFwd.map(n=>D.base[n].win),lineStyle:{width:1.6,color:'#9aa2ab',type:'dashed'},symbol:'circle',symbolSize:6,itemStyle:{color:'#9aa2ab'}},
+    {name:'VIX<15',type:'line',data:mk('15','win'),lineStyle:{width:2,color:BLUE},symbolSize:7,itemStyle:{color:BLUE}},
+    {name:'低波动+高位(当前形态)',type:'line',data:winFwd.map(n=>(D.high[n.replace('T','')]||{}).win),lineStyle:{width:2.4,color:RED},symbolSize:8,itemStyle:{color:RED}}
+  ]
+});
+
+// 7 回撤时点: 谷底相对E天数分布
+echarts.init(document.getElementById('chart_dd_timing')).setOption({
+  tooltip:{trigger:'axis',formatter:ps=>ps[0].axisValue+'：'+ps[0].value+' 例 ('+((ps[0].value/D.dd_meta.valley_offset_E.n)*100).toFixed(0)+'%)'},
+  grid:{left:48,right:20,top:30,bottom:36},
+  xAxis:{type:'category',data:D.dd_timing.labels,axisLabel:{fontSize:10}},
+  yAxis:{type:'value',name:'事件数',axisLabel:{fontSize:10}},
+  series:[{type:'bar',data:D.dd_timing.vals,barWidth:'60%',
+    itemStyle:{color:p=>p.dataIndex<=1?RED:(p.dataIndex<=3?AMBER:'#9db8e8')},
+    label:{show:true,position:'top',fontSize:10,formatter:p=>p.value+'例'},
+    markLine:{silent:true,symbol:'none',label:{formatter:'中位 18 天',color:RED,position:'end'},lineStyle:{color:RED,type:'dashed'}}}
+  ]
+});
+
+// 8 谷底时 VIX 分布
+echarts.init(document.getElementById('chart_dd_vix')).setOption({
+  tooltip:{trigger:'axis',formatter:ps=>ps[0].axisValue+'：'+ps[0].value+' 例 ('+((ps[0].value/D.dd_meta.vix_at_valley.n)*100).toFixed(0)+'%)'},
+  grid:{left:48,right:20,top:30,bottom:36},
+  xAxis:{type:'category',data:D.dd_vix.labels,axisLabel:{fontSize:10}},
+  yAxis:{type:'value',name:'事件数',axisLabel:{fontSize:10}},
+  series:[{type:'bar',data:D.dd_vix.vals,barWidth:'58%',
+    itemStyle:{color:p=>p.dataIndex===1||p.dataIndex===2?RED:'#9db8e8'},
+    label:{show:true,position:'top',fontSize:10,formatter:p=>p.value+'例'},
+    markLine:{silent:true,symbol:'none',label:{formatter:'中位 20.5',color:RED,position:'end'},lineStyle:{color:RED,type:'dashed'}}}
+  ]
+});
+</script>
+</body>
+</html>

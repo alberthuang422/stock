@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GILD 财报前后 vs 板块对照（IBB/XBI/XLV）</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<style>
+  body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background:#f7f8fa; color:#222; margin:0; padding:24px; }
+  .wrap { max-width:1080px; margin:0 auto; }
+  h1 { font-size:22px; margin:0 0 4px; }
+  .meta { color:#888; font-size:12px; margin-bottom:18px; }
+  .cards { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:20px; }
+  .card { flex:1; min-width:210px; background:#fff; border-radius:10px; padding:14px 16px; box-shadow:0 1px 4px rgba(0,0,0,.06); }
+  .card .k { font-size:12px; color:#888; margin-bottom:6px; }
+  .card .v { font-size:20px; font-weight:700; }
+  .card .s { font-size:12px; color:#999; margin-top:4px; }
+  .up { color:#d23b2e; } .down { color:#1a9e4b; }
+  .panel { background:#fff; border-radius:10px; padding:18px; margin-bottom:20px; box-shadow:0 1px 4px rgba(0,0,0,.06); }
+  .panel h2 { font-size:16px; margin:0 0 12px; }
+  .note { font-size:12px; color:#888; margin-top:8px; }
+  table { width:100%; border-collapse:collapse; font-size:13px; }
+  th, td { padding:7px 8px; border-bottom:1px solid #eee; text-align:right; }
+  th { background:#fafbfc; color:#555; font-weight:600; text-align:right; }
+  td.win, th:first-child { text-align:left; }
+  .sub { font-size:11px; color:#aaa; font-weight:400; }
+  .hl { background:#fff8e6; }
+  ul { margin:8px 0; padding-left:20px; } li { margin:5px 0; line-height:1.6; }
+  .tag { display:inline-block; background:#eef3fb; color:#1f4e79; border-radius:4px; padding:1px 7px; font-size:12px; margin-right:6px; }
+  .concl { border-left:4px solid #1f4e79; background:#f4f7fb; padding:10px 14px; font-size:14px; line-height:1.8; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>GILD 财报（2026-08-04）前后：是板块主升浪，还是 GILD 独自的行情？</h1>
+  <div class="meta">标的：GILD（吉利德科学）vs IBB / XBI / XLV ｜ 行情：Yahoo Finance 日线（复权价），截至 2026-08-14 ｜ 生成：2026-08-16</div>
+
+  <div class="cards">
+    <div class="card"><div class="k">财报前主升段（6/10→7/7）</div><div class="v up">GILD +13.0%</div><div class="s">IBB +19.5% ｜ XBI +27.3% ｜ XLV +8.1%<br>板块涨得比 GILD 更猛 → 主升浪是板块性的</div></div>
+    <div class="card"><div class="k">财报日 8/4 当天</div><div class="v up">GILD +3.13%</div><div class="s">IBB +2.28% ｜ XBI +3.10% ｜ XLV -0.09%<br>板块齐涨，非 GILD 独有</div></div>
+    <div class="card"><div class="k">财报后两日（8/4→8/6）</div><div class="v down">GILD -3.25%</div><div class="s">IBB +1.48% ｜ XBI +1.73% ｜ XLV +1.45%<br>只有 GILD 跌 → 真正的个股事件</div></div>
+    <div class="card"><div class="k">最新（8/14 收）</div><div class="v up">GILD $138.36</div><div class="s">已突破 7/7 前高 $136.36，创财报后新高<br>“快速回落”仅持续 2 天即 V 型修复</div></div>
+  </div>
+
+  <div class="panel">
+    <h2>① 结论</h2>
+    <div class="concl">
+      <b>“财报前涨很凶”是板块主升浪 + GILD 个股催化叠加，且 GILD 其实跑输板块</b>（6/10→7/7：XBI +27.3% &gt; IBB +19.5% &gt; GILD +13.0% &gt; XLV +8.1%）。真正<b>只有 GILD 独自演绎</b>的是财报后 8/5–8/6 的回落：板块同期齐涨（+1.5% 左右），仅 GILD 因财报账面净亏 $105 亿而回吐 -3.3%。随后市场认定亏损为收购一次性计提、主业 HIV 增长 +12%，2 天内修复并创新高——所以这不是“财报见光死”，而是“财报噪音吓退短线资金”。
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>② 归一化走势（2026-06-01 = 100）</h2>
+    <div id="chart1" style="width:100%;height:400px;"></div>
+    <div class="note">GILD 于 06-10 见底（相对板块晚一周），07-07 见顶后与板块一同回调；8/4 财报后两日独跌，随后 8/7 起领涨并创新高。</div>
+  </div>
+
+  <div class="panel">
+    <h2>③ 关键窗口收益对照</h2>
+    <div id="chart2" style="width:100%;height:360px;"></div>
+    <table>
+      <tr><th>窗口</th><th>GILD<br><span class='sub'>吉利德科学</span></th><th>IBB<br><span class='sub'>生物科技ETF</span></th><th>XBI<br><span class='sub'>小盘生物科技ETF</span></th><th>XLV<br><span class='sub'>医疗保健精选ETF</span></th></tr>
+      <tr><td class='win'>财报前主升段 6/10→7/7</td><td class='up'>+12.99%</td><td class='up'>+19.48%</td><td class='up'>+27.30%</td><td class='up'>+8.06%</td></tr><tr><td class='win'>财报前回落段 7/7→8/3</td><td class='down'>-3.82%</td><td class='down'>-6.21%</td><td class='down'>-10.11%</td><td class='down'>-1.34%</td></tr><tr><td class='win'>财报日当周 7/31→8/7</td><td class='up'>+2.30%</td><td class='up'>+6.06%</td><td class='up'>+7.05%</td><td class='up'>+1.93%</td></tr><tr><td class='win'>财报后两日 8/4→8/6</td><td class='down'>-3.25%</td><td class='up'>+1.48%</td><td class='up'>+1.73%</td><td class='up'>+1.45%</td></tr><tr><td class='win'>财报后修复段 8/6→8/14</td><td class='up'>+5.73%</td><td class='up'>+2.74%</td><td class='up'>+1.88%</td><td class='up'>+1.78%</td></tr><tr><td class='win'>近一周 8/7→8/14</td><td class='up'>+3.87%</td><td class='up'>+0.28%</td><td class='up'>+0.03%</td><td class='up'>+1.02%</td></tr>
+    </table>
+    <div class="note">红涨绿跌；收益为复权价（adj_close）区间涨跌幅。</div>
+  </div>
+
+  <div class="panel">
+    <h2>④ 8/4 财报发布后逐日涨跌（%）</h2>
+    <table>
+      <tr><th>日期</th><th>GILD<br><span class='sub'>吉利德科学</span></th><th>IBB<br><span class='sub'>生物科技ETF</span></th><th>XBI<br><span class='sub'>小盘生物科技ETF</span></th><th>XLV<br><span class='sub'>医疗保健精选ETF</span></th></tr>
+      <tr><td class='win'>08-05</td><td class='down'>-2.58%</td><td class='up'>+0.87%</td><td class='up'>+0.74%</td><td class='up'>+1.27%</td></tr><tr><td class='win'>08-06</td><td class='down'>-0.68%</td><td class='up'>+0.61%</td><td class='up'>+0.97%</td><td class='up'>+0.18%</td></tr><tr><td class='win'>08-07</td><td class='up'>+1.80%</td><td class='up'>+2.46%</td><td class='up'>+1.86%</td><td class='up'>+0.75%</td></tr><tr><td class='win'>08-10</td><td class='down'>-0.11%</td><td class='up'>+1.17%</td><td class='up'>+0.42%</td><td class='up'>+1.67%</td></tr><tr><td class='win'>08-11</td><td class='up'>+2.04%</td><td class='down'>-0.14%</td><td class='up'>+0.03%</td><td class='down'>-0.26%</td></tr><tr><td class='win'>08-12</td><td class='up'>+0.07%</td><td class='up'>+0.49%</td><td class='up'>+0.84%</td><td class='up'>+0.26%</td></tr><tr><td class='win'>08-13</td><td class='up'>+1.67%</td><td class='down'>-0.89%</td><td class='down'>-1.59%</td><td class='down'>-0.04%</td></tr><tr><td class='win'>08-14</td><td class='up'>+0.16%</td><td class='down'>-0.34%</td><td class='up'>+0.35%</td><td class='down'>-0.60%</td></tr>
+    </table>
+    <div class="note">8/5–8/6 为 GILD 独跌窗口：板块（IBB/XBI/XLV）连续两日收涨，GILD 两日合计 -3.25%；8/7 起修复，8/14 收 138.36 高于财报日收盘。</div>
+  </div>
+
+  <div class="panel">
+    <h2>⑤ GILD 的“特别驱动”拆解：β（板块）与 α（个股）</h2>
+    <table>
+      <tr><th>阶段</th><th>板块同步性</th><th>GILD 个股驱动</th></tr>
+      <tr><td class="win">6 月中旬–7/7<br>（财报前主升段）</td>
+          <td><span class="tag">β 为主</span>板块主升浪：IBB +19.5%、XBI +27.3%，GILD 涨幅落后板块</td>
+          <td>Trodelvy 一线 mTNBC 获批（6/24 美国 + 欧盟 27 国首个一线 ADC）；Yeztugo 每周口服 PrEP 获 FDA 受理（6/15）；ISL/LEN 每周口服 HIV III 期双达终点；HSBC 上调买入（7/6–7/7，目标 $133→$155）→ 7/7 单日 +5.2%</td></tr>
+      <tr><td class="win">7/7–8/3<br>（财报前回落）</td>
+          <td><span class="tag">β 同步</span>板块性回调：XBI -10.1%、IBB -6.2%，GILD -3.8% 居中</td>
+          <td>无明显利空，随板块回调；期间 7/16 成交额全市场第一（机构抢跑财报）</td></tr>
+      <tr><td class="win hl">8/4 财报日</td>
+          <td><span class="tag">板块齐涨</span>IBB +2.3%、XBI +3.1% 同步大涨</td>
+          <td>Q2 营收 $78.0 亿 +10%（超预期 5.4%）、HIV +12%、上调全年指引；GAAP 净亏 $104.96 亿（收购 IPR&D $112 亿 + Trodelvy 减值 $17.5 亿，一次性非现金）</td></tr>
+      <tr><td class="win hl">8/5–8/6<br>（财报后回落）</td>
+          <td><span class="tag">α 独立</span>板块仍在涨（IBB/XBI/XLV +1.4~1.7%），GILD 独自 -3.25%</td>
+          <td>账面巨亏 $105 亿引发短线抛售；illustrative EPS $2.27（+13%）显示主业健康</td></tr>
+      <tr><td class="win">8/7–8/14<br>（修复）</td>
+          <td><span class="tag">α 领涨</span>GILD +3.9% vs IBB +0.3%、XBI 0.0%、XLV +1.0%</td>
+          <td>市场消化“亏损是一次性计提”；8/27 BIC/LEN（每日一次 HIV 复方）PDUFA 临近，财报前即有预期抢跑</td></tr>
+    </table>
+  </div>
+
+  <div class="panel">
+    <h2>⑥ 一句话回答</h2>
+    <ul>
+      <li><b>IBB/XBI/XLV 在这段也是主升浪吗？</b> —— <b>是，而且是它们领涨</b>。财报前主升段 GILD +13%，板块 +8%~+27%，GILD 并未跑赢板块；“财报前涨很凶”主要是搭板块主升浪的便车，个股催化（Trodelvy 获批 + 长效 HIV 数据 + HSBC 上调）锦上添花。</li>
+      <li><b>GILD 有特别的驱动因素吗？</b> —— 有，但体现在<b>财报后而非财报前</b>：8/5–8/6 板块齐涨、仅 GILD 独跌（Q2 账面净亏 $105 亿的财报噪音），这是 GILD 独有的 α 事件；且 2 天即修复、创新高，说明市场认定该亏损为收购一次性非现金计提，主业（HIV +12%、上调指引）才是定价核心。</li>
+    </ul>
+  </div>
+
+  <div class="panel">
+    <h2>数据来源</h2>
+    <ul>
+      <li><b>行情</b>：Yahoo Finance 日线（本机 Chrome 拉取），复权收盘价，截至 2026-08-14（GILD/IBB/XBI/XLV 各自交易日对齐）</li>
+      <li><b>财报</b>：GILD 2026-08-04 发布 Q2 财报（10-Q/8-K，一手来源）：营收 $78.0 亿（+10%）、HIV $56.9 亿（+12%）、GAAP 净亏 $104.96 亿（Arcellx/Tubulis/Ouro 收购 IPR&D $112 亿 + Trodelvy 减值 $17.5 亿）、illustrative EPS $2.27（+13%）、上调全年指引</li>
+      <li><b>催化剂</b>：公开新闻与研报（BellwetherBrief、StockToTrade、Zacks、Mitrade、AInvest、Longbridge 等，2026-06 ~ 08 报道）——<b>非一手来源，需核实原文</b></li>
+    </ul>
+  </div>
+</div>
+
+<script>
+var DATA = {"dates": ["06-01", "06-02", "06-03", "06-04", "06-05", "06-08", "06-09", "06-10", "06-11", "06-12", "06-15", "06-16", "06-17", "06-18", "06-22", "06-23", "06-24", "06-25", "06-26", "06-29", "06-30", "07-01", "07-02", "07-06", "07-07", "07-08", "07-09", "07-10", "07-13", "07-14", "07-15", "07-16", "07-17", "07-20", "07-21", "07-22", "07-23", "07-24", "07-27", "07-28", "07-29", "07-30", "07-31", "08-03", "08-04", "08-05", "08-06", "08-07", "08-10", "08-11", "08-12", "08-13", "08-14"], "norm": {"GILD": [100.0, 97.31, 98.39, 98.54, 98.52, 97.71, 95.73, 92.66, 96.01, 95.8, 95.44, 97.69, 96.32, 95.02, 95.87, 96.01, 96.1, 95.08, 98.18, 96.99, 97.0, 96.72, 100.79, 99.51, 104.7, 104.28, 103.53, 99.68, 100.89, 99.84, 101.12, 104.65, 103.1, 102.28, 100.03, 100.07, 100.47, 99.28, 100.21, 103.13, 101.91, 100.8, 99.97, 100.7, 103.84, 101.16, 100.47, 102.28, 102.16, 104.24, 104.32, 106.06, 106.23], "IBB": [100.0, 96.99, 98.9, 101.22, 99.45, 98.55, 99.99, 97.97, 100.66, 100.76, 101.67, 101.24, 102.42, 102.54, 104.52, 105.16, 107.19, 108.46, 110.64, 112.07, 112.31, 112.27, 115.56, 115.33, 117.06, 115.94, 116.53, 113.41, 111.93, 111.41, 112.14, 111.91, 112.05, 110.15, 111.79, 110.42, 111.59, 111.1, 111.21, 112.5, 111.33, 112.17, 110.08, 109.78, 112.28, 113.26, 113.95, 116.75, 118.11, 117.95, 118.53, 117.48, 117.07], "XBI": [100.0, 95.61, 97.16, 99.85, 96.3, 96.12, 98.32, 96.43, 99.34, 100.13, 102.08, 101.29, 104.32, 105.31, 109.27, 110.14, 112.15, 113.56, 116.4, 118.59, 118.55, 117.28, 120.2, 120.47, 122.76, 122.09, 123.07, 119.13, 116.37, 116.45, 117.03, 113.87, 115.56, 113.07, 115.74, 113.95, 114.04, 112.73, 112.81, 112.2, 110.8, 113.46, 110.13, 110.35, 113.78, 114.62, 115.74, 117.89, 118.38, 118.41, 119.4, 117.51, 117.92], "XLV": [100.0, 99.03, 99.8, 102.87, 103.5, 103.25, 104.55, 103.39, 104.23, 104.04, 103.42, 103.45, 101.94, 101.06, 101.95, 103.39, 104.18, 105.73, 108.93, 109.21, 107.79, 108.39, 111.24, 110.03, 111.72, 110.27, 110.18, 109.27, 109.66, 107.54, 107.54, 109.93, 109.44, 108.19, 108.87, 108.32, 109.68, 110.45, 111.01, 113.63, 112.94, 111.09, 110.43, 110.22, 110.13, 111.53, 111.73, 112.56, 114.44, 114.14, 114.44, 114.4, 113.71]}, "windows": [{"win": "财报前主升段 6/10→7/7", "GILD": 12.99, "IBB": 19.48, "XBI": 27.3, "XLV": 8.06}, {"win": "财报前回落段 7/7→8/3", "GILD": -3.82, "IBB": -6.21, "XBI": -10.11, "XLV": -1.34}, {"win": "财报日当周 7/31→8/7", "GILD": 2.3, "IBB": 6.06, "XBI": 7.05, "XLV": 1.93}, {"win": "财报后两日 8/4→8/6", "GILD": -3.25, "IBB": 1.48, "XBI": 1.73, "XLV": 1.45}, {"win": "财报后修复段 8/6→8/14", "GILD": 5.73, "IBB": 2.74, "XBI": 1.88, "XLV": 1.78}, {"win": "近一周 8/7→8/14", "GILD": 3.87, "IBB": 0.28, "XBI": 0.03, "XLV": 1.02}], "daily": [{"date": "08-05", "GILD": -2.58, "IBB": 0.87, "XBI": 0.74, "XLV": 1.27}, {"date": "08-06", "GILD": -0.68, "IBB": 0.61, "XBI": 0.97, "XLV": 0.18}, {"date": "08-07", "GILD": 1.8, "IBB": 2.46, "XBI": 1.86, "XLV": 0.75}, {"date": "08-10", "GILD": -0.11, "IBB": 1.17, "XBI": 0.42, "XLV": 1.67}, {"date": "08-11", "GILD": 2.04, "IBB": -0.14, "XBI": 0.03, "XLV": -0.26}, {"date": "08-12", "GILD": 0.07, "IBB": 0.49, "XBI": 0.84, "XLV": 0.26}, {"date": "08-13", "GILD": 1.67, "IBB": -0.89, "XBI": -1.59, "XLV": -0.04}, {"date": "08-14", "GILD": 0.16, "IBB": -0.34, "XBI": 0.35, "XLV": -0.6}], "lo_d": "06-10", "hi_d": "07-07"};
+var C = {"GILD":"#1f4e79","IBB":"#c0392b","XBI":"#27ae60","XLV":"#e67e22"};
+var N = {"GILD":"GILD 吉利德","IBB":"IBB 生物科技","XBI":"XBI 小盘生物","XLV":"XLV 医疗保健"};
+
+echarts.init(document.getElementById('chart1')).setOption({
+  tooltip: { trigger: 'axis' },
+  legend: { data: ['GILD 吉利德','IBB 生物科技','XBI 小盘生物','XLV 医疗保健'] },
+  grid: { left: 50, right: 20, top: 40, bottom: 40 },
+  xAxis: { type: 'category', data: DATA.dates },
+  yAxis: { type: 'value', name: '归一化 (6/1=100)' },
+  series: ['GILD','IBB','XBI','XLV'].map(function(k){
+    return {
+      name: N[k], type: 'line', smooth: true, showSymbol: false,
+      lineStyle: { width: k==='GILD'?3.5:1.8, color: C[k] },
+      itemStyle: { color: C[k] },
+      data: DATA.norm[k]
+    };
+  })
+});
+
+echarts.init(document.getElementById('chart2')).setOption({
+  tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+  legend: { data: ['GILD 吉利德','IBB 生物科技','XBI 小盘生物','XLV 医疗保健'] },
+  grid: { left: 50, right: 20, top: 40, bottom: 60 },
+  xAxis: { type: 'category', data: DATA.windows.map(function(w){return w.win;}), axisLabel: { interval: 0, rotate: 28, fontSize: 11 } },
+  yAxis: { type: 'value', name: '区间涨跌幅 %' },
+  series: ['GILD','IBB','XBI','XLV'].map(function(k){
+    return {
+      name: N[k], type: 'bar',
+      itemStyle: { color: C[k], borderRadius: [2,2,0,0] },
+      data: DATA.windows.map(function(w){
+        var v = w[k];
+        return { value: v, itemStyle: { color: v >= 0 ? C[k] : '#1a9e4b' } };
+      })
+    };
+  })
+});
+</script>
+</body>
+</html>

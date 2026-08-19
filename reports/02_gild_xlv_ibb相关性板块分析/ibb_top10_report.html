@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IBB 前十大成分股对照分析报告</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<style>
+  :root { --ink:#1f2733; --sub:#5b6675; --line:#e3e8ef; --bg:#f7f9fc; --card:#ffffff;
+          --red:#c0392b; --green:#1e8449; --blue:#2e5f9e; --amber:#b9770e; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--ink); font-family: -apple-system, "PingFang SC",
+         "Microsoft YaHei", "Helvetica Neue", sans-serif; line-height: 1.65; padding: 24px 16px 60px; }
+  .wrap { max-width: 1180px; margin: 0 auto; }
+  h1 { font-size: 26px; letter-spacing: .5px; margin-bottom: 4px; }
+  .subtitle { color: var(--sub); font-size: 13px; margin-bottom: 22px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+          padding: 20px 22px; margin-bottom: 18px; box-shadow: 0 1px 3px rgba(20,30,50,.05); }
+  .card h2 { font-size: 17px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .card h2::before { content: ""; width: 4px; height: 16px; background: var(--blue); border-radius: 2px; }
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 4px; }
+  .kv { background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; }
+  .kv .k { font-size: 12px; color: var(--sub); }
+  .kv .v { font-size: 20px; font-weight: 700; margin-top: 2px; }
+  .kv .v small { font-size: 12px; font-weight: 400; color: var(--sub); }
+  .up { color: var(--red); } .down { color: var(--green); }
+  .tag { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 20px;
+         background: #eef3fb; color: var(--blue); margin-left: 6px; vertical-align: 2px; }
+  table { width: 100%; border-collapse: collapse; font-size: 12.5px; margin-top: 6px; }
+  th, td { padding: 7px 8px; text-align: right; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  th { background: #f1f4f9; font-weight: 600; }
+  th:first-child, td:first-child { text-align: left; }
+  .note { font-size: 12px; color: var(--sub); margin-top: 10px; }
+  .chart { width: 100%; height: 360px; }
+  .concl { border-left: 4px solid var(--blue); background: #f4f8ff; padding: 12px 16px;
+           border-radius: 0 8px 8px 0; font-size: 14px; margin-top: 10px; }
+  .disclaimer { font-size: 12px; color: var(--sub); margin-top: 16px; border-top: 1px dashed var(--line);
+                padding-top: 12px; }
+  .src { font-size: 11.5px; color: var(--sub); margin-top: 8px; }
+  .hl { background: #fdf6e9; padding: 1px 5px; border-radius: 4px; font-weight: 600; }
+  .scroll { overflow-x: auto; }
+  @media (max-width: 720px) { .grid3 { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>IBB 前十大成分股对照分析报告</h1>
+  <div class="subtitle">iShares 生物科技 ETF（IBB）vs 前十大持仓 · 分阶段对比（2026-02-01 为界）· 数据截至 2026-08-14</div>
+
+  <div class="card">
+    <h2>核心结论</h2>
+    <div class="grid3">
+      <div class="kv"><div class="k">前十大合计权重</div><div class="v">~45% <small>238-252 只持仓</small></div></div>
+      <div class="kv"><div class="k">分界后超额分布</div><div class="v"><span class="up">+95.8pp</span> ~ <span class="down">−46.4pp</span></div></div>
+      <div class="kv"><div class="k">分界后相关性区间</div><div class="v">0.32 ~ 0.66 <small>Pearson</small></div></div>
+    </div>
+    <div class="concl">
+      ① <b>内部结构剧烈分化</b>：分界后相对 IBB，涨幅从 <span class="up">RVMD +95.8pp</span>、<span class="up">ILMN +21.4pp</span>、<span class="up">NTRA +20.3pp</span> 到 <span class="down">GILD −17.0pp</span>、<span class="down">ARGX −12.0pp</span>、<span class="down">ALNY −46.4pp</span>——同样一只 ETF，成分股半年表现横跨 140pp。<br>
+      ② <b>大市值权重股相对平庸</b>：权重最大的 AMGN/VRTX/GILD/REGN（合计 ~28.6%）分界后对 IBB 超额为 −6.7 ~ +6.6pp，整体拖累指数；真正的 alpha 来自中小市值（RVMD/NTRA/ILMN）。<br>
+      ③ <b>个股化脱钩加剧</b>：分界后相关性显著下降的有 ALNY（0.55→0.32）、ILMN（0.60→0.32）、BIIB（0.55→0.40）、AMGN（0.65→0.55）——这些股票在走独立行情；而 VRTX（→0.66）、NTRA（→0.52）、ARGX（→0.55）反而更贴板块。<br>
+      ④ <b>跷跷板结构</b>：ALNY 37%、ILMN 36%、GILD 34% 最高（个股事件驱动强）；AMGN 21.5%、RVMD 22% 最低（独立强势型）。
+    </div>
+    <div class="src">数据：Yahoo Finance 日线（收盘价）；权重为 2026-08 公开披露口径（Morningstar/iShares 等，需以官方最新披露为准）；计算：日收益率 Pearson 相关、OLS β、残差波动、跑赢天数占比、跷跷板占比。RVMD（2020-02 上市）、ARGX（2017-05）、NTRA（2015-07）样本较短。</div>
+  </div>
+
+  <div class="card">
+    <h2>分阶段相关性全景表 <span class="tag">以 2026-02-01 为界</span></h2>
+    <div class="scroll">
+    <table>
+      <tr><th>成分股</th><th>权重</th><th>样本</th><th>起始</th><th>全期 r</th><th>分界前 r</th><th>分界后 r</th><th>β 分界后</th><th>残差 分界后</th><th>分界后涨幅</th><th>分界前超额</th><th>分界后超额</th><th>2026分界前超额</th><th>2026以来超额</th><th>跑赢 分界后</th><th>跑赢 7/15后</th><th>跷跷板</th></tr>
+      <tr>
+      <td><b>AMGN</b> 安进 Amgen</td>
+      <td>8.6%</td>
+      <td>2920</td>
+      <td>2015-01-05</td>
+      <td>0.6486</td>
+      <td>0.6539</td>
+      <td>0.5523</td>
+      <td>0.7</td>
+      <td>1.464</td>
+      <td>20.46</td>
+      <td class="up">+47.3pp</td>
+      <td class="up">+6.6pp</td>
+      <td class="up">+2.3pp</td>
+      <td class="up">+9.4pp</td>
+      <td>48.9</td>
+      <td>52.2</td>
+      <td>21.5</td>
+    </tr><tr>
+      <td><b>VRTX</b> 福泰制药 Vertex</td>
+      <td>8.1%</td>
+      <td>2920</td>
+      <td>2015-01-05</td>
+      <td>0.6499</td>
+      <td>0.6494</td>
+      <td>0.6636</td>
+      <td>0.931</td>
+      <td>1.454</td>
+      <td>7.15</td>
+      <td class="up">+219.1pp</td>
+      <td class="down">-6.7pp</td>
+      <td class="up">+1.9pp</td>
+      <td class="down">-5.5pp</td>
+      <td>43.0</td>
+      <td>43.5</td>
+      <td>23.7</td>
+    </tr><tr>
+      <td><b>GILD</b> 吉利德 Gilead</td>
+      <td>7.0%</td>
+      <td>2920</td>
+      <td>2015-01-05</td>
+      <td>0.5761</td>
+      <td>0.5793</td>
+      <td>0.5151</td>
+      <td>0.638</td>
+      <td>1.472</td>
+      <td>-3.17</td>
+      <td class="down">-22.5pp</td>
+      <td class="down">-17.0pp</td>
+      <td class="up">+14.7pp</td>
+      <td class="down">-3.5pp</td>
+      <td>41.5</td>
+      <td>52.2</td>
+      <td>34.1</td>
+    </tr><tr>
+      <td><b>REGN</b> 再生元 Regeneron</td>
+      <td>6.0%</td>
+      <td>2920</td>
+      <td>2015-01-05</td>
+      <td>0.6507</td>
+      <td>0.6537</td>
+      <td>0.5836</td>
+      <td>0.849</td>
+      <td>1.637</td>
+      <td>6.42</td>
+      <td class="up">+10.6pp</td>
+      <td class="down">-7.4pp</td>
+      <td class="down">-6.5pp</td>
+      <td class="down">-13.8pp</td>
+      <td>48.9</td>
+      <td>56.5</td>
+      <td>29.6</td>
+    </tr><tr>
+      <td><b>ARGX</b> argenx</td>
+      <td>3.4%</td>
+      <td>2322</td>
+      <td>2017-05-19</td>
+      <td>0.3824</td>
+      <td>0.3768</td>
+      <td>0.5476</td>
+      <td>0.87</td>
+      <td>1.842</td>
+      <td>1.87</td>
+      <td class="up">+3668.6pp</td>
+      <td class="down">-12.0pp</td>
+      <td class="down">-2.0pp</td>
+      <td class="down">-16.0pp</td>
+      <td>43.7</td>
+      <td>34.8</td>
+      <td>25.9</td>
+    </tr><tr>
+      <td><b>NTRA</b> Natera</td>
+      <td>3.2%</td>
+      <td>2796</td>
+      <td>2015-07-02</td>
+      <td>0.4492</td>
+      <td>0.446</td>
+      <td>0.5234</td>
+      <td>1.384</td>
+      <td>3.123</td>
+      <td>34.11</td>
+      <td class="up">+1144.4pp</td>
+      <td class="up">+20.3pp</td>
+      <td class="down">-1.0pp</td>
+      <td class="up">+18.1pp</td>
+      <td>51.9</td>
+      <td>47.8</td>
+      <td>32.6</td>
+    </tr><tr>
+      <td><b>RVMD</b> Revolution Medicines <span style='color:#b9770e;font-size:11px'>短样本</span></td>
+      <td>2.9%</td>
+      <td>1633</td>
+      <td>2020-02-14</td>
+      <td>0.4871</td>
+      <td>0.4937</td>
+      <td>0.4172</td>
+      <td>1.328</td>
+      <td>4.008</td>
+      <td>109.66</td>
+      <td class="up">+201.7pp</td>
+      <td class="up">+95.8pp</td>
+      <td class="up">+20.7pp</td>
+      <td class="up">+140.5pp</td>
+      <td>51.9</td>
+      <td>43.5</td>
+      <td>22.2</td>
+    </tr><tr>
+      <td><b>BIIB</b> 渤健 Biogen</td>
+      <td>2.3%</td>
+      <td>2920</td>
+      <td>2015-01-05</td>
+      <td>0.5453</td>
+      <td>0.5512</td>
+      <td>0.3983</td>
+      <td>0.684</td>
+      <td>2.182</td>
+      <td>17.16</td>
+      <td class="down">-115.7pp</td>
+      <td class="up">+3.3pp</td>
+      <td class="down">-0.9pp</td>
+      <td class="up">+0.7pp</td>
+      <td>45.9</td>
+      <td>43.5</td>
+      <td>31.9</td>
+    </tr><tr>
+      <td><b>ALNY</b> Alnylam</td>
+      <td>2.2%</td>
+      <td>2920</td>
+      <td>2015-01-05</td>
+      <td>0.5496</td>
+      <td>0.56</td>
+      <td>0.3205</td>
+      <td>0.785</td>
+      <td>3.215</td>
+      <td>-32.57</td>
+      <td class="up">+185.3pp</td>
+      <td class="down">-46.4pp</td>
+      <td class="down">-17.6pp</td>
+      <td class="down">-60.2pp</td>
+      <td>48.9</td>
+      <td>56.5</td>
+      <td>37.0</td>
+    </tr><tr>
+      <td><b>ILMN</b> 因美纳 Illumina</td>
+      <td>2.2%</td>
+      <td>2920</td>
+      <td>2015-01-05</td>
+      <td>0.5988</td>
+      <td>0.6113</td>
+      <td>0.3183</td>
+      <td>0.611</td>
+      <td>2.521</td>
+      <td>35.26</td>
+      <td class="down">-91.1pp</td>
+      <td class="up">+21.4pp</td>
+      <td class="up">+5.8pp</td>
+      <td class="up">+24.8pp</td>
+      <td>51.9</td>
+      <td>56.5</td>
+      <td>36.3</td>
+    </tr>
+    </table>
+    </div>
+    <div class="note">说明：超额 = 成分股涨幅 − IBB 涨幅；分界前 = 各股上市日 ~ 2026-01-30，分界后 = 2026-02-01 ~ 2026-08-14（IBB +13.85%），2026分界前 = 2026-01-01 ~ 2026-01-30（IBB +2.03%），2026以来 = 2026-01-01 ~ 2026-08-14（IBB +17.31%）。跑赢占比 = 该股日收益 &gt; IBB 的天数比例；跷跷板 = 反向波动天数占比（分界后）。短样本标的（RVMD/ARGX/NTRA）对比时注意。</div>
+  </div>
+
+  <div class="card">
+    <h2>2026 年内三阶段超额：分界前 vs 分界后 vs 全年 <span class="tag">超额 = 股票 − IBB</span></h2>
+    <div id="chart_cmp" class="chart"></div>
+    <div class="note">蓝=2026 分界前（1 月，20 个交易日）超额，红=分界后（2-8 月）超额，灰=2026 全年累计超额。注意 2026 分界前仅有 20 个交易日、且 IBB 只涨 +2.03%，单月超额易被个别事件放大（如 GILD 1 月 +16.7%）；全年的"总账"看灰柱。</div>
+  </div>
+
+  <div class="card">
+    <h2>分界后相对 IBB 超额：冰火两重天 <span class="tag">2026-02 以来</span></h2>
+    <div id="chart_ex" class="chart"></div>
+    <div class="note">红=跑赢板块，绿=跑输板块。RVMD（+95.8pp）为极端值（2020 年上市的早期管线公司，2026 年暴涨）；剔除 RVMD 后，ILMN +21.4pp、NTRA +20.3pp 领先，ALNY −46.4pp 最差、GILD −17.0pp 次之。</div>
+  </div>
+
+  <div class="card">
+    <h2>相关性变化：谁在脱钩、谁在贴板块 <span class="tag">分界前 vs 分界后</span></h2>
+    <div id="chart_rel" class="chart"></div>
+    <div class="note">绿色=分界前，红色=分界后。相关性大幅下降（ALNY、ILMN、BIIB、AMGN）说明个股进入独立行情；上升或持平（VRTX、NTRA、ARGX）说明仍紧密跟随板块。</div>
+  </div>
+
+  <div class="card">
+    <h2>跷跷板占比：个股事件驱动强度 <span class="tag">2026-02 以来</span></h2>
+    <div id="chart_ss" class="chart"></div>
+    <div class="note">跷跷板占比越高，说明该股与板块"反向波动"的日子越多——ALNY（37%）、ILMN（36%）、GILD（34%）是个股事件主导型；AMGN（21.5%）、RVMD（22%）是独立强势型（同向跟涨但涨更多）。</div>
+  </div>
+
+  <div class="card">
+    <h2>7 月中旬以来跑赢占比 <span class="tag">自 2026-07-15</span></h2>
+    <div id="chart_d715" class="chart"></div>
+    <div class="note">REGN、ALNY、ILMN 在最近一个月明显跑赢板块（56.5%），而 ARGX（34.8%）、GILD/VRTX/BIIB/RVMD（43-44%）偏弱——注意 GILD 7/15 后跑赢 52.2% 但累计超额有限（前文分析过是脉冲式修复）。</div>
+  </div>
+
+  <div class="card">
+    <h2>解读与使用提示</h2>
+    <ul style="list-style:none; padding:0; margin:0;">
+      <li style="padding:8px 0 8px 18px; border-left:2px solid var(--line); margin-left:6px; position:relative;">
+        <span style="position:absolute; left:-5px; top:14px; width:8px; height:8px; border-radius:50%; background:var(--blue);"></span>
+        <b>IBB 的收益其实由少数成分股贡献</b>：分界后指数 +13.9%，但内部 4 只大权重（AMGN/VRTX/GILD/REGN，28.6% 权重）合计超额约 −24pp，全靠 RVMD/NTRA/ILMN 等中小市值拉回——买 IBB 等于押注这些"小而猛"的管线公司继续兑现。</li>
+      <li style="padding:8px 0 8px 18px; border-left:2px solid var(--line); margin-left:6px; position:relative;">
+        <span style="position:absolute; left:-5px; top:14px; width:8px; height:8px; border-radius:50%; background:var(--blue);"></span>
+        <b>相关性已不能代表成分股表现</b>：ALNY 与 IBB 相关 0.32、ILMN 0.32——用 IBB 对冲/预测这两只股票意义很小；而 VRTX（0.66）仍可当板块 β 工具。</li>
+      <li style="padding:8px 0 8px 18px; border-left:2px solid var(--line); margin-left:6px; position:relative;">
+        <span style="position:absolute; left:-5px; top:14px; width:8px; height:8px; border-radius:50%; background:var(--blue);"></span>
+        <b>ALNY 是最大反向案例</b>：相关性从 0.55 崩到 0.32、跷跷板 37%、超额 −46.4pp——个股利空（需核实具体事件）完全盖过板块行情，若持有它不可用板块逻辑解释。</li>
+      <li style="padding:8px 0 8px 18px; border-left:2px solid var(--line); margin-left:6px; position:relative;">
+        <span style="position:absolute; left:-5px; top:14px; width:8px; height:8px; border-radius:50%; background:var(--blue);"></span>
+        <b>局限</b>：权重为时点快照（随行情波动）；RVMD/ARGX/NTRA 样本短；分界后仅 135 日；未验证各股具体催化剂（除 AMGN/VRTX/GILD 已归因外）。本报告为统计描述，不构成买卖建议。</li>
+    </ul>
+    <div class="disclaimer">免责声明：以上内容基于公开数据（Yahoo Finance 行情、iShares/Morningstar 持仓披露等）与量化统计，仅供参考，不构成投资建议。市场有风险，投资需谨慎。任何投资决策应结合个人风险承受能力、资金状况和投资目标独立判断，必要时咨询持牌专业机构。过往表现不预示未来收益。</div>
+  </div>
+
+</div>
+
+<script>
+const DATA = {"ex_names": ["ALNY Alnylam", "GILD 吉利德 Gile", "ARGX argenx", "REGN 再生元 Rege", "VRTX 福泰制药 Ver", "BIIB 渤健 Bioge", "AMGN 安进 Amgen", "NTRA Natera", "ILMN 因美纳 Illu", "RVMD Revoluti"], "ex_vals": [-46.4, -17.0, -12.0, -7.4, -6.7, 3.3, 6.6, 20.3, 21.4, 95.8], "ex_colors": ["#1e8449", "#1e8449", "#1e8449", "#1e8449", "#1e8449", "#c0392b", "#c0392b", "#c0392b", "#c0392b", "#c0392b"], "cmp_names": ["ALNY", "GILD", "ARGX", "REGN", "VRTX", "BIIB", "AMGN", "NTRA", "ILMN", "RVMD"], "cmp_ytd_pre": [-17.6, 14.7, -2.0, -6.5, 1.9, -0.9, 2.3, -1.0, 5.8, 20.7], "cmp_post": [-46.4, -17.0, -12.0, -7.4, -6.7, 3.3, 6.6, 20.3, 21.4, 95.8], "cmp_ytd": [-60.2, -3.5, -16.0, -13.8, -5.5, 0.7, 9.4, 18.1, 24.8, 140.5], "rel_names": ["AMGN", "VRTX", "GILD", "REGN", "ARGX", "NTRA", "RVMD", "BIIB", "ALNY", "ILMN"], "rel_pre": [0.6539, 0.6494, 0.5793, 0.6537, 0.3768, 0.446, 0.4937, 0.5512, 0.56, 0.6113], "rel_post": [0.5523, 0.6636, 0.5151, 0.5836, 0.5476, 0.5234, 0.4172, 0.3983, 0.3205, 0.3183], "ss_names": ["AMGN", "VRTX", "GILD", "REGN", "ARGX", "NTRA", "RVMD", "BIIB", "ALNY", "ILMN"], "ss_vals": [21.5, 23.7, 34.1, 29.6, 25.9, 32.6, 22.2, 31.9, 37.0, 36.3], "d715_names": ["AMGN", "VRTX", "GILD", "REGN", "ARGX", "NTRA", "RVMD", "BIIB", "ALNY", "ILMN"], "d715_vals": [52.2, 43.5, 52.2, 56.5, 34.8, 47.8, 43.5, 43.5, 56.5, 56.5], "split": "2026-02-01", "d715": "2026-07-15"};
+const axisStyle = { axisLine: { lineStyle: { color: '#c9d2de' } }, axisLabel: { color: '#5b6675' } };
+const tooltipAxis = { trigger: 'axis', backgroundColor: 'rgba(255,255,255,.96)', borderColor: '#d9e1ec', textStyle: { color: '#1f2733' } };
+
+echarts.init(document.getElementById('chart_cmp')).setOption({
+  tooltip: tooltipAxis,
+  legend: { data: ['2026分界前超额', '分界后超额', '2026全年超额'], top: 0 },
+  grid: { left: 70, right: 30, top: 34, bottom: 40 },
+  xAxis: Object.assign({ type: 'category', data: DATA.cmp_names }, axisStyle),
+  yAxis: Object.assign({ type: 'value', name: '超额 (pp)', scale: true }, axisStyle),
+  series: [
+    { name: '2026分界前超额', type: 'bar', data: DATA.cmp_ytd_pre, barWidth: 10,
+      itemStyle: { color: 'rgba(46,95,158,.75)', borderRadius: [3,3,0,0] } },
+    { name: '分界后超额', type: 'bar', data: DATA.cmp_post, barWidth: 10,
+      itemStyle: { color: 'rgba(192,57,43,.8)', borderRadius: [3,3,0,0] } },
+    { name: '2026全年超额', type: 'line', data: DATA.cmp_ytd, symbolSize: 6,
+      lineStyle: { width: 1.5, color: '#5f5e5a' }, itemStyle: { color: '#5f5e5a' } }
+  ]
+});
+
+echarts.init(document.getElementById('chart_ex')).setOption({
+  tooltip: tooltipAxis,
+  grid: { left: 120, right: 30, top: 20, bottom: 40 },
+  xAxis: Object.assign({ type: 'value', name: '相对 IBB 超额 (pp)' }, axisStyle),
+  yAxis: Object.assign({ type: 'category', data: DATA.ex_names }, axisStyle),
+  series: [{ type: 'bar', data: DATA.ex_vals.map((v, i) => ({ value: v, itemStyle: { color: DATA.ex_colors[i] } })),
+    label: { show: true, position: 'right', formatter: p => p.value + 'pp', fontSize: 11, color: '#5b6675' },
+    barWidth: 16 }]
+});
+
+echarts.init(document.getElementById('chart_rel')).setOption({
+  tooltip: tooltipAxis,
+  legend: { data: ['分界前', '分界后'], top: 0 },
+  grid: { left: 60, right: 20, top: 34, bottom: 40 },
+  xAxis: Object.assign({ type: 'category', data: DATA.rel_names }, axisStyle),
+  yAxis: Object.assign({ type: 'value', name: 'Pearson r', min: 0, max: 0.8 }, axisStyle),
+  series: [
+    { name: '分界前', type: 'bar', data: DATA.rel_pre, barWidth: 12,
+      itemStyle: { color: 'rgba(30,132,73,.65)', borderRadius: [3,3,0,0] } },
+    { name: '分界后', type: 'bar', data: DATA.rel_post, barWidth: 12,
+      itemStyle: { color: 'rgba(192,57,43,.75)', borderRadius: [3,3,0,0] } }
+  ]
+});
+
+echarts.init(document.getElementById('chart_ss')).setOption({
+  tooltip: tooltipAxis,
+  grid: { left: 60, right: 20, top: 24, bottom: 40 },
+  xAxis: Object.assign({ type: 'category', data: DATA.ss_names }, axisStyle),
+  yAxis: Object.assign({ type: 'value', name: '跷跷板占比 %', min: 0, max: 45 }, axisStyle),
+  series: [{ type: 'bar', data: DATA.ss_vals, barWidth: 16,
+    itemStyle: { color: 'rgba(46,95,158,.7)', borderRadius: [3,3,0,0] },
+    label: { show: true, position: 'top', formatter: p => p.value + '%', fontSize: 10, color: '#5b6675' } }]
+});
+
+echarts.init(document.getElementById('chart_d715')).setOption({
+  tooltip: tooltipAxis,
+  grid: { left: 60, right: 20, top: 24, bottom: 40 },
+  xAxis: Object.assign({ type: 'category', data: DATA.d715_names }, axisStyle),
+  yAxis: Object.assign({ type: 'value', name: '跑赢占比 %', min: 0, max: 70 }, axisStyle),
+  series: [{ type: 'bar', data: DATA.d715_vals, barWidth: 16,
+    itemStyle: { color: 'rgba(185,119,14,.75)', borderRadius: [3,3,0,0] },
+    label: { show: true, position: 'top', formatter: p => p.value + '%', fontSize: 10, color: '#5b6675' } }]
+});
+</script>
+</body>
+</html>

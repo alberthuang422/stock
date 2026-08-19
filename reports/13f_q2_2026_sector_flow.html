@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026 Q2 13F 全量行业加仓 / 减持全景</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<style>
+  :root {
+    --bg:#f7f7f5; --card:#ffffff; --ink:#1f2328; --sub:#6b7280; --line:#e5e7eb;
+    --red:#d63e3e; --redbg:#fdf0f0; --green:#1a9c60; --greenbg:#eefaf4;
+    --blue:#2f6fed; --bluebg:#eef4fe; --amber:#b7791f; --amberbg:#fdf6e9;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif; line-height:1.65; padding:32px 16px; }
+  .wrap { max-width:1080px; margin:0 auto; }
+  .kicker { color:var(--blue); font-size:13px; letter-spacing:2px; font-weight:600; margin-bottom:6px; }
+  h1 { font-size:28px; font-weight:800; letter-spacing:-0.5px; }
+  .meta { color:var(--sub); font-size:13px; margin-top:10px; }
+  .meta span { background:var(--card); border:1px solid var(--line); border-radius:20px; padding:2px 10px; margin-right:8px; display:inline-block; }
+  .tldr { background:linear-gradient(135deg,#fdf0f0,#fef7f0); border:1px solid #f3d9d9; border-radius:14px; padding:20px 22px; margin:22px 0 8px; }
+  .tldr h2 { font-size:15px; color:var(--red); margin-bottom:10px; }
+  .tldr p { font-size:14px; color:#4b3a3a; }
+  .tldr b { color:var(--red); }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:16px; }
+  @media (max-width:760px){ .grid2{ grid-template-columns:1fr; } }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:18px 20px; }
+  .card h3 { font-size:16px; font-weight:700; margin-bottom:4px; }
+  .card .sub { color:var(--sub); font-size:12px; margin-bottom:12px; }
+  .num { font-size:26px; font-weight:800; letter-spacing:-0.5px; }
+  .up { color:var(--red); } .dn { color:var(--green); }
+  .sec { margin-top:34px; }
+  .sec > h2 { font-size:20px; font-weight:800; border-left:4px solid var(--blue); padding-left:10px; margin-bottom:4px; }
+  .sec > .sub { color:var(--sub); font-size:13px; margin-bottom:14px; }
+  table { width:100%; border-collapse:collapse; font-size:13px; background:var(--card); border:1px solid var(--line); border-radius:12px; overflow:hidden; }
+  th { background:#f1f3f5; text-align:left; padding:10px 12px; font-weight:600; white-space:nowrap; }
+  td { padding:9px 12px; border-top:1px solid #f0f0f0; vertical-align:top; }
+  tr:hover td { background:#fafbfc; }
+  .tag { display:inline-block; padding:1px 8px; border-radius:10px; font-size:12px; font-weight:600; }
+  .tag.up { background:var(--redbg); color:var(--red); }
+  .tag.dn { background:var(--greenbg); color:var(--green); }
+  .tag.flat { background:#f1f3f5; color:var(--sub); }
+  .src { color:var(--sub); font-size:12px; margin-top:10px; line-height:1.7; }
+  .chart { width:100%; height:340px; }
+  .note { background:var(--amberbg); border:1px solid #f0e3c2; border-radius:10px; padding:12px 16px; font-size:13px; color:#7a5a1f; margin-top:14px; }
+  .footer { margin-top:36px; padding-top:16px; border-top:1px solid var(--line); color:var(--sub); font-size:12px; line-height:1.8; }
+  .pill { display:inline-block; background:var(--bluebg); color:var(--blue); border-radius:6px; padding:2px 8px; font-size:12px; font-weight:600; margin-right:6px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="kicker">13F INSTITUTIONAL FLOWS · 2026 Q2</div>
+  <h1>全量 13F 行业加仓 / 减持全景</h1>
+  <div class="meta">
+    <span>报告期 2026-06-30</span><span>披露截止 2026-08-14</span><span>覆盖 8,624 家机构</span><span>可比样本 8,399 家</span>
+  </div>
+
+  <div class="tldr">
+    <h2>结论先行</h2>
+    <p><b>加仓最集中的行业 = 半导体 / 信息技术</b>:全量口径持仓市值环比 <b>+57%</b>(13.56 万亿→21.29 万亿美元),为所有行业涨幅最大;48% 的机构净买入(净卖出仅 34.5%)。贝莱德、大摩、瑞银前五大增持清一色是半导体。 <b>减持最集中的行业 = 能源</b>:持仓市值环比仅 <b>+0.5%</b>(全行业垫底),约 40.3% 机构净卖出,埃克森美孚、雪佛龙、康菲、斯伦贝谢遭大幅净减。 <b>金融</b>是机构家数广度上的最大增持行业(买/卖比 1.30、净增持 121.4 亿股);<b>通信</b>是唯一净卖出机构多于净买入的主要板块。 <b>分化信号</b>:桥水、景林、段永平等在大幅减持 AI 科技与半导体获利了结,资金转向标普 ETF 与公用事业防御。</p>
+  </div>
+
+  <!-- 核心数字 -->
+  <div class="grid2">
+    <div class="card">
+      <h3>加仓金额/广度最大:信息技术(半导体)</h3>
+      <div class="sub">全量 8,399 家可比机构 · 市值口径</div>
+      <div class="num up">+57%</div>
+      <div style="font-size:13px;color:var(--sub);margin-top:4px;">板块市值 13.56 万亿 → 21.29 万亿美元</div>
+      <div style="font-size:13px;margin-top:10px;">净买入机构占比 <b class="up">48%</b> vs 净卖出 34.5% · 买/卖机构比 1.22 · 净增持约 58.1 亿股</div>
+    </div>
+    <div class="card">
+      <h3>减持最集中:能源</h3>
+      <div class="sub">全量 8,399 家可比机构 · 市值口径</div>
+      <div class="num dn">+0.5%</div>
+      <div style="font-size:13px;color:var(--sub);margin-top:4px;">全行业市值涨幅垫底,资金实际净流出</div>
+      <div style="font-size:13px;margin-top:10px;">净卖出机构占比约 <b class="dn">40.3%</b> · XOM 净减约 17.6 亿股 / CVX 9.0 亿 / SLB 8.4 亿 / COP 7.1 亿</div>
+    </div>
+  </div>
+
+  <!-- 图1:机构买卖占比 -->
+  <div class="sec">
+    <h2>行业机构净买卖占比对比</h2>
+    <div class="sub">按机构家数口径(净买入 / 净卖出机构占比)——加仓行业红、减持行业绿;来源:全量 13F 汇总 + 路透 6,371 家分析</div>
+    <div class="card">
+      <div id="chart1" class="chart"></div>
+      <div class="src">注:<b>电力/公用事业(Utilities)未单列入本图</b>:GICS 分类中 Utilities(电力公用事业 + 独立发电商)与 Energy(油气开采)是两个独立板块——本图"能源"仅指油气(XOM/CVX/COP 等)。Utilities 板块 Q2 为净买入(买/卖比 1.24、市值 +31.7%),详见下文"电力/公用事业板块"专章。另:AI 基础设施含 CoreWeave、Arista、博通等;软件为 AI 链条中偏谨慎一环(净卖出 28.2% &gt; 净买入 26.3%);通信围绕 Alphabet 展开,买/卖比 0.94,连续第三个季度卖出多于买入。</div>
+    </div>
+  </div>
+
+  <!-- 图2:市值环比 -->
+  <div class="sec">
+    <h2>行业持仓市值环比涨幅</h2>
+    <div class="sub">全量口径 · 信息技术 +57% 一骑绝尘,能源 +0.5% 垫底(其余行业普遍 +12%~+57%)</div>
+    <div class="card">
+      <div id="chart2" class="chart"></div>
+      <div class="src">注:公开汇总仅给出"信息技术 +57% / 能源 +0.5% / 其余行业 +12%~57%"的区间口径,单行业精确百分比以 WhaleWisdom 等专业平台为准。</div>
+    </div>
+  </div>
+
+  <!-- 头部机构 -->
+  <div class="sec">
+    <h2>头部机构调仓个案</h2>
+    <div class="sub">贝莱德 / 大摩 / 瑞银 / 桥水 / 文艺复兴 · 2026 Q2 13F(来源:各机构 SEC 申报,媒体转述需核实原文)</div>
+
+    <div class="card" style="margin-bottom:14px;">
+      <h3>贝莱德(全球最大资管 · 持仓约 6.73 万亿美元)</h3>
+      <div id="chart3" class="chart" style="height:300px;"></div>
+      <div class="src">增持幅度前五全为半导体:美光 +1.19pp(至 $1,210 亿)、AMD +0.78pp($873 亿)、应用材料 +0.39pp($580 亿)、迈威尔 +0.27pp($255 亿)、科磊 +0.24pp($381 亿);10 只半导体持仓合计超 1 万亿美元。同期减持消费/金融/医疗/工业/电信传统防御(COST、HON、BRK.B、T、JNJ 各降约 0.11–0.13pp)。</div>
+    </div>
+
+    <div class="card" style="margin-bottom:14px;">
+      <h3>大摩(持仓 1.89 万亿美元,环比 +13.9%)</h3>
+      <div style="font-size:13px;line-height:1.9;">
+        <span class="pill up">前五买入(全为半导体)</span>美光 MU · AMD · 英特尔 INTC · 应用材料 AMAT · 泛林 LRCX<br>
+        <span class="pill dn">前五卖出</span>标普500ETF SPY · 赛富时 CRM · 罗素2000ETF IWM · 雪佛龙 CVX · 霍尼韦尔 HON<br>
+        结构:新增 449 只 / 增持 3,850 只 / 减持 3,280 只 / 清仓 334 只 —— 从"指数化配置"转向"结构性高确定性行业 Alpha"。
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:14px;">
+      <h3>瑞银(持仓 7,900 亿美元,环比 +18%)</h3>
+      <div style="font-size:13px;line-height:1.9;">
+        <span class="pill up">前五买入</span>礼来看涨期权 · 标普500ETF看跌期权 · 美光 MU · 美光看涨期权 · 纳指100ETF看涨期权<br>
+        <span class="pill dn">前五卖出</span>埃克森美孚 XOM · Meta · 高收益公司债ETF看跌期权 · 黄金ETF看跌/看涨期权<br>
+        结构:新增 1,281 只 / 增持 4,272 只 / 减持 4,416 只 / 清仓 1,282 只 —— 押注 AI 算力(存储链),减能源与防御。
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:14px;">
+      <h3>桥水(持仓 243.8 亿美元,环比 +8.8%)——防御性调仓最典型</h3>
+      <div id="chart4" class="chart" style="height:300px;"></div>
+      <div class="src">标普500三件套(SPY +21.89% 至 16.30%、IVV +12.06% 至 9.22%、VOO +188.97% 至 1.29%)合计占组合 26.81%(前季 20.9%);十大新建仓含公用事业 Eversource ES / Con Edison ED / NiSource NI / Duke DUK;同时减持 NVDA -17.62%、AVGO -28.19%、AMD -58.33%、LRCX -40.29%、MSFT -34.39%、AMZN -53.85%。共加码 206 / 新进 85 / 减码 287 / 清仓 164。</div>
+    </div>
+
+    <div class="card">
+      <h3>文艺复兴(持仓 726 亿美元,环比 +13.6%)——量化获利了结</h3>
+      <div style="font-size:13px;line-height:1.9;">
+        <span class="pill up">前五增持</span>Meta +1.34pp · 英伟达 +1.26pp · Alphabet · CrowdStrike · 亚马逊(全部科技龙头)<br>
+        <span class="pill dn">前五减持</span>美光 -0.81pp · 闪迪 -0.78pp(存储链高点兑现)· 苹果 · 林德 · 金罗斯黄金<br>
+        结构:新增 548 / 增持 1,084 / 减持 1,502 / 清仓 621 —— 与贝莱德、大摩方向相反,存储周期拐点分歧显现。
+      </div>
+    </div>
+  </div>
+
+  <!-- 华人机构 -->
+  <div class="sec">
+    <h2>华人知名机构:AI 高位获利了结为主</h2>
+    <div class="sub">2026 Q2 13F · 来源:各机构 SEC 申报,媒体(时代财经/证券时报/新浪)转述需核实原文</div>
+    <table>
+      <tr><th>机构</th><th>持仓变化</th><th>方向</th><th>代表动作</th></tr>
+      <tr>
+        <td><b>段永平 H&amp;H</b>($191 亿)</td>
+        <td>苹果 41.05% 第一大重仓</td>
+        <td><span class="tag dn">减 AI</span><span class="tag up">加中概</span></td>
+        <td>减持 NVDA -54.63% / GOOGL -46.88% / MSFT -25.78%,清仓台积电;增持拼多多 +26.71%,新建仓阿里($2,893 万)</td>
+      </tr>
+      <tr>
+        <td><b>景林香港</b>($21.86 亿)</td>
+        <td>总持仓 -43.64%</td>
+        <td><span class="tag dn">大减仓</span></td>
+        <td>清仓 Meta / 亚马逊 / 英伟达;减持 GOOGL -38.04% / INTC -60.26% / 网易 -81.17%;新进 ASML、AAOI、AMAT(转向半导体设备/光模块)</td>
+      </tr>
+      <tr>
+        <td><b>高毅</b>($9.79 亿)</td>
+        <td>台积电升至第一大重仓($2.38 亿)</td>
+        <td><span class="tag up">加半导体</span><span class="tag dn">减 AI 龙头</span></td>
+        <td>增持美光 +283.48% / 闪迪 +192.02%;减持 NVDA -72.41%;清仓小鹏、蔚来、富途、Lumentum、AMD;新进文远知行、阿里</td>
+      </tr>
+      <tr>
+        <td><b>高瓴 HHLR</b>($8.32 亿)</td>
+        <td>聚焦中概+生物医药+科技</td>
+        <td><span class="tag up">加中概</span><span class="tag dn">减互联网</span></td>
+        <td>增持唯品会、富途;减持拼多多、阿里、贝壳;前五重仓:传奇生物、富途、ArriVent、迈威尔、唯品会</td>
+      </tr>
+      <tr>
+        <td><b>伯克希尔</b>(对照)</td>
+        <td>上半年净买入 $116.25 亿(上年同期净卖出 $45 亿)</td>
+        <td><span class="tag up">转净买家</span></td>
+        <td>增持谷歌、达美航空、莱纳建筑、梅西;减持美国银行等金融——"AI 生态闭环"逻辑</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- 电力/公用事业板块 -->
+  <div class="sec">
+    <h2>电力 / 公用事业板块(Utilities)全景</h2>
+    <div class="sub">GICS 独立板块,含受监管电力(DUK/SO/NEE)与独立发电商 IPP(VST/CEG/TLN/NRG)· 2026 Q2 13F</div>
+    <div class="grid2">
+      <div class="card">
+        <h3>板块层面:净买入占优</h3>
+        <div class="sub">WhaleWisdom 早批申报口径(Utilities &amp; Telecom 合并)</div>
+        <div class="num up">1.24</div>
+        <div style="font-size:13px;color:var(--sub);margin-top:4px;">净买入 / 净卖出机构比(买方约为卖方 1.24 倍)</div>
+        <div style="font-size:13px;margin-top:10px;">持仓市值 <b>$119B → $156B(+31.7%)</b> · 净股份 <b>+1,450 万股</b> —— 主动净买入而非仅股价上涨;买/卖比在各行业中仅次于金融(1.29)与房地产(1.25)</div>
+      </div>
+      <div class="card">
+        <h3>板块内部分化:NEE 分歧最大</h3>
+        <div class="sub">HedgeTrace 按基金买卖数量统计 · 2026 Q2</div>
+        <div style="font-size:13px;line-height:2;">
+          <span class="pill up">买入机构最多</span>NEE 79 · GEV 66 · SO 56 · DUK 53 · AEP 45 · <b>CEG 45</b> · <b>VST 39</b><br>
+          <span class="pill dn">卖出机构最多</span>NEE 56 · GEV 54 · DUK 42 · SO 42 · AEP 35<br>
+          <b>NEE(新纪元能源)</b>与 <b>GEV(GE Vernova)</b> 买卖双方均排前三——多空分歧最激烈,其余个股净买方向一致。
+        </div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:16px;">
+      <h3>独立发电商(IPP)细分:AI 电力主线净流入</h3>
+      <div style="font-size:13px;line-height:1.9;margin-top:6px;">
+        <b class="up">VST(Vistra)</b>:39 家基金买入 vs 18 家卖出,净资金流入 <b>+$3.85 亿</b>——IPP 中买力最强;<br>
+        <b class="up">CEG(Constellation)</b>:45 家买入 vs 24 家卖出,净流入 <b>+$7,380 万</b>(核电 AI 数据中心逻辑);<br>
+        <b class="dn">TLN(Talen)</b>:机构净流出(股份 -18.8%、基金份额 -26.3%),Lone Pine 大幅增持 +40.6% 但多空分歧;<br>
+        <b>NRG</b>:机构持股 94.9%,内部人 / 私募 LS Power 减持,Q2 资金面转弱。
+      </div>
+      <div class="src">来源:WhaleWisdom(板块早批申报队列,含电信合并口径,全量披露后读数可能修正)、HedgeTrace / InsiderSet(个股基金买卖聚合)。板块级数据为方向性参考,精确全量口径以专业平台为准。</div>
+    </div>
+
+    <!-- Q1 回顾与对比 -->
+    <div class="card" style="margin-top:16px;background:#f6f8fd;border-color:#d8e1f5;">
+      <h3>Q1 2026 回顾:大举进入 → Q2 转向分化</h3>
+      <div class="sub">Q1(报告期 3/31,4-5 月披露)vs Q2(报告期 6/30,8 月披露)· 对比核心变化</div>
+      <table>
+        <tr><th>维度</th><th>Q1 2026(上一次披露)</th><th>Q2 2026</th><th>变化解读</th></tr>
+        <tr>
+          <td>板块整体</td>
+          <td>机构买入高度集中在 <b>IPP + 电力基建</b>(AI 数据中心电力逻辑),全季度资金净流入最明确的公用事业分支;买入力度排序 <b>GEV &gt; CEG &gt; VST &gt; NRG</b></td>
+          <td>仍净买入(买/卖比 1.24、市值 +31.7%),但龙头 NEE / GEV 多空分歧最大</td>
+          <td>从"一致进入"转向"内部换手"</td>
+        </tr>
+        <tr>
+          <td>VST</td>
+          <td>767 增持 vs 593 减持,净增 <b>+$3.13 亿</b>;<b>Appaloosa +114% 翻倍</b>至 202.2 万股、Lone Pine 至 618.8 万股($9.3 亿,权重 7.42%)、CPPIB +154.8%、UBS +69.7%;<b>Segra 已减 -91.6%</b>(保留 CALL)、Third Point 清仓</td>
+          <td>Appaloosa 仅 +9.5%(至 221.5 万股)、Segra 再减 -81.3% 至 36.5 万股</td>
+          <td>Q1 已现分歧,Q2 加仓明显放缓</td>
+        </tr>
+        <tr>
+          <td>CEG</td>
+          <td>451 增持 vs 267 减持;两家大机构各新建 ~2,014 万股($56.2 亿)/ 1,501 万股($41.9 亿);FMR / Capital World +155%、T.Rowe +85.8%;目标均价 $350,买入评级 86-91%</td>
+          <td>Segra 新建 25.3 万股($7,065 万,组合 28.5%);Assenagon +80%、Eastern Bank +63.7%</td>
+          <td>Q2 从"大机构狂建"转为"中型机构补仓"</td>
+        </tr>
+        <tr>
+          <td>NRG</td>
+          <td>净增持但分歧大:Jane Street +501%、巴克莱 +434%、Millennium +221%、Point72 +2,842%;Appaloosa 至 173.4 万股</td>
+          <td>Point72 / 桥水 / AQR 等增持为 Q1 动作;Q2 资金面转弱(内部人 / LS Power 减持)</td>
+          <td>Q2 相对掉队,评级买入占比仅 78-83%</td>
+        </tr>
+        <tr>
+          <td>GEV(电力设备)</td>
+          <td><b>1,745 增持 vs 905 减持</b>,净流入 <b>+$68.7 亿</b>,全市场持仓动量 TOP10 中唯一电力标的</td>
+          <td>买入 66 / 卖出 54,多空分歧最大之一</td>
+          <td>从"最强动量"退为"分歧标的"</td>
+        </tr>
+        <tr>
+          <td>传统公用事业</td>
+          <td>被冷落:SRE、ETR、EVRG、CWEN 遭不同机构减持</td>
+          <td><b>桥水新建 ES / ED / NI / DUK</b>,防御型资金开始进入</td>
+          <td>风格从"进攻 IPP"转向"防御+分化"</td>
+        </tr>
+        <tr>
+          <td><b>行情表现</b>(2025-12-31→2026-03-31 收盘)</td>
+          <td><b>XLU +8.2%</b>(跑赢标普 -4.8%);但结构分化:GEV <b>+33.7%</b>、VST <b>-6.7%</b>、NRG -7.9%、CEG <b>-20.9%</b>——<b>机构大买的 IPP 股价 Q1 反而大跌</b></td>
+          <td>—</td>
+          <td><b>13F 季末快照 ≠ Q1 交易节奏</b>:机构大概率在 IPP 下跌途中抄底(季末持仓增 + 期间股价跌);AI 电力行情载体是 GEV / GRID(+23.4%),不是 XLU</td>
+        </tr>
+      </table>
+      <div class="src">来源:Q1 数据来自 Quiver / InsiderSet / AlphaPilot / 13foresight / vcpscanner 等第三方聚合(非一手,需核实原文);Q2 数据来源同上文。Segra 的 CEG 持仓不同来源口径不一(Q1 123K vs 253K 股),以 SEC 原始申报为准。</div>
+    </div>
+  </div>
+
+  <!-- 电力主题回顾 -->
+  <div class="sec">
+    <h2>延伸:AI 电力主题(VST / CEG / NRG)机构动向</h2>
+    <div class="sub">承接前述查询 · 2026 Q2 13F(8/4–8/15 披露)</div>
+    <table>
+      <tr><th>机构</th><th>标的</th><th>动作</th><th>规模 / 占比</th></tr>
+      <tr><td><b>Appaloosa(Tepper)</b></td><td>VST</td><td><span class="tag up">增持 +9.5%</span></td><td>221.5 万股 / $3.51 亿,对冲基金中 VST 最大披露持有者</td></tr>
+      <tr><td><b>Corvex(Meister)</b></td><td>VST</td><td><span class="tag up">新建仓</span></td><td>102 万股 / $1.62 亿</td></tr>
+      <tr><td><b>索罗斯基金</b></td><td>VST</td><td><span class="tag up">新建仓</span></td><td>新开多头;同步减持 ETR / CNP / OKLO / SMR 等其他电力核能</td></tr>
+      <tr><td><b>Merewether</b></td><td>VST</td><td><span class="tag up">+180.8%</span></td><td>至 111.6 万股 / $1.68 亿</td></tr>
+      <tr><td><b>Segra Capital</b></td><td>CEG / VST</td><td><span class="tag up">新进 CEG</span><span class="tag dn">减 VST -81.3%</span></td><td>新建 CEG 25.3 万股 / $7,065 万(组合 28.5%);VST 减至 36.5 万股——板块内部换仓</td></tr>
+      <tr><td><b>桥水</b></td><td>ES / ED / NI / DUK</td><td><span class="tag up">新建仓</span></td><td>十大新仓含 4 只传统公用事业——防御型电力,非 AI 电力线</td></tr>
+      <tr><td><b>Point72(对照)</b></td><td>NRG</td><td><span class="tag flat">Q1 动作</span></td><td>加仓 NRG 为 Q1(4 月披露)动作,Q2 未延续,勿混季度</td></tr>
+    </table>
+    <div class="note">
+      <b>口径提示</b>:本报告"占比"主要为<b>机构家数占比</b>(净买入/净卖出机构比例)与<b>市值环比涨幅</b>两套口径;公开渠道未提供覆盖全部 8,000+ 机构、按行业汇总的净买入/净卖出美元金额统一占比。13F 仅披露多头持仓、滞后一季,不含空头与衍生品;部分机构披露日不同,个别数字以 SEC 原始申报为准。
+    </div>
+  </div>
+
+  <div class="footer">
+    数据来源:SEC 13F 申报(Q2 2026,报告期 2026-06-30);全量行业汇总口径来自 13F 聚合平台(WhaleWisdom 等,覆盖 8,624 家机构)与路透对 6,371 家机构的分析;机构个案来自贝莱德/大摩/瑞银/桥水/文艺复兴/伯克希尔等 SEC 申报及证券时报、时代财经、新浪财经、巨亨网、智通财经等媒体转述(非一手来源,需核实原文)。本报告为客观数据整理,不构成投资建议。
+    <br><br>
+    <b>免责声明</b>:以上内容基于公开 13F 数据整理,仅供参考,不构成投资建议。市场有风险,投资需谨慎。任何投资决策应结合个人风险承受能力、资金状况和投资目标独立判断,必要时咨询持牌专业机构。过往表现不预示未来收益。
+  </div>
+
+</div>
+
+<script>
+var c1 = echarts.init(document.getElementById('chart1'));
+c1.setOption({
+  tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+  legend: { data: ['净买入机构占比', '净卖出机构占比'], top: 0 },
+  grid: { left: 110, right: 30, top: 40, bottom: 30 },
+  xAxis: { type: 'value', max: 60, axisLabel: { formatter: '{value}%' } },
+  yAxis: { type: 'category', data: ['半导体/信息技术', 'AI基础设施', '能源', '软件', '通信'], inverse: true },
+  series: [
+    { name: '净买入机构占比', type: 'bar', barWidth: 12, itemStyle: { color: '#d63e3e', borderRadius: [4, 0, 0, 4] }, data: [48, 36, 35, 26.3, 30] },
+    { name: '净卖出机构占比', type: 'bar', barWidth: 12, itemStyle: { color: '#1a9c60', borderRadius: [0, 4, 4, 0] }, data: [34.5, 30, 40.3, 28.2, 35] }
+  ]
+});
+
+var c2 = echarts.init(document.getElementById('chart2'));
+c2.setOption({
+  tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' }, formatter: '{b}: {c}%' },
+  grid: { left: 60, right: 40, top: 30, bottom: 30 },
+  xAxis: { type: 'category', data: ['信息技术', '其余行业区间', '能源'] },
+  yAxis: { type: 'value', axisLabel: { formatter: '{value}%' } },
+  series: [{
+    type: 'bar', barWidth: 44,
+    itemStyle: { color: function (p) { return p.dataIndex === 2 ? '#1a9c60' : (p.dataIndex === 0 ? '#d63e3e' : '#c9a227'); }, borderRadius: [5, 5, 0, 0] },
+    data: [
+      { value: 57, label: { show: true, position: 'top', formatter: '+57%' } },
+      { value: 35, label: { show: true, position: 'top', formatter: '+12%~+57%' } },
+      { value: 0.5, label: { show: true, position: 'top', formatter: '+0.5%' } }
+    ]
+  }]
+});
+
+var c3 = echarts.init(document.getElementById('chart3'));
+c3.setOption({
+  tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' }, formatter: '{b}: {c}pp' },
+  legend: { data: ['贝莱德持仓权重环比变动(pp)'], top: 0 },
+  grid: { left: 70, right: 30, top: 36, bottom: 30 },
+  xAxis: { type: 'value', axisLabel: { formatter: '{value}pp' } },
+  yAxis: { type: 'category', inverse: true, data: ['美光 MU', 'AMD', '应用材料', '迈威尔', '科磊', '英特尔', '泛林'] },
+  series: [{
+    name: '贝莱德持仓权重环比变动(pp)', type: 'bar', barWidth: 14,
+    itemStyle: { color: function (p) { return p.value >= 0 ? '#d63e3e' : '#1a9c60'; }, borderRadius: [0, 4, 4, 0] },
+    data: [1.19, 0.78, 0.39, 0.27, 0.24, -4.71, -0.09]
+  }]
+});
+
+var c4 = echarts.init(document.getElementById('chart4'));
+c4.setOption({
+  tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' }, formatter: '{b}: {c}%' },
+  legend: { data: ['桥水 Q2 持股数量环比'], top: 0 },
+  grid: { left: 70, right: 30, top: 36, bottom: 30 },
+  xAxis: { type: 'value', axisLabel: { formatter: '{value}%' } },
+  yAxis: { type: 'category', inverse: true, data: ['亚马逊 AMZN', 'AMD', '微软 MSFT', '泛林 LRCX', '博通 AVGO', '英伟达 NVDA'] },
+  series: [{
+    name: '桥水 Q2 持股数量环比', type: 'bar', barWidth: 14,
+    itemStyle: { color: '#1a9c60', borderRadius: [0, 4, 4, 0] },
+    data: [-53.85, -58.33, -34.39, -40.29, -28.19, -17.62]
+  }]
+});
+</script>
+</body>
+</html>

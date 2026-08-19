@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>__T__ · MACD水下金叉+站上均线+站稳 回测报告（含实盘化买入收益）</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<style>
+  :root{--bg:#f7f8fa;--card:#fff;--ink:#1f2329;--sub:#6b7280;--line:#e5e7eb;
+        --red:#e03131;--green:#0aa06e;--blue:#1e66d6;--amber:#b45309;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font:14px/1.7 -apple-system,"PingFang SC","Microsoft YaHei",sans-serif;padding:24px 16px 48px;}
+  .wrap{max-width:1220px;margin:0 auto;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 24px;margin-bottom:18px;box-shadow:0 1px 3px rgba(16,24,40,.05);}
+  h1{font-size:21px;margin-bottom:4px;}
+  .meta{color:var(--sub);font-size:12.5px;margin-bottom:14px;}
+  h2{font-size:16px;margin:0 0 12px;padding-left:10px;border-left:4px solid var(--blue);}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-top:14px;}
+  .kpi{background:#fbfcfe;border:1px solid var(--line);border-radius:10px;padding:12px 14px;}
+  .kpi .num{font-size:21px;font-weight:700;}
+  .kpi .num.up{color:var(--red);} .kpi .num.dn{color:var(--green);}
+  .kpi .lab{color:var(--sub);font-size:12px;margin-top:2px;}
+  .flow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:10px 0 4px;font-size:13px;}
+  .fstep{background:#eef3fb;color:var(--blue);border:1px solid #d5e2f7;border-radius:6px;padding:2px 8px;font-weight:600;}
+  .farrow{color:var(--sub);}
+  .fstat{color:var(--sub);font-size:12px;}
+  table{width:100%;border-collapse:collapse;font-size:12px;}
+  th{background:#f3f5f8;text-align:left;padding:6px 7px;border-bottom:2px solid var(--line);white-space:nowrap;font-weight:600;}
+  td{padding:5px 7px;border-bottom:1px solid #f0f1f3;white-space:nowrap;}
+  tr.hit td{background:#eefaf5;}
+  tr.hit td:first-child{border-left:3px solid var(--green);}
+  td.up{color:var(--red);font-weight:600;} td.dn{color:var(--green);font-weight:600;} td.na{color:#c3c8cf;}
+  .scroll{overflow-x:auto;}
+  .chart{width:100%;height:380px;}
+  .chart.sm{height:330px;}
+  .chart.k{width:100%;height:620px;}
+  .note{color:var(--sub);font-size:12px;margin-top:8px;}
+  .keypoint{background:#eef7f2;border:1px solid #cde8da;border-radius:10px;padding:12px 16px;font-size:12.5px;color:#17442f;margin-top:10px;}
+  .warn{background:#fff8ec;border:1px solid #f3dfb6;border-radius:10px;padding:12px 16px;font-size:12.5px;color:#7c4a03;}
+  .dis{color:var(--sub);font-size:12px;border-top:1px dashed var(--line);padding-top:12px;margin-top:16px;}
+  .hl{font-weight:700;color:var(--red);} .hlg{font-weight:700;color:var(--green);}
+  .lgd{display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--ink);margin:8px 0 4px;}
+  .lgd span{display:inline-flex;align-items:center;gap:5px;}
+  .arrow-up{display:inline-block;width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:10px solid var(--red);}
+  .arrow-dn{display:inline-block;width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-top:10px solid var(--green);}
+  .dot{display:inline-block;width:9px;height:9px;border-radius:50%;}
+  .diamond{display:inline-block;width:9px;height:9px;background:#7048e8;transform:rotate(45deg);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="card">
+    <h1>MACD 水下金叉 · 站上 EMA10/20 · 站稳5天 —— __T__（__NAME__）回测</h1>
+    <div class="meta">标的：__T__（__NAME__，BATS 日线）｜数据：__RANGE__，共 __DAYS__ 个交易日｜严格口径：收盘须同时高于 EMA10 与 EMA20 且金叉后重新上穿（无容差）；站稳 5 天为「完全符合」标签｜<b>买入规则：站稳3天即可考虑买入（hold3母集），买点 =（金叉前10日盘整最高价 + 确认日EMA20）/ 2，价格回踩到买点才成交，30日内未回踩=错过</b>｜收益口径：金叉日收盘→T+N（原收益）；买点→买入后T+N（买入收益），均不含成本</div>
+    <div class="flow">
+      <span class="fstep">① 水下金叉</span><span class="farrow">→</span>
+      <span class="fstep">② x≤3天站上 EMA10/20</span><span class="farrow">→</span>
+      <span class="fstep">③ 站稳3天确认</span><span class="farrow">→</span>
+      <span class="fstep">④ 回踩买点买入</span>
+      <span class="fstat">　金叉 __GOLD_N__ → 站上 __STAND_N__ → hold3母集 __H3_N__（hold5=__H5_N__）→ 可成交 __HIT_N__（错过 __MISS_N__，成交率 __HIT_RATE__）</span>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><div class="num up">__H5_T5_WIN__</div><div class="lab">hold5 确认后 T+5 上涨概率（金叉日口径）</div></div>
+      <div class="kpi"><div class="num">__BUY_T5_WIN__</div><div class="lab">同批信号回踩买点买入 T+5 上涨概率</div></div>
+      <div class="kpi"><div class="num up">__ORIG_T5_AVG__</div><div class="lab">金叉日买入 T+5 均值（同批）</div></div>
+      <div class="kpi"><div class="num">__BUY_T5_AVG__</div><div class="lab">回踩买点买入 T+5 均值（同批）</div></div>
+      <div class="kpi"><div class="num">__HIT_RATE__</div><div class="lab">hold3 母集中实际可成交比例（__MISS_N__ 错过）</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>一、条件逐级过滤后的收益表现（金叉日口径）</h2>
+    <div id="chart_win" class="chart"></div>
+    <div class="note">上图：各条件组的上涨概率。条件加严后 T+5/T+10 胜率显著提升；T+20 普遍回落，属<b>中短期（5~10日）动能信号</b>。</div>
+    <div class="scroll" style="margin-top:12px;">
+    <table>
+      <thead><tr><th>条件组合</th><th>样本</th>
+        <th>T+5 胜率 / 均值 / 中位 / 标准差 / 区间</th>
+        <th>T+10 胜率 / 均值 / 中位 / 标准差 / 区间</th>
+        <th>T+20 胜率 / 均值 / 中位 / 标准差 / 区间</th></tr></thead>
+      <tbody>__TABLE_ROWS__</tbody>
+    </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>二、平均收益对比（%）</h2>
+    <div id="chart_avg" class="chart sm"></div>
+  </div>
+
+  <div class="card">
+    <h2>三、实盘化买入收益 vs 金叉日收益（入场点脱节检验）</h2>
+    <div class="keypoint"><b>核心发现：入场点与收益计算脱节确实存在。</b>同一批「hold3 确认且回踩成交」的信号：金叉日收盘买入 T+5 胜率 __ORIG_T5_WIN__（均值 __ORIG_T5_AVG__）；等到站稳3天确认、回踩到（盘整高点+EMA20）/2 买点再买入，T+5 胜率降至 <b>__BUY_T5_WIN__</b>、均值 <b>__BUY_T5_AVG__</b>。被「错过」的信号恰恰是价格不回头走强的，实盘买不到。</div>
+    <div id="chart_buy" class="chart"></div>
+    <div class="scroll" style="margin-top:12px;">
+    <table>
+      <thead><tr><th>观察窗口</th><th>金叉日买入（胜率 / 均值）</th><th>回踩买点买入（胜率 / 均值）</th><th>样本</th></tr></thead>
+      <tbody>__BUY_ROWS__</tbody>
+    </table>
+    </div>
+    <div class="note">买入规则：买点 =（金叉日前10交易日盘整最高价 + 确认日EMA20）/ 2；确认日后 30 个交易日内首次回踩（low ≤ 买点）以买点成交。回踩买入 T+10 为 __BUY_T10__（金叉日口径 __ORIG_T10__），T+20 为 __BUY_T20__（金叉日口径 __ORIG_T20__）。</div>
+  </div>
+
+  <div class="card">
+    <h2>四、符合全部条件（站稳5天）的 __H5_N__ 个信号节点 —— 金叉后收益热力图</h2>
+    <div id="chart_hm" class="chart" style="height:__HM_H__;"></div>
+    <div class="note">横轴金叉日期，纵轴 T+5/T+10/T+20；<span class="hl">红涨</span> <span class="hlg">绿跌</span>（金叉日口径收益）。</div>
+  </div>
+
+  <div class="card">
+    <h2>五、全部通过「站上」检验的 __STAND_N__ 个节点明细（含买入信息）</h2>
+    <div class="note">绿色高亮行 = 完全符合条件（站稳5天）；「成交/错过」列 = hold3 母集（站稳3天即可考虑买入）按买点回踩的成交情况；买入T+5/10/20 为买点成交后的收益（%），错过或无买入逻辑的显示 —。</div>
+    <div class="scroll" style="margin-top:10px;max-height:540px;overflow-y:auto;">
+    <table>
+      <thead><tr><th>金叉日</th><th>站上日</th><th>x</th><th>金叉价</th><th>站稳3</th><th>站稳4</th><th>站稳5</th><th>T+5%</th><th>T+10%</th><th>T+20%</th><th>买点</th><th>买入</th><th>买入T+5%</th><th>买入T+10%</th><th>买入T+20%</th></tr></thead>
+      <tbody>__NODE_ROWS__</tbody>
+    </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>六、全历史价格走势 · 信号箭头 · 成交点 · MACD 副图</h2>
+    <div class="lgd">
+      <span><i class="arrow-up"></i> 完全符合 · 金叉后5日上涨（__N_UP__）</span>
+      <span><i class="arrow-dn"></i> 完全符合 · 金叉后5日未涨（__N_DN__）</span>
+      <span><i class="dot" style="background:#9aa2ab;"></i> 仅过站上未站稳</span>
+      <span><i class="dot" style="background:#b45309;"></i> 数据不足</span>
+      <span><span style="display:inline-block;width:18px;height:10px;background:rgba(224,49,49,.15);border:1px solid rgba(224,49,49,.35);"></span> 站稳窗口</span>
+      <span><i class="diamond" style="background:#7048e8;"></i> 成交·买入5日盈利（__N_BUY_UP__ 笔）</span>
+      <span><i class="diamond" style="background:#1f2329;"></i> 成交·买入5日不盈利（__N_BUY_DN__ 笔）</span>
+    </div>
+    <div id="chart_kline" class="chart k"></div>
+    <div class="note">全历史 __DAYS__ 根 K 线，缩放条可看任意时段；<span class="hl">红▲</span>=符合条件且金叉后5日上涨、<span class="hlg">绿▼</span>=未上涨；<span style="color:#7048e8;font-weight:700;">◆ 紫菱形</span>=成交且<b>买入后5日盈利</b>、<span style="color:#1f2329;font-weight:700;">◆ 黑菱形</span>=成交但<b>买入后5日不盈利</b>（均标注买入日期，位于成交日K线、价格=买点）；下半部 MACD 副图（红绿柱=DIF−DEA，虚线=水下金叉）。</div>
+  </div>
+
+  <div class="card">
+    <div class="warn"><b>局限与提醒：</b>① 买入逻辑中「盘整区间=金叉日前10交易日、EMA20取确认日」为设定值，买点对参数敏感；② 回踩买入未考虑滑点/手续费，且假设买点可精确成交；③ hold5 完全符合样本仅 __H5_N__ 个、成交样本 __HIT_N__ 个，统计显著性有限；④ 收益为历史回测，未来不重复。</div>
+    <div class="dis">数据来源：用户提供本地 CSV（BATS __T__ 日线）；指标口径经递推验证（EMA10/20、MACD(12,26,9)，误差&lt;1e-13）。仅供研究参考。<br><br><b>免责声明：</b>以上内容基于公开数据和量化分析，仅供参考，不构成投资建议。市场有风险，投资需谨慎。任何投资决策应结合个人风险承受能力、资金状况和投资目标独立判断，必要时咨询持牌专业机构。过往表现不预示未来收益。</div>
+  </div>
+
+</div>
+<script>
+const D = __JSON__;
+const RED='#e03131', GREEN='#0aa06e', BLUE='#1e66d6', AMBER='#b45309';
+
+echarts.init(document.getElementById('chart_win')).setOption({
+  tooltip:{trigger:'axis',valueFormatter:v=>v+'%'},
+  legend:{data:['T+5胜率','T+10胜率','T+20胜率']},
+  grid:{left:48,right:20,top:40,bottom:40},
+  xAxis:{type:'category',data:D.group_labels,axisLabel:{fontSize:11}},
+  yAxis:{type:'value',min:0,max:100,axisLabel:{formatter:'{value}%'}},
+  series:[
+    {name:'T+5胜率',type:'bar',data:D.win5,itemStyle:{color:RED},barGap:'20%'},
+    {name:'T+10胜率',type:'bar',data:D.win10,itemStyle:{color:AMBER}},
+    {name:'T+20胜率',type:'bar',data:D.win20,itemStyle:{color:BLUE}}
+  ]
+});
+
+echarts.init(document.getElementById('chart_avg')).setOption({
+  tooltip:{trigger:'axis',valueFormatter:v=>v+'%'},
+  legend:{data:['T+5平均','T+10平均','T+20平均']},
+  grid:{left:48,right:20,top:40,bottom:40},
+  xAxis:{type:'category',data:D.group_labels,axisLabel:{fontSize:11}},
+  yAxis:{type:'value',axisLabel:{formatter:'{value}%'}},
+  series:[
+    {name:'T+5平均',type:'bar',data:D.avg5,itemStyle:{color:RED},barGap:'20%'},
+    {name:'T+10平均',type:'bar',data:D.avg10,itemStyle:{color:AMBER}},
+    {name:'T+20平均',type:'bar',data:D.avg20,itemStyle:{color:BLUE}}
+  ]
+});
+
+echarts.init(document.getElementById('chart_buy')).setOption({
+  tooltip:{trigger:'axis',valueFormatter:v=>v+'%'},
+  legend:{data:['金叉日买入·胜率','回踩买点买入·胜率']},
+  grid:{left:48,right:20,top:40,bottom:40},
+  xAxis:{type:'category',data:['T+5','T+10','T+20']},
+  yAxis:{type:'value',min:0,max:100,axisLabel:{formatter:'{value}%'}},
+  series:[
+    {name:'金叉日买入·胜率',type:'bar',data:D.buy_win_o,itemStyle:{color:BLUE},barGap:'30%'},
+    {name:'回踩买点买入·胜率',type:'bar',data:D.buy_win_b,itemStyle:{color:AMBER}}
+  ]
+});
+
+echarts.init(document.getElementById('chart_hm')).setOption({
+  tooltip:{position:'top',formatter:p=>{const v=p.value[2];return (D.hm_dates[p.value[0]]||'')+' · T+'+(p.value[1]===0?5:p.value[1]===1?10:20)+'天<br/>'+(v==null?'—':v.toFixed(2)+'%');}},
+  grid:{left:50,right:16,top:10,bottom:80},
+  xAxis:{type:'category',data:D.hm_dates,axisLabel:{rotate:60,fontSize:9.5,interval:2}},
+  yAxis:{type:'category',data:['T+5','T+10','T+20']},
+  visualMap:{min:-18,max:18,calculable:false,orient:'vertical',right:2,top:'center',
+    inRange:{color:[GREEN,'#f2f4f7',RED]},text:['涨','跌'],textStyle:{fontSize:11}},
+  series:[{type:'heatmap',data:D.hm_vals,label:{show:true,fontSize:9,formatter:p=>{const v=p.value[2];return v==null?'—':v.toFixed(1);}}}] 
+});
+
+const allGold = D.fullUp.concat(D.fullDn);
+echarts.init(document.getElementById('chart_kline')).setOption({
+  animation:false,
+  tooltip:{trigger:'axis',axisPointer:{type:'cross'}},
+  legend:{data:['日K','EMA10','EMA20','MACD柱','DIF','DEA']},
+  axisPointer:{link:[{xAxisIndex:'all'}]},
+  grid:[
+    {left:58,right:22,top:30,height:'55%'},
+    {left:58,right:22,top:'71%',height:'21%'}
+  ],
+  xAxis:[
+    {type:'category',data:D.dates,gridIndex:0,axisLabel:{fontSize:10,interval:'auto'}},
+    {type:'category',data:D.dates,gridIndex:1,axisLabel:{show:false}}
+  ],
+  yAxis:[
+    {scale:true,gridIndex:0,splitLine:{lineStyle:{color:'#eef0f3'}}},
+    {scale:true,gridIndex:1,splitNumber:3,axisLabel:{fontSize:10}}
+  ],
+  dataZoom:[
+    {type:'inside',xAxisIndex:[0,1],start:90},
+    {type:'slider',xAxisIndex:[0,1],start:90,height:18,bottom:2}
+  ],
+  series:[
+    {name:'日K',type:'candlestick',data:D.ohlc,
+      itemStyle:{color:RED,color0:GREEN,borderColor:RED,borderColor0:GREEN},
+      markArea:{silent:true,itemStyle:{color:'rgba(224,49,49,0.10)'},data:D.markArea},
+      markPoint:{symbolSize:13,
+        label:{show:true,fontSize:9,fontWeight:'bold',color:'#333',formatter:p=>p.value.slice(5)},
+        data:[
+          ...D.fullUp.map(p=>({coord:[p.x,p.price],value:p.d,itemStyle:{color:RED},symbol:'triangle',symbolOffset:[0,-24],label:{position:'top'}})),
+          ...D.fullDn.map(p=>({coord:[p.x,p.price],value:p.d,itemStyle:{color:GREEN},symbol:'triangle',symbolRotate:180,symbolOffset:[0,24],label:{position:'bottom'}})),
+          ...D.partial.map(p=>({coord:[p.x,p.price],value:p.d,itemStyle:{color:'#9aa2ab'},symbol:'circle',symbolSize:7,label:{show:false}})),
+          ...D.insuff.map(p=>({coord:[p.x,p.price],value:p.d,itemStyle:{color:AMBER},symbol:'circle',symbolSize:8,label:{show:false}})),
+          ...D.buy_points.map(p=>({coord:[p.x,p.price],value:p.d,itemStyle:{color:p.c},symbol:'diamond',symbolSize:13,
+            label:{show:true,fontSize:9,fontWeight:'bold',color:p.c,position:'right'}}))
+        ]}},
+    {name:'EMA10',type:'line',data:D.ema10,smooth:true,showSymbol:false,lineStyle:{width:1.2,color:BLUE}},
+    {name:'EMA20',type:'line',data:D.ema20,smooth:true,showSymbol:false,lineStyle:{width:1.2,color:AMBER}},
+    {name:'MACD柱',type:'bar',xAxisIndex:1,yAxisIndex:1,data:D.hist,barWidth:'60%',
+      itemStyle:{color:p=>p.value>=0?RED:GREEN}},
+    {name:'DIF',type:'line',xAxisIndex:1,yAxisIndex:1,data:D.dif,showSymbol:false,lineStyle:{width:1,color:RED},
+      markLine:{silent:true,symbol:'none',lineStyle:{type:'dashed',color:'#c8cdd3'},
+        data:allGold.map(p=>({xAxis:p.x}))}},
+    {name:'DEA',type:'line',xAxisIndex:1,yAxisIndex:1,data:D.dea,showSymbol:false,lineStyle:{width:1,color:BLUE}}
+  ]
+});
+</script>
+</body>
+</html>
