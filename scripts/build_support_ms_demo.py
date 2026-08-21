@@ -144,7 +144,7 @@ for k, v in repl.items():
     html = html.replace(k, v)
 html = html.replace("var DATA = __DATA_JSON__;", "var DATA = " + js(D) + ";")
 
-out_dir = os.path.join(BASE, "..", "reports", "13_kbwb_ms")
+out_dir = os.path.join(BASE, "..", "reports", "13_kbwb支撑位")
 os.makedirs(out_dir, exist_ok=True)
 path = os.path.join(out_dir, "support_levels_ms_demo.html")
 with open(path, "w", encoding="utf-8") as f:

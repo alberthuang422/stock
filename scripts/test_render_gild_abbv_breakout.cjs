@@ -13,7 +13,7 @@ const path = require("path");
   page.on("pageerror", e => errors.push("PAGEERROR: " + e.message));
   page.on("console", m => { if (m.type() === "error") errors.push("CONSOLE: " + m.text()); });
 
-  const file = path.resolve(__dirname, "../reports/11_gild_abbv_breakout/gild_abbv_breakout_report.html");
+  const file = path.resolve(__dirname, "../reports/11_gild突破回踩/gild_abbv_breakout_report.html");
   await page.goto("file://" + file, { waitUntil: "networkidle", timeout: 60000 });
   await page.waitForTimeout(3000);
 
@@ -35,9 +35,9 @@ const path = require("path");
   console.log("first fig caption:", info.firstFigText);
   console.log("errors:", errors.length ? errors.join("\n") : "none");
 
-  await page.screenshot({ path: path.resolve(__dirname, "../reports/11_gild_abbv_breakout/render_top.png"), fullPage: false });
+  await page.screenshot({ path: path.resolve(__dirname, "../reports/11_gild突破回踩/render_top.png"), fullPage: false });
   await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
   await page.waitForTimeout(800);
-  await page.screenshot({ path: path.resolve(__dirname, "../reports/11_gild_abbv_breakout/render_bottom.png"), fullPage: false });
+  await page.screenshot({ path: path.resolve(__dirname, "../reports/11_gild突破回踩/render_bottom.png"), fullPage: false });
   await browser.close();
 })().catch(e => { console.error("FATAL:", e.message); process.exit(1); });

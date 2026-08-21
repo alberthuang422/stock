@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""生成生物医药股涨3%事件研究报告 (reports/10_3pct_event/3pct_event_report.html)
+"""生成生物医药股涨3%事件研究报告 (reports/10_涨3%事件/3pct_event_report.html)
 读 results/event_3pct_biopharma.json
 """
 import json, os
@@ -402,7 +402,7 @@ for k, v in {
 }.items():
     HTML = HTML.replace(k, v)
 
-outdir = os.path.join(ROOT, "reports", "10_3pct_event")
+outdir = os.path.join(ROOT, "reports", "10_涨3%事件")
 os.makedirs(outdir, exist_ok=True)
 out = os.path.join(outdir, "3pct_event_report.html")
 with open(out, "w", encoding="utf-8") as f:

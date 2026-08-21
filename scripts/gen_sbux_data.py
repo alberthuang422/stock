@@ -23,7 +23,7 @@ recent = [{"d": r.date, "c": round(float(r.c), 2)} for _, r in wk.iterrows()]
 
 out = {"monthly": monthly, "breakout_daily": daily, "recent": recent}
 js = "window.SBUX_DATA = " + json.dumps(out, separators=(",", ":")) + ";\n"
-with open("/Users/alberthuang/Desktop/股票分析/reports/07_sbux/sbux_data.js", "w") as f:
+with open("/Users/alberthuang/Desktop/股票分析/reports/07_sbux星巴克/sbux_data.js", "w") as f:
     f.write(js)
 print("monthly:", len(monthly), "daily:", len(daily), "recent:", len(recent))
 print("monthly last:", monthly[-1], "| 2021-07:", [p for p in monthly if p["d"] == "2021-07"])

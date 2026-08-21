@@ -6,7 +6,7 @@ import numpy as np
 
 BASE = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.join(BASE, "..", "data")
-OUT = os.path.join(BASE, "..", "reports", "06_steep_ko_pm_mo")
+OUT = os.path.join(BASE, "..", "reports", "06_陡峭化消费股")
 os.makedirs(OUT, exist_ok=True)
 
 with open(os.path.join(BASE, "..", "results", "steep_episodes.json"), encoding="utf-8") as f:

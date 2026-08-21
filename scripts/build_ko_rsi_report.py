@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """构建研报：KO 日线 RSI14 进入超买区间后的 T+5 / T+10 表现（分阶段事件研究）
 读取 results/ko_rsi_overbought.json + data/ko 原始 csv（生成时序）
-输出 reports/17_ko_rsi_overbought/ko_rsi_overbought_report.html
+输出 reports/17_KO超买/ko_rsi_overbought_report.html
 静默写盘：只打印 written 路径与体积。
 """
 import os, json, glob, re
@@ -10,7 +10,7 @@ import numpy as np
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RES = os.path.join(ROOT, "results")
-OUTD = os.path.join(ROOT, "reports", "17_ko_rsi_overbought")
+OUTD = os.path.join(ROOT, "reports", "17_KO超买")
 os.makedirs(OUTD, exist_ok=True)
 
 with open(os.path.join(RES, "ko_rsi_overbought.json"), encoding="utf-8") as f:

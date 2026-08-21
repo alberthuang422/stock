@@ -13,7 +13,7 @@ const path = require("path");
   page.on("pageerror", e => errors.push("PAGEERROR: " + e.message));
   page.on("console", m => { if (m.type() === "error") errors.push("CONSOLE: " + m.text()); });
 
-  const file = path.resolve(__dirname, "../reports/06_steep_ko_pm_mo/steep_ko_pm_mo_report.html");
+  const file = path.resolve(__dirname, "../reports/06_陡峭化消费股/steep_ko_pm_mo_report.html");
   await page.goto("file://" + file, { waitUntil: "networkidle", timeout: 60000 });
   await page.waitForTimeout(3000);
 
