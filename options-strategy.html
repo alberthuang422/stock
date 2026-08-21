@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>期权策略盈亏分析</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<script>window.echarts||document.write('<script src="https://cdn.bootcdn.net/ajax/libs/echarts/5.5.0/echarts.min.js"><\/script>');</script>
+<style>
+:root{
+  --red:#dc2626;--green:#16a34a;--blue:#2563eb;--ink:#1f2937;--sub:#6b7280;
+  --line:#e5e8ef;--card:#ffffff;--bg:#f3f5f9;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;
+  background:var(--bg);color:var(--ink);padding:18px;line-height:1.5;
+}
+header{max-width:1400px;margin:0 auto 14px;display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;}
+header h1{font-size:22px;font-weight:700;}
+header .sub{color:var(--sub);font-size:13px;}
+.wrap{max-width:1400px;margin:0 auto;display:grid;grid-template-columns:350px 1fr;gap:14px;align-items:start;}
+.panel{display:flex;flex-direction:column;gap:14px;min-width:0;}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;box-shadow:0 1px 3px rgba(16,24,40,.05);}
+.card h2{font-size:14px;font-weight:600;margin-bottom:12px;color:#111827;display:flex;align-items:center;gap:6px;}
+.card h2 .tag{font-size:11px;font-weight:400;color:var(--sub);}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
+.row .full{grid-column:1/-1;}
+.field label{display:block;font-size:12px;color:var(--sub);margin-bottom:4px;}
+.field input,.field select{
+  width:100%;padding:7px 9px;border:1px solid #d1d5db;border-radius:8px;font-size:13px;
+  background:#fff;color:var(--ink);outline:none;transition:border-color .15s;
+}
+.field input:focus,.field select:focus{border-color:var(--blue);}
+.btn{
+  width:100%;padding:9px;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;
+  background:var(--blue);color:#fff;transition:opacity .15s;
+}
+.btn:hover{opacity:.88;}
+.btn.ghost{background:#fff;color:var(--sub);border:1px solid var(--line);font-weight:500;}
+.btn.danger{background:#fff;color:var(--red);border:1px solid #fecaca;font-weight:500;margin-top:8px;}
+/* legs list */
+.leg-list{display:flex;flex-direction:column;gap:8px;max-height:300px;overflow:auto;}
+.leg{position:relative;border:1px solid var(--line);border-radius:8px;padding:9px 30px 9px 10px;font-size:12px;background:#fafbfd;}
+.leg .l1{font-weight:600;color:#111827;font-size:13px;}
+.leg .l2{color:var(--sub);margin-top:2px;}
+.leg .del{position:absolute;top:6px;right:8px;border:none;background:none;color:#9ca3af;cursor:pointer;font-size:15px;line-height:1;padding:2px;}
+.leg .del:hover{color:var(--red);}
+.empty-tip{color:#9ca3af;font-size:12px;text-align:center;padding:12px 0;}
+/* presets */
+.chips{display:flex;flex-wrap:wrap;gap:6px;}
+.chip{
+  border:1px solid #d1d5db;background:#fff;color:#374151;border-radius:999px;padding:5px 11px;
+  font-size:12px;cursor:pointer;transition:all .15s;
+}
+.chip:hover{border-color:var(--blue);color:var(--blue);}
+/* metrics */
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px;}
+.metric{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:13px 15px;}
+.metric .m-label{font-size:12px;color:var(--sub);margin-bottom:6px;}
+.metric .m-val{font-size:19px;font-weight:700;}
+.metric .m-note{font-size:11px;color:#9ca3af;margin-top:4px;}
+.metric .up{color:var(--red);}
+.metric .down{color:var(--green);}
+.metric.wide{grid-column:span 2;}
+/* chart */
+#chart{width:100%;height:430px;}
+/* slider */
+.slider-wrap{margin-top:6px;}
+.slider-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:6px;}
+.slider-top .date{font-weight:600;font-size:14px;color:#111827;}
+.slider-top .days{color:var(--sub);font-size:12px;}
+.slider-top .days b{color:var(--blue);}
+input[type=range]{width:100%;accent-color:var(--blue);height:22px;cursor:pointer;}
+.range-labels{display:flex;justify-content:space-between;font-size:11px;color:#9ca3af;margin-top:2px;}
+/* table */
+table{width:100%;border-collapse:collapse;font-size:12.5px;}
+th,td{padding:7px 8px;text-align:right;border-bottom:1px solid #f0f2f6;white-space:nowrap;}
+th{color:var(--sub);font-weight:500;text-align:right;background:#fafbfd;}
+th:first-child,td:first-child{text-align:left;}
+tr.total td{font-weight:700;border-top:2px solid var(--line);background:#fafbfd;}
+.tbl-meta{font-size:12px;color:var(--sub);margin-bottom:8px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;}
+footer{max-width:1400px;margin:16px auto 0;color:#9ca3af;font-size:11.5px;text-align:center;}
+.pos{color:var(--red);}
+.neg{color:var(--green);}
+.del-row{
+  border:1px solid #fecaca;background:#fff;color:var(--red);border-radius:6px;
+  padding:2px 9px;font-size:11.5px;cursor:pointer;transition:all .15s;white-space:nowrap;
+}
+.del-row:hover{background:#fef2f2;}
+.netflow{font-size:12px;color:var(--sub);margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);}
+.netflow b{color:#111827;}
+@media (max-width:960px){
+  .wrap{grid-template-columns:1fr;}
+  .metrics{grid-template-columns:repeat(2,1fr);}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>期权策略盈亏分析</h1>
+  <span class="sub">多腿组合 · Black-Scholes 定价 · 到期前任意日期盈亏曲线</span>
+</header>
+
+<div class="wrap">
+
+  <!-- ======== 左侧 ======== -->
+  <aside class="panel">
+
+    <div class="card">
+      <h2>组合参数</h2>
+      <div class="row">
+        <div class="field">
+          <label>标的现价</label>
+          <input id="pUnderlying" type="number" step="0.0001" value="3.0000"/>
+        </div>
+        <div class="field">
+          <label>合约单位(份/张)</label>
+          <input id="pMultiplier" type="number" step="1" value="100"/>
+        </div>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label>无风险利率 %</label>
+          <input id="pRate" type="number" step="0.01" value="4.1"/>
+        </div>
+        <div class="field">
+          <label>默认隐含波动率 %</label>
+          <input id="pIV" type="number" step="0.01" value="25"/>
+        </div>
+      </div>
+      <button class="btn ghost" id="btnClear">清空全部期权</button>
+    </div>
+
+    <div class="card">
+      <h2>期权持仓 <span class="tag" id="legCount">0 条</span></h2>
+      <div class="leg-list" id="legList">
+        <div class="empty-tip">暂无期权，请在下方添加</div>
+      </div>
+      <div class="netflow" id="netFlow"></div>
+    </div>
+
+    <div class="card">
+      <h2>添加期权</h2>
+      <form id="addForm">
+        <div class="row">
+          <div class="field">
+            <label>方向</label>
+            <select id="fSide">
+              <option value="buy">买入</option>
+              <option value="sell">卖出</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>类型</label>
+            <select id="fType">
+              <option value="call">看涨 Call</option>
+              <option value="put">看跌 Put</option>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="field">
+            <label>行权价</label>
+            <input id="fStrike" type="number" step="0.0001" placeholder="如 3.0000" required/>
+          </div>
+          <div class="field">
+            <label>权利金(元/份)</label>
+            <input id="fPremium" type="number" step="0.0001" placeholder="如 0.0500" required/>
+          </div>
+        </div>
+        <div class="row">
+          <div class="field">
+            <label>张数</label>
+            <input id="fQty" type="number" step="1" min="1" value="1" placeholder="如 1" required/>
+          </div>
+          <div class="field">
+            <label>到期日</label>
+            <input id="fExpiry" type="date" required/>
+          </div>
+        </div>
+        <div class="row">
+          <div class="field full">
+            <label>隐含波动率 %（留空自动按权利金反推）</label>
+            <input id="fIV" type="number" step="0.01" placeholder="留空自动反推"/>
+          </div>
+        </div>
+        <button class="btn" type="submit">添加期权</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2>常用策略模板</h2>
+      <div class="chips" id="presetChips"></div>
+      <div style="font-size:11px;color:#9ca3af;margin-top:8px;">点击载入演示参数（基于现价 3.00），可继续修改或叠加</div>
+    </div>
+
+  </aside>
+
+  <!-- ======== 右侧 ======== -->
+  <section class="panel">
+
+    <div class="metrics">
+      <div class="metric">
+        <div class="m-label" id="mMaxExpLabel">到期最大盈利</div>
+        <div class="m-val up" id="mMaxExp">—</div>
+        <div class="m-note" id="mMaxExpNote">全部到期时</div>
+      </div>
+      <div class="metric">
+        <div class="m-label" id="mMinExpLabel">到期最大亏损</div>
+        <div class="m-val down" id="mMinExp">—</div>
+        <div class="m-note" id="mMinExpNote">全部到期时</div>
+      </div>
+      <div class="metric">
+        <div class="m-label">所选日期最大盈利</div>
+        <div class="m-val up" id="mMaxCur">—</div>
+        <div class="m-note" id="mMaxCurNote">—</div>
+      </div>
+      <div class="metric">
+        <div class="m-label">所选日期最大亏损</div>
+        <div class="m-val down" id="mMinCur">—</div>
+        <div class="m-note" id="mMinCurNote">—</div>
+      </div>
+      <div class="metric wide">
+        <div class="m-label">盈亏平衡点（所选日期）</div>
+        <div class="m-val" id="mBreakeven" style="font-size:16px;">—</div>
+        <div class="m-note">曲线穿越零轴的位置，多个用 / 分隔</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>组合盈亏曲线 <span class="tag" id="chartTag">红绿实线=到期日(正红负绿) · 橙虚线=所选日期(随滑块) · 滚轮缩放</span></h2>
+      <div style="margin-bottom:8px;">
+        <label class="toggle-line" style="display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--sub);cursor:pointer;">
+          <input type="checkbox" id="toggleDelta" style="accent-color:#7c3aed;cursor:pointer;"/>
+          显示所选日期曲线的斜率（Delta，元/元）
+        </label>
+      </div>
+      <div id="chart"></div>
+    </div>
+
+    <div class="card">
+      <h2>到期前日期选择</h2>
+      <div class="slider-wrap">
+        <div class="slider-top">
+          <span class="date" id="sliderDate">—</span>
+          <span class="days" id="sliderDays">—</span>
+        </div>
+        <input type="range" id="dateSlider" min="0" max="30" value="30" step="1"/>
+        <div class="range-labels"><span id="rangeMin">今天</span><span id="rangeMax">到期日</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>价格盈亏明细 <span class="tag" id="detailTag">—</span></h2>
+      <div class="tbl-meta">
+        <span>查看价格：<b id="detailPrice">—</b></span>
+        <span>组合合计：<b id="detailTotal">—</b></span>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>腿</th><th>方向</th><th>类型</th><th>行权价</th><th>权利金/份</th>
+            <th>张数</th><th>期权价值/份</th><th>盈亏(元)</th>
+            <th>Delta<br/><span style="font-weight:400;font-size:10px;">占比%</span></th>
+            <th>Theta(元/天)<br/><span style="font-weight:400;font-size:10px;">占比%</span></th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody id="detailBody"></tbody>
+      </table>
+      <div style="font-size:11px;color:#9ca3af;margin-top:8px;">默认显示当前标的价下的盈亏，点击图表曲线任意位置可查看该价格下的明细；点击「删除」可移除对应期权。Delta/Theta 占比按绝对值计算（反映各腿风险敞口占组合比例），且始终按「今天（建仓日）」的剩余时间计算，不受日期滑块影响。</div>
+    </div>
+
+  </section>
+</div>
+
+<footer>本工具基于 Black-Scholes 模型计算理论价值，仅用于策略分析与教学演示，不构成投资建议。市场有风险，投资需谨慎。</footer>
+
+<script>
+'use strict';
+/* ================= 工具函数 ================= */
+function $(s){return document.querySelector(s);}
+function fmt(n,d){
+  d=d==null?2:d;
+  return n.toLocaleString('zh-CN',{minimumFractionDigits:d,maximumFractionDigits:d});
+}
+function fmtMoney(n){
+  var s=n.toLocaleString('zh-CN',{maximumFractionDigits:0});
+  return n>=0?'+'+s:s;
+}
+function fmtDate(d){
+  var y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),dd=String(d.getDate()).padStart(2,'0');
+  return y+'-'+m+'-'+dd;
+}
+function parseDate(s){
+  var p=s.split('-');
+  return new Date(+p[0],+p[1]-1,+p[2]);
+}
+function addDays(d,n){
+  var x=new Date(d);
+  x.setDate(x.getDate()+n);
+  return x;
+}
+var DAY=86400000;
+
+/* ================= 状态 ================= */
+var state={
+  legs:[],
+  underlying:3.0,
+  multiplier:100,
+  rate:0.041,
+  defaultIV:0.25,
+  sliderDays:null,
+  today:new Date(new Date().getFullYear(),new Date().getMonth(),new Date().getDate()),
+  selPrice:null
+};
+var currentSelDate=null;
+
+/* ================= Black-Scholes 定价 ================= */
+function normCdf(x){
+  var a1=0.254829592,a2=-0.284496736,a3=1.421413741,a4=-1.453152027,a5=1.061405429,p=0.3275911;
+  var sign=x<0?-1:1;
+  x=Math.abs(x)/Math.sqrt(2);
+  var t=1/(1+p*x);
+  var y=1-((((a5*t+a4)*t+a3)*t+a2)*t+a1)*t*Math.exp(-x*x);
+  return 0.5*(1+sign*y);
+}
+function bsPrice(S,K,T,r,sig,isCall){
+  if(T<=1e-9) return isCall?Math.max(S-K,0):Math.max(K-S,0);
+  if(sig<=1e-9) return isCall?Math.max(S-K*Math.exp(-r*T),0):Math.max(K*Math.exp(-r*T)-S,0);
+  var d1=(Math.log(S/K)+(r+0.5*sig*sig)*T)/(sig*Math.sqrt(T));
+  var d2=d1-sig*Math.sqrt(T);
+  var df=Math.exp(-r*T);
+  if(isCall) return S*normCdf(d1)-K*df*normCdf(d2);
+  return K*df*normCdf(-d2)-S*normCdf(-d1);
+}
+/* 二分法反推隐含波动率：给定现价/行权价/剩余时间/利率/权利金，解出 σ */
+function impliedVolatility(S,K,T,r,price,isCall){
+  if(!(price>0)||T<=1e-9) return null;
+  var intrinsic=isCall?Math.max(S-K,0):Math.max(K-S,0);
+  if(price<=intrinsic) return null; /* 权利金低于内在价值，无解 */
+  var lo=1e-4,hi=10;
+  for(var i=0;i<200;i++){
+    var mid=(lo+hi)/2;
+    if(bsPrice(S,K,T,r,mid,isCall)>price) hi=mid; else lo=mid;
+  }
+  var iv=(lo+hi)/2;
+  return iv>0.0001&&iv<9.9?iv:null;
+}
+
+/* ================= 单腿 / 组合 ================= */
+function legExpiry(leg){return parseDate(leg.expiry);}
+function legT(leg,selDate){
+  var exp=legExpiry(leg);
+  if(selDate>=exp) return 0;
+  var days=(exp-selDate)/DAY;
+  return Math.max(days,0)/365;
+}
+function legValue(leg,S,T){
+  var isCall=leg.type==='call';
+  if(T<=1e-9) return isCall?Math.max(S-leg.strike,0):Math.max(leg.strike-S,0);
+  return bsPrice(S,leg.strike,T,state.rate,leg.iv,isCall);
+}
+function legPnl(leg,S,selDate){
+  var T=legT(leg,selDate);
+  var v=legValue(leg,S,T);
+  var dir=leg.side==='buy'?1:-1;
+  return dir*(v-leg.premium)*leg.qty*state.multiplier;
+}
+function portfolioPnl(S,selDate){
+  var t=0;
+  state.legs.forEach(function(l){t+=legPnl(l,S,selDate);});
+  return t;
+}
+/* 单腿 Delta（期权价格对标的价的偏导），到期时退化为内在价值斜率 */
+function legDelta(leg,S,T){
+  var isCall=leg.type==='call';
+  if(T<=1e-9){
+    if(isCall) return S>leg.strike?1:(S===leg.strike?0.5:0);
+    return S<leg.strike?-1:(S===leg.strike?-0.5:0);
+  }
+  var d1=(Math.log(S/leg.strike)+(state.rate+0.5*leg.iv*leg.iv)*T)/(leg.iv*Math.sqrt(T));
+  var nd=normCdf(d1);
+  return isCall?nd:(nd-1);
+}
+/* 组合 Delta（盈亏曲线斜率，元/元）：各腿 delta × 方向 × 张数 × 合约单位 */
+function portfolioDelta(S,selDate){
+  var t=0;
+  state.legs.forEach(function(l){
+    var T=legT(l,selDate);
+    var dir=l.side==='buy'?1:-1;
+    t+=dir*legDelta(l,S,T)*l.qty*state.multiplier;
+  });
+  return t;
+}
+/* 单腿 Theta（年化，期权价格对时间偏导）：call/put 的 BS theta */
+function legTheta(leg,S,T){
+  var isCall=leg.type==='call';
+  if(T<=1e-9) return 0;
+  var d1=(Math.log(S/leg.strike)+(state.rate+0.5*leg.iv*leg.iv)*T)/(leg.iv*Math.sqrt(T));
+  var d2=d1-leg.iv*Math.sqrt(T);
+  var phi=Math.exp(-d1*d1/2)/Math.sqrt(2*Math.PI);
+  var df=Math.exp(-state.rate*T);
+  var first=-S*phi*leg.iv/(2*Math.sqrt(T));
+  if(isCall) return first-state.rate*leg.strike*df*normCdf(d2);
+  return first+state.rate*leg.strike*df*normCdf(-d2);
+}
+/* 单腿每日 Theta（元/天，含方向与仓位）：买入为负（时间衰减亏钱），卖出为正 */
+function legThetaDaily(leg,S,selDate){
+  var T=legT(leg,selDate);
+  var dir=leg.side==='buy'?1:-1;
+  return dir*legTheta(leg,S,T)*leg.qty*state.multiplier/365;
+}
+/* 组合每日 Theta（元/天） */
+function portfolioThetaDaily(S,selDate){
+  var t=0;
+  state.legs.forEach(function(l){t+=legThetaDaily(l,S,selDate);});
+  return t;
+}
+/* Greeks 用最小剩余时间保护：即使滑块拖到到期日，也按至少 1 天计算，
+   避免 Delta/Theta 因 T=0 退化为 0（到期日内在价值斜率仅用于曲线绘制） */
+function greeksT(leg,selDate){
+  return Math.max(legT(leg,selDate),1/365);
+}
+function portfolioDeltaGreeks(S,selDate){
+  var t=0;
+  state.legs.forEach(function(l){
+    var T=greeksT(l,selDate);
+    var dir=l.side==='buy'?1:-1;
+    t+=dir*legDelta(l,S,T)*l.qty*state.multiplier;
+  });
+  return t;
+}
+function legThetaDailyGreeks(leg,S,selDate){
+  var T=greeksT(leg,selDate);
+  var dir=leg.side==='buy'?1:-1;
+  return dir*legTheta(leg,S,T)*leg.qty*state.multiplier/365;
+}
+
+/* ================= 曲线 ================= */
+function priceRange(){
+  var vals=state.legs.map(function(l){return l.strike;});
+  vals.push(state.underlying);
+  var lo=Math.min.apply(null,vals),hi=Math.max.apply(null,vals);
+  /* 向两侧扩展足够空间（以现价的 25% 与价差核心区间的 25% 取大者），
+     确保看涨期权能看到行权价上方的盈利空间、看跌期权能看到下方空间 */
+  var pad=Math.max(state.underlying*0.25,(hi-lo)*0.25);
+  lo=Math.max(lo-pad,0.0001);
+  hi=hi+pad;
+  return [lo,hi,300];
+}
+function buildCurve(selDate){
+  var r=priceRange(),lo=r[0],hi=r[1],n=r[2];
+  var step=(hi-lo)/n,pts=[];
+  for(var i=0;i<=n;i++){
+    var s=lo+i*step;
+    pts.push([s,portfolioPnl(s,selDate)]);
+  }
+  return pts;
+}
+function curveStats(pts){
+  var mx=-Infinity,mn=Infinity;
+  pts.forEach(function(p){if(p[1]>mx)mx=p[1];if(p[1]<mn)mn=p[1];});
+  return {max:mx,min:mn};
+}
+function breakevens(pts){
+  var res=[];
+  for(var i=1;i<pts.length;i++){
+    var s0=pts[i-1][0],p0=pts[i-1][1],s1=pts[i][0],p1=pts[i][1];
+    if(p0===0&&res.indexOf(s0)<0) res.push(s0);
+    if((p0<0&&p1>=0)||(p0>0&&p1<=0)){
+      var t=p0/(p0-p1);
+      var be=s0+(s1-s0)*t;
+      if(res.indexOf(be)<0) res.push(be);
+    }
+  }
+  return res;
+}
+
+/* ================= 图表 ================= */
+var chart=null;
+function initChart(){
+  if(!window.echarts){alert('图表库加载失败，请检查网络后刷新页面');return;}
+  chart=echarts.init($('#chart'),null,{renderer:'canvas'});
+  chart.on('click',function(params){
+    if(params&&params.value&&Array.isArray(params.value)){
+      updateDetailTable(params.value[0]);
+    }
+  });
+  window.addEventListener('resize',function(){if(chart)chart.resize();});
+}
+function maxExpiry(){
+  if(!state.legs.length) return addDays(state.today,30);
+  var mx=state.today;
+  state.legs.forEach(function(l){
+    var e=legExpiry(l);
+    if(e>mx)mx=e;
+  });
+  return mx;
+}
+/* 最近到期日：日历/对角价差的标准估值基准——近月腿到期结算为内在价值，
+   远月腿按剩余时间继续以 BS 理论价值估算 */
+function firstExpiry(){
+  if(!state.legs.length) return addDays(state.today,30);
+  var mn=null;
+  state.legs.forEach(function(l){
+    var e=legExpiry(l);
+    if(mn==null||e<mn)mn=e;
+  });
+  return mn;
+}
+function hasMultiExpiry(){
+  if(state.legs.length<2) return false;
+  var e0=state.legs[0].expiry;
+  return state.legs.some(function(l){return l.expiry!==e0;});
+}
+function renderChart(){
+  if(!chart) return;
+  /* 红绿基准曲线按「最近到期日」估值：单到期日组合等价于原到期日口径；
+     日历价差则得到标准帐篷形曲线（若按最晚到期日估值，近远月内在价值相减，
+     图形退化为水平线/误导折线，不反映日历价差的真实盈亏结构） */
+  var expiryDate=firstExpiry();
+  var multi=hasMultiExpiry();
+  var expName=multi?'最近到期日盈亏':'到期日盈亏';
+  var expLabel=multi?('最近到期日('+fmtDate(expiryDate)+')盈亏'):'到期日盈亏';
+  var tagEl=$('#chartTag');
+  if(tagEl){
+    tagEl.textContent=multi
+      ?('红绿实线=最近到期日('+fmtDate(expiryDate)+')(正红负绿) · 橙虚线=所选日期(随滑块) · 滚轮缩放')
+      :'红绿实线=到期日(正红负绿) · 橙虚线=所选日期(随滑块) · 滚轮缩放';
+  }
+  currentSelDate=addDays(state.today,state.sliderDays);
+  var curPts=buildCurve(currentSelDate);
+  var expPts=buildCurve(expiryDate);
+  /* 正负分色：null 断开法。正 series 只保留 y>=0 的点，负 series 只保留 y<0 的点 */
+  function split(pts){
+    var pos=pts.map(function(p){return p[1]>=0?[p[0],p[1]]:null;});
+    var neg=pts.map(function(p){return p[1]<0?[p[0],p[1]]:null;});
+    return [pos,neg];
+  }
+  var sp=split(expPts), expPos=sp[0], expNeg=sp[1];
+  var curStats=curveStats(curPts);
+  var expStats=curveStats(expPts);
+  /* 斜率曲线（Delta）：对所选日期曲线求数值斜率 */
+  var showDelta=$('#toggleDelta').checked;
+  var deltaPts=null;
+  if(showDelta){
+    var step=curPts.length>1?curPts[1][0]-curPts[0][0]:0;
+    deltaPts=curPts.map(function(p,idx){
+      if(idx===0||idx===curPts.length-1) return [p[0],null];
+      var dy=curPts[idx+1][1]-curPts[idx-1][1];
+      return [p[0],dy/(2*step)];
+    });
+  }
+  var option={
+    animation:false,
+    tooltip:{
+      trigger:'axis',
+      axisPointer:{type:'cross',label:{backgroundColor:'#6b7280'}},
+      formatter:function(params){
+        var item=null;
+        for(var i=0;i<params.length;i++){if(params[i].value&&Array.isArray(params[i].value)){item=params[i];break;}}
+        if(!item) return '';
+        var s=item.value[0];
+        var p=portfolioPnl(s,currentSelDate);
+        var pe=portfolioPnl(s,expiryDate);
+        var d=portfolioDeltaGreeks(s,state.today);
+        var h='<div style="font-weight:600;margin-bottom:5px;">标的价 '+fmt(s,4)+'</div>';
+        h+='<div style="margin-bottom:4px;">所选日期盈亏 <b style="color:'+(p>=0?'#dc2626':'#16a34a')+'">'+fmtMoney(p)+' 元</b></div>';
+        h+='<div style="margin-bottom:4px;">'+expLabel+' <b style="color:'+(pe>=0?'#dc2626':'#16a34a')+'">'+fmtMoney(pe)+' 元</b></div>';
+        if(showDelta){
+          h+='<div style="margin-bottom:4px;">斜率 Delta <b style="color:#7c3aed">'+fmt(d,2)+' 元/元</b></div>';
+        }
+        h+='<div style="padding:4px 0 4px 0;margin-bottom:6px;border-top:1px dashed #e5e8ef;border-bottom:1px dashed #e5e8ef;">';
+        h+='<div style="font-size:11.5px;">最大盈利 <b style="color:#dc2626">'+fmtMoney(curStats.max)+' 元</b></div>';
+        h+='<div style="font-size:11.5px;">最大亏损 <b style="color:#16a34a">'+fmtMoney(curStats.min)+' 元</b></div>';
+        h+='<div style="font-size:11px;color:#9ca3af;">（所选日期曲线区间内）</div>';
+        h+='</div>';
+        state.legs.forEach(function(l,idx){
+          var pl=legPnl(l,s,currentSelDate);
+          h+='<div style="font-size:11.5px;color:#6b7280;">L'+(idx+1)+' '+l.side+' '+l.type+' K='+fmt(l.strike,4)+'：<span style="color:'+(pl>=0?'#dc2626':'#16a34a')+'">'+fmtMoney(pl)+'</span></div>';
+        });
+        return h;
+      }
+    },
+    legend:{data:[expName,'所选日期盈亏','斜率 Delta'],top:0,textStyle:{color:'#374151',fontSize:12}},
+    toolbox:{
+      right:8,top:0,itemSize:13,iconStyle:{borderColor:'#6b7280'},
+      feature:{
+        dataZoom:{show:true,title:{zoom:'框选缩放',back:'还原'},yAxisIndex:'none'},
+        restore:{show:true,title:'还原'}
+      }
+    },
+    grid:{left:78,right:20,top:36,bottom:64},
+    dataZoom:[
+      {type:'inside',xAxisIndex:0,zoomOnMouseWheel:true,moveOnMouseMove:true},
+      {type:'slider',xAxisIndex:0,height:16,bottom:6,borderColor:'#e5e8ef'}
+    ],
+    xAxis:{
+      type:'value',name:'标的价',nameLocation:'middle',nameGap:30,
+      axisLabel:{formatter:function(v){return fmt(v,3);}},
+      splitLine:{lineStyle:{color:'#f0f2f6'}}
+    },
+    yAxis:[
+      {
+        type:'value',name:'盈亏(元)',nameLocation:'middle',nameGap:42,
+        axisLabel:{formatter:function(v){return v>=0?'+'+fmtMoney(v):fmtMoney(v);}},
+        splitLine:{lineStyle:{color:'#f0f2f6'}}
+      },
+      {
+        type:'value',name:'Delta(元/元)',nameLocation:'middle',nameGap:42,
+        position:'right',
+        axisLabel:{formatter:function(v){return fmt(v,2);},color:'#7c3aed'},
+        splitLine:{show:false}
+      }
+    ],
+    series:[
+      {
+        name:expName,type:'line',data:expPos,symbol:'none',z:3,
+        lineStyle:{width:2.5,color:'#dc2626'},
+        markLine:{
+          silent:true,symbol:'none',
+          data:[
+            {yAxis:0,lineStyle:{color:'#9ca3af'},label:{show:false}},
+            {xAxis:state.underlying,lineStyle:{color:'#2563eb',type:'dashed'},label:{formatter:'现价 '+fmt(state.underlying,3),color:'#2563eb',position:'insideEndTop',fontSize:11}}
+          ]
+        }
+      },
+      {
+        name:expName,type:'line',data:expNeg,symbol:'none',z:3,
+        lineStyle:{width:2.5,color:'#16a34a'}
+      },
+      {
+        name:'所选日期盈亏',type:'line',data:curPts,symbol:'none',z:4,
+        lineStyle:{width:2,color:'#f97316',type:'dashed'}
+      }
+    ]
+  };
+  if(showDelta){
+    option.series.push({
+      name:'斜率 Delta',type:'line',data:deltaPts,symbol:'none',z:5,yAxisIndex:1,
+      lineStyle:{width:1.8,color:'#7c3aed',type:'solid'}
+    });
+  }
+  chart.setOption(option,true);
+}
+
+/* ================= 指标 ================= */
+function updateMetrics(){
+  /* 与图表基准一致：多到期日组合按最近到期日估值 */
+  var refDate=firstExpiry();
+  var multi=hasMultiExpiry();
+  currentSelDate=addDays(state.today,state.sliderDays);
+  var cur=curveStats(buildCurve(currentSelDate));
+  var exp=curveStats(buildCurve(refDate));
+  var be=breakevens(buildCurve(currentSelDate));
+  var refName=multi?'最近到期日':'到期';
+  $('#mMaxExpLabel').textContent=refName+'最大盈利';
+  $('#mMinExpLabel').textContent=refName+'最大亏损';
+  var refNote=multi?(fmtDate(refDate)+' 估值'):'全部到期时';
+  $('#mMaxExpNote').textContent=refNote;
+  $('#mMinExpNote').textContent=refNote;
+  $('#mMaxExp').textContent=fmtMoney(exp.max);
+  $('#mMinExp').textContent=fmtMoney(exp.min);
+  $('#mMaxCur').textContent=fmtMoney(cur.max);
+  $('#mMinCur').textContent=fmtMoney(cur.min);
+  var remDays=Math.max(0,Math.round((refDate-currentSelDate)/DAY));
+  $('#mMaxCurNote').textContent='距到期 '+remDays+' 天';
+  $('#mMinCurNote').textContent='距到期 '+remDays+' 天';
+  $('#mBreakeven').textContent=be.length?be.map(function(v){return fmt(v,3);}).join(' / '):'—';
+  $('#mBreakeven').style.color=be.length?'#111827':'#9ca3af';
+}
+
+/* ================= 期权列表 ================= */
+function renderLegs(){
+  var box=$('#legList');
+  $('#legCount').textContent=state.legs.length+' 条';
+  if(!state.legs.length){
+    box.innerHTML='<div class="empty-tip">暂无期权，请在下方添加</div>';
+    $('#netFlow').innerHTML='';
+    return;
+  }
+  var html='';
+  state.legs.forEach(function(l,idx){
+    var net=((l.side==='buy'?1:-1)*l.premium*l.qty*state.multiplier);
+    html+='<div class="leg">'
+      +'<div class="l1">L'+(idx+1)+' · '
+      +'<select class="side-sel" data-idx="'+idx+'" title="切换买入/卖出">'
+      +'<option value="buy"'+(l.side==='buy'?' selected':'')+'>买入</option>'
+      +'<option value="sell"'+(l.side==='sell'?' selected':'')+'>卖出</option>'
+      +'</select> '
+      +(l.type==='call'?'看涨':'看跌')
+      +' <span style="color:#2563eb">K='+fmt(l.strike,4)+'</span></div>'
+      +'<div class="l2">权利金 '+fmt(l.premium,4)+'/份 × '+l.qty+' 张 · 到期 '+l.expiry+' · IV '+Math.round(l.iv*100)+'%</div>'
+      +'<div class="l2">开仓现金流 <span class="'+(net>=0?'neg':'pos')+'">'+(net>=0?'-'+Math.abs(net).toLocaleString():'+'+Math.abs(net).toLocaleString())+' 元</span></div>'
+      +'<button class="del" data-idx="'+idx+'" title="删除">×</button>'
+      +'</div>';
+  });
+  box.innerHTML=html;
+  var totalNet=0;
+  state.legs.forEach(function(l){
+    totalNet+=((l.side==='buy'?1:-1)*l.premium*l.qty*state.multiplier);
+  });
+  $('#netFlow').innerHTML='组合净权利金流：<b>'+(totalNet>=0?'-'+Math.abs(totalNet).toLocaleString()+' 元(净支出)':'+'+Math.abs(totalNet).toLocaleString()+' 元(净收入)')+'</b>';
+  var dels=box.querySelectorAll('.del');
+  for(var i=0;i<dels.length;i++){
+    dels[i].addEventListener('click',function(){
+      state.legs.splice(+this.getAttribute('data-idx'),1);
+      render();
+    });
+  }
+  var sels=box.querySelectorAll('.side-sel');
+  for(var j=0;j<sels.length;j++){
+    sels[j].addEventListener('change',function(){
+      state.legs[+this.getAttribute('data-idx')].side=this.value;
+      render();
+    });
+  }
+}
+
+/* ================= 明细表 ================= */
+function updateDetailTable(sPrice){
+  if(sPrice==null) sPrice=state.selPrice!=null?state.selPrice:state.underlying;
+  state.selPrice=sPrice;
+  $('#detailPrice').textContent=fmt(sPrice,4);
+  var rows='',total=0,totalD=0,totalT=0,absD=0,absT=0;
+  var data=[];
+  /* Greeks 固定按「今天」（建仓日剩余完整时间）计算，不随滑块退化为到期日 0 值 */
+  var gSel=state.today;
+  state.legs.forEach(function(l,idx){
+    var T=legT(l,currentSelDate);
+    var v=legValue(l,sPrice,T);
+    var pl=((l.side==='buy'?1:-1)*(v-l.premium)*l.qty*state.multiplier);
+    var d=((l.side==='buy'?1:-1)*legDelta(l,sPrice,greeksT(l,gSel))*l.qty*state.multiplier);
+    var th=legThetaDailyGreeks(l,sPrice,gSel);
+    total+=pl; totalD+=d; totalT+=th;
+    absD+=Math.abs(d); absT+=Math.abs(th);
+    data.push({idx:idx,l:l,v:v,pl:pl,d:d,th:th});
+  });
+  data.forEach(function(r){
+    var dPct=absD>0?(Math.abs(r.d)/absD*100):0;
+    var tPct=absT>0?(Math.abs(r.th)/absT*100):0;
+    rows+='<tr>'
+      +'<td>L'+(r.idx+1)+'</td>'
+      +'<td>'+(r.l.side==='buy'?'买入':'卖出')+'</td>'
+      +'<td>'+(r.l.type==='call'?'看涨':'看跌')+'</td>'
+      +'<td>'+fmt(r.l.strike,4)+'</td>'
+      +'<td>'+fmt(r.l.premium,4)+'</td>'
+      +'<td>'+r.l.qty+'</td>'
+      +'<td>'+fmt(r.v,4)+'</td>'
+      +'<td class="'+(r.pl>=0?'pos':'neg')+'">'+fmtMoney(r.pl)+'</td>'
+      +'<td class="'+(r.d>=0?'pos':'neg')+'">'+fmt(r.d,0)+'<br/><span style="font-size:10px;color:#9ca3af;">'+dPct.toFixed(1)+'%</span></td>'
+      +'<td class="'+(r.th>=0?'pos':'neg')+'">'+fmt(r.th,1)+'<br/><span style="font-size:10px;color:#9ca3af;">'+tPct.toFixed(1)+'%</span></td>'
+      +'<td><button class="del-row" data-idx="'+r.idx+'" title="删除该期权">删除</button></td>'
+      +'</tr>';
+  });
+  if(!state.legs.length) rows='<tr><td colspan="11" style="text-align:center;color:#9ca3af;padding:14px;">暂无数据</td></tr>';
+  rows+='<tr class="total">'
+    +'<td colspan="8">组合合计</td>'
+    +'<td class="'+(totalD>=0?'pos':'neg')+'">'+fmt(totalD,0)+'</td>'
+    +'<td class="'+(totalT>=0?'pos':'neg')+'">'+fmt(totalT,1)+'</td>'
+    +'<td class="'+(total>=0?'pos':'neg')+'">'+fmtMoney(total)+'</td>'
+    +'</tr>';
+  $('#detailBody').innerHTML=rows;
+  $('#detailTotal').innerHTML='<span class="'+(total>=0?'pos':'neg')+'">'+fmtMoney(total)+' 元</span>';
+  var delRows=$('#detailBody').querySelectorAll('.del-row');
+  for(var k=0;k<delRows.length;k++){
+    delRows[k].addEventListener('click',function(){
+      state.legs.splice(+this.getAttribute('data-idx'),1);
+      render();
+    });
+  }
+}
+
+/* ================= 滑块 ================= */
+function renderSlider(){
+  var expiryDate=maxExpiry();
+  var maxDays=Math.max(1,Math.round((expiryDate-state.today)/DAY));
+  /* 默认停在「今天」：此时红绿线=橙线（今日），拖动后红绿线从橙线出发逐渐走向到期日线 */
+  if(state.sliderDays==null) state.sliderDays=0;
+  if(state.sliderDays>maxDays) state.sliderDays=maxDays;
+  var sl=$('#dateSlider');
+  sl.min=0;sl.max=maxDays;sl.value=state.sliderDays;
+  $('#rangeMin').textContent='今天 '+fmtDate(state.today);
+  $('#rangeMax').textContent='到期 '+fmtDate(expiryDate);
+  var sel=addDays(state.today,state.sliderDays);
+  $('#sliderDate').textContent=fmtDate(sel);
+  var rem=Math.max(0,Math.round((expiryDate-sel)/DAY));
+  $('#sliderDays').innerHTML='距到期 <b>'+rem+'</b> 天'+(rem===0?'（已到期）':'');
+}
+$('#dateSlider').addEventListener('input',function(){
+  state.sliderDays=+this.value;
+  renderSlider();
+  renderChart();
+  updateMetrics();
+  updateDetailTable(null);
+});
+$('#toggleDelta').addEventListener('change',function(){
+  renderChart();
+});
+
+/* ================= 渲染总入口 ================= */
+function render(){
+  renderSlider();
+  renderLegs();
+  renderChart();
+  updateMetrics();
+  updateDetailTable(null);
+}
+
+/* ================= 表单 ================= */
+$('#addForm').addEventListener('submit',function(e){
+  e.preventDefault();
+  var ivInput=$('#fIV').value;
+  var strike=+$('#fStrike').value;
+  var premium=+$('#fPremium').value;
+  var qty=+$('#fQty').value;
+  var expiry=$('#fExpiry').value;
+  var side=$('#fSide').value;
+  var type=$('#fType').value;
+  if(!(strike>0)){alert('请填写有效的行权价');return;}
+  if(!(premium>=0)){alert('请填写有效的权利金');return;}
+  if(!(qty>=1)){alert('请填写有效的张数');return;}
+  var exp=parseDate(expiry);
+  if(!expiry||isNaN(exp.getTime())){alert('请选择到期日');return;}
+  if(exp<state.today){alert('到期日不能早于今天');return;}
+  var iv;
+  if(ivInput!==''&&+ivInput>0){
+    iv=(+ivInput)/100;
+  }else{
+    /* IV 留空：根据权利金反推隐含波动率 */
+    var T=(exp-state.today)/DAY/365;
+    iv=impliedVolatility(state.underlying,strike,T,state.rate,premium,type==='call');
+    if(iv==null){
+      alert('无法反推隐含波动率：权利金需高于内在价值。请手动填写 IV。');
+      return;
+    }
+    $('#fIV').value=(iv*100).toFixed(1);
+  }
+  var leg={
+    side:side,type:type,strike:strike,premium:premium,qty:qty,expiry:expiry,iv:iv
+  };
+  state.legs.push(leg);
+  /* 保留输入值，方便连续添加同类型期权（可手动修改行权价/张数后再次添加） */
+  render();
+});
+
+/* 组合参数变更 */
+['pUnderlying','pMultiplier','pRate','pIV'].forEach(function(id){
+  $('#'+id).addEventListener('change',function(){
+    var v=+this.value;
+    if(id==='pUnderlying'&&v>0) state.underlying=v;
+    if(id==='pMultiplier'&&v>0) state.multiplier=v;
+    if(id==='pRate'&&v>=0) state.rate=v/100;
+    if(id==='pIV'&&v>0) state.defaultIV=v/100;
+    render();
+  });
+});
+
+$('#btnClear').addEventListener('click',function(){
+  if(state.legs.length&&!confirm('确定清空全部期权吗？')) return;
+  state.legs=[];
+  render();
+});
+
+/* ================= 预设策略 ================= */
+function presetList(){
+  return [
+    {id:'long-call',label:'买入看涨',build:function(exp,iv){
+      return [{side:'buy',type:'call',strike:3.0000,premium:0.1100,qty:100,expiry:exp,iv:iv}];
+    }},
+    {id:'long-put',label:'买入看跌',build:function(exp,iv){
+      return [{side:'buy',type:'put',strike:3.0000,premium:0.1000,qty:100,expiry:exp,iv:iv}];
+    }},
+    {id:'bull-call',label:'牛市看涨价差',build:function(exp,iv){
+      return [
+        {side:'buy',type:'call',strike:2.9000,premium:0.1700,qty:100,expiry:exp,iv:iv},
+        {side:'sell',type:'call',strike:3.1000,premium:0.0700,qty:100,expiry:exp,iv:iv}
+      ];
+    }},
+    {id:'bear-put',label:'熊市看跌价差',build:function(exp,iv){
+      return [
+        {side:'buy',type:'put',strike:3.1000,premium:0.1500,qty:100,expiry:exp,iv:iv},
+        {side:'sell',type:'put',strike:2.9000,premium:0.0600,qty:100,expiry:exp,iv:iv}
+      ];
+    }},
+    {id:'straddle',label:'买入跨式',build:function(exp,iv){
+      return [
+        {side:'buy',type:'call',strike:3.0000,premium:0.1100,qty:100,expiry:exp,iv:iv},
+        {side:'buy',type:'put',strike:3.0000,premium:0.1000,qty:100,expiry:exp,iv:iv}
+      ];
+    }},
+    {id:'strangle',label:'买入宽跨式',build:function(exp,iv){
+      return [
+        {side:'buy',type:'call',strike:3.1000,premium:0.0700,qty:100,expiry:exp,iv:iv},
+        {side:'buy',type:'put',strike:2.9000,premium:0.0600,qty:100,expiry:exp,iv:iv}
+      ];
+    }},
+    {id:'short-straddle',label:'卖出跨式',build:function(exp,iv){
+      return [
+        {side:'sell',type:'call',strike:3.0000,premium:0.1100,qty:100,expiry:exp,iv:iv},
+        {side:'sell',type:'put',strike:3.0000,premium:0.1000,qty:100,expiry:exp,iv:iv}
+      ];
+    }},
+    {id:'iron-condor',label:'铁鹰策略',build:function(exp,iv){
+      return [
+        {side:'sell',type:'put',strike:2.9000,premium:0.0400,qty:100,expiry:exp,iv:iv},
+        {side:'buy',type:'put',strike:2.8000,premium:0.0300,qty:100,expiry:exp,iv:iv},
+        {side:'sell',type:'call',strike:3.1000,premium:0.0700,qty:100,expiry:exp,iv:iv},
+        {side:'buy',type:'call',strike:3.2000,premium:0.0400,qty:100,expiry:exp,iv:iv}
+      ];
+    }},
+    /* 日历价差：卖近月(30天) 买远月(60天)，同行权价。
+       权利金按 BS 精确计算（S=3.0, K=3.0, r=4.1%, σ=25%），与页面定价引擎一致 */
+    {id:'calendar',label:'日历价差',build:function(exp,iv){
+      var expNear=fmtDate(addDays(state.today,30));
+      var expFar=fmtDate(addDays(state.today,60));
+      return [
+        {side:'buy',type:'call',strike:3.0000,premium:0.1371,qty:100,expiry:expFar,iv:iv},
+        {side:'sell',type:'call',strike:3.0000,premium:0.0920,qty:100,expiry:expNear,iv:iv}
+      ];
+    }}
+  ];
+}
+function renderPresets(){
+  var box=$('#presetChips');
+  var html='';
+  presetList().forEach(function(p){
+    html+='<button class="chip" data-id="'+p.id+'">'+p.label+'</button>';
+  });
+  box.innerHTML=html;
+  var btns=box.querySelectorAll('.chip');
+  for(var i=0;i<btns.length;i++){
+    btns[i].addEventListener('click',function(){
+      var p=presetList().filter(function(x){return x.id===this.getAttribute('data-id');}.bind(this))[0];
+      if(!p) return;
+      state.underlying=3.0;
+      state.multiplier=100;
+      state.rate=0.041;
+      state.defaultIV=0.25;
+      $('#pUnderlying').value='3.0000';
+      $('#pMultiplier').value='100';
+      $('#pRate').value='4.1';
+      $('#pIV').value='25';
+      var exp=fmtDate(addDays(state.today,45));
+      var legs=p.build(exp,state.defaultIV);
+      if(state.legs.length&&!confirm('已存在持仓：确定=清空后载入模板　取消=追加到现有组合')) {
+        legs.forEach(function(l){state.legs.push(l);});
+      } else {
+        state.legs=[];
+        legs.forEach(function(l){state.legs.push(l);});
+      }
+      render();
+    });
+  }
+}
+
+/* ================= 启动 ================= */
+function boot(){
+  $('#fExpiry').value=fmtDate(addDays(state.today,30));
+  renderPresets();
+  initChart();
+  /* 初始载入一个「买入跨式」示例，便于立即查看效果 */
+  var exp=fmtDate(addDays(state.today,45));
+  state.legs.push({side:'buy',type:'call',strike:3.0000,premium:0.1100,qty:100,expiry:exp,iv:0.25});
+  state.legs.push({side:'buy',type:'put',strike:3.0000,premium:0.1000,qty:100,expiry:exp,iv:0.25});
+  render();
+}
+boot();
+</script>
+</body>
+</html>

@@ -1,0 +1,907 @@
+{
+ "orig_n": 21,
+ "full_n": 32,
+ "added_n": 11,
+ "orig_stats": {
+  "1": {
+   "n": 21,
+   "mean": -0.3,
+   "median": -0.04,
+   "win": 42.9,
+   "std": 1.68
+  },
+  "5": {
+   "n": 20,
+   "mean": -0.67,
+   "median": -0.01,
+   "win": 50.0,
+   "std": 3.34
+  },
+  "10": {
+   "n": 20,
+   "mean": -1.77,
+   "median": -1.23,
+   "win": 40.0,
+   "std": 5.61
+  },
+  "20": {
+   "n": 20,
+   "mean": -2.13,
+   "median": -1.16,
+   "win": 45.0,
+   "std": 8.78
+  }
+ },
+ "full_stats": {
+  "1": {
+   "n": 32,
+   "mean": -0.05,
+   "median": 0.12,
+   "win": 50.0,
+   "std": 1.68
+  },
+  "5": {
+   "n": 31,
+   "mean": -0.44,
+   "median": -0.09,
+   "win": 48.4,
+   "std": 3.63
+  },
+  "10": {
+   "n": 31,
+   "mean": -1.83,
+   "median": -1.43,
+   "win": 41.9,
+   "std": 6.47
+  },
+  "20": {
+   "n": 31,
+   "mean": -0.82,
+   "median": -1.03,
+   "win": 48.4,
+   "std": 11.17
+  }
+ },
+ "added_stats": {
+  "1": {
+   "n": 11,
+   "mean": 0.43,
+   "median": 0.66,
+   "win": 63.6,
+   "std": 1.66
+  },
+  "5": {
+   "n": 11,
+   "mean": -0.01,
+   "median": -0.18,
+   "win": 45.5,
+   "std": 4.25
+  },
+  "10": {
+   "n": 11,
+   "mean": -1.94,
+   "median": -3.22,
+   "win": 45.5,
+   "std": 8.11
+  },
+  "20": {
+   "n": 11,
+   "mean": 1.56,
+   "median": 4.82,
+   "win": 54.5,
+   "std": 14.78
+  }
+ },
+ "orig_cls": {
+  "V型反转": {
+   "n": 5,
+   "pct": 25.0
+  },
+  "死猫反弹": {
+   "n": 3,
+   "pct": 15.0
+  },
+  "支撑击穿": {
+   "n": 8,
+   "pct": 40.0
+  },
+  "未完整": {
+   "n": 1,
+   "pct": 5.0
+  },
+  "横盘消化": {
+   "n": 4,
+   "pct": 20.0
+  }
+ },
+ "full_cls": {
+  "V型反转": {
+   "n": 8,
+   "pct": 25.8
+  },
+  "支撑击穿": {
+   "n": 12,
+   "pct": 38.7
+  },
+  "未完整": {
+   "n": 1,
+   "pct": 3.2
+  },
+  "死猫反弹": {
+   "n": 3,
+   "pct": 9.7
+  },
+  "横盘消化": {
+   "n": 8,
+   "pct": 25.8
+  }
+ },
+ "added_cls": {
+  "横盘消化": {
+   "n": 4,
+   "pct": 36.4
+  },
+  "V型反转": {
+   "n": 3,
+   "pct": 27.3
+  },
+  "支撑击穿": {
+   "n": 4,
+   "pct": 36.4
+  }
+ },
+ "added_by_sector_n": {
+  "XLF": 1,
+  "XLK": 2,
+  "XLI": 1,
+  "XLE": 1,
+  "XLY": 4,
+  "XLC": 2
+ },
+ "full_by_sector_n": {
+  "XLV": 8,
+  "XLK": 7,
+  "XLF": 6,
+  "XLY": 4,
+  "XLI": 3,
+  "XLC": 2,
+  "XLP": 1,
+  "XLE": 1
+ },
+ "missing_data": [],
+ "added_events": [
+  {
+   "pair": "XLY/HD",
+   "sector": "XLY",
+   "ticker": "HD",
+   "date": "2009-10-28",
+   "t": 3733,
+   "entry": 16.829,
+   "support_kinds": [
+    "分形支撑(1触)"
+   ],
+   "support_broken_day": null,
+   "fwd1": 2.78,
+   "fwd5": -0.99,
+   "fwd10": 8.33,
+   "fwd20": 10.47,
+   "cls": "横盘消化"
+  },
+  {
+   "pair": "XLY/NKE",
+   "sector": "XLY",
+   "ticker": "NKE",
+   "date": "2014-01-13",
+   "t": 4791,
+   "entry": 31.846,
+   "support_kinds": [
+    "分形支撑(3触)"
+   ],
+   "support_broken_day": 4,
+   "fwd1": -0.01,
+   "fwd5": -1.9,
+   "fwd10": -3.29,
+   "fwd20": -1.6,
+   "cls": "支撑击穿"
+  },
+  {
+   "pair": "XLK/IBM",
+   "sector": "XLK",
+   "ticker": "IBM",
+   "date": "2014-06-26",
+   "t": 4905,
+   "entry": 105.676,
+   "support_kinds": [
+    "分形支撑(2触)"
+   ],
+   "support_broken_day": null,
+   "fwd1": 0.74,
+   "fwd5": 4.52,
+   "fwd10": 4.23,
+   "fwd20": 7.78,
+   "cls": "V型反转"
+  },
+  {
+   "pair": "XLY/AMZN",
+   "sector": "XLY",
+   "ticker": "AMZN",
+   "date": "2015-01-06",
+   "t": 4439,
+   "entry": 14.764,
+   "support_kinds": [
+    "分形支撑(7触)"
+   ],
+   "support_broken_day": null,
+   "fwd1": 1.06,
+   "fwd5": -0.19,
+   "fwd10": 0.66,
+   "fwd20": 23.52,
+   "cls": "横盘消化"
+  },
+  {
+   "pair": "XLY/MCD",
+   "sector": "XLY",
+   "ticker": "MCD",
+   "date": "2018-02-05",
+   "t": 5814,
+   "entry": 134.148,
+   "support_kinds": [
+    "分形支撑(2触)"
+   ],
+   "support_broken_day": null,
+   "fwd1": 0.81,
+   "fwd5": 0.03,
+   "fwd10": -4.08,
+   "fwd20": -7.14,
+   "cls": "横盘消化"
+  },
+  {
+   "pair": "XLE/CVX",
+   "sector": "XLE",
+   "ticker": "CVX",
+   "date": "2020-01-21",
+   "t": 6306,
+   "entry": 84.349,
+   "support_kinds": [
+    "分形支撑(9触)"
+   ],
+   "support_broken_day": 4,
+   "fwd1": -0.36,
+   "fwd5": -1.93,
+   "fwd10": -5.7,
+   "fwd20": -1.13,
+   "cls": "支撑击穿"
+  },
+  {
+   "pair": "XLC/DIS",
+   "sector": "XLC",
+   "ticker": "DIS",
+   "date": "2020-02-24",
+   "t": 6329,
+   "entry": 128.962,
+   "support_kinds": [
+    "分形支撑(4触)"
+   ],
+   "support_broken_day": 1,
+   "fwd1": -3.62,
+   "fwd5": -9.8,
+   "fwd10": -21.55,
+   "fwd20": -35.52,
+   "cls": "支撑击穿"
+  },
+  {
+   "pair": "XLF/TRV",
+   "sector": "XLF",
+   "ticker": "TRV",
+   "date": "2020-09-08",
+   "t": 6466,
+   "entry": 100.672,
+   "support_kinds": [
+    "分形支撑(5触)"
+   ],
+   "support_broken_day": null,
+   "fwd1": 0.66,
+   "fwd5": -0.66,
+   "fwd10": -3.22,
+   "fwd20": -1.2,
+   "cls": "横盘消化"
+  },
+  {
+   "pair": "XLC/VZ",
+   "sector": "XLC",
+   "ticker": "VZ",
+   "date": "2025-07-15",
+   "t": 7683,
+   "entry": 38.622,
+   "support_kinds": [
+    "分形支撑(6触)"
+   ],
+   "support_broken_day": null,
+   "fwd1": -0.02,
+   "fwd5": 4.12,
+   "fwd10": 3.51,
+   "fwd20": 4.82,
+   "cls": "V型反转"
+  },
+  {
+   "pair": "XLI/MMM",
+   "sector": "XLI",
+   "ticker": "MMM",
+   "date": "2025-08-01",
+   "t": 7696,
+   "entry": 141.758,
+   "support_kinds": [
+    "分形支撑(5触)"
+   ],
+   "support_broken_day": null,
+   "fwd1": 2.4,
+   "fwd5": 6.16,
+   "fwd10": 5.53,
+   "fwd20": 8.2,
+   "cls": "V型反转"
+  },
+  {
+   "pair": "XLK/CRM",
+   "sector": "XLK",
+   "ticker": "CRM",
+   "date": "2025-11-06",
+   "t": 5379,
+   "entry": 237.675,
+   "support_kinds": [
+    "分形支撑(7触)"
+   ],
+   "support_broken_day": 10,
+   "fwd1": 0.25,
+   "fwd5": 0.48,
+   "fwd10": -5.81,
+   "fwd20": 8.9,
+   "cls": "支撑击穿"
+  }
+ ],
+ "full_events": [
+  {
+   "pair": "XLK/MSFT",
+   "sector": "XLK",
+   "ticker": "MSFT",
+   "date": "2000-04-03",
+   "t": 1326,
+   "entry": 27.581,
+   "support_kinds": [
+    "分形支撑(8触)"
+   ],
+   "support_broken_day": 2,
+   "fwd1": -2.54,
+   "fwd5": -5.3,
+   "fwd10": -16.51,
+   "fwd20": -23.11,
+   "cls": "支撑击穿"
+  },
+  {
+   "pair": "XLV/JNJ",
+   "sector": "XLV",
+   "ticker": "JNJ",
+   "date": "2003-05-19",
+   "t": 2109,
+   "entry": 28.818,
+   "support_kinds": [
+    "分形支撑(6触)"
+   ],
+   "support_broken_day": null,
+   "fwd1": -1.17,
+   "fwd5": -2.21,
+   "fwd10": -1.43,
+   "fwd20": 0.24,
+   "cls": "横盘消化"
+  },
+  {
+   "pair": "XLV/MRK",
+   "sector": "XLV",
+   "ticker": "MRK",
+   "date": "2003-05-19",
+   "t": 2109,
+   "entry": 22.312,
+   "support_kinds": [
+    "分形支撑(6触)"
+   ],
+   "support_broken_day": null,
+   "fwd1": -2.93,
+   "fwd5": -0.55,
+   "fwd10": -0.62,
+   "fwd20": 10.81,
+   "cls": "横盘消化"
+  },
+  {
+   "pair": "XLF/AXP",
+   "sector": "XLF",
+   "ticker": "AXP",
+   "date": "2007-02-12",
+   "t": 3049,
+   "entry": 42.401,
+   "support_kinds": [
+    "分形支撑(1触)"
+   ],
+   "support_broken_day": null,
+   "fwd1": 1.05,
+   "fwd5": 3.0,
+   "fwd10": -2.47,
+   "fwd20": -3.95,
+   "cls": "死猫反弹"
+  },
+  {
+   "pair": "XLK/CSCO",
+   "sector": "XLK",
+   "ticker": "CSCO",
+   "date": "2007-05-24",
+   "t": 3120,
+   "entry": 16.286,
+   "support_kinds": [
+    "分形支撑(3触)"
+   ],
+   "support_broken_day": null,
+   "fwd1": 0.47,
+   "fwd5": 5.75,
+   "fwd10": 4.25,
+   "fwd20": 5.98,
+   "cls": "V型反转"
+  },
+  {
+   "pair": "XLY/HD",
+   "sector": "XLY",
+   "ticker": "HD",
+   "date": "2009-10-28",
+   "t": 3733,
+   "entry": 16.829,
+   "support_kinds": [
+    "分形支撑(1触)"
+   ],
+   "support_broken_day": null,
+   "fwd1": 2.78,
+   "fwd5": -0.99,
+   "fwd10": 8.33,
+   "fwd20": 10.47,
+   "cls": "横盘消化"
+  },
+  {
+   "pair": "XLV/AMGN",
+   "sector": "XLV",
+   "ticker": "AMGN",
+   "date": "2009-10-30",
+   "t": 3735,
+   "entry": 35.996,
+   "support_kinds": [
+    "分形支撑(1触)"
+   ],
+   "support_broken_day": null,
+   "fwd1": -2.22,
+   "fwd5": 2.0,
+   "fwd10": 3.34,
+   "fwd20": 5.09,
+   "cls": "V型反转"
+  },
+  {
+   "pair": "XLF/JPM",
+   "sector": "XLF",
+   "ticker": "JPM",
+   "date": "2011-03-07",
+   "t": 4073,
+   "entry": 29.836,
+   "support_kinds": [
+    "分形支撑(4触)"
+   ],
+   "support_broken_day": null,
+   "fwd1": 2.68,
+   "fwd5": 0.24,
+   "fwd10": 0.97,
+   "fwd20": 3.1,
+   "cls": "V型反转"
+  },
+  {
+   "pair": "XLK/NVDA",
+   "sector": "XLK",
+   "ticker": "NVDA",
+   "date": "2012-04-04",
+   "t": 3322,
+   "entry": 0.335,
+   "support_kinds": [
+    "分形支撑(5触)"
+   ],
+   "support_broken_day": 9,
+   "fwd1": -0.14,
+   "fwd5": 0.2,
+   "fwd10": -6.76,
+   "fwd20": -13.79,
+   "cls": "支撑击穿"
+  },
+  {
+   "pair": "XLF/AXP",
+   "sector": "XLF",
+   "ticker": "AXP",
+   "date": "2012-09-26",
+   "t": 4467,
+   "entry": 46.312,
+   "support_kinds": [
+    "分形支撑(10触)"
+   ],
+   "support_broken_day": null,
+   "fwd1": 0.77,
+   "fwd5": 2.6,
+   "fwd10": 3.62,
+   "fwd20": -1.28,
+   "cls": "死猫反弹"
+  },
+  {
+   "pair": "XLY/NKE",
+   "sector": "XLY",
+   "ticker": "NKE",
+   "date": "2014-01-13",
+   "t": 4791,
+   "entry": 31.846,
+   "support_kinds": [
+    "分形支撑(3触)"
+   ],
+   "support_broken_day": 4,
+   "fwd1": -0.01,
+   "fwd5": -1.9,
+   "fwd10": -3.29,
+   "fwd20": -1.6,
+   "cls": "支撑击穿"
+  },
+  {
+   "pair": "XLP/WMT",
+   "sector": "XLP",
+   "ticker": "WMT",
+   "date": "2014-05-20",
+   "t": 4879,
+   "entry": 20.133,
+   "support_kinds": [
+    "分形支撑(4触)"
+   ],
+   "support_broken_day": null,
+   "fwd1": -0.04,
+   "fwd5": -0.21,
+   "fwd10": 1.9,
+   "fwd20": 0.01,
+   "cls": "横盘消化"
+  },
+  {
+   "pair": "XLK/IBM",
+   "sector": "XLK",
+   "ticker": "IBM",
+   "date": "2014-06-26",
+   "t": 4905,
+   "entry": 105.676,
+   "support_kinds": [
+    "分形支撑(2触)"
+   ],
+   "support_broken_day": null,
+   "fwd1": 0.74,
+   "fwd5": 4.52,
+   "fwd10": 4.23,
+   "fwd20": 7.78,
+   "cls": "V型反转"
+  },
+  {
+   "pair": "XLY/AMZN",
+   "sector": "XLY",
+   "ticker": "AMZN",
+   "date": "2015-01-06",
+   "t": 4439,
+   "entry": 14.764,
+   "support_kinds": [
+    "分形支撑(7触)"
+   ],
+   "support_broken_day": null,
+   "fwd1": 1.06,
+   "fwd5": -0.19,
+   "fwd10": 0.66,
+   "fwd20": 23.52,
+   "cls": "横盘消化"
+  },
+  {
+   "pair": "XLF/GS",
+   "sector": "XLF",
+   "ticker": "GS",
+   "date": "2016-06-10",
+   "t": 4304,
+   "entry": 122.006,
+   "support_kinds": [
+    "分形支撑(5触)"
+   ],
+   "support_broken_day": 5,
+   "fwd1": -0.84,
+   "fwd5": -2.84,
+   "fwd10": -5.36,
+   "fwd20": 1.53,
+   "cls": "支撑击穿"
+  },
+  {
+   "pair": "XLV/AMGN",
+   "sector": "XLV",
+   "ticker": "AMGN",
+   "date": "2017-10-26",
+   "t": 5746,
+   "entry": 135.446,
+   "support_kinds": [
+    "分形支撑(3触)"
+   ],
+   "support_broken_day": null,
+   "fwd1": -0.7,
+   "fwd5": -2.33,
+   "fwd10": -1.43,
+   "fwd20": -2.97,
+   "cls": "横盘消化"
+  },
+  {
+   "pair": "XLV/UNH",
+   "sector": "XLV",
+   "ticker": "UNH",
+   "date": "2018-02-05",
+   "t": 5814,
+   "entry": 191.004,
+   "support_kinds": [
+    "分形支撑(2触)"
+   ],
+   "support_broken_day": null,
+   "fwd1": 2.35,
+   "fwd5": 2.58,
+   "fwd10": 3.02,
+   "fwd20": 2.8,
+   "cls": "V型反转"
+  },
+  {
+   "pair": "XLV/JNJ",
+   "sector": "XLV",
+   "ticker": "JNJ",
+   "date": "2018-02-05",
+   "t": 5814,
+   "entry": 103.138,
+   "support_kinds": [
+    "分形支撑(4触)"
+   ],
+   "support_broken_day": null,
+   "fwd1": 1.1,
+   "fwd5": -0.09,
+   "fwd10": 0.37,
+   "fwd20": -1.03,
+   "cls": "死猫反弹"
+  },
+  {
+   "pair": "XLV/AMGN",
+   "sector": "XLV",
+   "ticker": "AMGN",
+   "date": "2018-02-05",
+   "t": 5814,
+   "entry": 135.004,
+   "support_kinds": [
+    "分形支撑(3触)"
+   ],
+   "support_broken_day": null,
+   "fwd1": 1.09,
+   "fwd5": 0.07,
+   "fwd10": 5.5,
+   "fwd20": 9.75,
+   "cls": "V型反转"
+  },
+  {
+   "pair": "XLY/MCD",
+   "sector": "XLY",
+   "ticker": "MCD",
+   "date": "2018-02-05",
+   "t": 5814,
+   "entry": 134.148,
+   "support_kinds": [
+    "分形支撑(2触)"
+   ],
+   "support_broken_day": null,
+   "fwd1": 0.81,
+   "fwd5": 0.03,
+   "fwd10": -4.08,
+   "fwd20": -7.14,
+   "cls": "横盘消化"
+  },
+  {
+   "pair": "XLE/CVX",
+   "sector": "XLE",
+   "ticker": "CVX",
+   "date": "2020-01-21",
+   "t": 6306,
+   "entry": 84.349,
+   "support_kinds": [
+    "分形支撑(9触)"
+   ],
+   "support_broken_day": 4,
+   "fwd1": -0.36,
+   "fwd5": -1.93,
+   "fwd10": -5.7,
+   "fwd20": -1.13,
+   "cls": "支撑击穿"
+  },
+  {
+   "pair": "XLI/CAT",
+   "sector": "XLI",
+   "ticker": "CAT",
+   "date": "2020-01-27",
+   "t": 6310,
+   "entry": 119.918,
+   "support_kinds": [
+    "分形支撑(1触)"
+   ],
+   "support_broken_day": 4,
+   "fwd1": 0.74,
+   "fwd5": -4.39,
+   "fwd10": -1.04,
+   "fwd20": -4.96,
+   "cls": "支撑击穿"
+  },
+  {
+   "pair": "XLK/CSCO",
+   "sector": "XLK",
+   "ticker": "CSCO",
+   "date": "2020-02-24",
+   "t": 6329,
+   "entry": 36.443,
+   "support_kinds": [
+    "分形支撑(2触)"
+   ],
+   "support_broken_day": 1,
+   "fwd1": -2.86,
+   "fwd5": -6.43,
+   "fwd10": -13.73,
+   "fwd20": -21.36,
+   "cls": "支撑击穿"
+  },
+  {
+   "pair": "XLC/DIS",
+   "sector": "XLC",
+   "ticker": "DIS",
+   "date": "2020-02-24",
+   "t": 6329,
+   "entry": 128.962,
+   "support_kinds": [
+    "分形支撑(4触)"
+   ],
+   "support_broken_day": 1,
+   "fwd1": -3.62,
+   "fwd5": -9.8,
+   "fwd10": -21.55,
+   "fwd20": -35.52,
+   "cls": "支撑击穿"
+  },
+  {
+   "pair": "XLF/TRV",
+   "sector": "XLF",
+   "ticker": "TRV",
+   "date": "2020-09-08",
+   "t": 6466,
+   "entry": 100.672,
+   "support_kinds": [
+    "分形支撑(5触)"
+   ],
+   "support_broken_day": null,
+   "fwd1": 0.66,
+   "fwd5": -0.66,
+   "fwd10": -3.22,
+   "fwd20": -1.2,
+   "cls": "横盘消化"
+  },
+  {
+   "pair": "XLV/MRK",
+   "sector": "XLV",
+   "ticker": "MRK",
+   "date": "2021-01-27",
+   "t": 6563,
+   "entry": 61.84,
+   "support_kinds": [
+    "分形支撑(3触)"
+   ],
+   "support_broken_day": 8,
+   "fwd1": 1.1,
+   "fwd5": 0.32,
+   "fwd10": -2.83,
+   "fwd20": -3.18,
+   "cls": "支撑击穿"
+  },
+  {
+   "pair": "XLI/CAT",
+   "sector": "XLI",
+   "ticker": "CAT",
+   "date": "2021-06-10",
+   "t": 6656,
+   "entry": 206.023,
+   "support_kinds": [
+    "分形支撑(4触)"
+   ],
+   "support_broken_day": 2,
+   "fwd1": -2.23,
+   "fwd5": -7.21,
+   "fwd10": -2.83,
+   "fwd20": -3.68,
+   "cls": "支撑击穿"
+  },
+  {
+   "pair": "XLC/VZ",
+   "sector": "XLC",
+   "ticker": "VZ",
+   "date": "2025-07-15",
+   "t": 7683,
+   "entry": 38.622,
+   "support_kinds": [
+    "分形支撑(6触)"
+   ],
+   "support_broken_day": null,
+   "fwd1": -0.02,
+   "fwd5": 4.12,
+   "fwd10": 3.51,
+   "fwd20": 4.82,
+   "cls": "V型反转"
+  },
+  {
+   "pair": "XLI/MMM",
+   "sector": "XLI",
+   "ticker": "MMM",
+   "date": "2025-08-01",
+   "t": 7696,
+   "entry": 141.758,
+   "support_kinds": [
+    "分形支撑(5触)"
+   ],
+   "support_broken_day": null,
+   "fwd1": 2.4,
+   "fwd5": 6.16,
+   "fwd10": 5.53,
+   "fwd20": 8.2,
+   "cls": "V型反转"
+  },
+  {
+   "pair": "XLK/MSFT",
+   "sector": "XLK",
+   "ticker": "MSFT",
+   "date": "2025-11-06",
+   "t": 7764,
+   "entry": 493.043,
+   "support_kinds": [
+    "分形支撑(2触)"
+   ],
+   "support_broken_day": 10,
+   "fwd1": -0.06,
+   "fwd5": 1.25,
+   "fwd10": -3.58,
+   "fwd20": -2.62,
+   "cls": "支撑击穿"
+  },
+  {
+   "pair": "XLK/CRM",
+   "sector": "XLK",
+   "ticker": "CRM",
+   "date": "2025-11-06",
+   "t": 5379,
+   "entry": 237.675,
+   "support_kinds": [
+    "分形支撑(7触)"
+   ],
+   "support_broken_day": 10,
+   "fwd1": 0.25,
+   "fwd5": 0.48,
+   "fwd10": -5.81,
+   "fwd20": 8.9,
+   "cls": "支撑击穿"
+  },
+  {
+   "pair": "XLF/GS",
+   "sector": "XLF",
+   "ticker": "GS",
+   "date": "2026-08-19",
+   "t": 6865,
+   "entry": 1021.65,
+   "support_kinds": [
+    "分形支撑(3触)"
+   ],
+   "support_broken_day": null,
+   "fwd1": -1.93,
+   "fwd5": null,
+   "fwd10": null,
+   "fwd20": null,
+   "cls": "未完整"
+  }
+ ]
+}

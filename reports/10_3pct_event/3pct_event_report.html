@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>生物医药股 当日涨≥3% 后走势 · 事件研究（T+1/T+5/T+10）</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<style>
+
+  :root{--bg:#f7f8fa;--card:#fff;--ink:#1f2329;--sub:#6b7280;--line:#e5e7eb;
+        --red:#e03131;--up:#e03131;--dn:#0aa06e;--blue:#1e66d6;--orange:#e8930c;--green:#0aa06e;--blue:#1e66d6;--amber:#b45309;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font:14px/1.7 -apple-system,"PingFang SC","Microsoft YaHei",sans-serif;padding:24px 16px 48px;}
+  .wrap{max-width:1220px;margin:0 auto;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 24px;margin-bottom:18px;box-shadow:0 1px 3px rgba(16,24,40,.05);}
+  h1{font-size:21px;margin-bottom:4px;}
+  .meta{color:var(--sub);font-size:12.5px;margin-bottom:14px;}
+  h2{font-size:16px;margin:0 0 12px;padding-left:10px;border-left:4px solid var(--blue);}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-top:14px;}
+  .kpi{background:#fbfcfe;border:1px solid var(--line);border-radius:10px;padding:12px 14px;}
+  .kpi .num{font-size:21px;font-weight:700;}
+  .kpi .num.up{color:var(--red);} .kpi .num.dn{color:var(--green);}
+  .kpi .lab{color:var(--sub);font-size:12px;margin-top:2px;}
+  .flow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:10px 0 4px;font-size:13px;}
+  .fstep{background:#eef3fb;color:var(--blue);border:1px solid #d5e2f7;border-radius:6px;padding:2px 8px;font-weight:600;}
+  .farrow{color:var(--sub);}
+  .fstat{color:var(--sub);font-size:12px;}
+  table{width:100%;border-collapse:collapse;font-size:12px;}
+  th{background:#f3f5f8;text-align:left;padding:6px 7px;border-bottom:2px solid var(--line);white-space:nowrap;font-weight:600;}
+  td{padding:5px 7px;border-bottom:1px solid #f0f1f3;white-space:nowrap;}
+  tr.hit td{background:#eefaf5;}
+  tr.hit td:first-child{border-left:3px solid var(--green);}
+  td.up{color:var(--red);font-weight:600;} td.dn{color:var(--green);font-weight:600;} td.na{color:#c3c8cf;}
+  .scroll{overflow-x:auto;}
+  .chart{width:100%;height:380px;}
+  .chart.sm{height:330px;}
+  .chart.k{width:100%;height:620px;}
+  .note{color:var(--sub);font-size:12px;margin-top:8px;}
+  .keypoint{background:#eef7f2;border:1px solid #cde8da;border-radius:10px;padding:12px 16px;font-size:12.5px;color:#17442f;margin-top:10px;}
+  .warn{background:#fff8ec;border:1px solid #f3dfb6;border-radius:10px;padding:12px 16px;font-size:12.5px;color:#7c4a03;}
+  .dis{color:var(--sub);font-size:12px;border-top:1px dashed var(--line);padding-top:12px;margin-top:16px;}
+  .hl{font-weight:700;color:var(--red);} .hlg{font-weight:700;color:var(--green);}
+  .lgd{display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--ink);margin:8px 0 4px;}
+  .lgd span{display:inline-flex;align-items:center;gap:5px;}
+  .arrow-up{display:inline-block;width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:10px solid var(--red);}
+  .arrow-dn{display:inline-block;width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-top:10px solid var(--green);}
+  .dot{display:inline-block;width:9px;height:9px;border-radius:50%;}
+  .diamond{display:inline-block;width:9px;height:9px;background:#7048e8;transform:rotate(45deg);}
+
+  .kpis{grid-template-columns:repeat(auto-fit,minmax(175px,1fr));}
+  .tbl{font-size:12px;}
+  .tbl th,.tbl td{padding:5px 6px;}
+  .grp{background:#f3f5f8;font-weight:700;}
+  .chip{display:inline-block;padding:1px 8px;border-radius:10px;font-size:12px;margin-right:6px;}
+  .chip.evt{background:#e7f0fb;color:#1e66d6;border:1px solid #c7d9f5;}
+  .chip.ctrl{background:#fdf3e3;color:#b45309;border:1px solid #f3ddb8;}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  @media(max-width:900px){.two{grid-template-columns:1fr;}}
+  .chart{width:100%;height:340px;}
+  .chart.tall{height:400px;}
+  .neg{color:var(--dn);} .pos{color:var(--up);}
+  .conc{font-size:13.5px;line-height:2;}
+  .conc b{color:#17442f;}
+  .conc .head{font-weight:700;color:#0b4d8c;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="card">
+  <h1>生物医药股「当日涨 ≥3%」后走势 · 事件研究</h1>
+  <div class="meta">标的池：制药大票 9 只（GILD / ABBV / LLY / AMGN / VRTX / MRK / JNJ / REGN / BIIB）＋ 生物科技 5 只（ALNY / NTRA / ILMN / RVMD / ARGX）｜数据：Yahoo 日线 2015-01-02 ~ 2026-08-14（复权 adj_close，与看盘软件对齐）｜事件：当日收盘涨幅 ≥ +3%（严格阈值，无容差），共 <b>984 个制药事件 / 1615 个生物科技事件</b>｜收益口径：事件日收盘买入持有至 T+1 / T+5 / T+10 收盘，不含成本｜对照组：同股「小涨日(0~3%)」与「全部非事件日」</div>
+
+  <div class="keypoint" style="margin-top:14px;">
+    <b style="font-size:14px;">一句话结论：</b>制药大票单日大涨是「事件脉冲」，次日大概率回落、越猛越危险（≥5% 次日胜率仅 39%），<b>不宜追涨</b>；生物科技大涨后 T+10 确有正收益（中位 +1.1%、胜率 53%），但与小涨日无差异 —— 吃的是<b>板块常态波动（beta）</b>而非事件动量（α），且 2026 年以来两池追涨信号均已转弱。
+  </div>
+</div>
+
+<div class="card">
+  <h2>核心指标一览</h2>
+  
+<div class="kpis">
+  <div class="kpi"><div class="num">984</div><div class="lab">制药大票 涨≥3% 事件数（2015-2026.8）</div></div>
+  <div class="kpi"><div class="num dn">-0.13%</div><div class="lab">制药 T+1 平均收益（次日）</div></div>
+  
+  <div class="kpi"><div class="num dn">46.3%</div><div class="lab">制药 T+1 上涨概率（<50% 即次日偏回落）</div></div>
+  <div class="kpi"><div class="num up">+0.31%</div><div class="lab">制药 T+10 中位收益</div></div>
+  <div class="kpi"><div class="num dn">39.3%</div><div class="lab">制药 涨≥5% 后 T+1 上涨概率</div></div>
+</div>
+<div class="kpis">
+  <div class="kpi"><div class="num">1615</div><div class="lab">生物科技 涨≥3% 事件数</div></div>
+  <div class="kpi"><div class="num up">+0.05%</div><div class="lab">生物科技 T+1 平均收益（次日）</div></div>
+  <div class="kpi"><div class="num dn">49.6%</div><div class="lab">生物科技 T+1 上涨概率</div></div>
+  <div class="kpi"><div class="num up">+1.06%</div><div class="lab">生物科技 T+10 中位收益</div></div>
+  <div class="kpi"><div class="num up">56.0%</div><div class="lab">生物科技 涨≥5% 后 T+5 上涨概率</div></div>
+</div>
+
+  <div class="note">KPI 为两池合并事件统计；上涨概率以 50% 为分界（低于 50% 表示次日/持有期更可能收跌）。</div>
+</div>
+
+<div class="card">
+  <h2>1. 涨≥3% 后 vs 「小涨日(0~3%)」：追涨是动量还是反转？</h2>
+  <div class="lgd"><span><span class="dot" style="background:#1e66d6;"></span>事件日（涨≥3%）后持有收益（均值）</span><span><span class="dot" style="background:#e8930c;"></span>对照·小涨日（0~3%）后持有收益（均值）</span></div>
+  <div id="fig1" class="chart tall"></div>
+  <div class="keypoint">
+    <b>制药大票：大涨后反而跑输自己的小涨日。</b>涨≥3% 后 T+1 均值 −0.13%（胜率 46.3%），而小涨日 T+1 为 +0.05%（胜率 51.4%）—— 单日大涨的次日更倾向回吐；T+10 事件 +0.24% 也低于小涨日 +0.45%。<br>
+    <b>生物科技：大涨后与平日无异。</b>T+1 中性（+0.05%，胜率 49.6%），T+10 事件 +1.25% vs 小涨日 +1.28%，几乎重合 —— 大涨后没有额外动量，收益主要来自板块本身的高波动常态。
+  </div>
+</div>
+
+<div class="card">
+  <h2>2. 涨幅分档：涨 3~5% 与涨 ≥5% 命运完全不同</h2>
+  <div class="lgd">
+    <span><span class="dot" style="background:#1e66d6;"></span>制药 3~5%</span>
+    <span><span class="dot" style="background:#56b4e9;"></span>制药 ≥5%</span>
+    <span><span class="dot" style="background:#e8930c;"></span>生物科技 3~5%</span>
+    <span><span class="dot" style="background:#f4b942;"></span>生物科技 ≥5%</span>
+  </div>
+  <div id="fig2" class="chart"></div>
+  <div class="keypoint">
+    <b>制药：涨得越猛、次日越危险。</b>≥5% 的 262 次事件后，T+1 中位 −0.49%、胜率仅 <b>39.3%</b>（3~5% 档为 48.9%），T+5/T+10 中位数也始终为负 —— 大涨 5%+ 基本对应财报/并购/审批等一次性利好，次日即回吐。<br>
+    <b>生物科技：恰恰相反，大涨有延续。</b>≥5% 档 T+5 中位 +0.90%、胜率 <b>56.0%</b>，T+10 +1.61%；而 3~5% 档 T+5 仅 +0.05%/47.6% —— 生物科技的大涨多为临床/管线催化，「涨不动的小涨」反而没有信号意义。
+  </div>
+</div>
+
+<div class="card">
+  <h2>3. 核心统计表（含超额收益）</h2>
+  <div class="two">
+    <div>
+      <h2 style="font-size:14px;">制药大票（9 只）</h2>
+      <div class="scroll"><table class="tbl">
+        <thead><tr><th>口径</th><th>n</th><th>T+1均值</th><th>T+1中位</th><th>T+1胜率</th><th>T+5均值</th><th>T+5中位</th><th>T+5胜率</th><th>T+10均值</th><th>T+10中位</th><th>T+10胜率</th></tr></thead>
+        <tbody><tr><td class="hl">事件 · 当日涨≥3%</td><td>984</td><td class="dn">-0.13%</td><td class="dn">-0.17%</td><td class="dn">46.3%</td><td class="up">+0.09%</td><td class="up">+0.10%</td><td class="up">51.3%</td><td class="up">+0.24%</td><td class="up">+0.31%</td><td class="up">52.2%</td></tr><tr><td class="">事件 · 3% ~ 5%</td><td>722</td><td class="up">+0.01%</td><td class="dn">-0.06%</td><td class="dn">48.9%</td><td class="up">+0.24%</td><td class="up">+0.22%</td><td class="up">53.3%</td><td class="up">+0.37%</td><td class="up">+0.66%</td><td class="up">53.7%</td></tr><tr><td class="">事件 · ≥5%</td><td>262</td><td class="dn">-0.50%</td><td class="dn">-0.49%</td><td class="dn">39.3%</td><td class="dn">-0.32%</td><td class="dn">-0.42%</td><td class="dn">45.8%</td><td class="dn">-0.14%</td><td class="dn">-0.43%</td><td class="dn">48.1%</td></tr><tr><td class="">稳健性 · 10日冷却期事件</td><td>629</td><td class="up">+0.05%</td><td class="dn">-0.03%</td><td class="dn">49.1%</td><td class="up">+0.11%</td><td class="up">+0.19%</td><td class="up">52.5%</td><td class="up">+0.25%</td><td class="up">+0.47%</td><td class="up">53.4%</td></tr><tr><td class="">对照 · 小涨日(0~3%)</td><td>12552</td><td class="up">+0.05%</td><td class="up">+0.05%</td><td class="up">51.4%</td><td class="up">+0.26%</td><td class="up">+0.25%</td><td class="up">53.4%</td><td class="up">+0.45%</td><td class="up">+0.41%</td><td class="up">53.7%</td></tr><tr><td class="">对照 · 全部非事件日</td><td>25206</td><td class="up">+0.06%</td><td class="up">+0.06%</td><td class="up">51.9%</td><td class="up">+0.29%</td><td class="up">+0.24%</td><td class="up">53.3%</td><td class="up">+0.57%</td><td class="up">+0.46%</td><td class="up">54.2%</td></tr></tbody>
+      </table></div>
+    </div>
+    <div>
+      <h2 style="font-size:14px;">生物科技（5 只）</h2>
+      <div class="scroll"><table class="tbl">
+        <thead><tr><th>口径</th><th>n</th><th>T+1均值</th><th>T+1中位</th><th>T+1胜率</th><th>T+5均值</th><th>T+5中位</th><th>T+5胜率</th><th>T+10均值</th><th>T+10中位</th><th>T+10胜率</th></tr></thead>
+        <tbody><tr><td class="hl">事件 · 当日涨≥3%</td><td>1615</td><td class="up">+0.05%</td><td class="">+0.00%</td><td class="dn">49.6%</td><td class="up">+0.34%</td><td class="up">+0.11%</td><td class="up">50.8%</td><td class="up">+1.25%</td><td class="up">+1.06%</td><td class="up">53.3%</td></tr><tr><td class="">事件 · 3% ~ 5%</td><td>1001</td><td class="up">+0.01%</td><td class="dn">-0.06%</td><td class="dn">49.1%</td><td class="up">+0.05%</td><td class="dn">-0.28%</td><td class="dn">47.6%</td><td class="up">+1.06%</td><td class="up">+0.76%</td><td class="up">52.5%</td></tr><tr><td class="">事件 · ≥5%</td><td>614</td><td class="up">+0.13%</td><td class="up">+0.05%</td><td class="up">50.5%</td><td class="up">+0.80%</td><td class="up">+0.90%</td><td class="up">56.0%</td><td class="up">+1.56%</td><td class="up">+1.61%</td><td class="up">54.4%</td></tr><tr><td class="">稳健性 · 10日冷却期事件</td><td>711</td><td class="up">+0.02%</td><td class="dn">-0.08%</td><td class="dn">47.8%</td><td class="up">+0.46%</td><td class="dn">-0.04%</td><td class="dn">49.8%</td><td class="up">+1.27%</td><td class="up">+1.05%</td><td class="up">52.7%</td></tr><tr><td class="">对照 · 小涨日(0~3%)</td><td>4772</td><td class="up">+0.13%</td><td class="up">+0.02%</td><td class="up">50.3%</td><td class="up">+0.63%</td><td class="up">+0.31%</td><td class="up">53.0%</td><td class="up">+1.28%</td><td class="up">+0.89%</td><td class="up">55.2%</td></tr><tr><td class="">对照 · 全部非事件日</td><td>10926</td><td class="up">+0.14%</td><td class="up">+0.06%</td><td class="up">51.1%</td><td class="up">+0.69%</td><td class="up">+0.40%</td><td class="up">53.3%</td><td class="up">+1.29%</td><td class="up">+0.92%</td><td class="up">54.7%</td></tr></tbody>
+      </table></div>
+    </div>
+  </div>
+  <div class="note">胜率 = 持有至 T+N 收盘收益为正的比例（%）。「10日冷却期」为稳健性口径：同一股票 10 个交易日内多次触发只计首次，用于剔除连续大涨的重叠影响。</div>
+  <h2 style="font-size:14px;margin-top:16px;">超额收益：事件后个股 vs 基准（均值/中位/胜率）</h2>
+  <div class="scroll"><table class="tbl">
+    <thead><tr><th>池</th><th>窗口</th><th>vs SPY 均值</th><th>vs SPY 中位</th><th>vs SPY 胜率</th><th>vs 板块均值</th><th>vs 板块中位</th><th>vs 板块胜率</th></tr></thead>
+    <tbody><tr><td>制药大票</td><td>T+1</td><td class="up">+0.05%</td><td class="dn">-0.15%</td><td class="dn">46.2%</td><td class="up">+0.02%</td><td class="dn">-0.17%</td><td class="dn">45.6%</td></tr><tr><td>制药大票</td><td>T+5</td><td class="up">+0.04%</td><td class="dn">-0.15%</td><td class="dn">48.8%</td><td class="">+0.00%</td><td class="dn">-0.12%</td><td class="dn">49.0%</td></tr><tr><td>制药大票</td><td>T+10</td><td class="dn">-0.17%</td><td class="dn">-0.47%</td><td class="dn">45.9%</td><td class="dn">-0.03%</td><td class="dn">-0.33%</td><td class="dn">47.3%</td></tr><tr><td>生物科技</td><td>T+1</td><td class="up">+0.05%</td><td class="dn">-0.02%</td><td class="dn">49.5%</td><td class="up">+0.09%</td><td class="dn">-0.03%</td><td class="dn">49.5%</td></tr><tr><td>生物科技</td><td>T+5</td><td class="up">+0.02%</td><td class="dn">-0.28%</td><td class="dn">48.2%</td><td class="up">+0.15%</td><td class="dn">-0.25%</td><td class="dn">48.5%</td></tr><tr><td>生物科技</td><td>T+10</td><td class="up">+0.58%</td><td class="">+0.00%</td><td class="">50.0%</td><td class="up">+0.94%</td><td class="up">+0.16%</td><td class="up">50.8%</td></tr></tbody>
+  </table></div>
+  <div class="note">板块基准：制药 → XLV（医疗保健 ETF）、生物科技 → IBB（生物科技 ETF）。超额 = 个股 T+N 持有收益 − 基准同期持有收益。</div>
+</div>
+
+<div class="card">
+  <h2>4. 个股分化：谁追得、谁追不得</h2>
+  <div class="two">
+    <div><div id="fig3p" class="chart"></div></div>
+    <div><div id="fig3b" class="chart"></div></div>
+  </div>
+  <div class="scroll"><table class="tbl">
+    <thead><tr><th>标的</th><th>事件数</th><th>年均</th><th>事件日均涨</th><th>T+1均值</th><th>T+1胜率</th><th>T+5中位</th><th>T+5胜率</th><th>T+10中位</th><th>T+10胜率</th><th>vs SPY T+10中位</th></tr></thead>
+    <tbody><tr><td class="hl">GILD</td><td>97</td><td>8.4</td><td>4.50%</td><td class="dn">-0.17%</td><td class="dn">45.4%</td><td class="dn">-0.13%</td><td class="dn">48.5%</td><td class="dn">-0.38%</td><td class="dn">47.4%</td><td class="dn">-0.70%</td></tr><tr><td class="hl">ABBV</td><td>95</td><td>8.2</td><td>4.36%</td><td class="up">+0.40%</td><td class="up">57.9%</td><td class="up">+0.62%</td><td class="up">60.0%</td><td class="up">+0.65%</td><td class="up">53.7%</td><td class="dn">-0.31%</td></tr><tr><td class="hl">LLY</td><td>132</td><td>11.4</td><td>4.85%</td><td class="">+0.00%</td><td class="up">51.5%</td><td class="up">+0.52%</td><td class="up">57.6%</td><td class="up">+0.78%</td><td class="up">58.3%</td><td class="up">+0.17%</td></tr><tr><td class="hl">AMGN</td><td>94</td><td>8.1</td><td>4.55%</td><td class="dn">-0.35%</td><td class="dn">40.4%</td><td class="up">+0.08%</td><td class="up">51.1%</td><td class="up">+0.89%</td><td class="up">58.5%</td><td class="up">+0.41%</td></tr><tr><td class="hl">VRTX</td><td>161</td><td>13.9</td><td>4.80%</td><td class="dn">-0.42%</td><td class="dn">43.5%</td><td class="dn">-0.09%</td><td class="dn">48.4%</td><td class="up">+0.42%</td><td class="up">50.9%</td><td class="dn">-0.69%</td></tr><tr><td class="hl">MRK</td><td>64</td><td>5.5</td><td>4.54%</td><td class="dn">-0.39%</td><td class="dn">48.4%</td><td class="up">+0.12%</td><td class="up">51.6%</td><td class="dn">-0.84%</td><td class="dn">43.8%</td><td class="dn">-1.38%</td></tr><tr><td class="hl">JNJ</td><td>32</td><td>2.8</td><td>4.57%</td><td class="dn">-0.70%</td><td class="dn">37.5%</td><td class="up">+1.18%</td><td class="up">62.5%</td><td class="up">+1.10%</td><td class="up">65.6%</td><td class="up">+0.84%</td></tr><tr><td class="hl">REGN</td><td>166</td><td>14.3</td><td>4.68%</td><td class="up">+0.04%</td><td class="dn">47.0%</td><td class="dn">-0.17%</td><td class="dn">48.2%</td><td class="dn">-0.36%</td><td class="dn">48.2%</td><td class="dn">-1.08%</td></tr><tr><td class="hl">BIIB</td><td>143</td><td>12.3</td><td>5.72%</td><td class="dn">-0.06%</td><td class="dn">42.0%</td><td class="dn">-0.64%</td><td class="dn">46.2%</td><td class="up">+0.22%</td><td class="up">51.7%</td><td class="dn">-0.58%</td></tr><tr><td class="hl">ALNY</td><td>370</td><td>31.9</td><td>5.27%</td><td class="up">+0.30%</td><td class="up">51.6%</td><td class="dn">-0.03%</td><td class="dn">49.7%</td><td class="dn">-0.27%</td><td class="dn">48.6%</td><td class="dn">-1.10%</td></tr><tr><td class="hl">NTRA</td><td>472</td><td>40.7</td><td>5.66%</td><td class="dn">-0.13%</td><td class="up">52.1%</td><td class="up">+0.35%</td><td class="up">51.7%</td><td class="up">+2.14%</td><td class="up">59.3%</td><td class="up">+1.01%</td></tr><tr><td class="hl">ILMN</td><td>265</td><td>22.8</td><td>4.94%</td><td class="dn">-0.16%</td><td class="dn">44.9%</td><td class="up">+0.22%</td><td class="up">50.9%</td><td class="up">+1.21%</td><td class="up">53.2%</td><td class="dn">-0.05%</td></tr><tr><td class="hl">RVMD</td><td>291</td><td>25.1</td><td>5.88%</td><td class="up">+0.13%</td><td class="dn">48.1%</td><td class="dn">-0.22%</td><td class="dn">48.1%</td><td class="dn">-0.54%</td><td class="dn">48.8%</td><td class="dn">-0.35%</td></tr><tr><td class="hl">ARGX</td><td>217</td><td>18.7</td><td>5.71%</td><td class="up">+0.20%</td><td class="dn">48.4%</td><td class="up">+0.25%</td><td class="up">53.9%</td><td class="up">+1.05%</td><td class="up">53.9%</td><td class="up">+0.09%</td></tr></tbody>
+  </table></div>
+  <div class="keypoint">
+    <b>制药池里相对能追：</b>LLY（n=132，T+10 胜率 58.3%）、AMGN（58.5%）、JNJ（65.6%，n=32 样本小）—— 趋势型标的，大涨后延续性强；<b>追不得：</b>MRK（T+10 −0.84%/43.8%）、REGN（−0.36%/48.2%）、GILD（−0.38%/47.4%）、VRTX（T+1 仅 43.5%）。<br>
+    <b>生物科技池里相对能追：</b>NTRA（n=472，T+10 +2.14%/59.3%，超额 SPY +1.01%）、ILMN（+1.21%）、ARGX（+1.05%）；<b>追不得：</b>ALNY（T+10 −0.27%，超额 −1.10%）、RVMD（−0.54%）。
+  </div>
+</div>
+
+<div class="card">
+  <h2>5. 年份视角：追涨胜率随板块环境起伏</h2>
+  <div class="two">
+    <div><div id="fig4p" class="chart"></div></div>
+    <div><div id="fig4b" class="chart"></div></div>
+  </div>
+  <div class="scroll"><table class="tbl">
+    <thead><tr><th>年份</th><th>n</th><th>T+5均值</th><th>T+5中位</th><th>T+5胜率</th><th>T+10均值</th><th>T+10中位</th><th>T+10胜率</th></tr></thead>
+    <tbody>
+      <tr class="grp"><td colspan="8">制药大票</td></tr><tr><td>2015</td><td>111</td><td class="up">+0.43%</td><td class="up">+0.10%</td><td class="up">50.5%</td><td class="dn">-0.04%</td><td class="dn">-0.12%</td><td class="dn">49.5%</td></tr><tr><td>2016</td><td>97</td><td class="dn">-0.75%</td><td class="dn">-1.05%</td><td class="dn">40.2%</td><td class="dn">-1.48%</td><td class="dn">-0.78%</td><td class="dn">44.3%</td></tr><tr><td>2017</td><td>53</td><td class="up">+0.74%</td><td class="up">+0.57%</td><td class="up">56.6%</td><td class="up">+0.70%</td><td class="up">+0.34%</td><td class="up">52.8%</td></tr><tr><td>2018</td><td>84</td><td class="dn">-0.85%</td><td class="dn">-0.62%</td><td class="dn">47.6%</td><td class="dn">-0.54%</td><td class="dn">-0.72%</td><td class="dn">46.4%</td></tr><tr><td>2019</td><td>43</td><td class="up">+0.27%</td><td class="up">+0.05%</td><td class="up">51.2%</td><td class="up">+0.73%</td><td class="up">+1.02%</td><td class="up">58.1%</td></tr><tr><td>2020</td><td>190</td><td class="dn">-0.14%</td><td class="up">+0.18%</td><td class="up">52.1%</td><td class="up">+0.37%</td><td class="up">+0.18%</td><td class="up">51.1%</td></tr><tr><td>2021</td><td>46</td><td class="up">+1.46%</td><td class="up">+0.85%</td><td class="up">60.9%</td><td class="up">+1.74%</td><td class="up">+0.69%</td><td class="up">56.5%</td></tr><tr><td>2022</td><td>80</td><td class="up">+0.83%</td><td class="up">+0.09%</td><td class="up">52.5%</td><td class="up">+0.79%</td><td class="up">+1.59%</td><td class="up">60.0%</td></tr><tr><td>2023</td><td>38</td><td class="up">+1.09%</td><td class="up">+1.42%</td><td class="up">71.1%</td><td class="up">+0.67%</td><td class="up">+1.49%</td><td class="up">60.5%</td></tr><tr><td>2024</td><td>51</td><td class="up">+0.67%</td><td class="up">+0.47%</td><td class="up">54.9%</td><td class="up">+0.62%</td><td class="up">+0.91%</td><td class="up">62.7%</td></tr><tr><td>2025</td><td>102</td><td class="up">+0.19%</td><td class="up">+0.79%</td><td class="up">57.8%</td><td class="up">+0.63%</td><td class="up">+0.81%</td><td class="up">54.9%</td></tr><tr><td>2026</td><td>89</td><td class="dn">-0.77%</td><td class="dn">-1.03%</td><td class="dn">39.3%</td><td class="up">+0.25%</td><td class="dn">-0.47%</td><td class="dn">47.2%</td></tr>
+      <tr class="grp"><td colspan="8">生物科技</td></tr><tr><td>2015</td><td>86</td><td class="dn">-0.96%</td><td class="up">+0.22%</td><td class="up">53.5%</td><td class="up">+0.21%</td><td class="up">+2.19%</td><td class="up">53.5%</td></tr><tr><td>2016</td><td>102</td><td class="up">+1.62%</td><td class="dn">-0.70%</td><td class="dn">45.1%</td><td class="up">+1.71%</td><td class="up">+0.49%</td><td class="up">51.0%</td></tr><tr><td>2017</td><td>98</td><td class="up">+1.17%</td><td class="dn">-0.28%</td><td class="dn">46.9%</td><td class="up">+5.45%</td><td class="dn">-0.27%</td><td class="dn">49.0%</td></tr><tr><td>2018</td><td>129</td><td class="up">+1.12%</td><td class="up">+0.35%</td><td class="up">53.5%</td><td class="up">+0.94%</td><td class="up">+0.09%</td><td class="up">50.4%</td></tr><tr><td>2019</td><td>120</td><td class="up">+1.07%</td><td class="up">+1.26%</td><td class="up">60.0%</td><td class="up">+1.81%</td><td class="up">+2.04%</td><td class="up">62.5%</td></tr><tr><td>2020</td><td>215</td><td class="up">+1.24%</td><td class="up">+1.45%</td><td class="up">56.7%</td><td class="up">+2.64%</td><td class="up">+3.12%</td><td class="up">59.5%</td></tr><tr><td>2021</td><td>180</td><td class="dn">-0.29%</td><td class="dn">-0.40%</td><td class="dn">47.8%</td><td class="dn">-0.66%</td><td class="dn">-0.80%</td><td class="dn">48.3%</td></tr><tr><td>2022</td><td>221</td><td class="dn">-1.33%</td><td class="dn">-0.88%</td><td class="dn">45.7%</td><td class="dn">-0.44%</td><td class="dn">-0.81%</td><td class="dn">46.6%</td></tr><tr><td>2023</td><td>133</td><td class="dn">-1.32%</td><td class="dn">-1.42%</td><td class="dn">39.8%</td><td class="up">+0.52%</td><td class="up">+1.27%</td><td class="up">53.4%</td></tr><tr><td>2024</td><td>115</td><td class="up">+1.66%</td><td class="up">+0.69%</td><td class="up">54.8%</td><td class="up">+1.82%</td><td class="up">+1.08%</td><td class="up">57.4%</td></tr><tr><td>2025</td><td>127</td><td class="up">+0.81%</td><td class="up">+0.59%</td><td class="up">53.5%</td><td class="up">+1.92%</td><td class="up">+2.04%</td><td class="up">60.6%</td></tr><tr><td>2026</td><td>89</td><td class="up">+0.44%</td><td class="up">+0.25%</td><td class="up">53.9%</td><td class="up">+0.84%</td><td class="dn">-0.54%</td><td class="dn">47.2%</td></tr>
+    </tbody>
+  </table></div>
+  <div class="keypoint">
+    <b>大涨后追涨的有效性高度依赖当年板块环境。</b>制药池：2023（T+5 胜率 71.1%）、2021（60.9%）、2025（57.8%）是追涨好年份；2016（40.2%）、2018（47.6%）、<b>2026（39.3%）</b>追涨必挨打。生物科技：2019-2020 疫情牛（60%/57%）、2024-2025 好；2021-2023 连续三年胜率 <48%。<b>当前 2026 年，制药池大涨后 T+5 中位 −1.03%、胜率 39.3%，生物科技 T+10 也已转负（−0.54%）</b> —— 与 8/18 板块大跌、生物医药整体弱势的环境一致。
+  </div>
+</div>
+
+<div class="card">
+  <h2>6. 方法口径与局限</h2>
+  <div class="conc">
+    <span class="head">口径：</span>收益一律用<b>复权收盘价（adj_close）</b>；事件 = 当日复权收益 ≥ +3%；持有收益 = 事件日收盘 → 第 N 个交易日收盘；事件日须具备 T+10 数据（尾部不足 10 个交易日的事件剔除）；合并统计为 pooled（每个事件 = 1 个样本，未按股票加权）。<br>
+    <span class="head">检验：</span>t 检验（均值 vs 0）与二项检验（胜率 vs 50%，正态近似）；显著性标注见「关键数据」表，制药 T+10 t=1.13（不显著）、生物科技 T+10 t=4.23（p&lt;0.001 显著）。<br>
+    <span class="head">局限：</span>① 事件为「无差异事件」，混合了财报、并购、临床数据、评级调整等各类催化剂，未分类；② 未扣除交易成本；③ 10 日冷却期稳健性版本结论与主版本一致（制药 T+10 +0.25% vs +0.24%，生物科技 +1.27% vs +1.25%），重叠事件未扭曲结果；④ 生物科技池含 ILMN（测序工具）等非纯药标的；⑤ 2026 年数据截至 8 月中旬，样本 <90 次/池，统计稳定性有限；⑥ 历史规律不构成未来保证，尤其当前板块处于阴跌环境。
+  </div>
+  <div class="dis">数据：Yahoo Finance 日线（复权）· 2015-01-02 ~ 2026-08-14｜分析脚本：scripts/event_3pct_analyze.py｜报告生成：scripts/build_event_3pct_report.py｜统计单位：%｜事件研究无未来函数，持有收益为事后观察。</div>
+</div>
+
+</div>
+<script>
+const DATA = {"fig1_cats": ["制药大票(9) T+1", "制药大票(9) T+5", "制药大票(9) T+10", "生物科技(5) T+1", "生物科技(5) T+5", "生物科技(5) T+10"], "fig1_evt": [-0.13, 0.09, 0.24, 0.05, 0.34, 1.25], "fig1_ctrl": [0.05, 0.26, 0.45, 0.13, 0.63, 1.28], "fig2_x": ["T+1", "T+5", "T+10"], "fig2_p35": [-0.06, 0.22, 0.66], "fig2_p5p": [-0.49, -0.42, -0.43], "fig2_b35": [-0.06, -0.28, 0.76], "fig2_b5p": [0.05, 0.9, 1.61], "fig3_p_tkrs": ["GILD", "ABBV", "LLY", "AMGN", "VRTX", "MRK", "JNJ", "REGN", "BIIB"], "fig3_p_t10": [-0.38, 0.65, 0.78, 0.89, 0.42, -0.84, 1.1, -0.36, 0.22], "fig3_p_win": [47.4, 53.7, 58.3, 58.5, 50.9, 43.8, 65.6, 48.2, 51.7], "fig3_p_n": [97, 95, 132, 94, 161, 64, 32, 166, 143], "fig3_b_tkrs": ["ALNY", "NTRA", "ILMN", "RVMD", "ARGX"], "fig3_b_t10": [-0.27, 2.14, 1.21, -0.54, 1.05], "fig3_b_win": [48.6, 59.3, 53.2, 48.8, 53.9], "fig3_b_n": [370, 472, 265, 291, 217], "fig4_p_years": ["2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026"], "fig4_p_t5": [0.1, -1.05, 0.57, -0.62, 0.05, 0.18, 0.85, 0.09, 1.42, 0.47, 0.79, -1.03], "fig4_p_win5": [50.5, 40.2, 56.6, 47.6, 51.2, 52.1, 60.9, 52.5, 71.1, 54.9, 57.8, 39.3], "fig4_b_years": ["2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026"], "fig4_b_t5": [0.22, -0.7, -0.28, 0.35, 1.26, 1.45, -0.4, -0.88, -1.42, 0.69, 0.59, 0.25], "fig4_b_win5": [53.5, 45.1, 46.9, 53.5, 60.0, 56.7, 47.8, 45.7, 39.8, 54.8, 53.5, 53.9]};
+const INK = '#1f2329', SUB = '#6b7280', LINE = '#e5e7eb';
+const C_EVT = '#1e66d6', C_CTRL = '#e8930c';
+const base = {
+  textStyle:{color:INK,fontSize:12},
+  color:[C_EVT,C_CTRL,'#56b4e9','#cc79a7','#e8930c','#b45309'],
+  grid:{left:52,right:52,top:44,bottom:30},
+  tooltip:{trigger:'axis',backgroundColor:'#fff',borderColor:LINE,textStyle:{color:INK}},
+  legend:{top:6,textStyle:{color:SUB},itemWidth:18,itemHeight:10}
+};
+const marker = {itemStyle:{borderWidth:0}};
+
+// 图1: 事件 vs 小涨对照
+echarts.init(document.getElementById('fig1')).setOption(Object.assign({}, base, {
+  legend:Object.assign({}, base.legend, {data:['涨≥3%事件后','小涨日(0~3%)对照']}),
+  xAxis:{type:'category',data:DATA.fig1_cats,axisLine:{lineStyle:{color:LINE}},axisLabel:{color:INK}},
+  yAxis:{type:'value',name:'持有收益(%)',axisLine:{lineStyle:{color:LINE}},splitLine:{lineStyle:{color:'#f0f1f3'}}},
+  series:[
+    {name:'涨≥3%事件后',type:'bar',data:DATA.fig1_evt,barWidth:22,
+     label:{show:true,position:'top',formatter:p=>p.value>0?'+'+p.value+'%':p.value+'%',color:SUB,fontSize:11},
+     itemStyle:{color:C_EVT}},
+    {name:'小涨日(0~3%)对照',type:'bar',data:DATA.fig1_ctrl,barWidth:22,
+     label:{show:true,position:'top',formatter:p=>p.value>0?'+'+p.value+'%':p.value+'%',color:SUB,fontSize:11},
+     itemStyle:{color:C_CTRL}}
+  ]
+}));
+
+// 图2: 分档折线 (中位)
+echarts.init(document.getElementById('fig2')).setOption(Object.assign({}, base, {
+  legend:Object.assign({}, base.legend, {data:['制药 3~5%','制药 ≥5%','生科 3~5%','生科 ≥5%']}),
+  xAxis:{type:'category',data:DATA.fig2_x,axisLine:{lineStyle:{color:LINE}},axisLabel:{color:INK}},
+  yAxis:{type:'value',name:'中位持有收益(%)',axisLine:{lineStyle:{color:LINE}},splitLine:{lineStyle:{color:'#f0f1f3'}}},
+  series:[
+    {name:'制药 3~5%',type:'line',data:DATA.fig2_p35,smooth:true,symbolSize:8,itemStyle:{color:C_EVT},lineStyle:{color:C_EVT,width:3}},
+    {name:'制药 ≥5%',type:'line',data:DATA.fig2_p5p,smooth:true,symbolSize:8,itemStyle:{color:'#56b4e9'},lineStyle:{color:'#56b4e9',width:3,type:'dashed'}},
+    {name:'生科 3~5%',type:'line',data:DATA.fig2_b35,smooth:true,symbolSize:8,itemStyle:{color:'#e8930c'},lineStyle:{color:'#e8930c',width:3}},
+    {name:'生科 ≥5%',type:'line',data:DATA.fig2_b5p,smooth:true,symbolSize:8,itemStyle:{color:'#f4b942'},lineStyle:{color:'#f4b942',width:3,type:'dashed'}}
+  ]
+}));
+
+function tkrChart(el, tkrs, t10, win, n, title){
+  const labels = tkrs.map((t,i)=> t + (n[i]>=300?'':''));
+  const colors = t10.map(v=> v>=0 ? '#e03131' : '#0aa06e');
+  echarts.init(document.getElementById(el)).setOption(Object.assign({}, base, {
+    title:{text:title,left:6,top:0,textStyle:{fontSize:13,color:INK,fontWeight:700}},
+    grid:{left:52,right:60,top:34,bottom:30},
+    tooltip:{trigger:'axis',backgroundColor:'#fff',borderColor:LINE,textStyle:{color:INK},
+      formatter:ps=>{const i=ps[0].dataIndex;return tkrs[i]+'<br>事件数 '+n[i]+' · T+10中位 '+t10[i]+'%<br>胜率 '+win[i]+'%';}},
+    xAxis:{type:'category',data:labels,axisLine:{lineStyle:{color:LINE}},axisLabel:{color:INK,fontSize:11}},
+    yAxis:{type:'value',name:'T+10中位(%)',axisLine:{lineStyle:{color:LINE}},splitLine:{lineStyle:{color:'#f0f1f3'}}},
+    series:[{type:'bar',data:t10.map((v,i)=>({value:v})),barWidth:'55%',
+      itemStyle:{color:p=>colors[p.dataIndex]},
+      label:{show:true,position:'top',formatter:p=>{const i=p.dataIndex;return win[i]+'%';},color:SUB,fontSize:10.5}}]
+  }));
+}
+tkrChart('fig3p', DATA.fig3_p_tkrs, DATA.fig3_p_t10, DATA.fig3_p_win, DATA.fig3_p_n, '制药大票 · 涨≥3%后 T+10 中位收益(柱, %)+胜率(标)');
+tkrChart('fig3b', DATA.fig3_b_tkrs, DATA.fig3_b_t10, DATA.fig3_b_win, DATA.fig3_b_n, '生物科技 · 涨≥3%后 T+10 中位收益(柱, %)+胜率(标)');
+
+function yearChart(el, years, t5, win5, title){
+  echarts.init(document.getElementById(el)).setOption(Object.assign({}, base, {
+    title:{text:title,left:6,top:0,textStyle:{fontSize:13,color:INK,fontWeight:700}},
+    legend:Object.assign({}, base.legend, {data:['T+5中位收益(%)','T+5胜率(%)'],top:24}),
+    grid:{left:52,right:52,top:56,bottom:30},
+    tooltip:{trigger:'axis',backgroundColor:'#fff',borderColor:LINE,textStyle:{color:INK}},
+    xAxis:{type:'category',data:years,axisLine:{lineStyle:{color:LINE}},axisLabel:{color:INK}},
+    yAxis:[
+      {type:'value',name:'中位(%)',axisLine:{lineStyle:{color:LINE}},splitLine:{lineStyle:{color:'#f0f1f3'}}},
+      {type:'value',name:'胜率(%)',min:30,max:80,axisLine:{lineStyle:{color:LINE}},splitLine:{show:false}}
+    ],
+    series:[
+      {name:'T+5中位收益(%)',type:'bar',data:t5,barWidth:'50%',
+       itemStyle:{color:p=>p.value>=0?'#1e66d6':'#0aa06e'},
+       label:{show:true,position:'top',formatter:p=>(p.value>0?'+':'')+p.value+'%',color:SUB,fontSize:10}},
+      {name:'T+5胜率(%)',type:'line',data:win5,yAxisIndex:1,smooth:true,symbolSize:7,
+       itemStyle:{color:'#b45309'},lineStyle:{color:'#b45309',width:2.5},
+       label:{show:true,position:'bottom',formatter:'{c}%',color:'#b45309',fontSize:10}}
+    ]
+  }));
+}
+yearChart('fig4p', DATA.fig4_p_years, DATA.fig4_p_t5, DATA.fig4_p_win5, '制药大票 · 逐年 T+5 表现');
+yearChart('fig4b', DATA.fig4_b_years, DATA.fig4_b_t5, DATA.fig4_b_win5, '生物科技 · 逐年 T+5 表现');
+</script>
+</body>
+</html>

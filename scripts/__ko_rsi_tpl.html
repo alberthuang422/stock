@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KO 日线 RSI 进入超买区间后的 T+5 / T+10 表现 · 分阶段事件研究</title>
+__ECHARTS__
+<style>
+  :root{--bg:#f7f8fa;--card:#fff;--ink:#1f2329;--sub:#6b7280;--line:#e5e7eb;
+        --blue:#0072B2;--orange:#E69F00;--sky:#56B4E9;--purple:#9467bd;
+        --verm:#D55E00;--teal:#009E73;--amber:#b45309;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font:14px/1.7 -apple-system,"PingFang SC","Microsoft YaHei",sans-serif;padding:24px 16px 48px;}
+  .wrap{max-width:1220px;margin:0 auto;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 24px;margin-bottom:18px;box-shadow:0 1px 3px rgba(16,24,40,.05);}
+  h1{font-size:21px;margin-bottom:4px;}
+  .meta{color:var(--sub);font-size:12.5px;margin-bottom:14px;}
+  h2{font-size:16px;margin:0 0 12px;padding-left:10px;border-left:4px solid var(--blue);}
+  h3{font-size:13.5px;margin:14px 0 6px;color:#374151;}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:12px;margin-top:14px;}
+  .kpi{background:#fbfcfe;border:1px solid var(--line);border-radius:10px;padding:12px 14px;}
+  .kpi .num{font-size:21px;font-weight:700;}
+  .kpi .num.up{color:var(--verm);} .kpi .num.dn{color:var(--teal);} .kpi .num.warn{color:var(--amber);}
+  .kpi .lab{color:var(--sub);font-size:12px;margin-top:2px;}
+  table{width:100%;border-collapse:collapse;font-size:12px;}
+  th{background:#f3f5f8;text-align:left;padding:6px 7px;border-bottom:2px solid var(--line);white-space:nowrap;font-weight:600;}
+  td{padding:5px 7px;border-bottom:1px solid #f0f1f3;}
+  td.nowrap{white-space:nowrap;}
+  .note2{color:var(--sub);font-size:11.5px;}
+  td.up{color:var(--verm);font-weight:600;white-space:nowrap;}
+  td.dn{color:var(--teal);font-weight:600;white-space:nowrap;}
+  td.na{color:#c3c8cf;white-space:nowrap;}
+  tr.baserow td{background:#fbf7ee;}
+  .scroll{overflow-x:auto;}
+  .evbox{max-height:520px;overflow:auto;border:1px solid var(--line);border-radius:8px;}
+  .evbox table th{position:sticky;top:0;z-index:2;}
+  .chart{width:100%;height:420px;}
+  .chart.tall{height:560px;}
+  .callout{border:1px solid #f0d9c0;background:#fdf6ec;border-radius:10px;padding:12px 16px;font-size:13px;margin:10px 0;}
+  .callout.blue{border-color:#cfe0f5;background:#f0f6fd;}
+  .callout b{color:var(--amber);}
+  .callout.blue b{color:var(--blue);}
+  .st{font-size:11px;padding:1px 6px;border-radius:4px;white-space:nowrap;}
+  .st-a{background:#e8f1fa;color:var(--blue);}
+  .st-b{background:#fdf0dc;color:var(--amber);}
+  .st-c{background:#e0f2ec;color:var(--teal);}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  @media(max-width:900px){.grid2{grid-template-columns:1fr;}}
+  .verdict{border-left:4px solid var(--verm);background:#fdf3ee;padding:10px 14px;border-radius:0 8px 8px 0;margin:8px 0;font-size:13px;}
+  .src{color:var(--sub);font-size:11.5px;margin-top:8px;}
+  ul.tight{padding-left:20px;margin:6px 0;} ul.tight li{margin:3px 0;font-size:13px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="card">
+  <h1>KO 日线 RSI 进入超买区间后的 T+5 / T+10 / T+20 表现</h1>
+  <div class="meta">事件研究 · 数据 1995-01-03 ~ 2026-08-20（Yahoo 复权价 adj_close，约 7,960 个交易日）· 生成于 2026-08-21</div>
+  <div class="callout blue">
+    <b>口径定义：</b>事件 = 日线 RSI14（Wilder，基于 adj_close）自下而上<b>首次穿越 70</b>（前一日 &lt; 70，当日 ≥ 70），以当日收盘价为基准计算 T+5 / T+10 / T+20 收益（共 161 个事件）。
+    阶段划分：<span class="st st-a">疫情前</span> 数据起点 ~ 2020-02-19（美股疫情暴跌前夜）；<span class="st st-b">疫情及股灾后</span> 2020-02-20 ~ 2022-12-31（细分 B1 暴跌+V反 / B2 放水牛 / B3 2022 熊市）；<span class="st st-c">本轮牛市</span> 2023-01-01 至今。对照 = 全历史所有交易日基率。
+  </div>
+  <div class="callout">
+    <b>当前状态（2026-08-20 收盘）：</b>KO 收 $90.50 = <b>历史最高复权收盘价</b>。短周期 RSI6 = <b>80.7（8/19 已进入超买）</b>，日线 RSI14 = 69.2，距 70 超买线一步之遥——若后续上穿，将是本轮牛市第 22 个超买事件。
+  </div>
+  <div class="kpis">
+    <div class="kpi"><div class="num warn">69.2</div><div class="lab">当前日线 RSI14（8/20）</div></div>
+    <div class="kpi"><div class="num up">80.7</div><div class="lab">当前 RSI6（已超买）</div></div>
+    <div class="kpi"><div class="num">161</div><div class="lab">历史超买事件总数（1995 起）</div></div>
+    <div class="kpi"><div class="num up">+1.06% / 71%</div><div class="lab">本轮牛市 T+5 均值/胜率（n=21，t=2.84）</div></div>
+    <div class="kpi"><div class="num up">+0.95% / 67%</div><div class="lab">本轮牛市 T+20 均值/胜率（n=21）</div></div>
+    <div class="kpi"><div class="num dn">−1.28% / 15%</div><div class="lab">疫情及股灾后 T+5 均值/胜率（n=13）</div></div>
+    <div class="kpi"><div class="num">+0.21% / 54%</div><div class="lab">疫情前 T+5 均值/胜率（n=127）</div></div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>结论速览</h2>
+  <div class="verdict"><b>① 超买信号在 KO 上没有稳定的"看空 edge"，但阶段分化极大。</b>全样本 161 个事件 T+5 均值 +0.20%、胜率 52.8%，与全历史基率（+0.22% / 54.2%）几乎无差异；T+10 +0.01%、T+20 −0.10% 均弱于基率（+0.43% / +0.84%）——"超买后必回调"在 KO 上统计不成立。</div>
+  <div class="verdict"><b>② 震荡/下行环境：超买是真实的卖出信号。</b>疫情及股灾后（2020-02~2022-12，n=13）T+5 均值 −1.28%、胜率仅 15.4%；其中 2020-06~2021 放水牛（B2）8 个事件 T+5 <b>全部为负</b>（KO 在 42~52 区间横盘，超买 = 区间上沿 = 均值回归起点），2020-02-21 更是撞上疫情股灾（T+5 −11%）。</div>
+  <div class="verdict"><b>③ 趋势牛市：超买是趋势延续信号，T+20 进一步回升。</b>本轮牛市（2023~，n=21）T+5 +1.06%、胜率 71.4%（t=2.84，统计显著），超买常伴随加速上行；T+10 回落至 +0.47% / 57.1%，但 T+20 重新回升 +0.95% / 66.7%——趋势市里超买后的回撤是短期的，按 20 日持有反而更优。不过 2026 YTD 的 5 个事件 T+5 高达 +1.86% / 80%，T+10 转 −0.01% / 40%，T+20 亦回吐——短追长不追。</div>
+  <div class="verdict"><b>④ 深超买（RSI≥75）全样本为负且 T+20 加深。</b>66 个事件 T+5 −0.44%（胜率 42.4%）、T+10 −0.68%（40.9%）、T+20 −0.96%（40.9%）——70 线上方再冲到 75 以上，反而是阶段性高点的概率更大，且越持有越差。</div>
+</div>
+
+<div class="card">
+  <h2>一、历史全景：价格 × RSI14 × 超买事件（1995~2026）</h2>
+  <div class="chart tall" id="ch_main"></div>
+  <div class="src">上图：复权收盘价与三阶段底纹；紫菱形 = RSI14 上穿 70 事件日。下图：RSI14 走势，虚线为 70/30 参考线。可拖动下方缩放轴查看局部。</div>
+</div>
+
+<div class="card">
+  <h2>二、近况：2025-06 以来日线（RSI6 已超买，RSI14 逼近）</h2>
+  <div class="chart tall" id="ch_recent"></div>
+  <div class="src">8/18-8/20 三连阳创新高（$88.8 → $90.5），RSI6 于 8/19 上穿 70（当前 80.7），RSI14 升至 69.2。历史上 RSI6 超买领先 RSI14 上穿约 0~3 个交易日。</div>
+</div>
+
+<div class="card">
+  <h2>三、核心对比：分阶段 T+5 / T+10 / T+20 统计</h2>
+  <div class="grid2">
+    <div class="chart" id="ch_stage"></div>
+    <div class="chart" id="ch_scatter"></div>
+  </div>
+  <div class="scroll" style="margin-top:10px">
+  <table>
+    <thead><tr><th>阶段</th><th>n</th><th>T+5 均值</th><th>T+5 胜率</th><th>T+10 均值</th><th>T+10 胜率</th><th>T+20 均值</th><th>T+20 胜率</th></tr></thead>
+    <tbody>{{stage_rows}}</tbody>
+  </table>
+  </div>
+  <div class="src">左图：各阶段 T+5 / T+10 / T+20 均值（含全历史基率对照）。右图：每个事件 (T+5, T+10) 散点，形状/颜色区分阶段（◆ 本轮牛市 ▲ 疫情后 ● 疫情前），十字线为基率均值。</div>
+</div>
+
+<div class="card">
+  <h2>四、疫情及股灾后细分（2020-02 ~ 2022-12）</h2>
+  <div class="scroll">
+  <table>
+    <thead><tr><th>子阶段</th><th>n</th><th>T+5 均值</th><th>T+5 胜率</th><th>T+10 均值</th><th>T+10 胜率</th><th>T+20 均值</th><th>T+20 胜率</th></tr></thead>
+    <tbody>{{sub_rows}}</tbody>
+  </table>
+  </div>
+  <ul class="tight">
+    <li><b>B1 暴跌+V反</b>（n=1）：2020-02-21 RSI 71.8 上穿当日即疫情股灾起点，T+5 −11.0%——这是"超买撞上系统性风险"的极端案例，单例不构成统计结论。</li>
+    <li><b>B2 放水牛</b>（n=8）：2020-06~2021 期间 KO 于 $42~52 宽幅横盘，8 次超买 T+5 <b>无一为正</b>（均值 −0.98%），其中 2020-09-02 超买后 T+5 −2.32%（同期 SPY −6.66%，KO 已是最抗跌）。横盘市里"超买 = 区间顶"。</li>
+    <li><b>B3 2022 熊市</b>（n=4）：T+5 +0.57% / 50%，超买后反而有弱反弹——熊市反弹段超买≠立即见顶，但样本太小。</li>
+  </ul>
+</div>
+
+<div class="card">
+  <h2>五、本轮牛市逐年拆解（2023~2026 YTD）与疫情前逐年</h2>
+  <div class="chart" id="ch_year"></div>
+  <div class="grid2" style="margin-top:12px">
+    <div>
+      <h3>本轮牛市逐年（超额 = 相对 SPY 同期 T+N）</h3>
+      <table>
+        <thead><tr><th>年份</th><th>n</th><th>T+5 均值</th><th>胜率</th><th>T+5 超额</th><th>T+10 均值</th><th>胜率</th><th>T+10 超额</th><th>T+20 均值</th><th>胜率</th><th>T+20 超额</th></tr></thead>
+        <tbody>{{bull_year_rows}}</tbody>
+      </table>
+    </div>
+    <div>
+      <h3>疫情前逐年（1995~2020-02）</h3>
+      <div class="scroll">
+      <table>
+        <thead><tr><th>年份</th><th>n</th><th>T+5 均值</th><th>胜率</th><th>T+10 均值</th><th>胜率</th><th>T+20 均值</th><th>胜率</th></tr></thead>
+        <tbody>{{pre_year_rows}}</tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+  <ul class="tight" style="margin-top:10px">
+    <li>本轮牛市中 <b>2024 与 2026 YTD 最强</b>（T+5 胜率均 80%），但 2026 年 T+10 已转平（−0.01% / 40%）：最近 3 个事件（2/17、2/20、5/19）T+10 全部为负，均为创新高后的高位钝化。</li>
+    <li>疫情前 26 年无稳定规律：好年（2007、2009、2010）超买后续涨，差年（1997、2004、2015、2017）超买即局部顶——<b>超买信号的解释变量是"当时处于什么市场结构"，而非信号本身</b>。</li>
+  </ul>
+</div>
+
+<div class="card">
+  <h2>六、超额收益视角（vs SPY / XLP）与稳健性</h2>
+  <div class="scroll">
+  <table>
+    <thead><tr><th>阶段</th><th>T+5 超额(vs SPY)</th><th>T+10 超额(vs SPY)</th><th>T+20 超额(vs SPY)</th><th>T+5 超额(vs XLP)</th><th>T+10 超额(vs XLP)</th><th>T+20 超额(vs XLP)</th></tr></thead>
+    <tbody>{{excess_rows}}</tbody>
+  </table>
+  </div>
+  <ul class="tight">
+    <li>本轮牛市超买事件 T+5 跑赢 SPY +0.56pp、跑赢 XLP +0.43pp（超额胜率 66.7%）——牛市里超买日的 KO 相对强度是正的；T+10 超额转负后，T+20 重新转正（vs SPY +0.54pp）。</li>
+    <li>疫情后阶段 KO 绝对收益差但<b>相对 SPY 超额为正</b>（T+5 +0.37pp、T+20 +0.75pp）——跌得比大盘少，超买回调期间 KO 仍是相对避风港。</li>
+  </ul>
+  <h3>稳健性检验</h3>
+  <table style="max-width:960px">
+    <thead><tr><th>口径</th><th>n</th><th>T+5 均值/胜率</th><th>T+10 均值/胜率</th><th>T+20 均值/胜率</th></tr></thead>
+    <tbody>{{rob_rows}}</tbody>
+  </table>
+  <div class="src">去重后结论不变；深超买（RSI≥75）显著恶化，说明信号强度与后续表现呈"过犹不及"关系。</div>
+</div>
+
+<div class="card">
+  <h2>七、事件明细（161 个，按日期倒序）</h2>
+  <div class="evbox">
+  <table>
+    <thead><tr><th>日期</th><th>RSI14</th><th>收盘(复权$)</th><th>阶段</th><th>T+5</th><th>T+10</th><th>T+20</th><th>SPY T+5</th><th>SPY T+10</th><th>SPY T+20</th></tr></thead>
+    <tbody>{{ev_rows}}</tbody>
+  </table>
+  </div>
+</div>
+
+<div class="card">
+  <h2>八、结论与操作含义</h2>
+  <ul class="tight">
+    <li><b>[前提校验]</b> "RSI 超买 → 回调"在 KO 31 年样本中整体不成立（T+5/T+10 与基率无显著差异），该命题必须先分市场结构再讨论。</li>
+    <li><b>[关键证据]</b> 三阶段方向相反：疫情前中性（T+5 +0.21%，T+20 +0.05%）→ 疫情及股灾后显著为负（T+5 −1.28% 胜率 15%，T+20 恶化至 −3.15%）→ 本轮牛市显著为正且持有期延长不衰减（T+5 +1.06% / T+10 +0.47% / T+20 +0.95%，胜率 67%）。同一指标在不同结构下给出相反答案。</li>
+    <li><b>[客观分析]</b> 机制：KO 是低波动防御股，震荡市中 RSI 上穿 70 多因脉冲式补涨（随后均值回归，T+20 继续恶化）；趋势牛市中则反映防御资金持续流入（T+20 重新回升，持有越久越占优）。2026 年以来"创新高 + RSI6 超买"组合出现 5 次，T+5 胜率 80% 但 T+10 已衰减至 40%、T+20 亦转平，高位钝化迹象初现。</li>
+    <li><b>[结论与置信度：中]</b> 对当前（8/20 RSI14=69.2、历史新高）：若 RSI14 上穿 70，按本轮牛市基率 T+5 继续上行的概率约七成、T+20 维持正收益，但 (a) 若冲高至 RSI≥75 则转为负期望（T+20 −0.96%）；(b) T+10 维度 2026 年样本已回吐，不宜在超买日追加仓位、更适合持有观察或在 RSI≥75 脉冲日部分止盈。样本局限：B 阶段 n=13、B1 仅 1 例，逐年 n 多为个位数，显著性数字应视为上限。</li>
+  </ul>
+  <div class="src">数据：Yahoo Finance（adj_close 复权）· 方法：Wilder RSI14 / 事件研究 · 脚本：scripts/ko_rsi_overbought.py · 数据文件：results/ko_rsi_overbought.json</div>
+</div>
+
+</div>
+<script>
+var DATA = __DATA_JSON__;
+var C = {blue:"#0072B2", orange:"#E69F00", sky:"#56B4E9", purple:"#9467bd", verm:"#D55E00", teal:"#009E73", sub:"#6b7280", ink:"#1f2329"};
+var baseAxis = {axisLine:{lineStyle:{color:"#d5dae2"}},axisLabel:{color:"#4b5563",fontSize:11},splitLine:{lineStyle:{color:"#eef0f3"}}};
+var events = DATA.events;
+var dailyDates = DATA.dailyD.map(function(r){return r[0];});
+
+// ---------- 主图：价格 + RSI ----------
+(function(){
+  var el = document.getElementById("ch_main");
+  var ch = echarts.init(el);
+  var evPrice = events.map(function(e){return [e.date, e.px];});
+  var evRsi = events.map(function(e){return [e.date, e.rsi];});
+  ch.setOption({
+    animation:false,
+    tooltip:{trigger:"axis",axisPointer:{type:"cross"},backgroundColor:"#fff",borderColor:"#e5e7eb",textStyle:{color:"#1f2329",fontSize:12},
+      formatter:function(ps){ if(!ps||!ps.length) return ""; var d=ps[0].axisValue; var html="<b>"+d+"</b>";
+        ps.forEach(function(p){ if(p.seriesName==="收盘"||p.seriesName==="RSI14") html+="<br>"+p.marker+p.seriesName+": "+(p.value[1]==null?"—":(+p.value[1]).toFixed(2)); });
+        var ev=events.find(function(e){return e.date===d;}); if(ev) html+="<br>◆ 超买事件日 → T+5 "+(ev.fwd5==null?"—":ev.fwd5.toFixed(2)+"%")+" / T+10 "+(ev.fwd10==null?"—":ev.fwd10.toFixed(2)+"%");
+        return html; }},
+    axisPointer:{link:[{xAxisIndex:"all"}]},
+    grid:[{left:58,right:20,top:36,height:"52%"},{left:58,right:20,top:"68%",height:"20%"}],
+    xAxis:[
+      {type:"category",data:dailyDates,gridIndex:0,boundaryGap:false,axisLabel:{show:false},axisTick:{show:false}},
+      {type:"category",data:dailyDates,gridIndex:1,boundaryGap:false,axisLabel:{color:"#4b5563",fontSize:11}}
+    ],
+    yAxis:[
+      {gridIndex:0,scale:true,name:"复权收盘 $",nameTextStyle:{color:C.sub,fontSize:11},axisLine:{lineStyle:{color:"#d5dae2"}},axisLabel:{color:"#4b5563",fontSize:11},splitLine:{lineStyle:{color:"#eef0f3"}}},
+      {gridIndex:1,min:0,max:100,name:"RSI14",nameTextStyle:{color:C.sub,fontSize:11},axisLine:{lineStyle:{color:"#d5dae2"}},axisLabel:{color:"#4b5563",fontSize:11},splitLine:{show:false}}
+    ],
+    dataZoom:[{type:"inside",xAxisIndex:[0,1],start:78,end:100},{type:"slider",xAxisIndex:[0,1],bottom:6,height:16,start:78,end:100}],
+    series:[
+      {name:"收盘",type:"line",data:DATA.dailyD.map(function(r){return [r[0],r[1]];}),showSymbol:false,lineStyle:{color:C.blue,width:1.1},
+       markArea:{silent:true,data:[[
+          {xAxis:DATA.stageMark[0],itemStyle:{color:"rgba(230,159,0,0.10)"},label:{show:true,position:"insideTop",formatter:"疫情及股灾后",color:"#8a5a00",fontSize:10}},
+          {xAxis:DATA.stageMark[1]}]]},
+       markLine:{silent:true,symbol:"none",lineStyle:{type:"dashed",color:C.purple,width:1},data:[{xAxis:DATA.stageMark[2],label:{formatter:"本轮牛市→",color:C.purple,fontSize:10}}]}},
+      {name:"超买事件",type:"scatter",data:evPrice,symbol:"diamond",symbolSize:8,xAxisIndex:0,yAxisIndex:0,
+       itemStyle:{color:C.purple,opacity:0.85},z:5},
+      {name:"RSI14",type:"line",data:DATA.dailyD.map(function(r){return [r[0],r[2]];}),showSymbol:false,xAxisIndex:1,yAxisIndex:1,
+       lineStyle:{color:C.orange,width:1},
+       markLine:{silent:true,symbol:"none",lineStyle:{type:"dashed",color:"#b0b7c3",width:1},data:[{yAxis:70,label:{formatter:"70",fontSize:10}},{yAxis:30,label:{formatter:"30",fontSize:10}}]}},
+      {name:"事件RSI",type:"scatter",data:evRsi,symbol:"circle",symbolSize:4,xAxisIndex:1,yAxisIndex:1,itemStyle:{color:C.purple,opacity:0.7}}
+    ]
+  });
+  window.addEventListener("resize",function(){ch.resize();});
+})();
+
+// ---------- 近况图 ----------
+(function(){
+  var ch = echarts.init(document.getElementById("ch_recent"));
+  var rd = DATA.recentD;
+  ch.setOption({
+    animation:false,
+    tooltip:{trigger:"axis",axisPointer:{type:"cross"},backgroundColor:"#fff",borderColor:"#e5e7eb",textStyle:{color:"#1f2329",fontSize:12}},
+    axisPointer:{link:[{xAxisIndex:"all"}]},
+    grid:[{left:58,right:20,top:36,height:"48%"},{left:58,right:20,top:"66%",height:"26%"}],
+    xAxis:[
+      {type:"category",data:rd.map(function(r){return r[0];}),gridIndex:0,boundaryGap:false,axisLabel:{show:false}},
+      {type:"category",data:rd.map(function(r){return r[0];}),gridIndex:1,boundaryGap:false,axisLabel:{color:"#4b5563",fontSize:11}}
+    ],
+    yAxis:[
+      {gridIndex:0,scale:true,name:"$",nameTextStyle:{color:C.sub},axisLine:{lineStyle:{color:"#d5dae2"}},axisLabel:{color:"#4b5563",fontSize:11},splitLine:{lineStyle:{color:"#eef0f3"}}},
+      {gridIndex:1,min:20,max:100,name:"RSI",nameTextStyle:{color:C.sub},axisLine:{lineStyle:{color:"#d5dae2"}},axisLabel:{color:"#4b5563",fontSize:11},splitLine:{show:false}}
+    ],
+    series:[
+      {name:"收盘",type:"line",data:rd.map(function(r){return [r[0],r[1]];}),showSymbol:false,lineStyle:{color:C.blue,width:1.4},
+       markPoint:{data:[{coord:[rd[rd.length-1][0],rd[rd.length-1][1]],symbol:"pin",symbolSize:34,itemStyle:{color:C.verm},label:{formatter:"新高\n"+rd[rd.length-1][1],fontSize:9,color:"#fff"}}]}},
+      {name:"RSI14",type:"line",data:rd.map(function(r){return [r[0],r[2]];}),showSymbol:false,xAxisIndex:1,yAxisIndex:1,lineStyle:{color:C.orange,width:1.4},
+       markLine:{silent:true,symbol:"none",lineStyle:{type:"dashed",color:"#b0b7c3",width:1},data:[{yAxis:70,label:{formatter:"70 超买线",fontSize:10}}]}},
+      {name:"RSI6",type:"line",data:rd.map(function(r){return [r[0],r[3]];}),showSymbol:false,xAxisIndex:1,yAxisIndex:1,lineStyle:{color:C.sky,width:1.1}}
+    ],
+    legend:{data:["收盘","RSI14","RSI6"],top:6,textStyle:{fontSize:11,color:"#374151"}}
+  });
+  window.addEventListener("resize",function(){ch.resize();});
+})();
+
+// ---------- 阶段柱状图 ----------
+(function(){
+  var ch = echarts.init(document.getElementById("ch_stage"));
+  var sb = DATA.stageBar, bl = DATA.baseline;
+  var cats = ["疫情前\n(n="+sb.A_pre.n+")","疫情及股灾后\n(n="+sb.B_post.n+")","本轮牛市\n(n="+sb.C_bull.n+")","全历史基率"];
+  var t5 = [sb.A_pre.t5m, sb.B_post.t5m, sb.C_bull.t5m, bl.t5m];
+  var t10 = [sb.A_pre.t10m, sb.B_post.t10m, sb.C_bull.t10m, bl.t10m];
+  var t20 = [sb.A_pre.t20m, sb.B_post.t20m, sb.C_bull.t20m, bl.t20m];
+  var w5 = [sb.A_pre.t5w, sb.B_post.t5w, sb.C_bull.t5w, bl.t5w];
+  var w10 = [sb.A_pre.t10w, sb.B_post.t10w, sb.C_bull.t10w, bl.t10w];
+  var w20 = [sb.A_pre.t20w, sb.B_post.t20w, sb.C_bull.t20w, bl.t20w];
+  ch.setOption({
+    animation:false,
+    title:{text:"各阶段 T+5 / T+10 / T+20 均值（%）",left:"center",top:4,textStyle:{fontSize:13,color:"#374151"}},
+    tooltip:{trigger:"axis",backgroundColor:"#fff",borderColor:"#e5e7eb",textStyle:{color:"#1f2329"},
+      formatter:function(ps){var i=ps[0].dataIndex;return "<b>"+cats[i].replace("\n"," ")+"</b><br>T+5 均值 "+t5[i].toFixed(2)+"%（胜率 "+w5[i]+"%）<br>T+10 均值 "+t10[i].toFixed(2)+"%（胜率 "+w10[i]+"%）<br>T+20 均值 "+t20[i].toFixed(2)+"%（胜率 "+w20[i]+"%）";}},
+    grid:{left:50,right:20,top:48,bottom:40},
+    xAxis:{type:"category",data:cats,axisLabel:{color:"#4b5563",fontSize:11,interval:0}},
+    yAxis:{type:"value",name:"%",axisLine:{lineStyle:{color:"#d5dae2"}},axisLabel:{color:"#4b5563"},splitLine:{lineStyle:{color:"#eef0f3"}}},
+    series:[
+      {name:"T+5 均值",type:"bar",data:t5.map(function(v,i){return {value:v,itemStyle:{color:v>=0?C.verm:C.teal}};}),
+       barGap:"8%",label:{show:true,position:"top",fontSize:10,fontWeight:600,formatter:function(p){return p.value.toFixed(2);}}},
+      {name:"T+10 均值",type:"bar",data:t10.map(function(v){return {value:v,itemStyle:{color:v>=0?C.orange:C.sky}};}),
+       label:{show:true,position:"top",fontSize:10,formatter:function(p){return p.value.toFixed(2);}}},
+      {name:"T+20 均值",type:"bar",data:t20.map(function(v){return {value:v,itemStyle:{color:v>=0?C.purple:C.sky}};}),
+       label:{show:true,position:"top",fontSize:10,formatter:function(p){return p.value.toFixed(2);}}},
+      {name:"0线",type:"line",markLine:{silent:true,symbol:"none",lineStyle:{color:"#9aa3b0",width:1},data:[{yAxis:0,label:{show:false}}]},data:[]}
+    ],
+    legend:{data:["T+5 均值","T+10 均值","T+20 均值"],bottom:4,textStyle:{fontSize:11}}
+  });
+  window.addEventListener("resize",function(){ch.resize();});
+})();
+
+// ---------- 事件散点 ----------
+(function(){
+  var ch = echarts.init(document.getElementById("ch_scatter"));
+  var groups = [
+    {name:"疫情前 ●", st:"A_pre", sym:"circle", col:C.blue},
+    {name:"疫情后 ▲", st:"B_post", sym:"triangle", col:C.orange},
+    {name:"本轮牛市 ◆", st:"C_bull", sym:"diamond", col:C.teal}
+  ];
+  var series = groups.map(function(g){
+    return {name:g.name,type:"scatter",symbol:g.sym,symbolSize:7,itemStyle:{color:g.col,opacity:0.75},
+      data:events.filter(function(e){return e.stage===g.st && e.fwd5!=null && e.fwd10!=null;})
+                 .map(function(e){return [e.fwd5,e.fwd10,e.date,e.rsi,e.fwd20];})};
+  });
+  series.push({name:"基率",type:"scatter",symbol:"cross",symbolSize:14,itemStyle:{color:"#374151"},
+    data:[[DATA.baseline.t5m,DATA.baseline.t10m]],tooltip:{show:false},silent:true});
+  ch.setOption({
+    animation:false,
+    title:{text:"事件级 (T+5, T+10) 分布",left:"center",top:4,textStyle:{fontSize:13,color:"#374151"}},
+    tooltip:{backgroundColor:"#fff",borderColor:"#e5e7eb",textStyle:{color:"#1f2329"},
+      formatter:function(p){return "<b>"+p.value[2]+"</b>（RSI "+p.value[3]+"）<br>T+5 "+p.value[0].toFixed(2)+"% / T+10 "+p.value[1].toFixed(2)+"% / T+20 "+(p.data[4]==null?"—":p.data[4].toFixed(2)+"%");}},
+    grid:{left:52,right:16,top:40,bottom:46},
+    xAxis:{type:"value",name:"T+5 %",nameLocation:"middle",nameGap:26,axisLine:{lineStyle:{color:"#d5dae2"}},axisLabel:{color:"#4b5563"},splitLine:{lineStyle:{color:"#eef0f3"}}},
+    yAxis:{type:"value",name:"T+10 %",axisLine:{lineStyle:{color:"#d5dae2"}},axisLabel:{color:"#4b5563"},splitLine:{lineStyle:{color:"#eef0f3"}}},
+    legend:{data:groups.map(function(g){return g.name;}),bottom:2,textStyle:{fontSize:11}},
+    series:series
+  });
+  window.addEventListener("resize",function(){ch.resize();});
+})();
+
+// ---------- 逐年 T+5 ----------
+(function(){
+  var ch = echarts.init(document.getElementById("ch_year"));
+  var yt = DATA.yearT5;
+  ch.setOption({
+    animation:false,
+    title:{text:"逐年 T+5 均值（%）：疫情前 vs 本轮牛市",left:"center",top:4,textStyle:{fontSize:13,color:"#374151"}},
+    tooltip:{trigger:"axis",backgroundColor:"#fff",borderColor:"#e5e7eb",textStyle:{color:"#1f2329"},
+      formatter:function(ps){var d=yt[ps[0].dataIndex];return "<b>"+d.label+"</b>（n="+d.n+"）<br>T+5 均值 "+d.mean.toFixed(2)+"%，胜率 "+d.win+"%";}},
+    grid:{left:50,right:20,top:44,bottom:34},
+    xAxis:{type:"category",data:yt.map(function(d){return d.label;}),axisLabel:{color:"#4b5563",fontSize:10,rotate:45}},
+    yAxis:{type:"value",name:"%",axisLine:{lineStyle:{color:"#d5dae2"}},axisLabel:{color:"#4b5563"},splitLine:{lineStyle:{color:"#eef0f3"}}},
+    series:[{type:"bar",data:yt.map(function(d){return {value:d.mean,itemStyle:{color:d.stage==="bull"?C.teal:C.blue}};}),
+      label:{show:true,position:"top",fontSize:9,formatter:function(p){return p.value>=0?"+"+p.value.toFixed(1):p.value.toFixed(1);}},
+      markLine:{silent:true,symbol:"none",lineStyle:{color:"#9aa3b0",width:1},data:[{yAxis:0,label:{show:false}}]}}]
+  });
+  window.addEventListener("resize",function(){ch.resize();});
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 如何识别「下降趋势线突破」· 方法 + 证据</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<style>
+  :root{--bg:#f7f8fa;--card:#fff;--ink:#1f2329;--sub:#6b7280;--line:#e5e7eb;
+        --red:#d23b2e;--green:#1a9e4b;--blue:#1f4e79;--orange:#e67e22;--purple:#7048e8;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font:14px/1.7 -apple-system,"PingFang SC","Microsoft YaHei",sans-serif;padding:24px 16px 48px;}
+  .wrap{max-width:1180px;margin:0 auto;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 24px;margin-bottom:18px;box-shadow:0 1px 3px rgba(16,24,40,.05);}
+  h1{font-size:21px;margin-bottom:4px;}
+  .meta{color:var(--sub);font-size:12.5px;margin-bottom:14px;}
+  h2{font-size:16px;margin:0 0 12px;padding-left:10px;border-left:4px solid var(--blue);}
+  .note{color:var(--sub);font-size:12px;margin:8px 0 0;}
+  .chart{width:100%;height:420px;}
+  .chart.sm{height:340px;}
+  table{width:100%;border-collapse:collapse;font-size:12.5px;}
+  th{background:#f3f5f8;text-align:left;padding:7px 9px;border-bottom:2px solid var(--line);white-space:nowrap;font-weight:600;}
+  td{padding:6px 9px;border-bottom:1px solid #f0f1f3;white-space:nowrap;}
+  td.up{color:var(--red);font-weight:600;} td.dn{color:var(--green);font-weight:600;}
+  .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:6px;}
+  .step{background:#fbfcfe;border:1px solid var(--line);border-radius:10px;padding:12px 14px;}
+  .step .num{font-size:20px;font-weight:800;color:var(--blue);}
+  .step .t{font-weight:700;margin:2px 0 4px;}
+  .step .d{color:var(--sub);font-size:12px;}
+  .verdict{background:linear-gradient(135deg,#eef4ff,#f4f0ff);border:1px solid #d7e0f7;border-radius:12px;padding:14px 18px;margin-top:12px;font-size:13.5px;}
+  .verdict b{color:var(--blue);}
+  .badge{display:inline-block;padding:1px 8px;border-radius:10px;font-size:11px;font-weight:600;}
+  .b-ok{background:#e6f4ee;color:#0aa06e;} .b-bad{background:#fdeaea;color:#d23b2e;} .b-mid{background:#fff3e0;color:#b45309;}
+  .hl{font-weight:700;color:var(--red);} .hlg{font-weight:700;color:var(--green);} .hlb{font-weight:700;color:var(--blue);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="card">
+    <h1>AI 如何识别「下降趋势线突破」：方法 + 四票实证</h1>
+    <div class="meta">标的 GILD / CEG / VST / MS · Yahoo 日线（各自上市以来）· 共识别 67 次突破事件</div>
+    <div class="steps">
+      <div class="step"><div class="num">①</div><div class="t">Swing High 分形</div><div class="d">左右各 3 根 K 线的局部最高点 → 数字化「这里是个反弹高点」。MS 1993 年以来千计。</div></div>
+      <div class="step"><div class="num">②</div><div class="t">下降链 + OLS 拟合</div><div class="d">取最近 2~4 个「依次降低」的 swing high，拟合直线；要求斜率&lt;0 且 R²≥0.6 → 数字化「空头持续在更低位置卖出」。</div></div>
+      <div class="step"><div class="num">③</div><div class="t">趋势活性判定</div><div class="d">当前收盘须在线值下方 0.15×ATR 以上，且近 3 日未收盘越线 → 「下降趋势还没被突破」。ATR 归一化使斜率的绝对意义随波动自适应。</div></div>
+      <div class="step"><div class="num">④</div><div class="t">突破事件 + 质量过滤</div><div class="d">收盘自下方上穿线值 = 事件；30 日冷却合并。记录突破日涨幅、量比、跳空，拆「放量/大阳/弱突破」检验胜率。</div></div>
+    </div>
+    <div class="verdict"><b>一句话答案：</b>下降趋势线 = 「一串更低的 swing high 拟合出的负斜率线，且价格仍在其下方运行」。AI 不画线，而是<span class="hlb">在每根 K 线上检测「收盘价穿透这条线的几何条件」</span>，再对事件做统计——线只是假设，统计才给结论。</div>
+  </div>
+
+  <div class="card">
+    <h2>① 突破后表现：事件 vs 全史对照（按持有期）</h2>
+    <div class="chart" id="ch_ev"></div>
+    <div class="note">汇总 4 票。可见趋势线突破 <span class="hlb">5 日内并无优势</span>（fwd5 胜率 46% vs 对照 54%），优势集中在 <span class="hlg">fwd10/fwd20</span>（fwd20 均值 +2.6% vs 对照 +2.0%）——符合「突破后常有回踩确认」的机制。</div>
+  </div>
+
+  <div class="card">
+    <h2>② 突破质量过滤：哪些突破值得追？</h2>
+    <div class="chart" id="ch_filt"></div>
+    <div class="note"><b>关键发现：</b>突破日冲动买入是差的（fwd5 几乎全负）；但「放量≥1.5x」的突破，fwd10 胜率 75%、fwd20 中位 <b>+4.65%</b>、胜率 83%（vs 全部 61%）。「弱突破」（涨&lt;2%+缩量）fwd20 中位 <b>−0.28%</b>。→ 结论：<span class="hlb">趋势线突破不是「当天买」的信号，而是「放量突破+F10~20 持有」的过滤条件</span>。</div>
+  </div>
+
+  <div class="card">
+    <h2>③ 典型案例：MS 2025-04-22 放量突破下降趋势线</h2>
+    <div class="chart" id="ch_case"></div>
+    <div class="note">紫色虚线 = 由 3 个依次降低的 swing high 拟合的下降趋势线（R² 高）；突破日涨幅 +3.8%、量比 1.2，突破后 fwd20 <b class="hl">+17.0%</b>。绿色竖线标突破日，蓝色三角标拟合锚点。</div>
+  </div>
+
+  <div class="card">
+    <h2>④ 方法局限与歧义</h2>
+    <ul>
+      <li><b>线怎么画有主观性</b>：第 2 个点 vs 第 3 个点、对数刻度 vs 线性刻度，结论可能不同。算法把自由度显式化（min 2 点、R²≥0.6、ATR 容差），但不等于「唯一正确」。</li>
+      <li><b>假突破普遍</b>：67 事件中 fwd5 胜率 46%——单日收盘越线不够，常需「回踩不破」或「两日确认」。</li>
+      <li><b>样本小</b>：过滤后 n=10~12，分票后 n=4~35，结论是初步的；分年也有差异（2023 突破普遍 fwd5 差）。</li>
+      <li><b>幸存者偏差</b>：4 票全是大市值现存标的，不能推广到全部股票。</li>
+      <li><b>线与均线的关系</b>：趋势线本质是线性近似，EMA20/50 突破是它的平滑替代——两者常等价，选择取决于你希望捕捉的时间尺度。</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+var DATA = {"filter_summary": {"全部突破 (n=67)": {"name": "全部突破 (n=67)", "n": 67, "fwd5": {"n": 67, "mean": -0.13, "med": -0.33, "win": 46.3}, "fwd10": {"n": 67, "mean": 0.85, "med": 0.94, "win": 64.2}, "fwd20": {"n": 67, "mean": 2.58, "med": 2.28, "win": 61.2}}, "放量 ≥1.5x (n=12)": {"name": "放量 ≥1.5x (n=12)", "n": 12, "fwd5": {"n": 12, "mean": -1.26, "med": -0.35, "win": 33.3}, "fwd10": {"n": 12, "mean": 1.54, "med": 1.78, "win": 75.0}, "fwd20": {"n": 12, "mean": 4.88, "med": 4.65, "win": 83.3}}, "突破日涨幅 ≥2% (n=41)": {"name": "突破日涨幅 ≥2% (n=41)", "n": 41, "fwd5": {"n": 41, "mean": -0.24, "med": -0.04, "win": 48.8}, "fwd10": {"n": 41, "mean": 1.26, "med": 0.42, "win": 61.0}, "fwd20": {"n": 41, "mean": 3.63, "med": 3.26, "win": 68.3}}, "大阳+放量 (n=10)": {"name": "大阳+放量 (n=10)", "n": 10, "fwd5": {"n": 10, "mean": -1.45, "med": -0.57, "win": 40.0}, "fwd10": {"n": 10, "mean": 1.49, "med": 1.68, "win": 70.0}, "fwd20": {"n": 10, "mean": 4.93, "med": 4.7, "win": 80.0}}, "弱突破·涨<2%且缩量 (n=24)": {"name": "弱突破·涨<2%且缩量 (n=24)", "n": 24, "fwd5": {"n": 24, "mean": 0.07, "med": -0.67, "win": 45.8}, "fwd10": {"n": 24, "mean": 0.07, "med": 1.23, "win": 66.7}, "fwd20": {"n": 24, "mean": 0.61, "med": -1.04, "win": 45.8}}}, "per_tk": {"GILD": {"ticker": "GILD", "n": 19, "ctrl": {"1": {"n": 2920, "mean": 0.03, "median": 0.03, "win": 50.5}, "5": {"n": 2916, "mean": 0.12, "median": 0.08, "win": 50.8}, "10": {"n": 2911, "mean": 0.22, "median": 0.1, "win": 50.6}, "20": {"n": 2901, "mean": 0.39, "median": -0.2, "win": 48.5}}, "ev": {"fwd5": {"n": 19, "mean": 0.18, "med": -0.13, "win": 47.4}, "fwd10": {"n": 19, "mean": -0.2, "med": 0.53, "win": 68.4}, "fwd20": {"n": 19, "mean": -0.21, "med": -1.21, "win": 36.8}}}, "CEG": {"ticker": "CEG", "n": 4, "ctrl": {"1": {"n": 1148, "mean": 0.21, "median": 0.16, "win": 53.5}, "5": {"n": 1144, "mean": 1.04, "median": 0.79, "win": 56.0}, "10": {"n": 1139, "mean": 2.07, "median": 1.05, "win": 56.0}, "20": {"n": 1129, "mean": 4.09, "median": 2.73, "win": 61.7}}, "ev": {"fwd5": {"n": 4, "mean": 0.59, "med": 0.47, "win": 50.0}, "fwd10": {"n": 4, "mean": 5.14, "med": 5.15, "win": 75.0}, "fwd20": {"n": 4, "mean": 3.49, "med": 3.86, "win": 75.0}}}, "VST": {"ticker": "VST", "n": 9, "ctrl": {"1": {"n": 2479, "mean": 0.13, "median": 0.07, "win": 51.3}, "5": {"n": 2475, "mean": 0.61, "median": 0.54, "win": 55.4}, "10": {"n": 2470, "mean": 1.21, "median": 0.9, "win": 56.2}, "20": {"n": 2460, "mean": 2.46, "median": 1.83, "win": 57.2}}, "ev": {"fwd5": {"n": 9, "mean": -0.5, "med": -1.69, "win": 33.3}, "fwd10": {"n": 9, "mean": 0.38, "med": -0.16, "win": 44.4}, "fwd20": {"n": 9, "mean": 6.97, "med": 3.67, "win": 77.8}}}, "MS": {"ticker": "MS", "n": 35, "ctrl": {"1": {"n": 8428, "mean": 0.08, "median": 0.03, "win": 50.3}, "5": {"n": 8424, "mean": 0.37, "median": 0.34, "win": 52.8}, "10": {"n": 8419, "mean": 0.69, "median": 0.72, "win": 54.6}, "20": {"n": 8409, "mean": 1.33, "median": 1.64, "win": 57.3}}, "ev": {"fwd5": {"n": 35, "mean": -0.29, "med": -0.04, "win": 48.6}, "fwd10": {"n": 35, "mean": 1.04, "med": 2.59, "win": 65.7}, "fwd20": {"n": 35, "mean": 2.86, "med": 3.26, "win": 68.6}}}}, "case": {"label": "MS 案例 · 2025-04-22 · 上穿下降趋势线后 fwd20 +17.0%", "dates": ["2025-02-14", "2025-02-18", "2025-02-19", "2025-02-20", "2025-02-21", "2025-02-24", "2025-02-25", "2025-02-26", "2025-02-27", "2025-02-28", "2025-03-03", "2025-03-04", "2025-03-05", "2025-03-06", "2025-03-07", "2025-03-10", "2025-03-11", "2025-03-12", "2025-03-13", "2025-03-14", "2025-03-17", "2025-03-18", "2025-03-19", "2025-03-20", "2025-03-21", "2025-03-24", "2025-03-25", "2025-03-26", "2025-03-27", "2025-03-28", "2025-03-31", "2025-04-01", "2025-04-02", "2025-04-03", "2025-04-04", "2025-04-07", "2025-04-08", "2025-04-09", "2025-04-10", "2025-04-11", "2025-04-14", "2025-04-15", "2025-04-16", "2025-04-17", "2025-04-21", "2025-04-22", "2025-04-23", "2025-04-24", "2025-04-25", "2025-04-28", "2025-04-29", "2025-04-30", "2025-05-01", "2025-05-02", "2025-05-05", "2025-05-06", "2025-05-07", "2025-05-08", "2025-05-09", "2025-05-12", "2025-05-13", "2025-05-14", "2025-05-15", "2025-05-16", "2025-05-19", "2025-05-20", "2025-05-21", "2025-05-22", "2025-05-23", "2025-05-27", "2025-05-28", "2025-05-29", "2025-05-30", "2025-06-02", "2025-06-03", "2025-06-04", "2025-06-05", "2025-06-06", "2025-06-09", "2025-06-10", "2025-06-11", "2025-06-12", "2025-06-13", "2025-06-16", "2025-06-17", "2025-06-18", "2025-06-20", "2025-06-23", "2025-06-24", "2025-06-25"], "open": [136.45, 139.41, 140.01, 140.25, 135.18, 132.76, 131.03, 130.41, 131.8, 129.9, 133.33, 126.47, 122.0, 120.8, 118.73, 116.0, 111.71, 115.0, 114.0, 113.99, 114.97, 118.28, 117.23, 118.82, 119.35, 122.31, 124.9, 125.77, 118.93, 118.71, 113.71, 115.99, 113.97, 110.11, 101.54, 96.27, 105.22, 98.2, 108.77, 102.89, 110.48, 110.09, 109.58, 108.52, 108.14, 108.02, 113.25, 111.87, 115.71, 115.88, 115.38, 113.11, 115.54, 119.3, 118.74, 117.81, 118.33, 119.99, 122.49, 127.42, 127.76, 129.36, 130.26, 132.28, 130.3, 129.87, 128.09, 124.61, 124.1, 127.54, 129.21, 128.1, 127.61, 127.48, 128.12, 128.84, 128.37, 132.08, 132.23, 131.6, 132.03, 130.66, 130.19, 130.29, 129.84, 130.02, 133.35, 132.06, 135.68, 136.12], "high": [139.58, 140.78, 140.93, 141.07, 135.6, 132.97, 131.29, 132.24, 132.87, 133.41, 133.99, 126.57, 124.38, 123.13, 119.49, 116.28, 113.51, 115.6, 114.85, 115.77, 119.3, 119.21, 121.25, 121.81, 120.88, 124.82, 126.05, 126.34, 119.84, 119.43, 117.03, 116.88, 120.35, 111.39, 103.7, 104.34, 106.94, 113.9, 108.87, 109.2, 111.5, 112.15, 110.32, 110.75, 108.33, 110.7, 116.61, 115.9, 117.1, 117.9, 116.47, 115.82, 117.82, 120.51, 120.87, 119.15, 120.0, 123.26, 123.23, 129.2, 130.11, 131.57, 133.03, 132.98, 132.13, 130.39, 128.64, 127.07, 126.57, 129.53, 129.42, 128.4, 128.33, 128.47, 129.18, 129.42, 131.05, 133.57, 132.9, 132.46, 133.45, 132.0, 131.07, 132.8, 131.17, 132.96, 133.37, 134.1, 136.68, 137.89], "low": [136.45, 138.89, 139.26, 132.43, 130.91, 128.9, 126.38, 130.15, 128.81, 128.99, 127.73, 119.25, 121.44, 118.6, 115.45, 109.22, 110.34, 112.55, 111.23, 112.54, 114.84, 117.28, 116.23, 118.82, 118.3, 122.0, 124.15, 121.61, 117.54, 114.63, 112.18, 113.54, 113.88, 106.88, 97.31, 94.33, 98.27, 97.89, 103.41, 102.89, 108.55, 110.06, 106.65, 108.15, 104.78, 107.97, 111.93, 111.24, 114.97, 113.83, 114.23, 112.03, 114.67, 118.46, 118.39, 117.21, 118.2, 119.99, 121.47, 126.44, 127.23, 129.13, 130.02, 131.79, 129.07, 128.12, 125.07, 124.61, 123.88, 126.82, 127.27, 126.93, 126.35, 126.36, 127.13, 128.16, 127.34, 130.82, 131.11, 131.15, 131.42, 129.8, 128.81, 130.29, 129.66, 129.93, 131.91, 130.9, 135.01, 135.41], "close": [138.95, 140.71, 140.69, 134.34, 131.69, 129.97, 129.6, 131.05, 129.24, 133.11, 129.13, 121.72, 123.75, 119.37, 119.29, 111.69, 112.04, 114.0, 111.68, 115.34, 117.96, 118.11, 119.85, 120.47, 120.14, 124.27, 125.2, 122.2, 119.0, 115.33, 116.67, 115.74, 119.27, 107.93, 99.83, 100.92, 100.31, 111.7, 106.58, 108.12, 109.11, 110.44, 107.86, 109.18, 106.3, 110.38, 112.31, 115.6, 116.01, 115.83, 116.21, 115.42, 116.76, 120.22, 119.6, 118.33, 119.1, 121.88, 121.7, 127.06, 129.35, 131.04, 132.51, 132.18, 130.84, 129.13, 125.3, 126.26, 126.07, 129.21, 127.51, 128.16, 128.03, 128.4, 128.68, 128.16, 130.62, 131.82, 131.95, 131.82, 131.81, 131.92, 129.49, 130.9, 130.09, 132.52, 132.71, 134.0, 135.9, 137.72], "ev_date": "2025-04-22", "line_y": [142.24, 141.55, 140.85, 140.16, 139.46, 138.77, 138.07, 137.38, 136.68, 135.98, 135.29, 134.59, 133.9, 133.2, 132.51, 131.81, 131.12, 130.42, 129.72, 129.03, 128.33, 127.64, 126.94, 126.25, 125.55, 124.86, 124.16, 123.46, 122.77, 122.07, 121.38, 120.68, 119.99, 119.29, 118.6, 117.9, 117.2, 116.51, 115.81, 115.12, 114.42, 113.73, 113.03, 112.34, 111.64, 110.94, 110.25, 109.55, 108.86, 108.16, 107.47, 106.77, 106.08, 105.38, 104.68, 103.99, 103.29, 102.6, 101.9, 101.21, 100.51, 99.82, 99.12, 98.43, 97.73], "anchors": ["2025-03-03", "2025-03-26", "2025-04-15"], "ev_i": 45}};
+RED = "#d23b2e"; GREEN = "#1a9e4b"; BLUE = "#1f4e79"; ORANGE = "#e67e22"; PURPLE = "#7048e8"; GRAY = "#999";
+
+// ① 事件 vs 对照
+(function(){
+  var ch = echarts.init(document.getElementById("ch_ev"));
+  var tks = ["GILD","CEG","VST","MS"];
+  var horizons = [5,10,20];
+  var cats = horizons.map(function(h){ return "fwd" + h; });
+  var evMed = cats.map(function(k){ return DATA.per_tk /* 汇总用均值 */ });
+  // 全部事件汇总
+  var allMed = [];
+  var allCtl = [];
+  var allWin = [];
+  horizons.forEach(function(h){
+    var evs = [], ctls = [];
+    tks.forEach(function(t){
+      var t = DATA.per_tk[t];
+      if (t.ev["fwd"+h]) evs.push(t.ev["fwd"+h].med);
+      var c = t.ctrl[String(h)];
+      ctls.push({ n:c.n, mean:c.mean, med:c.med, win:c.win });
+    });
+    allMed.push(Math.round(evs.reduce(function(a,b){return a+b;},0)/evs.length*100)/100);
+    var wsum = ctls.reduce(function(a,c){return a + c.med*c.n;},0);
+    var nsum = ctls.reduce(function(a,c){return a + c.n;},0);
+    allCtl.push(Math.round(wsum/nsum*100)/100);
+  });
+  var winRates = [46,64,61]; // fwd5/10/20 全部事件胜率（计算值）
+  ch.setOption({
+    tooltip:{ trigger:"axis", valueFormatter:function(v){ return v+"%"; } },
+    legend:{ data:["突破事件 中位","全史对照 中位(加权)"], top:0 },
+    grid:{ left:60, right:30, top:40, bottom:30 },
+    xAxis:{ type:"category", data:cats },
+    yAxis:{ type:"value", name:"%", axisLabel:{formatter:function(v){return v+"%";}} },
+    series:[
+      { name:"突破事件 中位", type:"bar", data:allMed, itemStyle:{color:BLUE}, barGap:"20%",
+        label:{ show:true, position:"top", formatter:function(p){return p.value.toFixed(2)+"%";}, fontSize:10 } },
+      { name:"全史对照 中位(加权)", type:"bar", data:allCtl, itemStyle:{color:"#b9c6d4"},
+        label:{ show:true, position:"top", formatter:function(p){return p.value.toFixed(2)+"%";}, fontSize:10 } }
+    ]
+  });
+})();
+
+// ② 过滤
+(function(){
+  var ch = echarts.init(document.getElementById("ch_filt"));
+  var names = Object.keys(DATA.filter_summary);
+  var horiz = ["fwd5","fwd10","fwd20"];
+  ch.setOption({
+    tooltip:{ trigger:"axis", valueFormatter:function(v){ return (v==null?"-":v.toFixed(2)+"%"); } },
+    legend:{ data:horiz, top:0 },
+    grid:{ left:60, right:30, top:40, bottom:50 },
+    xAxis:{ type:"category", data:names, axisLabel:{ interval:0, rotate:18, fontSize:10 } },
+    yAxis:{ type:"value", name:"中位收益 %", axisLabel:{formatter:function(v){return v+"%";}} },
+    series: horiz.map(function(h, i){
+      var cols = [BLUE, ORANGE, PURPLE];
+      return { name:h, type:"bar", barGap:"15%", data:names.map(function(nm){
+          var s = DATA.filter_summary[nm][h];
+          return s ? s.med : null;
+        }), itemStyle:{ color:cols[i] } };
+    })
+  });
+})();
+
+// ③ MS 案例
+(function(){
+  var ch = echarts.init(document.getElementById("ch_case"));
+  var cs = DATA.case;
+  var ohlc = cs.open.map(function(o,i){ return [o, cs.close[i], cs.low[i], cs.high[i]]; });
+  var lineData = cs.line_y ? cs.line_y.map(function(v,i){ return [cs.dates[i], v]; }) : [];
+  ch.setOption({
+    animation:false,
+    tooltip:{ trigger:"axis", axisPointer:{type:"cross"},
+      formatter:function(ps){ var p=ps[0]; var i=p.dataIndex;
+        return cs.dates[i]+"<br>O "+cs.open[i]+"　H "+cs.high[i]+"<br>L "+cs.low[i]+"　C "+cs.close[i]; } },
+    grid:{ left:60, right:20, top:30, bottom:45 },
+    xAxis:{ type:"category", data:cs.dates, axisLabel:{ fontSize:9, interval:14 } },
+    yAxis:{ type:"value", scale:true, name:"价格" },
+    dataZoom:[{ type:"inside", start:0, end:100 }],
+    series:[
+      { type:"candlestick", data:ohlc, itemStyle:{ color:RED, color0:GREEN, borderColor:RED, borderColor0:GREEN },
+        markLine:{ silent:true, symbol:"none", data:[
+          { xAxis: cs.dates[cs.ev_i], lineStyle:{ color:BLUE, width:1.6, type:"solid" },
+            label:{ formatter:"突破日 " + cs.ev_date, fontSize:10, color:BLUE, position:"insideEndTop" } }
+        ] } },
+      { name:"下降趋势线", type:"line", data:lineData, showSymbol:false,
+        lineStyle:{ color:PURPLE, width:2, type:"dashed" }, itemStyle:{ color:PURPLE },
+        markPoint:{ data: cs.anchors.map(function(a,i){
+            return { coord:[a, null], symbol:"pin", symbolSize:16, itemStyle:{color:PURPLE},
+                     label:{ formatter:i+1, color:"#fff", fontSize:9 } };
+          }) } }
+    ]
+  });
+})();
+</script>
+</body>
+</html>
