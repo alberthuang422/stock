@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>公用事业 ETF + 成分股 MACD 水下金叉回测（严格口径 + 实盘化买入收益）</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<style>
+  :root{--bg:#f7f8fa;--card:#fff;--ink:#1f2329;--sub:#6b7280;--line:#e5e7eb;
+        --red:#e03131;--green:#0aa06e;--blue:#1e66d6;--amber:#d97706;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font:14px/1.7 -apple-system,"PingFang SC","Microsoft YaHei",sans-serif;padding:24px 16px 48px;}
+  .wrap{max-width:1240px;margin:0 auto;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 24px;margin-bottom:18px;box-shadow:0 1px 3px rgba(16,24,40,.05);}
+  h1{font-size:21px;margin-bottom:4px;}
+  .meta{color:var(--sub);font-size:12.5px;margin-bottom:14px;}
+  h2{font-size:16px;margin:0 0 12px;padding-left:10px;border-left:4px solid var(--blue);}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-top:14px;}
+  .kpi{background:#fbfcfe;border:1px solid var(--line);border-radius:10px;padding:12px 14px;}
+  .kpi .num{font-size:21px;font-weight:700;}
+  .kpi .num.up{color:var(--red);} .kpi .num.dn{color:var(--green);}
+  .kpi .lab{color:var(--sub);font-size:12px;margin-top:2px;}
+  .flow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:10px 0 4px;font-size:13px;}
+  .fstep{background:#eef3fb;color:var(--blue);border:1px solid #d5e2f7;border-radius:6px;padding:2px 8px;font-weight:600;}
+  .farrow{color:var(--sub);}
+  .fstat{color:var(--sub);font-size:12px;}
+  table{width:100%;border-collapse:collapse;font-size:12px;}
+  th{background:#f3f5f8;text-align:left;padding:6px 7px;border-bottom:2px solid var(--line);white-space:nowrap;font-weight:600;}
+  td{padding:5px 7px;border-bottom:1px solid #f0f1f3;white-space:nowrap;text-align:right;}
+  td:first-child,td:nth-child(2){text-align:left;}
+  td.up{color:var(--red);font-weight:600;} td.dn{color:var(--green);font-weight:600;} td.na{color:#c3c8cf;}
+  tr.hit td{background:#eefaf5;}
+  tr.hit td:first-child{border-left:3px solid var(--green);}
+  .scroll{overflow-x:auto;}
+  .chart{width:100%;height:400px;}
+  .chart.sm{height:330px;}
+  .note{color:var(--sub);font-size:12px;margin-top:8px;}
+  .conc{background:#eef7f2;border:1px solid #cde8da;border-radius:10px;padding:14px 18px;font-size:13px;color:#17442f;margin-top:10px;}
+  .warn{background:#fff8ec;border:1px solid #f3dfb6;border-radius:10px;padding:12px 16px;font-size:12.5px;color:#7c4a03;}
+  .dis{color:var(--sub);font-size:12px;border-top:1px dashed var(--line);padding-top:12px;margin-top:16px;}
+  .hl{font-weight:700;color:var(--red);} .hlg{font-weight:700;color:var(--green);}
+  .badge{display:inline-block;padding:1px 8px;border-radius:10px;font-size:11px;font-weight:600;}
+  .b-ETF{background:#e8f0fe;color:#1a56db;} .b-IPP{background:#fdecea;color:#c92a2a;} .b-受管制{background:#e6f4ea;color:#1a7f37;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="card">
+    <h1>公用事业板块 MACD 水下金叉回测 —— ETF（XLU/UTES）× 主要成分股（IPP + 受管制）</h1>
+    <div class="meta">标的：XLU/UTES（板块 ETF）· VST/CEG/TLN/NRG（IPP 独立发电）· NEE/SRE/XEL/CNP/ETR/LNT（受管制公用事业）｜数据：Yahoo 日线 adj_close（复权口径，指标与收益均基于复权价）｜严格口径：水下金叉 → ≤3 日收盘同时站上 EMA10/20（无容差）→ 站稳 3/4/5 天（允许 1 日跌破次日收复）｜<b>买入规则：站稳3天即可考虑买入（hold3母集），买点=（金叉前10日盘整最高价+确认日EMA20）/2，回踩到买点才成交，30日内未回踩=错过</b>｜收益不含成本</div>
+    <div class="flow">
+      <span class="fstep">① 水下金叉</span><span class="farrow">→</span>
+      <span class="fstep">② x≤3天站上 EMA10/20</span><span class="farrow">→</span>
+      <span class="fstep">③ 站稳3天确认</span><span class="farrow">→</span>
+      <span class="fstep">④ 回踩买点买入</span>
+      <span class="fstat">　合并金叉 475 → 未站上 164（35%）→ hold3母集 257（hold5=203）→ 成交 218（错过 37，成交率 85%）</span>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><div class="num up">86.3%</div><div class="lab">hold5 完全符合信号 T+5 平均胜率（金叉日口径）</div></div>
+      <div class="kpi"><div class="num up">78.7%</div><div class="lab">hold5 信号 T+10 平均胜率</div></div>
+      <div class="kpi"><div class="num dn">52.7%</div><div class="lab">回踩买点买入 T+5 平均胜率（同批信号）</div></div>
+      <div class="kpi"><div class="num dn">+0.52%</div><div class="lab">回踩买入 T+5 平均均值（%）</div></div>
+      <div class="kpi"><div class="num">85%</div><div class="lab">hold3 母集实际可成交比例（37 错过）</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>一、分组总览：ETF vs IPP vs 受管制（hold5 确认后 T+5，金叉日口径）</h2>
+    <div class="scroll"><table>
+      <thead><tr><th>分组</th><th>股票数</th><th>hold5 信号</th><th>hold5 T+5 胜率</th><th>hold5 T+5 均值</th><th>成交信号</th><th>回踩买 T+5 胜率</th><th>回踩买 T+5 均值</th></tr></thead>
+      <tbody><tr><td><b><span class='badge b-ETF'>ETF（公用事业指数）</span></b></td><td>2</td><td>43（43信号）</td><td class='up'>86.0%</td><td>+1.96%</td><td>42</td><td class='dn'>47.6%</td><td class='dn'>-0.79%</td></tr><tr><td><b><span class='badge b-IPP'>IPP 独立发电商</span></b></td><td>4</td><td>53（53信号）</td><td class='up'>79.2%</td><td>+3.95%</td><td>61</td><td class='dn'>46.7%</td><td class='up'>+0.83%</td></tr><tr><td><b><span class='badge b-受管制'>受管制公用事业</span></b></td><td>6</td><td>107（107信号）</td><td class='up'>89.7%</td><td>+2.29%</td><td>115</td><td class='up'>55.7%</td><td class='up'>+0.55%</td></tr></tbody>
+    </table></div>
+    <div id="chart2" class="chart sm"></div>
+    <div class="note">图例：hold5 组（金叉日口径）vs 同批信号的回踩买点买入 T+5 胜率。虚线标注 50%。分组内部按股票展开。</div>
+  </div>
+
+  <div class="card">
+    <h2>二、各标的回测总览（严格口径 + 买入）</h2>
+    <div class="scroll">
+    <table>
+      <thead><tr><th>标的</th><th>分组</th><th>数据区间</th><th>交易日</th><th>合并金叉</th><th>未站上</th><th>占比</th><th>hold5(完全符合)</th><th>hold3母集</th><th>成交/错过</th><th>成交率</th><th>基线T+5</th><th>hold5 T+5（胜率/均值）</th><th>hold5 T+10（胜率/均值）</th><th>hold5 T+20（胜率/均值）</th><th>金叉日买T+5(同批)</th><th>回踩买入T+5（胜率/均值）</th><th>回踩买入T+20（胜率/均值）</th></tr></thead>
+      <tbody><tr><td><b>XLU</b></td><td>ETF（公用事业指数）</td><td>2015-01-02~2026-08-18</td><td>2923</td><td>56</td><td>20</td><td>36%</td><td>22</td><td>27</td><td>21 / 4</td><td>78%</td><td>56.2%</td><td class='up'>86.4%（+1.80%）</td><td class='up'>95.5%（+2.46%）</td><td>72.7%（+1.85%）</td><td>71.4%</td><td class='dn'>52.4%（-0.25%）</td><td class='up'>71.4%（+1.37%）</td></tr>
+<tr><td><b>UTES</b></td><td>ETF（公用事业指数）</td><td>2015-09-24~2026-08-18</td><td>2740</td><td>49</td><td>14</td><td>29%</td><td>21</td><td>26</td><td>21 / 5</td><td>81%</td><td>57.3%</td><td class='up'>85.7%（+2.12%）</td><td class='up'>81.0%（+2.35%）</td><td>76.2%（+2.96%）</td><td>61.9%</td><td class='dn'>42.9%（-1.32%）</td><td class='up'>66.7%（+2.19%）</td></tr>
+<tr><td><b>VST</b></td><td>IPP 独立发电商</td><td>2016-10-05~2026-08-18</td><td>2480</td><td>48</td><td>24</td><td>50%</td><td>10</td><td>16</td><td>16 / 0</td><td>100%</td><td>55.8%</td><td class='up'>70.0%（+2.95%）</td><td class='dn'>50.0%（+0.16%）</td><td>50.0%（-1.47%）</td><td>68.8%</td><td class='dn'>37.5%（-1.82%）</td><td class='dn'>37.5%（-0.77%）</td></tr>
+<tr><td><b>CEG</b></td><td>IPP 独立发电商</td><td>2022-01-19~2026-08-18</td><td>1149</td><td>21</td><td>6</td><td>29%</td><td>11</td><td>12</td><td>10 / 2</td><td>83%</td><td>56.3%</td><td class='up'>72.7%（+4.28%）</td><td class='up'>81.8%（+8.62%）</td><td>63.6%（+5.98%）</td><td>60.0%</td><td class='up'>40.0%（+3.33%）</td><td class='up'>50.0%（+2.87%）</td></tr>
+<tr><td><b>TLN</b></td><td>IPP 独立发电商</td><td>2023-06-02~2026-08-18</td><td>805</td><td>10</td><td>1</td><td>10%</td><td>6</td><td>7</td><td>7 / 0</td><td>100%</td><td>60.5%</td><td class='up'>100.0%（+4.31%）</td><td class='dn'>60.0%（+3.34%）</td><td>60.0%（+2.24%）</td><td>85.7%</td><td class='up'>50.0%（+0.61%）</td><td class='up'>50.0%（+2.50%）</td></tr>
+<tr><td><b>NRG</b></td><td>IPP 独立发电商</td><td>2015-01-02~2026-08-18</td><td>2923</td><td>60</td><td>21</td><td>35%</td><td>26</td><td>31</td><td>28 / 3</td><td>90%</td><td>54.1%</td><td class='up'>80.8%（+4.11%）</td><td class='up'>80.8%（+6.50%）</td><td>73.1%（+6.53%）</td><td>71.4%</td><td class='up'>53.6%（+1.51%）</td><td class='up'>60.7%（+2.48%）</td></tr>
+<tr><td><b>NEE</b></td><td>受管制公用事业</td><td>2018-01-02~2026-08-14</td><td>2166</td><td>38</td><td>18</td><td>47%</td><td>13</td><td>15</td><td>13 / 2</td><td>87%</td><td>57.1%</td><td class='up'>84.6%（+2.03%）</td><td class='up'>76.9%（+3.65%）</td><td>76.9%（+6.11%）</td><td>69.2%</td><td class='up'>69.2%（+2.82%）</td><td class='up'>92.3%（+4.33%）</td></tr>
+<tr><td><b>SRE</b></td><td>受管制公用事业</td><td>2018-01-02~2026-08-14</td><td>2166</td><td>39</td><td>9</td><td>23%</td><td>21</td><td>26</td><td>22 / 4</td><td>85%</td><td>55.0%</td><td class='up'>81.0%（+1.56%）</td><td class='up'>71.4%（+2.27%）</td><td>66.7%（+2.20%）</td><td>72.7%</td><td class='up'>50.0%（+0.41%）</td><td class='up'>59.1%（+1.39%）</td></tr>
+<tr><td><b>XEL</b></td><td>受管制公用事业</td><td>2018-01-02~2026-08-14</td><td>2166</td><td>37</td><td>18</td><td>49%</td><td>10</td><td>13</td><td>10 / 3</td><td>77%</td><td>54.7%</td><td class='up'>100.0%（+3.60%）</td><td class='up'>90.0%（+3.46%）</td><td>100.0%（+7.52%）</td><td>100.0%</td><td class='up'>80.0%（+0.21%）</td><td class='up'>70.0%（+2.61%）</td></tr>
+<tr><td><b>CNP</b></td><td>受管制公用事业</td><td>2018-01-02~2026-08-14</td><td>2166</td><td>39</td><td>11</td><td>28%</td><td>22</td><td>28</td><td>26 / 2</td><td>93%</td><td>55.2%</td><td class='up'>95.5%（+1.83%）</td><td class='up'>72.7%（+2.04%）</td><td>90.9%（+4.20%）</td><td>80.8%</td><td class='dn'>42.3%（-0.05%）</td><td class='up'>73.1%（+2.06%）</td></tr>
+<tr><td><b>ETR</b></td><td>受管制公用事业</td><td>2018-01-02~2026-08-14</td><td>2166</td><td>37</td><td>10</td><td>27%</td><td>23</td><td>30</td><td>23 / 7</td><td>77%</td><td>57.4%</td><td class='up'>95.7%（+2.63%）</td><td class='up'>95.7%（+3.17%）</td><td>82.6%（+5.55%）</td><td>69.6%</td><td class='up'>52.2%（+0.06%）</td><td class='up'>65.2%（+2.78%）</td></tr>
+<tr><td><b>LNT</b></td><td>受管制公用事业</td><td>2018-01-02~2026-08-14</td><td>2166</td><td>41</td><td>12</td><td>29%</td><td>18</td><td>26</td><td>21 / 5</td><td>81%</td><td>55.7%</td><td class='up'>83.3%（+2.74%）</td><td class='up'>88.9%（+3.38%）</td><td>83.3%（+4.96%）</td><td>71.4%</td><td class='up'>61.9%（+0.74%）</td><td class='up'>81.0%（+3.31%）</td></tr></tbody>
+    </table>
+    </div>
+    <div class="note">「基线 T+5」=全历史任意日买入持有5日的胜率（对照）。「金叉日买入(同批)」与「回踩买入」统计同一批实际成交信号，可直接对比入场点脱节损耗。红涨绿跌（中国口径）。</div>
+  </div>
+
+  <div class="card">
+    <h2>三、入场点脱节检验：金叉日买入 vs 回踩买点买入（T+5 胜率，%）</h2>
+    <div id="chart1" class="chart"></div>
+    <div class="note">蓝=该批信号若在金叉日收盘买入的胜率；橙=站稳确认后回踩到买点再买入的胜率。<b>观察：回踩买入胜率系统性低于金叉日买入（尤其 IPP 高波动标的），但受管制类部分标的表现更好</b>——板块内不同子类入场点损耗并不一致。</div>
+  </div>
+
+  <div class="card">
+    <h2>四、全部站上信号节点明细（343 个 · 含买入信息）</h2>
+    <div class="note">绿色高亮行 = 回踩成交；混排 hold5 ✓/✗ 与买入信息。T+5/10/20 为金叉日复权收益；买入 T+5/10/20 为买点成交后收益（%）。</div>
+    <div class="scroll" style="margin-top:10px;max-height:560px;overflow-y:auto;">
+    <table>
+      <thead><tr><th>标的</th><th>金叉日</th><th>站稳3</th><th>hold5</th><th>T+5%</th><th>T+10%</th><th>T+20%</th><th>买入状态</th><th>买入T+5%</th><th>买入T+10%</th><th>买入T+20%</th></tr></thead>
+      <tbody><tr><td><b>CEG</b></td><td>2022-07-28</td><td>✓</td><td>✓</td><td class='up'>+4.44%</td><td class='up'>+22.05%</td><td class='up'>+28.33%</td><td>错过</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>CEG</b></td><td>2023-01-23</td><td>✓</td><td>✓</td><td class='dn'>-2.07%</td><td class='dn'>-1.05%</td><td class='dn'>-4.48%</td><td>成交</td><td class='up'>+0.94%</td><td class='up'>+1.10%</td><td class='dn'>-12.35%</td></tr>
+<tr><td><b>CEG</b></td><td>2023-03-29</td><td>✗</td><td>✗</td><td class='up'>+0.82%</td><td class='up'>+1.66%</td><td class='up'>+1.15%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>CEG</b></td><td>2023-04-20</td><td>✓</td><td>✓</td><td class='up'>+0.37%</td><td class='up'>+2.77%</td><td class='up'>+6.83%</td><td>成交</td><td class='dn'>-0.53%</td><td class='up'>+2.27%</td><td class='up'>+9.25%</td></tr>
+<tr><td><b>CEG</b></td><td>2023-12-19</td><td>✗</td><td>✗</td><td class='dn'>-2.81%</td><td class='dn'>-4.51%</td><td class='dn'>-5.26%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><b>CEG</b></td><td>2024-01-22</td><td>✓</td><td>✓</td><td class='up'>+3.24%</td><td class='up'>+8.38%</td><td class='up'>+12.45%</td><td>错过</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>CEG</b></td><td>2024-08-07</td><td>✓</td><td>✓</td><td class='up'>+3.81%</td><td class='up'>+9.71%</td><td class='dn'>-1.82%</td><td>成交</td><td class='dn'>-0.02%</td><td class='up'>+2.82%</td><td class='dn'>-1.84%</td></tr>
+<tr class='hit'><td><b>CEG</b></td><td>2024-11-21</td><td>✓</td><td>✓</td><td class='up'>+1.87%</td><td class='up'>+0.71%</td><td class='dn'>-9.86%</td><td>成交</td><td class='dn'>-2.43%</td><td class='dn'>-6.92%</td><td class='dn'>-0.58%</td></tr>
+<tr class='hit'><td><b>CEG</b></td><td>2025-01-02</td><td>✓</td><td>✓</td><td class='up'>+25.80%</td><td class='up'>+30.40%</td><td class='up'>+26.26%</td><td>成交</td><td class='up'>+32.25%</td><td class='up'>+45.76%</td><td class='up'>+29.96%</td></tr>
+<tr><td><b>CEG</b></td><td>2025-04-09</td><td>✗</td><td>✗</td><td class='dn'>-5.23%</td><td class='up'>+1.22%</td><td class='up'>+25.59%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>CEG</b></td><td>2025-11-26</td><td>✓</td><td>✓</td><td class='up'>+2.65%</td><td class='up'>+5.43%</td><td class='up'>+0.38%</td><td>成交</td><td class='dn'>-2.23%</td><td class='dn'>-0.46%</td><td class='dn'>-3.83%</td></tr>
+<tr class='hit'><td><b>CEG</b></td><td>2026-02-10</td><td>✓</td><td>✓</td><td class='up'>+8.45%</td><td class='up'>+20.17%</td><td class='up'>+11.05%</td><td>成交</td><td class='up'>+11.43%</td><td class='up'>+14.36%</td><td class='up'>+9.13%</td></tr>
+<tr class='hit'><td><b>CEG</b></td><td>2026-04-13</td><td>✓</td><td>✓</td><td class='dn'>-1.43%</td><td class='up'>+8.04%</td><td class='up'>+2.73%</td><td>成交</td><td class='dn'>-2.59%</td><td class='up'>+4.14%</td><td class='dn'>-8.42%</td></tr>
+<tr class='hit'><td><b>CEG</b></td><td>2026-06-16</td><td>✓</td><td>✓</td><td class='dn'>-0.01%</td><td class='dn'>-11.75%</td><td class='dn'>-6.06%</td><td>成交</td><td class='dn'>-8.48%</td><td class='dn'>-9.90%</td><td class='up'>+1.30%</td></tr>
+<tr class='hit'><td><b>CEG</b></td><td>2026-07-13</td><td>✓</td><td>✗</td><td class='dn'>-1.58%</td><td class='up'>+4.83%</td><td class='up'>+4.99%</td><td>成交</td><td class='up'>+4.95%</td><td class='up'>+0.37%</td><td class='up'>+6.11%</td></tr>
+<tr class='hit'><td><b>CNP</b></td><td>2018-01-19</td><td>✓</td><td>✗</td><td class='up'>+2.37%</td><td class='dn'>-0.90%</td><td class='dn'>-2.19%</td><td>成交</td><td class='dn'>-2.23%</td><td class='dn'>-5.96%</td><td class='dn'>-0.34%</td></tr>
+<tr><td><b>CNP</b></td><td>2018-02-16</td><td>✗</td><td>✗</td><td class='up'>+3.27%</td><td class='up'>+0.89%</td><td class='up'>+0.15%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>CNP</b></td><td>2018-05-23</td><td>✓</td><td>✓</td><td class='up'>+1.04%</td><td class='dn'>-1.74%</td><td class='up'>+2.55%</td><td>成交</td><td class='dn'>-2.07%</td><td class='dn'>-1.11%</td><td class='up'>+4.31%</td></tr>
+<tr class='hit'><td><b>CNP</b></td><td>2018-06-13</td><td>✓</td><td>✓</td><td class='up'>+2.61%</td><td class='up'>+7.49%</td><td class='up'>+8.54%</td><td>成交</td><td class='up'>+4.87%</td><td class='up'>+5.94%</td><td class='up'>+5.94%</td></tr>
+<tr class='hit'><td><b>CNP</b></td><td>2018-10-18</td><td>✓</td><td>✓</td><td class='dn'>-0.04%</td><td class='dn'>-2.05%</td><td class='up'>+0.23%</td><td>成交</td><td class='dn'>-2.87%</td><td class='dn'>-1.10%</td><td class='up'>+0.07%</td></tr>
+<tr><td><b>CNP</b></td><td>2019-07-18</td><td>✗</td><td>✗</td><td class='dn'>-2.39%</td><td class='dn'>-0.55%</td><td class='dn'>-4.76%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>CNP</b></td><td>2019-07-30</td><td>✓</td><td>✗</td><td class='up'>+0.07%</td><td class='dn'>-2.91%</td><td class='dn'>-4.43%</td><td>成交</td><td class='dn'>-4.67%</td><td class='dn'>-2.46%</td><td class='dn'>-1.84%</td></tr>
+<tr class='hit'><td><b>CNP</b></td><td>2019-08-30</td><td>✓</td><td>✓</td><td class='up'>+3.94%</td><td class='up'>+9.57%</td><td class='up'>+8.99%</td><td>成交</td><td class='up'>+1.89%</td><td class='up'>+5.38%</td><td class='up'>+2.43%</td></tr>
+<tr class='hit'><td><b>CNP</b></td><td>2019-10-22</td><td>✓</td><td>✗</td><td class='dn'>-0.85%</td><td class='dn'>-1.88%</td><td class='dn'>-13.49%</td><td>成交</td><td class='dn'>-0.96%</td><td class='dn'>-3.71%</td><td class='dn'>-14.63%</td></tr>
+<tr><td><b>CNP</b></td><td>2021-01-05</td><td>✗</td><td>✗</td><td class='dn'>-4.03%</td><td class='dn'>-0.42%</td><td class='dn'>-1.95%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>CNP</b></td><td>2021-01-15</td><td>✓</td><td>✓</td><td class='up'>+0.98%</td><td class='dn'>-1.03%</td><td class='up'>+0.37%</td><td>成交</td><td class='dn'>-0.99%</td><td class='dn'>-1.67%</td><td class='dn'>-0.94%</td></tr>
+<tr class='hit'><td><b>CNP</b></td><td>2021-10-04</td><td>✓</td><td>✓</td><td class='up'>+0.20%</td><td class='up'>+2.75%</td><td class='up'>+3.14%</td><td>成交</td><td class='up'>+4.62%</td><td class='up'>+3.80%</td><td class='up'>+4.31%</td></tr>
+<tr><td><b>CNP</b></td><td>2022-03-02</td><td>✓</td><td>✓</td><td class='up'>+2.38%</td><td class='up'>+4.15%</td><td class='up'>+11.04%</td><td>错过</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><b>CNP</b></td><td>2022-06-28</td><td>✗</td><td>✗</td><td class='up'>+0.86%</td><td class='dn'>-0.03%</td><td class='up'>+5.02%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>CNP</b></td><td>2023-03-13</td><td>✓</td><td>✓</td><td class='up'>+3.33%</td><td class='up'>+1.03%</td><td class='up'>+8.58%</td><td>成交</td><td class='dn'>-0.48%</td><td class='up'>+2.19%</td><td class='up'>+5.91%</td></tr>
+<tr><td><b>CNP</b></td><td>2023-03-27</td><td>✓</td><td>✓</td><td class='up'>+2.98%</td><td class='up'>+7.47%</td><td class='up'>+8.18%</td><td>错过</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>CNP</b></td><td>2023-06-05</td><td>✓</td><td>✓</td><td class='up'>+1.29%</td><td class='up'>+1.15%</td><td class='up'>+3.06%</td><td>成交</td><td class='up'>+1.82%</td><td class='dn'>-0.60%</td><td class='up'>+5.28%</td></tr>
+<tr class='hit'><td><b>CNP</b></td><td>2023-06-30</td><td>✓</td><td>✓</td><td class='up'>+1.06%</td><td class='up'>+1.82%</td><td class='up'>+3.22%</td><td>成交</td><td class='up'>+3.76%</td><td class='up'>+3.55%</td><td class='up'>+0.07%</td></tr>
+<tr class='hit'><td><b>CNP</b></td><td>2023-09-08</td><td>✓</td><td>✓</td><td class='up'>+2.79%</td><td class='up'>+0.04%</td><td class='dn'>-5.02%</td><td>成交</td><td class='up'>+1.66%</td><td class='dn'>-4.23%</td><td class='dn'>-2.12%</td></tr>
+<tr class='hit'><td><b>CNP</b></td><td>2023-10-10</td><td>✓</td><td>✓</td><td class='up'>+1.71%</td><td class='dn'>-0.55%</td><td class='dn'>-1.02%</td><td>成交</td><td class='dn'>-2.48%</td><td class='dn'>-4.10%</td><td class='dn'>-2.55%</td></tr>
+<tr class='hit'><td><b>CNP</b></td><td>2023-11-01</td><td>✓</td><td>✗</td><td class='dn'>-1.68%</td><td class='up'>+1.13%</td><td class='up'>+4.23%</td><td>成交</td><td class='dn'>-3.45%</td><td class='up'>+0.38%</td><td class='up'>+3.91%</td></tr>
+<tr class='hit'><td><b>CNP</b></td><td>2023-11-14</td><td>✓</td><td>✓</td><td class='up'>+0.11%</td><td class='up'>+1.53%</td><td class='up'>+9.94%</td><td>成交</td><td class='up'>+2.53%</td><td class='up'>+4.02%</td><td class='up'>+5.52%</td></tr>
+<tr><td><b>CNP</b></td><td>2024-02-01</td><td>✗</td><td>✗</td><td class='dn'>-3.35%</td><td class='dn'>-1.08%</td><td class='dn'>-2.60%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>CNP</b></td><td>2024-02-12</td><td>✓</td><td>✓</td><td class='up'>+0.88%</td><td class='up'>+0.37%</td><td class='up'>+2.11%</td><td>成交</td><td class='dn'>-1.55%</td><td class='up'>+1.39%</td><td class='up'>+0.67%</td></tr>
+<tr class='hit'><td><b>CNP</b></td><td>2024-02-14</td><td>✓</td><td>✓</td><td class='up'>+1.90%</td><td class='up'>+0.55%</td><td class='up'>+1.97%</td><td>成交</td><td class='dn'>-1.55%</td><td class='up'>+1.39%</td><td class='up'>+0.67%</td></tr>
+<tr class='hit'><td><b>CNP</b></td><td>2024-03-04</td><td>✓</td><td>✓</td><td class='up'>+2.08%</td><td>+0.00%</td><td class='up'>+1.79%</td><td>成交</td><td class='up'>+0.31%</td><td class='up'>+0.99%</td><td class='dn'>-1.55%</td></tr>
+<tr class='hit'><td><b>CNP</b></td><td>2024-08-19</td><td>✓</td><td>✓</td><td class='up'>+4.38%</td><td class='up'>+5.57%</td><td class='up'>+8.76%</td><td>成交</td><td class='up'>+1.48%</td><td class='up'>+3.89%</td><td class='up'>+8.25%</td></tr>
+<tr class='hit'><td><b>CNP</b></td><td>2025-06-26</td><td>✓</td><td>✗</td><td class='dn'>-1.75%</td><td class='dn'>-1.20%</td><td class='up'>+4.87%</td><td>成交</td><td class='dn'>-1.48%</td><td class='dn'>-1.43%</td><td class='up'>+5.05%</td></tr>
+<tr class='hit'><td><b>CNP</b></td><td>2025-12-24</td><td>✓</td><td>✓</td><td class='up'>+1.39%</td><td class='dn'>-0.81%</td><td class='up'>+3.19%</td><td>成交</td><td class='dn'>-1.20%</td><td class='up'>+2.20%</td><td class='up'>+3.19%</td></tr>
+<tr class='hit'><td><b>CNP</b></td><td>2026-01-13</td><td>✓</td><td>✓</td><td class='up'>+2.41%</td><td class='up'>+3.08%</td><td class='up'>+6.35%</td><td>成交</td><td class='up'>+2.78%</td><td class='up'>+3.71%</td><td class='up'>+11.67%</td></tr>
+<tr class='hit'><td><b>CNP</b></td><td>2026-05-21</td><td>✓</td><td>✗</td><td class='dn'>-0.49%</td><td class='up'>+0.52%</td><td class='up'>+1.53%</td><td>成交</td><td class='dn'>-1.56%</td><td class='up'>+0.08%</td><td class='up'>+5.94%</td></tr>
+<tr class='hit'><td><b>CNP</b></td><td>2026-06-05</td><td>✓</td><td>✓</td><td class='up'>+0.49%</td><td class='up'>+1.01%</td><td class='up'>+4.19%</td><td>成交</td><td class='dn'>-0.22%</td><td class='up'>+3.50%</td><td class='up'>+1.91%</td></tr>
+<tr class='hit'><td><b>CNP</b></td><td>2026-06-09</td><td>✓</td><td>✓</td><td class='up'>+2.26%</td><td class='up'>+3.47%</td><td class='up'>+2.19%</td><td>成交</td><td class='up'>+0.83%</td><td class='up'>+4.73%</td><td class='up'>+2.32%</td></tr>
+<tr><td><b>ETR</b></td><td>2018-02-13</td><td>✗</td><td>✗</td><td class='dn'>-0.81%</td><td class='up'>+1.03%</td><td class='up'>+3.26%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>ETR</b></td><td>2018-10-05</td><td>✓</td><td>✗</td><td class='dn'>-1.70%</td><td class='up'>+1.64%</td><td class='up'>+0.60%</td><td>成交</td><td class='up'>+0.01%</td><td class='up'>+1.09%</td><td class='up'>+4.17%</td></tr>
+<tr class='hit'><td><b>ETR</b></td><td>2019-01-11</td><td>✓</td><td>✓</td><td class='up'>+0.55%</td><td class='up'>+0.80%</td><td class='up'>+5.57%</td><td>成交</td><td class='up'>+0.11%</td><td class='up'>+3.21%</td><td class='up'>+5.26%</td></tr>
+<tr class='hit'><td><b>ETR</b></td><td>2019-01-15</td><td>✓</td><td>✓</td><td class='up'>+1.42%</td><td class='up'>+0.54%</td><td class='up'>+4.18%</td><td>成交</td><td class='up'>+0.11%</td><td class='up'>+3.21%</td><td class='up'>+5.26%</td></tr>
+<tr class='hit'><td><b>ETR</b></td><td>2019-12-03</td><td>✓</td><td>✓</td><td class='up'>+0.64%</td><td class='up'>+1.63%</td><td class='up'>+0.86%</td><td>成交</td><td class='up'>+1.16%</td><td class='up'>+1.69%</td><td class='up'>+2.39%</td></tr>
+<tr><td><b>ETR</b></td><td>2020-05-11</td><td>✗</td><td>✗</td><td class='up'>+3.33%</td><td class='up'>+3.66%</td><td class='up'>+7.40%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>ETR</b></td><td>2020-07-06</td><td>✓</td><td>✓</td><td class='dn'>-0.06%</td><td class='up'>+2.06%</td><td class='up'>+6.45%</td><td>成交</td><td class='up'>+0.61%</td><td class='up'>+4.03%</td><td class='up'>+8.09%</td></tr>
+<tr><td><b>ETR</b></td><td>2020-09-25</td><td>✓</td><td>✓</td><td class='up'>+6.88%</td><td class='up'>+9.15%</td><td class='up'>+12.34%</td><td>错过</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><b>ETR</b></td><td>2021-03-09</td><td>✓</td><td>✓</td><td class='up'>+8.99%</td><td class='up'>+8.11%</td><td class='up'>+12.09%</td><td>错过</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>ETR</b></td><td>2021-07-23</td><td>✓</td><td>✓</td><td class='up'>+0.18%</td><td class='up'>+3.26%</td><td class='up'>+12.53%</td><td>成交</td><td class='dn'>-0.43%</td><td class='up'>+5.58%</td><td class='up'>+10.21%</td></tr>
+<tr><td><b>ETR</b></td><td>2022-03-02</td><td>✓</td><td>✓</td><td class='up'>+1.28%</td><td class='up'>+3.66%</td><td class='up'>+9.77%</td><td>错过</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>ETR</b></td><td>2022-07-22</td><td>✓</td><td>✓</td><td class='up'>+5.27%</td><td class='up'>+7.65%</td><td class='up'>+12.17%</td><td>成交</td><td class='up'>+6.66%</td><td class='up'>+7.43%</td><td class='up'>+7.97%</td></tr>
+<tr><td><b>ETR</b></td><td>2023-01-25</td><td>✗</td><td>✗</td><td class='up'>+1.59%</td><td class='dn'>-1.77%</td><td class='up'>+0.76%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>ETR</b></td><td>2023-02-14</td><td>✓</td><td>✓</td><td class='up'>+1.33%</td><td class='dn'>-4.40%</td><td class='dn'>-0.94%</td><td>成交</td><td class='dn'>-5.49%</td><td class='dn'>-5.28%</td><td class='dn'>-5.24%</td></tr>
+<tr class='hit'><td><b>ETR</b></td><td>2023-03-15</td><td>✓</td><td>✗</td><td class='dn'>-4.43%</td><td class='up'>+1.02%</td><td class='up'>+3.88%</td><td>成交</td><td class='dn'>-0.96%</td><td class='up'>+1.57%</td><td class='up'>+2.89%</td></tr>
+<tr class='hit'><td><b>ETR</b></td><td>2023-03-27</td><td>✓</td><td>✓</td><td class='up'>+2.55%</td><td class='up'>+5.67%</td><td class='up'>+4.08%</td><td>成交</td><td class='up'>+0.72%</td><td class='up'>+3.19%</td><td class='dn'>-5.09%</td></tr>
+<tr class='hit'><td><b>ETR</b></td><td>2023-06-06</td><td>✓</td><td>✓</td><td class='up'>+1.85%</td><td class='up'>+1.64%</td><td class='dn'>-0.19%</td><td>成交</td><td class='dn'>-1.81%</td><td class='dn'>-2.53%</td><td class='dn'>-2.99%</td></tr>
+<tr><td><b>ETR</b></td><td>2023-07-05</td><td>✗</td><td>✗</td><td class='dn'>-0.84%</td><td class='up'>+2.13%</td><td class='up'>+2.26%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>ETR</b></td><td>2023-07-11</td><td>✓</td><td>✓</td><td class='up'>+1.43%</td><td class='up'>+7.02%</td><td class='dn'>-0.23%</td><td>成交</td><td class='up'>+5.21%</td><td class='up'>+1.90%</td><td class='dn'>-3.63%</td></tr>
+<tr><td><b>ETR</b></td><td>2023-08-29</td><td>✗</td><td>✗</td><td class='dn'>-4.22%</td><td class='dn'>-0.91%</td><td class='dn'>-4.83%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>ETR</b></td><td>2023-09-08</td><td>✓</td><td>✓</td><td class='up'>+3.29%</td><td class='up'>+1.34%</td><td class='dn'>-3.44%</td><td>成交</td><td class='dn'>-5.12%</td><td class='dn'>-5.66%</td><td class='dn'>-4.01%</td></tr>
+<tr class='hit'><td><b>ETR</b></td><td>2023-10-11</td><td>✓</td><td>✗</td><td class='dn'>-0.24%</td><td class='dn'>-2.53%</td><td class='up'>+2.15%</td><td>成交</td><td class='dn'>-0.90%</td><td class='up'>+4.90%</td><td class='up'>+6.36%</td></tr>
+<tr><td><b>ETR</b></td><td>2023-10-26</td><td>✓</td><td>✓</td><td class='up'>+5.85%</td><td class='up'>+3.89%</td><td class='up'>+9.76%</td><td>错过</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><b>ETR</b></td><td>2023-10-30</td><td>✓</td><td>✓</td><td class='up'>+3.48%</td><td class='up'>+1.51%</td><td class='up'>+8.53%</td><td>错过</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><b>ETR</b></td><td>2024-02-01</td><td>✗</td><td>✗</td><td class='dn'>-3.40%</td><td class='dn'>-0.82%</td><td class='dn'>-0.35%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>ETR</b></td><td>2024-02-13</td><td>✓</td><td>✓</td><td class='up'>+3.06%</td><td class='up'>+2.36%</td><td class='up'>+4.82%</td><td>成交</td><td class='up'>+1.59%</td><td class='up'>+2.86%</td><td class='up'>+3.39%</td></tr>
+<tr><td><b>ETR</b></td><td>2024-07-11</td><td>✓</td><td>✓</td><td class='up'>+2.06%</td><td class='up'>+2.70%</td><td class='up'>+8.05%</td><td>错过</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>ETR</b></td><td>2025-04-17</td><td>✓</td><td>✓</td><td class='up'>+1.61%</td><td class='up'>+2.18%</td><td class='up'>+0.57%</td><td>成交</td><td class='dn'>-2.02%</td><td class='dn'>-0.04%</td><td class='dn'>-2.02%</td></tr>
+<tr class='hit'><td><b>ETR</b></td><td>2025-04-22</td><td>✓</td><td>✓</td><td class='up'>+0.30%</td><td class='up'>+1.50%</td><td class='up'>+1.99%</td><td>成交</td><td class='up'>+1.01%</td><td class='dn'>-2.63%</td><td class='dn'>-1.53%</td></tr>
+<tr class='hit'><td><b>ETR</b></td><td>2025-05-30</td><td>✓</td><td>✗</td><td class='dn'>-1.36%</td><td class='dn'>-1.45%</td><td class='dn'>-0.19%</td><td>成交</td><td class='dn'>-1.81%</td><td class='dn'>-3.28%</td><td class='dn'>-2.08%</td></tr>
+<tr><td><b>ETR</b></td><td>2025-06-12</td><td>✗</td><td>✗</td><td class='dn'>-2.79%</td><td class='dn'>-0.97%</td><td class='dn'>-0.60%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>ETR</b></td><td>2025-06-24</td><td>✓</td><td>✗</td><td class='dn'>-0.53%</td><td class='dn'>-1.82%</td><td class='up'>+6.21%</td><td>成交</td><td class='dn'>-1.07%</td><td class='up'>+1.84%</td><td class='up'>+8.94%</td></tr>
+<tr class='hit'><td><b>ETR</b></td><td>2025-06-27</td><td>✓</td><td>✗</td><td class='dn'>-0.92%</td><td class='up'>+0.38%</td><td class='up'>+5.09%</td><td>成交</td><td class='dn'>-1.03%</td><td class='up'>+1.89%</td><td class='up'>+8.99%</td></tr>
+<tr><td><b>ETR</b></td><td>2025-07-14</td><td>✓</td><td>✓</td><td class='up'>+5.12%</td><td class='up'>+4.70%</td><td class='up'>+8.82%</td><td>错过</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>ETR</b></td><td>2025-12-29</td><td>✓</td><td>✗</td><td class='up'>+0.20%</td><td class='up'>+1.33%</td><td class='up'>+3.60%</td><td>成交</td><td class='dn'>-0.12%</td><td class='up'>+2.97%</td><td class='up'>+1.98%</td></tr>
+<tr class='hit'><td><b>ETR</b></td><td>2026-01-09</td><td>✓</td><td>✓</td><td class='up'>+3.10%</td><td class='up'>+1.55%</td><td class='up'>+5.64%</td><td>成交</td><td class='up'>+2.52%</td><td class='up'>+3.44%</td><td class='up'>+11.78%</td></tr>
+<tr class='hit'><td><b>ETR</b></td><td>2026-06-10</td><td>✓</td><td>✓</td><td class='up'>+0.34%</td><td class='up'>+4.44%</td><td class='up'>+4.14%</td><td>成交</td><td class='up'>+2.50%</td><td class='up'>+3.45%</td><td class='up'>+2.89%</td></tr>
+<tr class='hit'><td><b>LNT</b></td><td>2018-02-13</td><td>✓</td><td>✗</td><td class='dn'>-0.03%</td><td class='up'>+0.05%</td><td class='up'>+2.36%</td><td>成交</td><td class='dn'>-1.98%</td><td class='dn'>-3.47%</td><td class='up'>+0.58%</td></tr>
+<tr class='hit'><td><b>LNT</b></td><td>2018-03-09</td><td>✓</td><td>✓</td><td class='up'>+3.67%</td><td class='up'>+1.91%</td><td class='up'>+6.04%</td><td>成交</td><td class='up'>+0.91%</td><td class='up'>+3.35%</td><td class='up'>+3.10%</td></tr>
+<tr><td><b>LNT</b></td><td>2018-06-18</td><td>✓</td><td>✓</td><td class='up'>+4.79%</td><td class='up'>+5.90%</td><td class='up'>+6.32%</td><td>错过</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>LNT</b></td><td>2018-10-05</td><td>✓</td><td>✗</td><td class='dn'>-2.64%</td><td class='up'>+1.01%</td><td class='dn'>-1.86%</td><td>成交</td><td class='up'>+0.03%</td><td class='up'>+0.49%</td><td class='up'>+1.99%</td></tr>
+<tr class='hit'><td><b>LNT</b></td><td>2019-01-15</td><td>✓</td><td>✓</td><td class='up'>+3.83%</td><td class='up'>+3.95%</td><td class='up'>+7.72%</td><td>成交</td><td class='up'>+4.16%</td><td class='up'>+5.74%</td><td class='up'>+7.01%</td></tr>
+<tr><td><b>LNT</b></td><td>2020-03-30</td><td>✗</td><td>✗</td><td class='dn'>-5.42%</td><td class='up'>+6.03%</td><td class='up'>+0.16%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>LNT</b></td><td>2020-05-26</td><td>✓</td><td>✓</td><td class='up'>+6.93%</td><td class='up'>+8.23%</td><td class='up'>+2.09%</td><td>成交</td><td class='up'>+1.41%</td><td class='dn'>-0.87%</td><td class='up'>+3.50%</td></tr>
+<tr><td><b>LNT</b></td><td>2020-10-01</td><td>✓</td><td>✓</td><td class='up'>+5.45%</td><td class='up'>+4.24%</td><td class='up'>+6.92%</td><td>错过</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><b>LNT</b></td><td>2020-12-31</td><td>✗</td><td>✗</td><td class='dn'>-4.23%</td><td class='dn'>-4.00%</td><td class='dn'>-4.22%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><b>LNT</b></td><td>2021-03-05</td><td>✓</td><td>✓</td><td class='up'>+5.64%</td><td class='up'>+6.98%</td><td class='up'>+13.33%</td><td>错过</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>LNT</b></td><td>2021-07-12</td><td>✓</td><td>✓</td><td class='up'>+1.95%</td><td class='up'>+2.92%</td><td class='up'>+7.31%</td><td>成交</td><td class='up'>+0.60%</td><td class='up'>+3.64%</td><td class='up'>+6.74%</td></tr>
+<tr class='hit'><td><b>LNT</b></td><td>2021-07-14</td><td>✓</td><td>✓</td><td class='up'>+0.33%</td><td class='up'>+3.74%</td><td class='up'>+7.02%</td><td>成交</td><td class='up'>+3.63%</td><td class='up'>+6.40%</td><td class='up'>+8.17%</td></tr>
+<tr class='hit'><td><b>LNT</b></td><td>2021-11-10</td><td>✓</td><td>✗</td><td class='up'>+0.05%</td><td class='up'>+2.75%</td><td class='up'>+3.67%</td><td>成交</td><td class='dn'>-0.05%</td><td class='up'>+0.30%</td><td class='up'>+5.28%</td></tr>
+<tr class='hit'><td><b>LNT</b></td><td>2021-11-15</td><td>✓</td><td>✗</td><td class='up'>+2.90%</td><td class='dn'>-2.58%</td><td class='up'>+5.87%</td><td>成交</td><td class='dn'>-0.05%</td><td class='up'>+0.30%</td><td class='up'>+5.28%</td></tr>
+<tr class='hit'><td><b>LNT</b></td><td>2021-11-19</td><td>✓</td><td>✓</td><td class='up'>+0.86%</td><td class='up'>+2.01%</td><td class='up'>+5.53%</td><td>成交</td><td class='up'>+0.37%</td><td class='up'>+3.80%</td><td class='up'>+5.74%</td></tr>
+<tr><td><b>LNT</b></td><td>2022-02-28</td><td>✓</td><td>✓</td><td class='up'>+4.04%</td><td class='up'>+3.30%</td><td class='up'>+6.16%</td><td>错过</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><b>LNT</b></td><td>2022-05-17</td><td>✗</td><td>✗</td><td class='up'>+2.63%</td><td class='up'>+5.76%</td><td class='dn'>-6.71%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>LNT</b></td><td>2022-06-28</td><td>✓</td><td>✗</td><td class='up'>+0.60%</td><td class='dn'>-0.45%</td><td class='up'>+1.17%</td><td>成交</td><td class='dn'>-1.08%</td><td class='dn'>-2.19%</td><td class='up'>+4.77%</td></tr>
+<tr><td><b>LNT</b></td><td>2022-07-25</td><td>✓</td><td>✓</td><td class='up'>+5.95%</td><td class='up'>+6.21%</td><td class='up'>+10.16%</td><td>错过</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><b>LNT</b></td><td>2023-02-01</td><td>✗</td><td>✗</td><td class='dn'>-3.87%</td><td class='dn'>-2.37%</td><td class='dn'>-5.75%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><b>LNT</b></td><td>2023-02-17</td><td>✗</td><td>✗</td><td class='dn'>-4.65%</td><td class='dn'>-3.72%</td><td class='dn'>-0.39%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>LNT</b></td><td>2023-03-14</td><td>✓</td><td>✓</td><td class='dn'>-0.10%</td><td class='dn'>-0.17%</td><td class='up'>+5.15%</td><td>成交</td><td class='dn'>-0.85%</td><td class='up'>+1.00%</td><td class='up'>+5.49%</td></tr>
+<tr class='hit'><td><b>LNT</b></td><td>2023-03-28</td><td>✓</td><td>✓</td><td class='up'>+1.87%</td><td class='up'>+5.33%</td><td class='up'>+5.25%</td><td>成交</td><td class='up'>+3.50%</td><td class='up'>+3.12%</td><td class='up'>+5.06%</td></tr>
+<tr class='hit'><td><b>LNT</b></td><td>2023-06-07</td><td>✓</td><td>✓</td><td class='dn'>-0.51%</td><td class='dn'>-1.25%</td><td class='dn'>-1.44%</td><td>成交</td><td class='up'>+0.15%</td><td class='dn'>-0.12%</td><td class='up'>+1.83%</td></tr>
+<tr class='hit'><td><b>LNT</b></td><td>2023-07-11</td><td>✓</td><td>✗</td><td class='up'>+0.11%</td><td class='up'>+4.93%</td><td class='dn'>-1.89%</td><td>成交</td><td class='up'>+3.90%</td><td class='up'>+1.36%</td><td class='dn'>-3.61%</td></tr>
+<tr class='hit'><td><b>LNT</b></td><td>2023-09-07</td><td>✓</td><td>✓</td><td class='up'>+3.29%</td><td class='up'>+1.78%</td><td class='dn'>-5.59%</td><td>成交</td><td class='up'>+2.04%</td><td class='dn'>-4.71%</td><td class='dn'>-2.47%</td></tr>
+<tr><td><b>LNT</b></td><td>2024-02-01</td><td>✗</td><td>✗</td><td class='dn'>-4.74%</td><td class='dn'>-2.89%</td><td class='dn'>-4.23%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>LNT</b></td><td>2024-02-15</td><td>✓</td><td>✗</td><td class='up'>+0.62%</td><td class='dn'>-1.38%</td><td class='dn'>-0.02%</td><td>成交</td><td class='dn'>-1.31%</td><td class='up'>+0.82%</td><td class='dn'>-1.13%</td></tr>
+<tr class='hit'><td><b>LNT</b></td><td>2025-01-16</td><td>✓</td><td>✗</td><td class='dn'>-2.16%</td><td class='dn'>-1.14%</td><td class='up'>+2.98%</td><td>成交</td><td class='dn'>-1.40%</td><td class='up'>+1.39%</td><td class='up'>+4.59%</td></tr>
+<tr class='hit'><td><b>LNT</b></td><td>2025-04-25</td><td>✓</td><td>✓</td><td class='up'>+1.54%</td><td class='up'>+2.52%</td><td class='up'>+2.46%</td><td>成交</td><td class='up'>+0.68%</td><td class='up'>+1.86%</td><td class='up'>+1.19%</td></tr>
+<tr class='hit'><td><b>LNT</b></td><td>2025-05-15</td><td>✓</td><td>✓</td><td class='dn'>-0.81%</td><td class='up'>+0.84%</td><td class='dn'>-1.02%</td><td>成交</td><td class='dn'>-0.17%</td><td class='dn'>-2.64%</td><td class='dn'>-2.28%</td></tr>
+<tr class='hit'><td><b>LNT</b></td><td>2025-07-01</td><td>✓</td><td>✓</td><td class='up'>+0.59%</td><td class='up'>+2.46%</td><td class='up'>+5.93%</td><td>成交</td><td class='up'>+0.97%</td><td class='up'>+7.32%</td><td class='up'>+8.70%</td></tr>
+<tr class='hit'><td><b>NEE</b></td><td>2018-01-23</td><td>✓</td><td>✓</td><td class='up'>+1.56%</td><td class='dn'>-2.07%</td><td class='dn'>-0.63%</td><td>成交</td><td class='dn'>-1.14%</td><td class='dn'>-0.69%</td><td class='up'>+0.87%</td></tr>
+<tr class='hit'><td><b>NEE</b></td><td>2019-01-10</td><td>✓</td><td>✓</td><td class='up'>+0.06%</td><td class='dn'>-0.68%</td><td class='up'>+4.34%</td><td>成交</td><td class='up'>+3.02%</td><td class='dn'>-0.31%</td><td class='up'>+5.01%</td></tr>
+<tr class='hit'><td><b>NEE</b></td><td>2020-05-18</td><td>✓</td><td>✗</td><td class='dn'>-0.48%</td><td class='up'>+9.58%</td><td class='up'>+5.98%</td><td>成交</td><td class='up'>+9.64%</td><td class='up'>+9.74%</td><td class='up'>+4.49%</td></tr>
+<tr><td><b>NEE</b></td><td>2021-03-11</td><td>✗</td><td>✗</td><td class='dn'>-4.98%</td><td class='dn'>-1.88%</td><td class='up'>+4.11%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>NEE</b></td><td>2021-03-23</td><td>✓</td><td>✓</td><td class='up'>+0.27%</td><td class='up'>+4.58%</td><td class='up'>+5.34%</td><td>成交</td><td class='up'>+3.39%</td><td class='up'>+6.61%</td><td class='up'>+2.68%</td></tr>
+<tr class='hit'><td><b>NEE</b></td><td>2021-10-13</td><td>✓</td><td>✓</td><td class='up'>+4.65%</td><td class='up'>+6.01%</td><td class='up'>+6.25%</td><td>成交</td><td class='up'>+4.72%</td><td class='up'>+4.66%</td><td class='up'>+6.57%</td></tr>
+<tr class='hit'><td><b>NEE</b></td><td>2022-10-25</td><td>✓</td><td>✓</td><td class='up'>+2.44%</td><td class='up'>+3.18%</td><td class='up'>+10.88%</td><td>成交</td><td class='up'>+8.38%</td><td class='up'>+7.28%</td><td class='up'>+11.55%</td></tr>
+<tr class='hit'><td><b>NEE</b></td><td>2023-03-03</td><td>✓</td><td>✗</td><td class='dn'>-1.11%</td><td class='up'>+2.49%</td><td class='up'>+4.40%</td><td>成交</td><td class='up'>+1.65%</td><td class='dn'>-1.57%</td><td class='up'>+5.31%</td></tr>
+<tr><td><b>NEE</b></td><td>2023-05-12</td><td>✗</td><td>✗</td><td class='dn'>-4.46%</td><td class='dn'>-4.57%</td><td class='dn'>-4.50%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><b>NEE</b></td><td>2023-06-07</td><td>✗</td><td>✗</td><td class='dn'>-1.04%</td><td class='up'>+1.29%</td><td class='dn'>-2.86%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>NEE</b></td><td>2023-07-20</td><td>✓</td><td>✓</td><td class='dn'>-1.12%</td><td class='dn'>-5.40%</td><td class='dn'>-8.89%</td><td>成交</td><td class='dn'>-2.84%</td><td class='dn'>-6.88%</td><td class='dn'>-8.27%</td></tr>
+<tr class='hit'><td><b>NEE</b></td><td>2023-11-14</td><td>✓</td><td>✓</td><td class='up'>+0.75%</td><td class='up'>+2.23%</td><td class='up'>+9.50%</td><td>成交</td><td class='dn'>-1.73%</td><td class='up'>+0.13%</td><td class='up'>+4.10%</td></tr>
+<tr><td><b>NEE</b></td><td>2024-02-01</td><td>✗</td><td>✗</td><td class='dn'>-5.79%</td><td class='dn'>-4.15%</td><td class='dn'>-6.75%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>NEE</b></td><td>2024-03-05</td><td>✓</td><td>✓</td><td class='up'>+3.16%</td><td class='up'>+10.60%</td><td class='up'>+12.91%</td><td>成交</td><td class='up'>+8.22%</td><td class='up'>+8.50%</td><td class='up'>+13.06%</td></tr>
+<tr class='hit'><td><b>NEE</b></td><td>2024-07-22</td><td>✓</td><td>✓</td><td class='up'>+1.98%</td><td class='up'>+5.19%</td><td class='up'>+8.85%</td><td>成交</td><td class='up'>+4.90%</td><td class='up'>+3.76%</td><td class='up'>+5.61%</td></tr>
+<tr><td><b>NEE</b></td><td>2025-01-16</td><td>✗</td><td>✗</td><td class='up'>+2.05%</td><td class='up'>+0.27%</td><td class='dn'>-4.64%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>NEE</b></td><td>2025-02-20</td><td>✓</td><td>✓</td><td class='dn'>-1.08%</td><td class='up'>+0.64%</td><td class='up'>+2.28%</td><td>成交</td><td class='up'>+0.27%</td><td class='up'>+4.17%</td><td class='up'>+0.30%</td></tr>
+<tr><td><b>NEE</b></td><td>2025-04-24</td><td>✗</td><td>✗</td><td class='dn'>-0.45%</td><td class='up'>+2.97%</td><td class='up'>+0.89%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>NEE</b></td><td>2025-08-13</td><td>✓</td><td>✓</td><td class='up'>+5.37%</td><td class='up'>+2.20%</td><td class='dn'>-0.59%</td><td>成交</td><td class='dn'>-1.82%</td><td class='dn'>-0.79%</td><td class='up'>+5.04%</td></tr>
+<tr><td><b>NEE</b></td><td>2025-09-22</td><td>✓</td><td>✓</td><td class='up'>+5.34%</td><td class='up'>+13.49%</td><td class='up'>+17.17%</td><td>错过</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><b>NEE</b></td><td>2026-01-02</td><td>✗</td><td>✗</td><td class='dn'>-1.29%</td><td class='up'>+3.34%</td><td class='up'>+6.67%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><b>NEE</b></td><td>2026-01-12</td><td>✓</td><td>✓</td><td class='up'>+2.95%</td><td class='up'>+7.43%</td><td class='up'>+11.97%</td><td>错过</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>NRG</b></td><td>2015-02-03</td><td>✓</td><td>✓</td><td class='up'>+1.96%</td><td class='dn'>-0.46%</td><td class='dn'>-6.34%</td><td>成交</td><td class='dn'>-2.57%</td><td class='dn'>-2.69%</td><td class='dn'>-8.91%</td></tr>
+<tr class='hit'><td><b>NRG</b></td><td>2015-03-17</td><td>✓</td><td>✓</td><td class='up'>+3.95%</td><td class='up'>+3.53%</td><td class='up'>+3.37%</td><td>成交</td><td class='dn'>-2.44%</td><td class='dn'>-1.23%</td><td class='up'>+4.46%</td></tr>
+<tr><td><b>NRG</b></td><td>2015-04-07</td><td>✗</td><td>✗</td><td class='dn'>-2.17%</td><td class='up'>+2.33%</td><td class='up'>+1.46%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>NRG</b></td><td>2015-06-18</td><td>✓</td><td>✓</td><td class='dn'>-2.44%</td><td class='dn'>-9.49%</td><td class='dn'>-10.93%</td><td>成交</td><td class='dn'>-8.45%</td><td class='dn'>-11.57%</td><td class='dn'>-12.05%</td></tr>
+<tr class='hit'><td><b>NRG</b></td><td>2015-07-27</td><td>✓</td><td>✗</td><td class='up'>+4.03%</td><td class='dn'>-7.28%</td><td class='dn'>-10.22%</td><td>成交</td><td class='dn'>-14.23%</td><td class='dn'>-6.38%</td><td class='dn'>-14.18%</td></tr>
+<tr class='hit'><td><b>NRG</b></td><td>2015-08-14</td><td>✓</td><td>✗</td><td class='dn'>-5.82%</td><td class='dn'>-2.74%</td><td class='dn'>-11.40%</td><td>成交</td><td class='dn'>-9.94%</td><td class='dn'>-14.12%</td><td class='dn'>-18.30%</td></tr>
+<tr><td><b>NRG</b></td><td>2015-09-15</td><td>✗</td><td>✗</td><td class='dn'>-19.37%</td><td class='dn'>-24.04%</td><td class='dn'>-21.10%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>NRG</b></td><td>2015-12-18</td><td>✓</td><td>✓</td><td class='up'>+9.64%</td><td class='up'>+15.43%</td><td class='dn'>-7.62%</td><td>成交</td><td class='dn'>-3.58%</td><td class='dn'>-8.64%</td><td class='up'>+8.03%</td></tr>
+<tr class='hit'><td><b>NRG</b></td><td>2016-02-24</td><td>✓</td><td>✓</td><td class='up'>+12.28%</td><td class='up'>+14.13%</td><td class='up'>+19.94%</td><td>成交</td><td class='up'>+26.76%</td><td class='up'>+27.04%</td><td class='up'>+22.86%</td></tr>
+<tr><td><b>NRG</b></td><td>2016-09-20</td><td>✗</td><td>✗</td><td class='dn'>-2.10%</td><td class='dn'>-3.32%</td><td class='up'>+2.36%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><b>NRG</b></td><td>2017-05-18</td><td>✓</td><td>✓</td><td class='up'>+7.94%</td><td class='up'>+11.02%</td><td class='up'>+10.96%</td><td>错过</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>NRG</b></td><td>2018-02-20</td><td>✓</td><td>✓</td><td class='up'>+1.17%</td><td class='up'>+13.70%</td><td class='up'>+17.94%</td><td>成交</td><td class='up'>+11.25%</td><td class='up'>+14.35%</td><td class='up'>+14.62%</td></tr>
+<tr class='hit'><td><b>NRG</b></td><td>2018-07-12</td><td>✓</td><td>✓</td><td class='up'>+2.60%</td><td class='up'>+0.64%</td><td class='up'>+8.52%</td><td>成交</td><td class='dn'>-1.65%</td><td class='up'>+5.54%</td><td class='up'>+8.30%</td></tr>
+<tr><td><b>NRG</b></td><td>2019-08-13</td><td>✗</td><td>✗</td><td class='up'>+2.05%</td><td class='up'>+2.25%</td><td class='up'>+11.62%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>NRG</b></td><td>2020-01-16</td><td>✓</td><td>✓</td><td class='dn'>-1.71%</td><td class='dn'>-3.70%</td><td class='up'>+4.57%</td><td>成交</td><td class='dn'>-5.10%</td><td class='dn'>-2.16%</td><td class='up'>+0.52%</td></tr>
+<tr class='hit'><td><b>NRG</b></td><td>2020-02-04</td><td>✓</td><td>✓</td><td class='up'>+4.24%</td><td class='up'>+5.74%</td><td class='dn'>-4.86%</td><td>成交</td><td class='up'>+4.38%</td><td class='dn'>-5.60%</td><td class='dn'>-15.47%</td></tr>
+<tr><td><b>NRG</b></td><td>2020-03-26</td><td>✗</td><td>✗</td><td class='dn'>-1.59%</td><td class='up'>+8.92%</td><td class='up'>+15.44%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>NRG</b></td><td>2020-07-13</td><td>✓</td><td>✓</td><td class='up'>+0.57%</td><td class='up'>+1.53%</td><td class='up'>+6.21%</td><td>成交</td><td class='up'>+1.64%</td><td class='up'>+1.41%</td><td class='up'>+4.80%</td></tr>
+<tr class='hit'><td><b>NRG</b></td><td>2020-09-30</td><td>✓</td><td>✓</td><td class='up'>+2.11%</td><td class='up'>+9.66%</td><td class='up'>+1.27%</td><td>成交</td><td class='up'>+8.19%</td><td class='up'>+4.41%</td><td class='up'>+5.99%</td></tr>
+<tr class='hit'><td><b>NRG</b></td><td>2021-04-06</td><td>✓</td><td>✓</td><td class='up'>+0.76%</td><td class='dn'>-1.41%</td><td class='dn'>-7.61%</td><td>成交</td><td class='dn'>-2.93%</td><td class='dn'>-4.82%</td><td class='dn'>-10.99%</td></tr>
+<tr><td><b>NRG</b></td><td>2021-06-03</td><td>✓</td><td>✓</td><td class='up'>+6.24%</td><td class='up'>+11.96%</td><td class='up'>+18.17%</td><td>错过</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><b>NRG</b></td><td>2021-10-13</td><td>✗</td><td>✗</td><td class='dn'>-1.29%</td><td class='dn'>-3.29%</td><td class='dn'>-15.99%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>NRG</b></td><td>2022-02-07</td><td>✓</td><td>✗</td><td class='dn'>-3.06%</td><td class='dn'>-6.57%</td><td class='dn'>-6.17%</td><td>成交</td><td class='dn'>-3.83%</td><td class='dn'>-5.30%</td><td class='dn'>-3.18%</td></tr>
+<tr class='hit'><td><b>NRG</b></td><td>2022-03-09</td><td>✓</td><td>✓</td><td class='up'>+3.43%</td><td class='dn'>-4.22%</td><td class='up'>+3.46%</td><td>成交</td><td class='dn'>-3.91%</td><td class='dn'>-0.36%</td><td class='up'>+3.35%</td></tr>
+<tr class='hit'><td><b>NRG</b></td><td>2022-03-29</td><td>✓</td><td>✗</td><td class='dn'>-1.39%</td><td class='up'>+1.89%</td><td class='dn'>-4.17%</td><td>成交</td><td class='up'>+1.91%</td><td class='up'>+2.63%</td><td class='dn'>-4.17%</td></tr>
+<tr class='hit'><td><b>NRG</b></td><td>2022-10-10</td><td>✓</td><td>✓</td><td class='up'>+2.19%</td><td class='up'>+4.83%</td><td class='up'>+11.11%</td><td>成交</td><td class='up'>+2.41%</td><td class='up'>+8.00%</td><td class='up'>+10.63%</td></tr>
+<tr class='hit'><td><b>NRG</b></td><td>2022-10-13</td><td>✓</td><td>✓</td><td class='dn'>-1.12%</td><td class='up'>+6.12%</td><td class='up'>+10.36%</td><td>成交</td><td class='up'>+5.29%</td><td class='up'>+5.95%</td><td class='up'>+0.39%</td></tr>
+<tr class='hit'><td><b>NRG</b></td><td>2023-03-28</td><td>✓</td><td>✓</td><td class='up'>+2.79%</td><td class='up'>+9.56%</td><td class='up'>+2.33%</td><td>成交</td><td class='up'>+7.37%</td><td class='up'>+4.61%</td><td class='up'>+1.53%</td></tr>
+<tr class='hit'><td><b>NRG</b></td><td>2024-08-08</td><td>✓</td><td>✓</td><td class='up'>+6.13%</td><td class='up'>+4.98%</td><td class='dn'>-1.87%</td><td>成交</td><td class='up'>+5.77%</td><td class='up'>+13.66%</td><td class='up'>+24.44%</td></tr>
+<tr class='hit'><td><b>NRG</b></td><td>2025-01-03</td><td>✓</td><td>✓</td><td class='dn'>-1.32%</td><td class='up'>+13.25%</td><td class='up'>+3.65%</td><td>成交</td><td class='up'>+12.75%</td><td class='up'>+19.53%</td><td class='up'>+10.05%</td></tr>
+<tr class='hit'><td><b>NRG</b></td><td>2025-03-19</td><td>✓</td><td>✓</td><td class='dn'>-0.91%</td><td class='up'>+4.70%</td><td class='dn'>-0.17%</td><td>成交</td><td class='up'>+4.07%</td><td class='dn'>-1.48%</td><td class='up'>+7.34%</td></tr>
+<tr class='hit'><td><b>NRG</b></td><td>2025-04-14</td><td>✓</td><td>✓</td><td class='up'>+3.00%</td><td class='up'>+14.19%</td><td class='up'>+64.03%</td><td>成交</td><td class='up'>+9.00%</td><td class='up'>+17.83%</td><td class='up'>+60.82%</td></tr>
+<tr><td><b>NRG</b></td><td>2025-09-05</td><td>✓</td><td>✓</td><td class='up'>+11.63%</td><td class='up'>+11.31%</td><td class='up'>+12.61%</td><td>错过</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><b>NRG</b></td><td>2025-11-28</td><td>✗</td><td>✗</td><td class='dn'>-3.83%</td><td class='dn'>-4.75%</td><td class='dn'>-5.03%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>NRG</b></td><td>2025-12-04</td><td>✓</td><td>✗</td><td class='up'>+0.76%</td><td class='dn'>-8.69%</td><td class='dn'>-4.59%</td><td>成交</td><td class='dn'>-8.51%</td><td class='dn'>-5.72%</td><td class='dn'>-11.80%</td></tr>
+<tr><td><b>NRG</b></td><td>2025-12-29</td><td>✗</td><td>✗</td><td class='dn'>-0.83%</td><td class='dn'>-6.44%</td><td class='dn'>-3.63%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><b>NRG</b></td><td>2026-01-22</td><td>✗</td><td>✗</td><td class='up'>+1.74%</td><td class='dn'>-4.10%</td><td class='up'>+18.96%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><b>NRG</b></td><td>2026-01-26</td><td>✗</td><td>✗</td><td class='dn'>-0.24%</td><td class='up'>+4.19%</td><td class='up'>+23.13%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>NRG</b></td><td>2026-02-06</td><td>✓</td><td>✓</td><td class='up'>+12.41%</td><td class='up'>+15.13%</td><td class='up'>+1.37%</td><td>成交</td><td class='dn'>-1.13%</td><td class='dn'>-5.71%</td><td class='dn'>-3.12%</td></tr>
+<tr class='hit'><td><b>NRG</b></td><td>2026-04-06</td><td>✓</td><td>✓</td><td class='up'>+13.64%</td><td class='up'>+4.93%</td><td class='up'>+3.67%</td><td>成交</td><td class='up'>+1.21%</td><td class='dn'>-1.86%</td><td class='dn'>-20.45%</td></tr>
+<tr><td><b>NRG</b></td><td>2026-05-26</td><td>✗</td><td>✗</td><td class='dn'>-4.93%</td><td class='dn'>-7.46%</td><td class='up'>+1.27%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>NRG</b></td><td>2026-06-15</td><td>✓</td><td>✓</td><td class='up'>+5.57%</td><td class='up'>+12.01%</td><td class='up'>+5.75%</td><td>成交</td><td class='up'>+8.56%</td><td class='up'>+2.18%</td><td class='up'>+4.04%</td></tr>
+<tr class='hit'><td><b>SRE</b></td><td>2018-02-12</td><td>✓</td><td>✓</td><td class='up'>+0.86%</td><td class='up'>+3.21%</td><td class='up'>+3.83%</td><td>成交</td><td class='up'>+1.16%</td><td class='up'>+0.77%</td><td class='up'>+2.48%</td></tr>
+<tr><td><b>SRE</b></td><td>2018-05-29</td><td>✗</td><td>✗</td><td class='dn'>-2.82%</td><td class='up'>+10.72%</td><td class='up'>+9.40%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><b>SRE</b></td><td>2018-06-11</td><td>✓</td><td>✓</td><td class='dn'>-3.86%</td><td class='dn'>-0.49%</td><td class='up'>+0.88%</td><td>错过</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>SRE</b></td><td>2018-11-07</td><td>✓</td><td>✓</td><td class='dn'>-4.08%</td><td class='dn'>-4.72%</td><td class='dn'>-1.37%</td><td>成交</td><td class='dn'>-0.18%</td><td class='dn'>-2.39%</td><td class='up'>+1.05%</td></tr>
+<tr><td><b>SRE</b></td><td>2018-11-16</td><td>✗</td><td>✗</td><td class='dn'>-2.46%</td><td class='up'>+1.38%</td><td class='dn'>-0.90%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>SRE</b></td><td>2018-11-30</td><td>✓</td><td>✓</td><td class='up'>+0.84%</td><td class='dn'>-0.25%</td><td class='dn'>-6.57%</td><td>成交</td><td class='up'>+2.21%</td><td class='dn'>-1.73%</td><td class='dn'>-3.21%</td></tr>
+<tr class='hit'><td><b>SRE</b></td><td>2019-08-15</td><td>✓</td><td>✓</td><td class='up'>+1.15%</td><td class='up'>+2.67%</td><td class='up'>+2.28%</td><td>成交</td><td class='up'>+2.33%</td><td class='up'>+1.89%</td><td class='up'>+3.22%</td></tr>
+<tr class='hit'><td><b>SRE</b></td><td>2020-03-25</td><td>✓</td><td>✗</td><td class='dn'>-9.04%</td><td class='up'>+7.04%</td><td class='up'>+10.07%</td><td>成交</td><td class='dn'>-4.43%</td><td class='dn'>-0.47%</td><td class='up'>+6.15%</td></tr>
+<tr class='hit'><td><b>SRE</b></td><td>2020-07-10</td><td>✓</td><td>✓</td><td class='up'>+4.74%</td><td class='up'>+5.41%</td><td class='up'>+9.00%</td><td>成交</td><td class='up'>+4.39%</td><td class='up'>+1.45%</td><td class='up'>+10.39%</td></tr>
+<tr><td><b>SRE</b></td><td>2020-09-29</td><td>✓</td><td>✓</td><td class='up'>+5.21%</td><td class='up'>+8.93%</td><td class='up'>+12.13%</td><td>错过</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>SRE</b></td><td>2021-01-20</td><td>✓</td><td>✓</td><td class='dn'>-2.38%</td><td class='up'>+0.37%</td><td class='up'>+1.14%</td><td>成交</td><td class='up'>+1.66%</td><td class='up'>+1.44%</td><td class='dn'>-6.48%</td></tr>
+<tr class='hit'><td><b>SRE</b></td><td>2021-07-27</td><td>✓</td><td>✗</td><td class='dn'>-0.49%</td><td class='dn'>-0.66%</td><td class='dn'>-1.25%</td><td>成交</td><td class='dn'>-0.95%</td><td class='up'>+0.13%</td><td class='dn'>-1.30%</td></tr>
+<tr class='hit'><td><b>SRE</b></td><td>2021-08-31</td><td>✓</td><td>✓</td><td class='up'>+1.24%</td><td class='up'>+3.32%</td><td class='dn'>-2.89%</td><td>成交</td><td class='up'>+0.49%</td><td class='dn'>-1.74%</td><td class='dn'>-4.32%</td></tr>
+<tr class='hit'><td><b>SRE</b></td><td>2021-10-14</td><td>✓</td><td>✓</td><td class='up'>+1.72%</td><td class='up'>+1.30%</td><td class='dn'>-5.04%</td><td>成交</td><td class='dn'>-0.60%</td><td class='dn'>-4.70%</td><td class='dn'>-3.06%</td></tr>
+<tr><td><b>SRE</b></td><td>2021-11-23</td><td>✗</td><td>✗</td><td class='dn'>-4.52%</td><td class='up'>+0.64%</td><td class='up'>+3.95%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>SRE</b></td><td>2021-12-06</td><td>✓</td><td>✓</td><td class='up'>+0.66%</td><td class='up'>+1.67%</td><td class='up'>+8.03%</td><td>成交</td><td class='up'>+2.37%</td><td class='up'>+3.91%</td><td class='up'>+10.98%</td></tr>
+<tr class='hit'><td><b>SRE</b></td><td>2022-05-23</td><td>✓</td><td>✓</td><td class='up'>+0.04%</td><td class='dn'>-0.05%</td><td class='dn'>-12.42%</td><td>成交</td><td class='dn'>-0.33%</td><td class='dn'>-11.82%</td><td class='dn'>-8.48%</td></tr>
+<tr class='hit'><td><b>SRE</b></td><td>2022-10-24</td><td>✓</td><td>✓</td><td class='up'>+4.72%</td><td class='up'>+3.86%</td><td class='up'>+10.15%</td><td>成交</td><td class='up'>+4.56%</td><td class='up'>+3.38%</td><td class='up'>+11.33%</td></tr>
+<tr><td><b>SRE</b></td><td>2023-02-17</td><td>✗</td><td>✗</td><td class='dn'>-2.28%</td><td class='dn'>-4.69%</td><td class='dn'>-6.93%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><b>SRE</b></td><td>2023-03-27</td><td>✓</td><td>✓</td><td class='up'>+3.64%</td><td class='up'>+7.23%</td><td class='up'>+9.47%</td><td>错过</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>SRE</b></td><td>2023-06-07</td><td>✓</td><td>✗</td><td class='dn'>-0.62%</td><td class='dn'>-1.14%</td><td class='dn'>-1.95%</td><td>成交</td><td class='up'>+0.04%</td><td class='dn'>-0.74%</td><td class='up'>+1.76%</td></tr>
+<tr><td><b>SRE</b></td><td>2023-07-03</td><td>✗</td><td>✗</td><td class='up'>+1.21%</td><td class='dn'>-0.08%</td><td class='up'>+1.42%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><b>SRE</b></td><td>2023-08-23</td><td>✗</td><td>✗</td><td class='dn'>-1.41%</td><td class='dn'>-1.95%</td><td class='up'>+0.14%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>SRE</b></td><td>2023-09-08</td><td>✓</td><td>✓</td><td class='up'>+2.60%</td><td class='up'>+0.80%</td><td class='dn'>-4.99%</td><td>成交</td><td class='up'>+2.04%</td><td class='dn'>-2.61%</td><td class='dn'>-2.80%</td></tr>
+<tr class='hit'><td><b>SRE</b></td><td>2023-10-11</td><td>✓</td><td>✓</td><td class='up'>+1.66%</td><td class='up'>+1.30%</td><td class='up'>+1.82%</td><td>成交</td><td class='dn'>-2.05%</td><td class='dn'>-0.10%</td><td class='up'>+0.66%</td></tr>
+<tr class='hit'><td><b>SRE</b></td><td>2024-02-16</td><td>✓</td><td>✗</td><td class='up'>+0.60%</td><td class='up'>+0.35%</td><td class='up'>+0.16%</td><td>成交</td><td class='dn'>-1.22%</td><td class='up'>+1.31%</td><td class='dn'>-1.91%</td></tr>
+<tr class='hit'><td><b>SRE</b></td><td>2024-03-27</td><td>✓</td><td>✓</td><td class='dn'>-0.58%</td><td class='dn'>-2.81%</td><td class='up'>+1.02%</td><td>成交</td><td class='dn'>-2.23%</td><td class='dn'>-3.37%</td><td class='up'>+2.88%</td></tr>
+<tr class='hit'><td><b>SRE</b></td><td>2025-04-11</td><td>✓</td><td>✓</td><td class='up'>+3.15%</td><td class='up'>+10.67%</td><td class='up'>+10.77%</td><td>成交</td><td class='up'>+4.64%</td><td class='up'>+5.75%</td><td class='up'>+8.75%</td></tr>
+<tr><td><b>SRE</b></td><td>2025-06-30</td><td>✗</td><td>✗</td><td class='dn'>-1.91%</td><td class='dn'>-2.15%</td><td class='up'>+7.10%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>SRE</b></td><td>2025-12-24</td><td>✓</td><td>✗</td><td class='up'>+0.98%</td><td class='dn'>-0.02%</td><td class='dn'>-2.41%</td><td>成交</td><td class='dn'>-0.40%</td><td class='up'>+3.78%</td><td class='dn'>-3.31%</td></tr>
+<tr class='hit'><td><b>SRE</b></td><td>2026-01-09</td><td>✓</td><td>✓</td><td class='up'>+4.20%</td><td class='dn'>-2.39%</td><td class='dn'>-1.51%</td><td>成交</td><td class='dn'>-2.46%</td><td class='dn'>-2.58%</td><td class='up'>+2.72%</td></tr>
+<tr><td><b>SRE</b></td><td>2026-02-09</td><td>✓</td><td>✓</td><td class='up'>+6.24%</td><td class='up'>+7.42%</td><td class='up'>+6.28%</td><td>错过</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><b>SRE</b></td><td>2026-05-22</td><td>✗</td><td>✗</td><td class='dn'>-6.11%</td><td class='dn'>-4.09%</td><td class='dn'>-0.55%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>SRE</b></td><td>2026-06-05</td><td>✓</td><td>✓</td><td class='up'>+0.95%</td><td class='up'>+0.22%</td><td class='up'>+4.21%</td><td>成交</td><td class='dn'>-2.01%</td><td class='up'>+2.17%</td><td class='up'>+3.01%</td></tr>
+<tr class='hit'><td><b>TLN</b></td><td>2023-06-21</td><td>✓</td><td>✓</td><td class='up'>+7.53%</td><td class='up'>+7.85%</td><td class='up'>+11.56%</td><td>成交</td><td class='up'>+8.39%</td><td class='up'>+11.92%</td><td class='up'>+12.99%</td></tr>
+<tr class='hit'><td><b>TLN</b></td><td>2023-10-23</td><td>✓</td><td>✓</td><td class='up'>+1.28%</td><td class='up'>+3.00%</td><td class='up'>+3.94%</td><td>成交</td><td class='dn'>-1.74%</td><td class='up'>+1.66%</td><td class='up'>+1.97%</td></tr>
+<tr class='hit'><td><b>TLN</b></td><td>2025-03-14</td><td>✓</td><td>✓</td><td class='up'>+4.82%</td><td class='dn'>-3.64%</td><td class='dn'>-3.36%</td><td>成交</td><td class='dn'>-2.38%</td><td class='up'>+3.21%</td><td class='dn'>-2.33%</td></tr>
+<tr class='hit'><td><b>TLN</b></td><td>2025-04-11</td><td>✓</td><td>✗</td><td class='dn'>-3.37%</td><td class='up'>+7.77%</td><td class='up'>+19.48%</td><td>成交</td><td class='up'>+2.13%</td><td class='up'>+9.08%</td><td class='up'>+18.21%</td></tr>
+<tr><td><b>TLN</b></td><td>2025-11-24</td><td>✗</td><td>✗</td><td class='dn'>-3.29%</td><td class='dn'>-8.44%</td><td class='up'>+0.07%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>TLN</b></td><td>2025-12-16</td><td>✓</td><td>✓</td><td class='up'>+1.06%</td><td class='dn'>-0.51%</td><td class='up'>+11.23%</td><td>成交</td><td class='up'>+0.90%</td><td class='up'>+4.33%</td><td class='dn'>-0.68%</td></tr>
+<tr class='hit'><td><b>TLN</b></td><td>2026-02-11</td><td>✓</td><td>✓</td><td class='up'>+7.17%</td><td class='up'>+9.99%</td><td class='dn'>-12.17%</td><td>成交</td><td class='dn'>-3.64%</td><td class='dn'>-8.59%</td><td class='dn'>-15.16%</td></tr>
+<tr><td><b>TLN</b></td><td>2026-03-19</td><td>✗</td><td>✗</td><td class='dn'>-4.98%</td><td class='dn'>-3.67%</td><td class='up'>+7.43%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>TLN</b></td><td>2026-08-10</td><td>✓</td><td>✓</td><td class='up'>+4.00%</td><td>—</td><td>—</td><td>成交</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>UTES</b></td><td>2015-11-27</td><td>✓</td><td>✗</td><td class='dn'>-1.81%</td><td class='dn'>-2.04%</td><td class='up'>+2.50%</td><td>成交</td><td class='dn'>-1.70%</td><td class='up'>+1.72%</td><td class='up'>+0.87%</td></tr>
+<tr class='hit'><td><b>UTES</b></td><td>2016-09-16</td><td>✓</td><td>✓</td><td class='up'>+3.28%</td><td class='dn'>-0.26%</td><td class='dn'>-2.17%</td><td>成交</td><td class='dn'>-5.32%</td><td class='dn'>-3.19%</td><td class='dn'>-2.83%</td></tr>
+<tr class='hit'><td><b>UTES</b></td><td>2016-10-17</td><td>✓</td><td>✗</td><td class='dn'>-0.38%</td><td class='up'>+2.84%</td><td class='dn'>-4.64%</td><td>成交</td><td class='dn'>-0.80%</td><td class='dn'>-1.62%</td><td class='dn'>-5.00%</td></tr>
+<tr><td><b>UTES</b></td><td>2016-11-07</td><td>✗</td><td>✗</td><td class='dn'>-4.55%</td><td class='dn'>-3.03%</td><td class='dn'>-3.23%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>UTES</b></td><td>2016-11-28</td><td>✓</td><td>✗</td><td class='dn'>-2.86%</td><td class='dn'>-1.12%</td><td class='up'>+0.83%</td><td>成交</td><td class='up'>+0.17%</td><td class='up'>+0.68%</td><td class='up'>+2.40%</td></tr>
+<tr class='hit'><td><b>UTES</b></td><td>2017-10-24</td><td>✓</td><td>✓</td><td class='up'>+0.59%</td><td class='up'>+1.33%</td><td class='up'>+1.28%</td><td>成交</td><td class='dn'>-0.19%</td><td class='up'>+0.55%</td><td class='up'>+3.56%</td></tr>
+<tr><td><b>UTES</b></td><td>2018-02-15</td><td>✗</td><td>✗</td><td class='up'>+0.07%</td><td class='dn'>-1.47%</td><td class='up'>+1.54%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><b>UTES</b></td><td>2018-06-20</td><td>✓</td><td>✓</td><td class='up'>+2.88%</td><td class='up'>+4.00%</td><td class='up'>+4.78%</td><td>错过</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>UTES</b></td><td>2018-10-19</td><td>✓</td><td>✓</td><td class='dn'>-1.77%</td><td class='dn'>-2.67%</td><td class='up'>+1.91%</td><td>成交</td><td class='dn'>-0.98%</td><td class='dn'>-0.02%</td><td class='up'>+2.10%</td></tr>
+<tr><td><b>UTES</b></td><td>2019-01-10</td><td>✗</td><td>✗</td><td class='up'>+0.37%</td><td class='up'>+0.26%</td><td class='up'>+3.64%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><b>UTES</b></td><td>2019-11-19</td><td>✗</td><td>✗</td><td class='up'>+0.16%</td><td class='up'>+0.28%</td><td class='up'>+2.93%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><b>UTES</b></td><td>2020-03-27</td><td>✗</td><td>✗</td><td class='dn'>-6.08%</td><td class='up'>+5.56%</td><td class='up'>+6.48%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>UTES</b></td><td>2020-05-20</td><td>✓</td><td>✓</td><td class='up'>+4.35%</td><td class='up'>+6.33%</td><td class='up'>+4.39%</td><td>成交</td><td class='up'>+2.40%</td><td class='up'>+1.55%</td><td class='up'>+8.20%</td></tr>
+<tr><td><b>UTES</b></td><td>2020-12-30</td><td>✗</td><td>✗</td><td class='up'>+0.58%</td><td class='up'>+2.31%</td><td class='up'>+1.19%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><b>UTES</b></td><td>2021-03-09</td><td>✓</td><td>✓</td><td class='up'>+3.25%</td><td class='up'>+3.14%</td><td class='up'>+6.84%</td><td>错过</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>UTES</b></td><td>2021-06-09</td><td>✓</td><td>✓</td><td class='dn'>-0.01%</td><td class='dn'>-2.29%</td><td class='dn'>-0.64%</td><td>成交</td><td class='dn'>-2.28%</td><td class='dn'>-2.42%</td><td class='up'>+1.21%</td></tr>
+<tr><td><b>UTES</b></td><td>2022-02-02</td><td>✗</td><td>✗</td><td class='dn'>-1.02%</td><td class='dn'>-4.03%</td><td class='up'>+0.82%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><b>UTES</b></td><td>2022-02-25</td><td>✓</td><td>✓</td><td class='up'>+5.18%</td><td class='up'>+3.75%</td><td class='up'>+8.19%</td><td>错过</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>UTES</b></td><td>2022-05-19</td><td>✓</td><td>✓</td><td class='up'>+3.41%</td><td class='up'>+4.49%</td><td class='dn'>-8.79%</td><td>成交</td><td class='dn'>-9.71%</td><td class='dn'>-4.09%</td><td class='dn'>-2.83%</td></tr>
+<tr class='hit'><td><b>UTES</b></td><td>2022-06-28</td><td>✓</td><td>✓</td><td class='up'>+0.72%</td><td class='up'>+0.51%</td><td class='up'>+2.38%</td><td>成交</td><td class='up'>+0.04%</td><td class='dn'>-1.61%</td><td class='up'>+7.36%</td></tr>
+<tr><td><b>UTES</b></td><td>2022-07-22</td><td>✓</td><td>✓</td><td class='up'>+7.37%</td><td class='up'>+7.27%</td><td class='up'>+12.31%</td><td>错过</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>UTES</b></td><td>2023-02-15</td><td>✓</td><td>✗</td><td class='dn'>-3.00%</td><td class='dn'>-4.83%</td><td class='dn'>-1.08%</td><td>成交</td><td class='dn'>-5.31%</td><td class='dn'>-3.78%</td><td class='dn'>-3.52%</td></tr>
+<tr class='hit'><td><b>UTES</b></td><td>2023-03-13</td><td>✓</td><td>✓</td><td class='up'>+2.92%</td><td class='up'>+0.81%</td><td class='up'>+6.35%</td><td>成交</td><td class='dn'>-1.29%</td><td class='up'>+1.85%</td><td class='up'>+3.53%</td></tr>
+<tr><td><b>UTES</b></td><td>2023-03-27</td><td>✓</td><td>✓</td><td class='up'>+2.29%</td><td class='up'>+5.50%</td><td class='up'>+5.27%</td><td>错过</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>UTES</b></td><td>2023-06-06</td><td>✓</td><td>✓</td><td class='up'>+1.40%</td><td class='up'>+2.20%</td><td class='up'>+1.28%</td><td>成交</td><td class='up'>+0.60%</td><td class='dn'>-0.19%</td><td class='up'>+4.80%</td></tr>
+<tr class='hit'><td><b>UTES</b></td><td>2023-09-08</td><td>✓</td><td>✓</td><td class='up'>+2.24%</td><td class='up'>+1.00%</td><td class='dn'>-8.99%</td><td>成交</td><td class='dn'>-10.88%</td><td class='dn'>-8.80%</td><td class='dn'>-8.63%</td></tr>
+<tr><td><b>UTES</b></td><td>2023-10-12</td><td>✗</td><td>✗</td><td class='up'>+0.28%</td><td class='up'>+2.04%</td><td class='up'>+2.22%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><b>UTES</b></td><td>2024-02-01</td><td>✗</td><td>✗</td><td class='dn'>-3.43%</td><td class='dn'>-1.11%</td><td class='up'>+1.44%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>UTES</b></td><td>2024-02-12</td><td>✓</td><td>✓</td><td class='up'>+1.08%</td><td class='up'>+3.31%</td><td class='up'>+6.52%</td><td>成交</td><td class='up'>+4.16%</td><td class='up'>+6.01%</td><td class='up'>+9.29%</td></tr>
+<tr class='hit'><td><b>UTES</b></td><td>2024-02-14</td><td>✓</td><td>✓</td><td class='up'>+2.63%</td><td class='up'>+4.56%</td><td class='up'>+7.23%</td><td>成交</td><td class='up'>+4.16%</td><td class='up'>+6.01%</td><td class='up'>+9.29%</td></tr>
+<tr class='hit'><td><b>UTES</b></td><td>2024-07-31</td><td>✓</td><td>✓</td><td class='dn'>-1.73%</td><td class='up'>+0.87%</td><td class='up'>+4.23%</td><td>成交</td><td class='up'>+1.66%</td><td class='up'>+4.68%</td><td class='up'>+5.17%</td></tr>
+<tr class='hit'><td><b>UTES</b></td><td>2025-03-17</td><td>✓</td><td>✓</td><td class='up'>+1.36%</td><td class='dn'>-0.89%</td><td class='dn'>-1.55%</td><td>成交</td><td class='dn'>-2.35%</td><td class='dn'>-3.23%</td><td class='dn'>-1.80%</td></tr>
+<tr class='hit'><td><b>UTES</b></td><td>2025-04-14</td><td>✓</td><td>✓</td><td class='up'>+0.25%</td><td class='up'>+4.23%</td><td class='up'>+9.80%</td><td>成交</td><td class='up'>+1.65%</td><td class='up'>+5.20%</td><td class='up'>+11.03%</td></tr>
+<tr><td><b>UTES</b></td><td>2025-11-26</td><td>✗</td><td>✗</td><td class='dn'>-2.80%</td><td class='dn'>-3.61%</td><td class='dn'>-4.39%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>UTES</b></td><td>2026-01-13</td><td>✓</td><td>✗</td><td class='dn'>-1.07%</td><td class='dn'>-0.92%</td><td class='dn'>-0.19%</td><td>成交</td><td class='dn'>-3.52%</td><td class='dn'>-4.98%</td><td class='up'>+4.36%</td></tr>
+<tr class='hit'><td><b>UTES</b></td><td>2026-06-15</td><td>✓</td><td>✓</td><td class='up'>+2.83%</td><td class='up'>+2.08%</td><td class='up'>+1.58%</td><td>成交</td><td class='up'>+1.69%</td><td class='up'>+0.97%</td><td class='dn'>-2.58%</td></tr>
+<tr><td><b>UTES</b></td><td>2026-08-14</td><td>✗</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>VST</b></td><td>2017-03-29</td><td>✓</td><td>✓</td><td class='up'>+1.42%</td><td class='dn'>-1.54%</td><td class='dn'>-6.34%</td><td>成交</td><td class='up'>+0.40%</td><td class='dn'>-1.15%</td><td class='dn'>-9.86%</td></tr>
+<tr class='hit'><td><b>VST</b></td><td>2017-05-10</td><td>✓</td><td>✗</td><td class='dn'>-0.40%</td><td class='dn'>-0.99%</td><td class='up'>+3.76%</td><td>成交</td><td class='dn'>-3.23%</td><td class='dn'>-4.71%</td><td class='up'>+8.32%</td></tr>
+<tr><td><b>VST</b></td><td>2017-12-20</td><td>✗</td><td>✗</td><td class='dn'>-1.38%</td><td class='up'>+2.86%</td><td class='up'>+5.95%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>VST</b></td><td>2018-08-06</td><td>✓</td><td>✗</td><td class='dn'>-4.74%</td><td class='dn'>-2.97%</td><td class='up'>+0.04%</td><td>成交</td><td class='dn'>-3.32%</td><td class='dn'>-2.28%</td><td class='dn'>-1.25%</td></tr>
+<tr class='hit'><td><b>VST</b></td><td>2018-08-24</td><td>✓</td><td>✓</td><td class='up'>+3.88%</td><td class='up'>+1.06%</td><td class='up'>+5.34%</td><td>成交</td><td class='dn'>-2.55%</td><td class='up'>+1.31%</td><td class='up'>+4.91%</td></tr>
+<tr><td><b>VST</b></td><td>2019-06-19</td><td>✗</td><td>✗</td><td class='dn'>-6.55%</td><td class='dn'>-5.37%</td><td class='dn'>-7.18%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><b>VST</b></td><td>2019-11-21</td><td>✗</td><td>✗</td><td class='up'>+0.34%</td><td class='dn'>-8.89%</td><td class='dn'>-8.72%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><b>VST</b></td><td>2020-03-26</td><td>✗</td><td>✗</td><td class='up'>+1.20%</td><td class='up'>+12.67%</td><td class='up'>+14.25%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>VST</b></td><td>2020-07-14</td><td>✓</td><td>✗</td><td class='up'>+0.26%</td><td class='dn'>-3.91%</td><td class='dn'>-1.56%</td><td>成交</td><td class='dn'>-6.59%</td><td class='dn'>-3.71%</td><td class='dn'>-0.68%</td></tr>
+<tr class='hit'><td><b>VST</b></td><td>2020-08-07</td><td>✓</td><td>✓</td><td class='up'>+0.79%</td><td class='up'>+1.06%</td><td class='dn'>-3.54%</td><td>成交</td><td class='up'>+2.78%</td><td class='dn'>-2.28%</td><td class='dn'>-5.77%</td></tr>
+<tr><td><b>VST</b></td><td>2020-09-29</td><td>✗</td><td>✗</td><td class='dn'>-3.13%</td><td class='dn'>-2.70%</td><td class='dn'>-0.49%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><b>VST</b></td><td>2020-10-08</td><td>✗</td><td>✗</td><td class='up'>+2.57%</td><td class='up'>+4.27%</td><td class='up'>+1.15%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>VST</b></td><td>2020-11-09</td><td>✓</td><td>✓</td><td class='up'>+4.71%</td><td class='dn'>-1.80%</td><td class='up'>+0.21%</td><td>成交</td><td class='dn'>-2.18%</td><td class='up'>+3.42%</td><td class='dn'>-3.50%</td></tr>
+<tr class='hit'><td><b>VST</b></td><td>2021-05-18</td><td>✓</td><td>✗</td><td class='up'>+0.19%</td><td class='up'>+3.72%</td><td class='up'>+13.25%</td><td>成交</td><td class='dn'>-1.49%</td><td class='up'>+8.69%</td><td class='up'>+7.95%</td></tr>
+<tr class='hit'><td><b>VST</b></td><td>2021-10-06</td><td>✓</td><td>✓</td><td class='up'>+12.68%</td><td class='up'>+9.84%</td><td class='up'>+11.95%</td><td>成交</td><td class='up'>+9.04%</td><td class='up'>+9.99%</td><td class='up'>+11.35%</td></tr>
+<tr><td><b>VST</b></td><td>2022-10-17</td><td>✗</td><td>✗</td><td class='dn'>-2.45%</td><td class='up'>+4.27%</td><td class='up'>+4.18%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>VST</b></td><td>2023-01-24</td><td>✓</td><td>✗</td><td class='up'>+1.01%</td><td class='up'>+1.80%</td><td class='dn'>-1.80%</td><td>成交</td><td class='up'>+0.12%</td><td class='up'>+0.82%</td><td class='dn'>-2.64%</td></tr>
+<tr class='hit'><td><b>VST</b></td><td>2023-03-06</td><td>✓</td><td>✓</td><td class='dn'>-0.16%</td><td class='up'>+2.95%</td><td class='dn'>-2.02%</td><td>成交</td><td class='up'>+4.12%</td><td class='up'>+5.95%</td><td class='up'>+2.61%</td></tr>
+<tr class='hit'><td><b>VST</b></td><td>2023-05-09</td><td>✓</td><td>✓</td><td class='dn'>-1.02%</td><td class='dn'>-0.16%</td><td class='up'>+2.28%</td><td>成交</td><td class='up'>+2.97%</td><td class='up'>+3.39%</td><td class='up'>+7.51%</td></tr>
+<tr class='hit'><td><b>VST</b></td><td>2024-07-03</td><td>✓</td><td>✓</td><td class='dn'>-0.12%</td><td class='dn'>-16.54%</td><td class='dn'>-17.10%</td><td>成交</td><td class='dn'>-15.77%</td><td class='dn'>-19.77%</td><td class='dn'>-18.25%</td></tr>
+<tr class='hit'><td><b>VST</b></td><td>2024-08-07</td><td>✓</td><td>✓</td><td class='up'>+7.17%</td><td class='up'>+11.26%</td><td class='up'>+2.54%</td><td>成交</td><td class='dn'>-0.59%</td><td class='up'>+5.59%</td><td class='dn'>-0.06%</td></tr>
+<tr class='hit'><td><b>VST</b></td><td>2025-03-17</td><td>✓</td><td>✗</td><td class='up'>+7.03%</td><td class='dn'>-6.85%</td><td class='dn'>-10.61%</td><td>成交</td><td class='dn'>-7.79%</td><td class='dn'>-22.91%</td><td class='dn'>-9.48%</td></tr>
+<tr><td><b>VST</b></td><td>2025-12-11</td><td>✗</td><td>✗</td><td class='dn'>-4.83%</td><td class='dn'>-7.28%</td><td class='dn'>-1.02%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>VST</b></td><td>2026-01-09</td><td>✓</td><td>✓</td><td class='up'>+0.14%</td><td class='dn'>-4.54%</td><td class='dn'>-8.05%</td><td>成交</td><td class='dn'>-5.09%</td><td class='dn'>-3.78%</td><td class='dn'>-3.47%</td></tr>
+<tr><td><b>VST</b></td><td>2026-04-08</td><td>✗</td><td>✗</td><td class='up'>+4.52%</td><td class='dn'>-0.06%</td><td class='up'>+1.54%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><b>XEL</b></td><td>2018-02-15</td><td>✗</td><td>✗</td><td class='up'>+1.31%</td><td class='dn'>-2.63%</td><td class='up'>+0.74%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>XEL</b></td><td>2018-03-09</td><td>✓</td><td>✓</td><td class='up'>+2.86%</td><td class='up'>+1.95%</td><td class='up'>+6.08%</td><td>成交</td><td class='up'>+1.52%</td><td class='up'>+3.59%</td><td class='up'>+1.32%</td></tr>
+<tr><td><b>XEL</b></td><td>2019-01-15</td><td>✓</td><td>✓</td><td class='up'>+2.49%</td><td class='up'>+2.06%</td><td class='up'>+6.77%</td><td>错过</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><b>XEL</b></td><td>2020-03-30</td><td>✗</td><td>✗</td><td class='dn'>-2.25%</td><td class='up'>+5.90%</td><td class='up'>+5.77%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><b>XEL</b></td><td>2020-05-22</td><td>✓</td><td>✓</td><td class='up'>+8.91%</td><td class='up'>+10.90%</td><td class='up'>+8.64%</td><td>错过</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><b>XEL</b></td><td>2021-01-15</td><td>✗</td><td>✗</td><td class='up'>+2.37%</td><td class='dn'>-1.57%</td><td class='dn'>-6.85%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>XEL</b></td><td>2021-03-05</td><td>✓</td><td>✓</td><td class='up'>+1.94%</td><td class='up'>+3.44%</td><td class='up'>+11.85%</td><td>成交</td><td class='up'>+2.09%</td><td class='up'>+6.79%</td><td class='up'>+10.28%</td></tr>
+<tr class='hit'><td><b>XEL</b></td><td>2021-07-06</td><td>✓</td><td>✓</td><td class='up'>+0.76%</td><td class='up'>+1.63%</td><td class='up'>+2.43%</td><td>成交</td><td class='up'>+1.00%</td><td class='up'>+1.06%</td><td class='up'>+2.25%</td></tr>
+<tr><td><b>XEL</b></td><td>2021-10-05</td><td>✗</td><td>✗</td><td class='dn'>-0.47%</td><td class='up'>+2.58%</td><td class='up'>+2.23%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>XEL</b></td><td>2021-11-15</td><td>✓</td><td>✓</td><td class='up'>+3.11%</td><td class='dn'>-0.90%</td><td class='up'>+4.79%</td><td>成交</td><td class='up'>+0.29%</td><td class='up'>+0.93%</td><td class='up'>+3.76%</td></tr>
+<tr><td><b>XEL</b></td><td>2022-03-02</td><td>✓</td><td>✓</td><td class='up'>+3.37%</td><td class='up'>+3.22%</td><td class='up'>+7.79%</td><td>错过</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>XEL</b></td><td>2022-07-25</td><td>✓</td><td>✓</td><td class='up'>+5.37%</td><td class='up'>+6.39%</td><td class='up'>+9.70%</td><td>成交</td><td class='up'>+6.51%</td><td class='up'>+6.59%</td><td class='up'>+8.69%</td></tr>
+<tr class='hit'><td><b>XEL</b></td><td>2023-03-13</td><td>✓</td><td>✓</td><td class='up'>+4.03%</td><td class='up'>+0.79%</td><td class='up'>+9.66%</td><td>成交</td><td class='dn'>-0.40%</td><td class='up'>+2.47%</td><td class='up'>+6.84%</td></tr>
+<tr><td><b>XEL</b></td><td>2023-06-12</td><td>✗</td><td>✗</td><td class='up'>+0.04%</td><td class='dn'>-0.96%</td><td class='up'>+1.18%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>XEL</b></td><td>2023-06-30</td><td>✓</td><td>✗</td><td class='up'>+0.77%</td><td class='up'>+1.67%</td><td class='up'>+0.90%</td><td>成交</td><td class='up'>+0.54%</td><td class='up'>+2.01%</td><td class='dn'>-5.53%</td></tr>
+<tr><td><b>XEL</b></td><td>2024-02-01</td><td>✗</td><td>✗</td><td class='dn'>-5.14%</td><td class='dn'>-3.48%</td><td class='dn'>-18.92%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>XEL</b></td><td>2024-02-15</td><td>✓</td><td>✗</td><td class='up'>+0.54%</td><td class='dn'>-16.00%</td><td class='dn'>-10.95%</td><td>成交</td><td class='dn'>-15.21%</td><td class='dn'>-12.14%</td><td class='dn'>-11.92%</td></tr>
+<tr class='hit'><td><b>XEL</b></td><td>2024-07-11</td><td>✓</td><td>✓</td><td class='up'>+3.14%</td><td class='up'>+5.16%</td><td class='up'>+7.53%</td><td>成交</td><td class='up'>+2.56%</td><td class='up'>+9.05%</td><td class='up'>+10.96%</td></tr>
+<tr class='hit'><td><b>XEL</b></td><td>2026-06-12</td><td>✓</td><td>✗</td><td class='up'>+0.23%</td><td class='up'>+4.26%</td><td class='up'>+1.96%</td><td>成交</td><td class='up'>+3.23%</td><td class='up'>+3.50%</td><td class='dn'>-0.53%</td></tr>
+<tr><td><b>XLU</b></td><td>2015-01-08</td><td>✓</td><td>✓</td><td class='up'>+1.07%</td><td class='up'>+3.06%</td><td class='dn'>-2.35%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><b>XLU</b></td><td>2015-01-13</td><td>✓</td><td>✓</td><td class='up'>+3.82%</td><td class='up'>+2.87%</td><td class='dn'>-2.78%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>XLU</b></td><td>2015-03-16</td><td>✓</td><td>✓</td><td class='up'>+2.56%</td><td class='up'>+1.22%</td><td class='up'>+1.27%</td><td>成交</td><td class='dn'>-0.47%</td><td class='dn'>-0.26%</td><td class='dn'>-0.42%</td></tr>
+<tr><td><b>XLU</b></td><td>2015-06-18</td><td>✗</td><td>✗</td><td class='dn'>-3.86%</td><td class='dn'>-2.26%</td><td class='up'>+0.33%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>XLU</b></td><td>2015-07-02</td><td>✓</td><td>✓</td><td class='up'>+1.75%</td><td class='up'>+2.65%</td><td class='up'>+4.17%</td><td>成交</td><td class='up'>+2.05%</td><td class='dn'>-1.42%</td><td class='up'>+2.22%</td></tr>
+<tr class='hit'><td><b>XLU</b></td><td>2015-09-16</td><td>✓</td><td>✗</td><td class='up'>+0.20%</td><td class='up'>+3.33%</td><td class='up'>+5.19%</td><td>成交</td><td class='up'>+1.57%</td><td class='up'>+4.15%</td><td class='up'>+7.37%</td></tr>
+<tr><td><b>XLU</b></td><td>2015-12-01</td><td>✗</td><td>✗</td><td class='dn'>-1.30%</td><td class='dn'>-1.92%</td><td class='up'>+2.41%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>XLU</b></td><td>2015-12-16</td><td>✓</td><td>✓</td><td class='up'>+1.27%</td><td class='up'>+0.75%</td><td class='up'>+1.06%</td><td>成交</td><td class='up'>+3.09%</td><td class='up'>+2.22%</td><td class='up'>+1.30%</td></tr>
+<tr class='hit'><td><b>XLU</b></td><td>2016-09-06</td><td>✓</td><td>✗</td><td class='dn'>-3.05%</td><td class='dn'>-0.17%</td><td class='dn'>-4.94%</td><td>成交</td><td class='dn'>-1.45%</td><td class='up'>+1.91%</td><td class='dn'>-5.73%</td></tr>
+<tr class='hit'><td><b>XLU</b></td><td>2016-09-16</td><td>✓</td><td>✓</td><td class='up'>+3.41%</td><td class='dn'>-0.55%</td><td class='dn'>-3.07%</td><td>成交</td><td class='dn'>-4.96%</td><td class='dn'>-3.27%</td><td class='dn'>-2.69%</td></tr>
+<tr><td><b>XLU</b></td><td>2016-10-18</td><td>✗</td><td>✗</td><td class='up'>+0.12%</td><td class='up'>+0.23%</td><td class='dn'>-3.47%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><b>XLU</b></td><td>2016-11-25</td><td>✗</td><td>✗</td><td class='dn'>-0.76%</td><td class='up'>+1.70%</td><td class='up'>+4.07%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><b>XLU</b></td><td>2017-07-18</td><td>✓</td><td>✓</td><td class='up'>+0.34%</td><td class='up'>+2.31%</td><td class='up'>+3.90%</td><td>错过</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>XLU</b></td><td>2017-10-10</td><td>✓</td><td>✓</td><td class='up'>+0.61%</td><td class='up'>+1.70%</td><td class='up'>+3.04%</td><td>成交</td><td class='up'>+2.03%</td><td class='up'>+2.35%</td><td class='up'>+4.41%</td></tr>
+<tr><td><b>XLU</b></td><td>2018-02-14</td><td>✗</td><td>✗</td><td class='up'>+0.97%</td><td class='up'>+0.97%</td><td class='up'>+3.29%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>XLU</b></td><td>2018-10-05</td><td>✓</td><td>✗</td><td class='dn'>-1.27%</td><td class='up'>+1.75%</td><td class='dn'>-0.90%</td><td>成交</td><td class='up'>+0.89%</td><td class='up'>+2.09%</td><td class='up'>+2.88%</td></tr>
+<tr><td><b>XLU</b></td><td>2019-01-10</td><td>✗</td><td>✗</td><td class='dn'>-0.66%</td><td class='dn'>-0.21%</td><td class='up'>+4.21%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>XLU</b></td><td>2019-11-19</td><td>✓</td><td>✓</td><td class='up'>+0.29%</td><td class='up'>+0.75%</td><td class='up'>+2.88%</td><td>成交</td><td class='dn'>-0.65%</td><td class='dn'>-0.39%</td><td class='up'>+2.15%</td></tr>
+<tr><td><b>XLU</b></td><td>2020-03-27</td><td>✗</td><td>✗</td><td class='dn'>-6.99%</td><td class='up'>+5.78%</td><td class='up'>+5.84%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>XLU</b></td><td>2020-05-19</td><td>✓</td><td>✓</td><td class='up'>+2.51%</td><td class='up'>+9.62%</td><td class='up'>+5.42%</td><td>成交</td><td class='up'>+6.86%</td><td class='up'>+8.23%</td><td class='up'>+1.02%</td></tr>
+<tr><td><b>XLU</b></td><td>2020-07-10</td><td>✓</td><td>✓</td><td class='up'>+4.22%</td><td class='up'>+4.34%</td><td class='up'>+6.44%</td><td>错过</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><b>XLU</b></td><td>2020-12-30</td><td>✗</td><td>✗</td><td class='up'>+0.05%</td><td class='up'>+0.97%</td><td class='up'>+0.60%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><b>XLU</b></td><td>2021-03-09</td><td>✓</td><td>✓</td><td class='up'>+3.21%</td><td class='up'>+2.80%</td><td class='up'>+6.69%</td><td>错过</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>XLU</b></td><td>2022-05-20</td><td>✓</td><td>✓</td><td class='up'>+5.06%</td><td class='up'>+4.10%</td><td class='dn'>-7.86%</td><td>成交</td><td class='dn'>-9.84%</td><td class='dn'>-4.21%</td><td class='dn'>-2.48%</td></tr>
+<tr class='hit'><td><b>XLU</b></td><td>2022-06-27</td><td>✓</td><td>✓</td><td class='dn'>-0.24%</td><td class='up'>+0.50%</td><td class='up'>+1.65%</td><td>成交</td><td class='dn'>-0.66%</td><td class='dn'>-0.74%</td><td class='up'>+5.22%</td></tr>
+<tr class='hit'><td><b>XLU</b></td><td>2023-03-14</td><td>✓</td><td>✓</td><td class='dn'>-0.21%</td><td class='up'>+0.25%</td><td class='up'>+5.89%</td><td>成交</td><td class='dn'>-0.73%</td><td class='up'>+2.30%</td><td class='up'>+4.68%</td></tr>
+<tr><td><b>XLU</b></td><td>2023-03-24</td><td>✓</td><td>✓</td><td class='up'>+3.04%</td><td class='up'>+6.06%</td><td class='up'>+6.52%</td><td>错过</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>XLU</b></td><td>2023-06-07</td><td>✓</td><td>✓</td><td class='dn'>-0.41%</td><td class='up'>+0.06%</td><td class='dn'>-0.86%</td><td>成交</td><td class='up'>+0.23%</td><td class='dn'>-0.21%</td><td class='up'>+1.60%</td></tr>
+<tr class='hit'><td><b>XLU</b></td><td>2023-07-03</td><td>✓</td><td>✗</td><td class='dn'>-0.02%</td><td class='dn'>-0.55%</td><td class='up'>+0.49%</td><td>成交</td><td class='up'>+0.50%</td><td class='up'>+2.92%</td><td class='dn'>-3.80%</td></tr>
+<tr class='hit'><td><b>XLU</b></td><td>2023-09-08</td><td>✓</td><td>✓</td><td class='up'>+2.79%</td><td class='up'>+0.99%</td><td class='dn'>-8.65%</td><td>成交</td><td class='dn'>-6.99%</td><td class='dn'>-9.64%</td><td class='dn'>-8.41%</td></tr>
+<tr><td><b>XLU</b></td><td>2023-10-12</td><td>✗</td><td>✗</td><td>+0.00%</td><td class='up'>+2.08%</td><td class='up'>+2.32%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><b>XLU</b></td><td>2024-02-01</td><td>✗</td><td>✗</td><td class='dn'>-4.12%</td><td class='dn'>-2.11%</td><td class='dn'>-1.44%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>XLU</b></td><td>2024-02-15</td><td>✓</td><td>✓</td><td class='up'>+1.08%</td><td class='up'>+0.69%</td><td class='up'>+3.52%</td><td>成交</td><td class='up'>+0.35%</td><td class='up'>+2.13%</td><td class='up'>+4.10%</td></tr>
+<tr class='hit'><td><b>XLU</b></td><td>2024-07-10</td><td>✓</td><td>✓</td><td class='up'>+0.92%</td><td class='up'>+2.30%</td><td class='up'>+5.48%</td><td>成交</td><td class='up'>+1.66%</td><td class='up'>+2.76%</td><td class='up'>+6.00%</td></tr>
+<tr><td><b>XLU</b></td><td>2025-01-02</td><td>✗</td><td>✗</td><td class='dn'>-0.90%</td><td class='up'>+3.37%</td><td class='up'>+2.66%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr class='hit'><td><b>XLU</b></td><td>2025-12-24</td><td>✓</td><td>✗</td><td class='up'>+0.86%</td><td class='dn'>-0.70%</td><td class='up'>+0.14%</td><td>成交</td><td class='dn'>-1.03%</td><td class='dn'>-0.15%</td><td class='up'>+0.50%</td></tr>
+<tr class='hit'><td><b>XLU</b></td><td>2026-01-12</td><td>✓</td><td>✓</td><td class='up'>+0.89%</td><td class='up'>+2.00%</td><td class='up'>+3.80%</td><td>成交</td><td class='dn'>-0.58%</td><td class='dn'>-1.16%</td><td class='up'>+7.57%</td></tr>
+<tr class='hit'><td><b>XLU</b></td><td>2026-06-11</td><td>✓</td><td>✓</td><td class='up'>+1.61%</td><td class='up'>+5.55%</td><td class='up'>+4.45%</td><td>成交</td><td class='up'>+2.84%</td><td class='up'>+2.64%</td><td class='up'>+1.31%</td></tr></tbody>
+    </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>五、结论：公用事业板块水下 MACD 信号的适用性</h2>
+    <div class="conc" id="conclusion">
+      <b>① 信号规律在公用事业板块同样成立：</b>12 只标的 hold5 确认后 T+5 胜率 70%～100%（均值普遍 +1.5%～+4.3%），远高于各自基线（56%～66%）。<br>
+      <b>② 子类差异明显：</b>【受管制公用事业】hold5 T+5 胜率偏高（81%～100%）、回踩买入 T+5 均值多为正（NEE +2.82%、LNT +0.74%），入场点脱节损耗最小 —— 低波动、均值回归型，回踩策略可用；【IPP】hold5 T+5 均值最高（VST +2.95%、TLN +4.31%、CEG +4.28%），但回踩买入缩水最严重（VST 37.5%/−1.82%、CEG 40%/+3.33%），高波动导致强信号不回踩或回踩即破位 —— 更适合金叉当天/次日快进快出。<br>
+      <b>③ ETF 与成分股一致：</b>XLU/UTES hold5 T+5 胜率 86%/86%，板块 ETF 同样适用该信号。<br>
+      <b>④ 买入视角的修正：</b>与 01 回测结论一致 —— 「确认后回踩买点」策略整体不优于金叉日买入（12 只中多数回踩胜率低于金叉日胜率），受管制类接近持平甚至反超（XEL 80% vs 60%、LNT 62% vs 71%），IPP 类显著跑输。<br>
+      <b>⑤ 局限：</b>hold5 样本每标的 6~26 个，IPP 尤其少（VST 10、TLN 6）；未计成本；收益口径为复权价；分组内股票数量不等（受管制 6 只、IPP 4 只）。
+    </div>
+    <div class="dis">数据来源：Yahoo Finance 日线（本地存储，复权 adj_close）；MACD(12,26,9) + EMA10/20 自算。基于历史数据回测，仅供研究参考。<br><br><b>免责声明：</b>以上内容基于公开数据和量化分析，仅供参考，不构成投资建议。市场有风险，投资需谨慎。任何投资决策应结合个人风险承受能力、资金状况和投资目标独立判断，必要时咨询持牌专业机构。过往表现不预示未来收益。</div>
+  </div>
+
+</div>
+<script>
+const D = {"all": {"tickers": ["XLU", "UTES", "VST", "CEG", "TLN", "NRG", "NEE", "SRE", "XEL", "CNP", "ETR", "LNT"], "orig": [71.4, 61.9, 68.8, 60.0, 85.7, 71.4, 69.2, 72.7, 100.0, 80.8, 69.6, 71.4], "buy": [52.4, 42.9, 37.5, 40.0, 50.0, 53.6, 69.2, 50.0, 80.0, 42.3, 52.2, 61.9]}, "groups": {"tickers": ["XLU", "UTES", "VST", "CEG", "TLN", "NRG", "NEE", "SRE", "XEL", "CNP", "ETR", "LNT"], "h5": [86.4, 85.7, 70.0, 72.7, 100.0, 80.8, 84.6, 81.0, 100.0, 95.5, 95.7, 83.3], "buy": [52.4, 42.9, 37.5, 40.0, 50.0, 53.6, 69.2, 50.0, 80.0, 42.3, 52.2, 61.9]}};
+const RED='#e03131', GREEN='#0aa06e', BLUE='#1e66d6', AMBER='#d97706';
+
+echarts.init(document.getElementById('chart1')).setOption({
+  tooltip:{trigger:'axis',valueFormatter:v=>v+'%'},
+  legend:{data:['金叉日买入·T+5胜率','回踩买点买入·T+5胜率']},
+  grid:{left:50,right:20,top:40,bottom:50},
+  xAxis:{type:'category',data:D.all.tickers,axisLabel:{rotate:30}},
+  yAxis:{type:'value',min:0,max:110,axisLabel:{formatter:'{value}%'}},
+  series:[
+    {name:'金叉日买入·T+5胜率',type:'bar',data:D.all.orig,itemStyle:{color:BLUE},barGap:'20%'},
+    {name:'回踩买点买入·T+5胜率',type:'bar',data:D.all.buy,itemStyle:{color:AMBER}}
+  ]
+});
+
+const gd = document.getElementById('chart2');
+if (gd) echarts.init(gd).setOption({
+  tooltip:{trigger:'axis',valueFormatter:v=>v+'%'},
+  legend:{data:['hold5 T+5胜率','回踩买入 T+5胜率']},
+  grid:{left:50,right:20,top:40,bottom:50},
+  xAxis:{type:'category',data:D.groups.tickers,axisLabel:{rotate:30}},
+  yAxis:{type:'value',min:0,max:100,splitLine:{lineStyle:{type:'dashed'}}},
+  series:[
+    {name:'hold5 T+5胜率',type:'bar',data:D.groups.h5,itemStyle:{color:BLUE},barGap:'30%'},
+    {name:'回踩买入 T+5胜率',type:'bar',data:D.groups.buy,itemStyle:{color:AMBER}}
+  ]
+});
+</script>
+</body>
+</html>
