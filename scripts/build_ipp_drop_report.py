@@ -3,7 +3,7 @@
 import json, os
 
 BASE = os.path.dirname(os.path.abspath(__file__))
-OUT = os.path.join(BASE, "..", "reports", "07_ipp_drop")
+OUT = os.path.join(BASE, "..", "reports", "07_ipp大跌归因")
 os.makedirs(OUT, exist_ok=True)
 
 with open(os.path.join(BASE, "..", "results", "ipp_drop_0818.json")) as f:

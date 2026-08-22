@@ -15,7 +15,7 @@ import json
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RES = os.path.join(ROOT, "results")
-REPORT_DIR = os.path.join(ROOT, "reports", "12_weekline_ob")
+REPORT_DIR = os.path.join(ROOT, "reports", "12_周线超买")
 os.makedirs(REPORT_DIR, exist_ok=True)
 
 with open(os.path.join(RES, "abbv_gild_weekline_ob_window.json"), encoding="utf-8") as f:

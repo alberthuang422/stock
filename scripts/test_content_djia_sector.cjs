@@ -6,7 +6,7 @@ const path = require("path");
   const exe = "C:\\Users\\Administrator\\AppData\\Local\\Google\\Chrome\\Application\\chrome.exe";
   const browser = await chromium.launch({ executablePath: exe, headless: true });
   const page = await browser.newPage({ viewport: { width: 1400, height: 1600 } });
-  const file = "file:///" + path.resolve(__dirname, "../reports/13_djia_sector_support/djia_sector_support_report.html").replace(/\\/g, "/");
+  const file = "file:///" + path.resolve(__dirname, "../reports/13_道指板块支撑/djia_sector_support_report.html").replace(/\\/g, "/");
   await page.goto(file, { waitUntil: "networkidle", timeout: 60000 });
   await page.waitForTimeout(2500);
   const info = await page.evaluate(() => {

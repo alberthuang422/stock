@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 """构建研报：ETF 弱势状态窗口 × 成分股每次触支撑 事件研究
 读取 results/etf_weak_support.json
-输出 reports/14_etf_weak_support/etf_weak_support_report.html
+输出 reports/14_ETF弱势支撑/etf_weak_support_report.html
 静默写盘：只打印 written 路径与体积。
 """
 import os, json
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RES = os.path.join(ROOT, "results")
-OUTD = os.path.join(ROOT, "reports", "14_etf_weak_support")
+OUTD = os.path.join(ROOT, "reports", "14_ETF弱势支撑")
 
 with open(os.path.join(RES, "etf_weak_support.json"), encoding="utf-8") as f:
     D = json.load(f)

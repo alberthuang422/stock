@@ -9,7 +9,7 @@ const path = require("path");
   const errors = [];
   page.on("pageerror", e => errors.push("PAGEERROR: " + e.message));
   page.on("console", m => { if (m.type() === "error") errors.push("CONSOLE: " + m.text()); });
-  const file = "file:///" + path.resolve(__dirname, "../reports/14_etf_weak_support/etf_weak_support_report.html").replace(/\\/g, "/");
+  const file = "file:///" + path.resolve(__dirname, "../reports/14_ETF弱势支撑/etf_weak_support_report.html").replace(/\\/g, "/");
   await page.goto(file, { waitUntil: "networkidle", timeout: 60000 });
   await page.waitForTimeout(4500);
   await page.evaluate(async () => {

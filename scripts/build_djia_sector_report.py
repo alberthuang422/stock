@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 """构建研报 v2：道指板块跌破上升趋势线 × 龙头股触及2个月强支撑（分形聚类口径）
 读取 results/djia_sector_support.json + djia_sector_support_extra.json + djia_full_coverage_audit.json
-输出 reports/13_djia_sector_support/djia_sector_support_report.html
+输出 reports/13_道指板块支撑/djia_sector_support_report.html
 静默写盘：只打印 written 路径与体积。
 """
 import os, json
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RES = os.path.join(ROOT, "results")
-OUTD = os.path.join(ROOT, "reports", "13_djia_sector_support")
+OUTD = os.path.join(ROOT, "reports", "13_道指板块支撑")
 
 with open(os.path.join(RES, "djia_sector_support.json"), encoding="utf-8") as f:
     D = json.load(f)

@@ -9,7 +9,7 @@ const path = require("path");
   const errors = [];
   page.on("pageerror", e => errors.push("PAGEERROR: " + e.message));
   page.on("console", m => { if (m.type() === "error") errors.push("CONSOLE: " + m.text()); });
-  const file = "file:///" + path.resolve(__dirname, "../reports/12_weekline_ob/weekline_ob_report.html").replace(/\\/g, "/");
+  const file = "file:///" + path.resolve(__dirname, "../reports/12_周线超买/weekline_ob_report.html").replace(/\\/g, "/");
   await page.goto(file, { waitUntil: "networkidle", timeout: 60000 });
   await page.waitForTimeout(4000);
   const info = await page.evaluate(() => {

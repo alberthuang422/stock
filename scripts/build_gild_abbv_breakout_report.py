@@ -15,7 +15,7 @@ import numpy as np
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT_DIR = os.path.join(ROOT, "results", "gild_abbv_breakout")
-REPORT_DIR = os.path.join(ROOT, "reports", "11_gild_abbv_breakout")
+REPORT_DIR = os.path.join(ROOT, "reports", "11_gild突破回踩")
 os.makedirs(REPORT_DIR, exist_ok=True)
 
 TICKERS = ["GILD", "ABBV"]

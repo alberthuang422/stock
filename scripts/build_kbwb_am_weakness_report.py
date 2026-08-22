@@ -7,7 +7,7 @@ import json
 import os
 
 BASE = os.path.dirname(os.path.abspath(__file__))
-OUT_DIR = os.path.join(BASE, "..", "reports", "16_kbwb_am_weakness")
+OUT_DIR = os.path.join(BASE, "..", "reports", "16_kbwbAM弱势")
 os.makedirs(OUT_DIR, exist_ok=True)
 
 with open(os.path.join(BASE, "..", "results", "kbwb_am_weakness.json"), encoding="utf-8") as f:

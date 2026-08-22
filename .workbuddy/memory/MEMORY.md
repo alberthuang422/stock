@@ -20,6 +20,7 @@
 - 对照分析默认窗口 2025-09 起；超额分四档（分界前/后/2026分界前/2026以来）全给。
 - 爱刨根问底：相关性→跷跷板→相对强弱→贡献归因→剔除归因，每层量化。
 - **财报类问题先确认财报期**（曾把"财报"默认理解成 8/4 Q2，实际指 2/10 Q4）。
+- **报告目录一律中文命名**（2026-08-22 用户要求，必守）：reports/ 目录名用「编号_中文名」格式（如 04_ceg_vst电力股对比、06_陡峭化消费股、10_涨3%事件），与已有 01~17 目录风格统一；英文代号可保留为前缀。散落 html 也要归入中文目录。生成新报告时同样遵循（build 脚本 OUT 路径用中文目录名）。
 
 ## Token 优化规范（2026-08-21 用户要求，必守）
 单轮分析任务实测约 80 万 token，人工审计三大浪费：① 每轮重复注入系统提示（~40%）；② build 脚本把整个 HTML 打回控制台（~35%）；③ 报告 JSON 注入体积过大 / 试错重跑。
@@ -45,8 +46,8 @@
 ## 脚本索引（重要报告）
 - 回测：macd_backtest.py / run_all.py；报告 build_report.py / build_compare_report.py。
 - **横盘突破（08-21）**：gild_abbv_breakout.py → reports/11。Donchian N=20+shift(1)；突破=close 上穿前日上沿+涨≥2.5%；横盘=前60日触上下沿带各≥2次+带宽比∈[5%,25%]；30日合并。50笔 T+20 +3.05%/66%（中位+4.3%）；2016 最差、2020 最好。
-- **周线转正→4h超买（08-21）**：weekline_ob_{analyze,ctrl,window,export}.py + build_weekline_ob_report.py → reports/12_weekline_ob。事件=周线 MACD hist 负转正；超买=转正后2周窗口内 4h RSI14≥70（t0）。**结论：转正当周超买仅 28.6%（vs 对照 27.1%，前提不成立）；放宽 2 周窗口 → 64.3%（当周16/次周17/第3周3）。t0 后 40 根 4h：maxDD 中位 −3.65%(p90 −0.67%)，回 t0 收盘中位 1.5 根，40 根内新高 97.2%，期末 +3.43% 胜率60%。对照(n=144) −3.66% 无显著差异。当前 GILD=8/6 转正第2周经典超买点。**
-- **板块破位×龙头支撑共振（08-21）**：djia_sector_support.py + djia_sector_support_extra.py + build_djia_sector_report.py → reports/13_djia_sector_support。口径：ETF swing-low 分形 OLS 上升趋势线(线龄≥42日/R²≥0.7)收盘首破 × 个股同日触及≥2月支撑(120日最低 or MA50/100/200)。n=62：T+1 62.9% 胜率、T+5 盲点(53%)、T+10 +1.42%/69.4%、T+20 +2.23%/71%；结局双峰 V反40% vs 击穿39%。**最有效过滤=ETF 破位日量能（平量 T+10 胜率81% vs 放量54%）；VIX 20-30 反弹最好、VIX<20 阴跌击穿率最高；XLF 击穿率62.5% 最差；止损=支撑下方2%+持有到期期望最优。**
+- **周线转正→4h超买（08-21）**：weekline_ob_{analyze,ctrl,window,export}.py + build_weekline_ob_report.py → reports/12_周线超买。事件=周线 MACD hist 负转正；超买=转正后2周窗口内 4h RSI14≥70（t0）。**结论：转正当周超买仅 28.6%（vs 对照 27.1%，前提不成立）；放宽 2 周窗口 → 64.3%（当周16/次周17/第3周3）。t0 后 40 根 4h：maxDD 中位 −3.65%(p90 −0.67%)，回 t0 收盘中位 1.5 根，40 根内新高 97.2%，期末 +3.43% 胜率60%。对照(n=144) −3.66% 无显著差异。当前 GILD=8/6 转正第2周经典超买点。**
+- **板块破位×龙头支撑共振（08-21）**：djia_sector_support.py + djia_sector_support_extra.py + build_djia_sector_report.py → reports/13_道指板块支撑。口径：ETF swing-low 分形 OLS 上升趋势线(线龄≥42日/R²≥0.7)收盘首破 × 个股同日触及≥2月支撑(120日最低 or MA50/100/200)。n=62：T+1 62.9% 胜率、T+5 盲点(53%)、T+10 +1.42%/69.4%、T+20 +2.23%/71%；结局双峰 V反40% vs 击穿39%。**最有效过滤=ETF 破位日量能（平量 T+10 胜率81% vs 放量54%）；VIX 20-30 反弹最好、VIX<20 阴跌击穿率最高；XLF 击穿率62.5% 最差；止损=支撑下方2%+持有到期期望最优。**
 - **事件研究（08-20）**：event_3pct_analyze.py → reports/10。adj_close 日涨≥3% → fwd1/5/10；分制药/生科池；10日冷却 + 小涨日/非事件日双对照 + 超额（SPY/XLV/IBB）分档分年。
 - 相关性/对比：ibb_gild_corr.py / ibb_top10_corr.py / ceg_vst_compare.py / vst_utes_corr.py / wuxi_bigpharma_corr.py / steep_ko_pm_mo.py / steep_banks.py / steep_banks_bear.py / ibb_amgn_vrtx 系列。
 

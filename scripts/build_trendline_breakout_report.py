@@ -315,7 +315,7 @@ html = html.replace("var DATA = __DATA_JSON__;", "var DATA = " + js({
     "case": case,
 }) + ";")
 
-out_dir = os.path.join(ROOT, "reports", "13_kbwb_ms")
+out_dir = os.path.join(ROOT, "reports", "13_kbwb支撑位")
 os.makedirs(out_dir, exist_ok=True)
 path = os.path.join(out_dir, "trendline_breakout_report.html")
 with open(path, "w", encoding="utf-8") as f:
