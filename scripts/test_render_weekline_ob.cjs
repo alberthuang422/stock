@@ -25,6 +25,5 @@ const path = require("path");
   } else {
     console.log("NO JS ERRORS");
   }
-  await page.screenshot({ path: path.resolve(__dirname, "../results/weekline_ob_report_shot.png"), fullPage: false });
   await browser.close();
 })();

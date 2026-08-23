@@ -48,12 +48,6 @@ async function main() {
   checks['echarts'] = hasEcharts;
   if (!hasEcharts) errors.push('echarts 未加载');
 
-  // 截图
-  await page.screenshot({ path: path.join(__dirname, '..', 'results', 'biotech_mini_render_top.png'), clip: { x: 0, y: 0, width: 1400, height: 1200 } });
-  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-  await page.waitForTimeout(800);
-  await page.screenshot({ path: path.join(__dirname, '..', 'results', 'biotech_mini_render_full.png'), fullPage: true });
-
   await browser.close();
   console.log('checks:', JSON.stringify(checks, null, 1));
   if (errors.length) {

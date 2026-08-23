@@ -29,6 +29,5 @@ const path = require("path");
   console.log("charts:", JSON.stringify(charts, null, 1));
   console.log("JS errors:", errors.length ? errors : "NONE");
 
-  await page.screenshot({ path: path.resolve(__dirname, "../results/sofi_xyz_afrm_report_shot.png"), fullPage: true });
   await browser.close();
 })().catch(e => { console.error("FATAL:", e); process.exit(1); });

@@ -17,8 +17,6 @@ const path = require("path");
 
   // 1) 点击「日历价差」预设
   await page.click('.chip[data-id="calendar"]');
-  await page.waitForTimeout(800);
-
   // 2) 采集页面状态：图例/指标卡口径、明细表、曲线数值
   const info = await page.evaluate(() => {
     const chart = window.chart;
@@ -62,7 +60,6 @@ const path = require("path");
     sl.value = 30;
     sl.dispatchEvent(new Event("input", { bubbles: true }));
   });
-  await page.waitForTimeout(800);
   const afterSlide = await page.evaluate(() => ({
     sliderDate: document.getElementById("sliderDate").textContent,
     maxCurVal: document.getElementById("mMaxCur").textContent,
@@ -71,11 +68,8 @@ const path = require("path");
   console.log("滑块30天后:", JSON.stringify(afterSlide));
 
   console.log("JS errors:", errors.length ? errors.slice(0, 8) : "NONE");
-  await page.screenshot({ path: path.resolve(__dirname, "../results/options_calendar_today.png") });
-
   // 4) 单到期日回归：载入「牛市看涨价差」，确认口径回落为「到期日盈亏」
   await page.click('.chip[data-id="bull-call"]');
-  await page.waitForTimeout(800);
   const single = await page.evaluate(() => ({
     legend: (window.chart.getOption().legend[0].data),
     maxExpLabel: document.getElementById("mMaxExpLabel").textContent,
@@ -83,7 +77,5 @@ const path = require("path");
   }));
   console.log("单到期日回归:", JSON.stringify(single));
   console.log("JS errors:", errors.length ? errors.slice(0, 8) : "NONE");
-  await page.screenshot({ path: path.resolve(__dirname, "../results/options_bullcall_single.png") });
-
   await browser.close();
 })();

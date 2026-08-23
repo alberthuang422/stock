@@ -62,7 +62,5 @@ const path = require("path");
   console.log("corr:", corr);
   console.log("source links:", links);
   console.log("errors:", errors.length ? errors.join("\n") : "none");
-  await page.screenshot({ path: path.resolve(__dirname, "../results/biopharma_prosperity_render_top.png"), fullPage: false });
-  await page.screenshot({ path: path.resolve(__dirname, "../results/biopharma_prosperity_render_full.png"), fullPage: true });
   await browser.close();
 })().catch(e => { console.error("FATAL:", e.message); process.exit(1); });

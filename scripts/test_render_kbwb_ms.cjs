@@ -32,6 +32,5 @@ const path = require("path");
   console.log("DATA injected:", hasData);
   console.log("charts:", JSON.stringify(chartInfo));
   console.log("errors:", errors.length ? errors.join("\n") : "none");
-  await page.screenshot({ path: "C:\\Users\\Administrator\\Desktop\\stock\\results\\kbwb_ms_corr_report_full.png", fullPage: true });
   await browser.close();
 })().catch(e => { console.error("FATAL:", e.message); process.exit(1); });

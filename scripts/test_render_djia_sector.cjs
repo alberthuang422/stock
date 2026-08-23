@@ -15,10 +15,8 @@ const path = require("path");
   // 滚动触发懒渲染
   await page.evaluate(async () => {
     for (let y = 0; y <= document.body.scrollHeight; y += 600) {
-      window.scrollTo(0, y);
       await new Promise(r => setTimeout(r, 120));
     }
-    window.scrollTo(0, 0);
   });
   await page.waitForTimeout(2000);
   const info = await page.evaluate(() => {
@@ -31,9 +29,7 @@ const path = require("path");
   });
   console.log("totalCanvas:", info.totalCanvas, "| zeroSize:", info.zeroSize, "| mainCharts:", info.mainCharts, "| gallery:", info.galleryCharts, "| tableRows:", info.evRows);
   console.log("JS errors:", errors.length ? errors.slice(0, 8) : "NONE");
-  await page.screenshot({ path: path.resolve(__dirname, "../results/djia_sector_top.png") });
   await page.evaluate(() => { const el = document.getElementById("gallery"); el && el.scrollIntoView(); });
   await page.waitForTimeout(1200);
-  await page.screenshot({ path: path.resolve(__dirname, "../results/djia_sector_gallery.png") });
   await browser.close();
 })();

@@ -35,9 +35,5 @@ const path = require("path");
   console.log("first fig caption:", info.firstFigText);
   console.log("errors:", errors.length ? errors.join("\n") : "none");
 
-  await page.screenshot({ path: path.resolve(__dirname, "../reports/11_gild突破回踩/render_top.png"), fullPage: false });
-  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-  await page.waitForTimeout(800);
-  await page.screenshot({ path: path.resolve(__dirname, "../reports/11_gild突破回踩/render_bottom.png"), fullPage: false });
   await browser.close();
 })().catch(e => { console.error("FATAL:", e.message); process.exit(1); });

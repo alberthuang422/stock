@@ -23,6 +23,5 @@ const path = require("path");
   console.log("tbodies rows:", JSON.stringify(info.tbodies));
   console.log("DATA:", info.dataLen);
   console.log("JS errors:", logs.length ? logs.slice(0, 10) : "NONE");
-  await page.screenshot({ path: path.resolve(__dirname, "../results/ko_rsi_top.png") });
   await browser.close();
 })();

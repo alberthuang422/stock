@@ -27,6 +27,5 @@ const path = require("path");
   console.log("galleryCanvas:", info.galleryCanvas, "| zeroSize:", info.zeroSize, "| figCount:", info.figCount, "| mainCanvas:", info.mainCanvas);
   console.log("first 5 sizes:", info.firstSizes.join(", "));
   console.log("JS errors:", errors.length ? errors.slice(0, 8) : "NONE");
-  await page.screenshot({ path: path.resolve(__dirname, "../results/weekline_ob_shot2.png") });
   await browser.close();
 })();

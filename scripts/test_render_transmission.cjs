@@ -38,11 +38,6 @@ async function main() {
   if (Object.keys(chartInfo).length < 2) errors.push('图表数量不足 2');
   for (const [id, v] of Object.entries(chartInfo)) if (v !== 'canvas-ok') errors.push('图表无 canvas: ' + id);
 
-  await page.screenshot({ path: path.join(__dirname, '..', 'results', 'transmission_render_top.png'), clip: { x: 0, y: 0, width: 1400, height: 1500 } });
-  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-  await page.waitForTimeout(800);
-  await page.screenshot({ path: path.join(__dirname, '..', 'results', 'transmission_render_full.png'), fullPage: true });
-
   await browser.close();
   console.log('checks:', JSON.stringify(checks, null, 1));
   if (errors.length) {

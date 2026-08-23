@@ -26,10 +26,7 @@ const path = require("path");
   const canvases = charts.filter((c) => c.canvas).length;
   console.log("charts:", JSON.stringify(charts));
 
-  // 截图
   const shot = path.resolve(__dirname, "../results/vix_low_report_ssr.png");
-  await page.screenshot({ path: shot, fullPage: true });
-  console.log("screenshot saved:", shot);
   console.log("canvas count:", canvases, "/", charts.length);
   console.log("js errors:", errors.length ? errors.join("\n") : "none");
 

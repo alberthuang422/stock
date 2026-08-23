@@ -32,6 +32,5 @@ const path = require("path");
   console.log("charts:", JSON.stringify(chartInfo));
   console.log("table rows:", tableRows);
   console.log("errors:", errors.length ? errors.join("\n") : "none");
-  await page.screenshot({ path: "C:\\Users\\Administrator\\Desktop\\stock\\results\\banks_bear_report_full.png", fullPage: true });
   await browser.close();
 })().catch(e => { console.error("FATAL:", e.message); process.exit(1); });

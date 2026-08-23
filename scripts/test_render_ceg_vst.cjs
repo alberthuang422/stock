@@ -30,6 +30,5 @@ const path = require("path");
   console.log("echarts loaded:", hasEcharts);
   console.log("charts:", JSON.stringify(chartInfo));
   console.log("errors:", errors.length ? errors.join("\n") : "none");
-  await page.screenshot({ path: "/tmp/ceg_vst_report_top.png", fullPage: false });
   await browser.close();
 })().catch(e => { console.error("FATAL:", e.message); process.exit(1); });
