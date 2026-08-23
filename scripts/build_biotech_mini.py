@@ -451,30 +451,78 @@ HTML = """<!DOCTYPE html>
   </div>
 
   <div class="card">
-    <h2>四、逐年景气度明细（2022-2025 回溯）</h2>
+    <h2>四、加权敏感性：平权假设的稳健性检验（方法论升级）</h2>
+    <div class="warn">
+      <b>背景：</b>初版 16 项打分采用平权机制（每项 ±1）。评审意见指出：宏观利率与 MNC 大型并购对 XBI 的实际影响权重远高于单项临床进展或 FDA 加速批准政策，平权加总可能让短期情绪指标掩盖长期基本面风险。本章用实证与机制证据为各因子赋权，重估五年结论。
+    </div>
+    <div class="grp-summary" style="margin-top:10px;"><b>一、实证证据（本地数据，脚本 calc_factor_weights.py）：</b></div>
+    <div class="scroll">
+      <table style="min-width:860px;">
+        <thead><tr><th>证据</th><th>样本</th><th>数值</th><th>解读</th></tr></thead>
+        <tbody>
+          <tr><td>月频回归：XBI 月收益 ~ Δ10Y（单变量）</td><td>n=245（2006-01 ~ 2026-08 月度）</td><td>ß=-1.27（pp/pp）｜corr=-0.04｜R²≈0.2%</td><td>利率的<b>当月线性</b>解释力极弱——利率不是「每日拖累」，而是「利率飙升期」的稀有但致命事件（见下行案例）</td></tr>
+          <tr><td>同口径：IBB / XPH 的 Δ10Y 敏感度</td><td>同上</td><td>IBB corr≈-0.09｜XPH corr≈-0.07</td><td>XBI 的利率敏感度高于 IBB/XPH，但同为弱线性——久期差异主要体现于<b>极端年</b>（2022）而非逐月</td></tr>
+          <tr><td>年度：并购额 × XBI 年度收益</td><td>n=8（2019-2026）</td><td>相关 ≈ 0.19～0.31（口径敏感）</td><td>方向为正但小样本不稳定；机构口径（EY/IQVIA）在 2022-2025 并购年与 XBI 反弹高度同步</td></tr>
+          <tr><td>极值对照：利率「边际变化」事件</td><td>2022 vs 2026</td><td>2022：10Y +2.6pp → XBI maxDD <b>-45.6%</b>；2026：10Y 4.4%（高但平稳）→ maxDD 仅 <b>-10.5%</b></td><td>同样 4%+ 利率水平，2022 与 2026 回撤差 35pp——起作用的是利率<b>方向/速率</b>而非水平</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="grp-summary" style="margin-top:12px;"><b>二、权重设定（项级，缩放回 16 项原尺度）：</b></div>
+    <div class="scroll">
+      <table style="min-width:760px;">
+        <thead><tr><th>板块</th><th>项数</th><th>项级权重</th><th>缩放后权重</th><th>设定依据</th></tr></thead>
+        <tbody>
+          <tr><td>并购与退出通道</td><td>4</td><td><b>1.75</b></td><td>1.38</td><td>总金额级、全截面、月度可观测；退出通道是小 biotech 全部价值的兑现机制</td></tr>
+          <tr><td>宏观利率与政策</td><td>3</td><td><b>1.75</b></td><td>1.38</td><td>2022 极值证明利率是久期压缩的头号凶器；政策（FDA 稳定性/定价）为同级别系统因子</td></tr>
+          <tr><td>融资与资本面</td><td>5</td><td>1.0</td><td>0.79</td><td>供给端因子，月度可观测，但部分被利率/并购内化（VC 行为即利率+退出预期的函数）</td></tr>
+          <tr><td>临床与研发</td><td>4</td><td>0.75</td><td>0.59</td><td>事件驱动、截面不均（单票 alpha 不代表板块 beta）；FDA 加速批准影响已并入其政策面</td></tr>
+          <tr><td style="font-weight:700;">加权满分</td><td>16</td><td colspan="2">20.25 → 缩放系数 0.790</td><td>加权分 ÷20.25 ×16，与平权 -16~+16 完全可比，档位阈值不变</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="grp-summary" style="margin-top:12px;"><b>三、加权 vs 平权五年对照（核心结论）：</b></div>
+    <div class="scroll">
+      <table style="min-width:860px;">
+        <thead><tr>
+          <th>年度</th><th>平权总分</th><th>加权总分</th><th>Δ</th><th>平权档位</th><th>加权档位</th><th>结论变化</th>
+        </tr></thead>
+        <tbody>
+          @@WEIGHTED_YEAR_ROWS@@
+        </tbody>
+      </table>
+    </div>
+    <div class="chart sm" id="chart_weighted"></div>
+    <div class="keypoint" style="margin-top:12px;">
+      <b>加权结论：</b>① <b>2026 年结论不变</b>：加权总分 11.1 vs 平权 11，仍为<b>强景气下沿（+10~+16）</b>——因为 2026 权重大的因子（并购 +4、宏观 +1）与权重小的因子（临床 +3）同向为正，无论怎么加权都是强景气。② <b>但五年相对差异显著加深</b>：2022 从 -14 加深至 -14.8（利率+并购双权重加深熊市）、2024 从 +2 缩至 +1.8（若按无缩放原始权重则为 +2.25，档位仍筑底）——被临床事件撑起来的「+2 磨底」在加权下更接近「真筑底」。③ <b>排序关系变化</b>：2023（+4.2）与 2024（+1.8）差距拉大，2025 升至 +8.7。④ <b>敏感性扫描</b>（并购 1.25~2.0 × 临床 0.5~1.0 共 12 组合）：2026 加权总分恒在 <b>10.4 ~ 11.3</b>，全部落在强景气下沿——<b>当前年度结论对权重选择稳健</b>；五年档位仅在 2024（±1 临界）处存在边界敏感性。
+    </div>
+    <div class="note">注：Δ = 加权 − 平权（正=权重放大向好因子）。加权分 = ∑(分组得分 × 项级权重) × 0.790。档位阈值沿用原四档（-16~-3 低迷 / -2~+2 筑底 / +3~+9 结构性 / +10~+16 强景气）。实证脚本：scripts/calc_factor_weights.py。</div>
+  </div>
+
+  <div class="card">
+    <h2>五、逐年景气度明细（2022-2025 回溯）</h2>
     <div class="grp-summary">以下逐年列出 16 项核查的关键依据与来源链接。2022-2025 为回溯打分（同口径），2026 为当前核查。点击 ⧉ 进入一手来源。</div>
     @@YEAR_CARDS@@
   </div>
 
   <div class="card">
-    <h2>五、2026 年板块核查明细（16 项）</h2>
+    <h2>六、2026 年板块核查明细（16 项）</h2>
     <div class="grp-summary">以下四个板块卡片为 2026 年当前核查的逐项明细（与「一、总体评分结构」对应），关键数据均附来源链接（⧉ 一手来源）。</div>
     @@GROUP_CARDS@@
   </div>
 
   <div class="card">
-    <h2>六、风险提示与跟踪节点</h2>
+    <h2>七、风险提示与跟踪节点</h2>
     <div class="warn">
       <b>1. 数据依赖与时效：</b>本报告数据截至 2026-08-23，主要来自 BioPharma Dive、PitchBook、DealForma、EY/SVB、JPM、Stifel、Renaissance Capital、FDA/CMS/Fed 官方页面及公司公告（SEC 8-K）；所有关键数据均已附来源链接（⧉ 符号）。2022-2025 为回溯口径，不同机构统计口径差异（如 VC 金额、IPO 家数）已注明。
     </div>
     <div class="warn">
-      <b>2. 关键下行变量：</b>① 并购定价风险：2025 平均溢价 60%（前三笔大单约 30%）——若 MNC 转向「去风险化优先、溢价收窄」，板块重估逻辑生变；② IPO 窗口是否能持续（2025 vintage +49% 建立在低基数上）；③ 10Y 若重回 4.5%+ 将再度压制高久期资产（XBI 波动率 30%+）；④ 尾部出清：1/3 公司现金 <12 个月，H2 仍有批量再融资稀释。
+      <b>2. 关键下行变量：</b>① 并购定价风险：2025 平均溢价 60%（前三笔大单约 30%）——若 MNC 转向「去风险化优先、溢价收窄」，板块重估逻辑生变；② IPO 窗口是否能持续（2025 vintage +49% 建立在低基数上）；③ 10Y 若重回 4.5% 以上并加速上行（2022 式加息）将再度压制高久期资产（XBI 波动率 30%+）；④ 尾部出清：1/3 公司现金 <12 个月，H2 仍有批量再融资稀释。
     </div>
     <div class="warn">
       <b>3. 结构性风险：</b>早期轮（Seed/A）融资持续收缩——流动性向中晚期集中，「空心化」风险延续（2025 早期轮下滑、mega round 从 104 笔降至 80 笔）；单票三期失败冲击巨大（月度 -80% 案例频出），个股风险极不均匀。
     </div>
     <div class="warn">
-      <b>4. 方法局限：</b>本核查为「快照式」景气度评估，16 项等权打分为相对口径（±1），未加权、未做历史分位数标准化；并购额相关系数 0.494 基于 n=5 小样本，仅方向性参考；打分反映 2026-08 时点截面结论，不构成投资建议。
+      <b>4. 方法局限：</b>① 权重设定为「实证 + 机制先验」混合（月频回归 R² 极低、年度相关 n 仅 8），结论依赖敏感性扫描确认稳健性（已做 12 组合梯度）；② 16 项打分仍为截面快照，未做历史分位数标准化；③ 并购额相关系数（0.19~0.31 八年口径）样本小，仅方向性参考；④ 打分反映 2026-08 时点截面结论，不构成投资建议。
     </div>
   </div>
 
@@ -583,6 +631,32 @@ RENDER_JS = r"""
   });
   window.addEventListener('resize', function(){chart.resize();});
 })();
+
+// 4) 加权敏感性：平权 vs 加权五年前对照
+(function(){
+  var el = document.getElementById('chart_weighted');
+  if(!el || !DATA.weights) return;
+  var chart = echarts.init(el);
+  var w = DATA.weights.weighted_years;
+  var years = Object.keys(w.equal).map(Number).sort();
+  var yrs = years.map(String);
+  var wm = DATA.weights.weighted_2026;
+  chart.setOption({
+    tooltip:{trigger:'axis'},
+    legend:{top:0, textStyle:{fontSize:12}},
+    grid:{left:10,right:30,top:30,bottom:24,containLabel:true},
+    xAxis:{type:'category',data:yrs,axisLabel:{fontSize:13}},
+    yAxis:{type:'value',min:-20,max:16,splitLine:{lineStyle:{type:'dashed',color:'#eef0f3'}},axisLabel:{formatter:function(v){return (v>0?'+':'')+v;}}},
+    series:[
+      {name:'平权总分', type:'bar', barWidth:20, data: years.map(function(y){return w.equal[y];}), itemStyle:{color:'#1e66d6',opacity:.45,borderRadius:[3,3,0,0]}},
+      {name:'加权总分', type:'bar', barWidth:20, data: years.map(function(y){return +(w.weighted_scaled[y]).toFixed(1);}), itemStyle:{color:'#e03131',borderRadius:[3,3,0,0]}},
+      {name:'Δ 加权−平权', type:'line', smooth:true, symbol:'diamond', symbolSize:8,
+       data: years.map(function(y){return +(w.weighted_scaled[y]-w.equal[y]).toFixed(1);}),
+       lineStyle:{width:2,color:'#7048e8'}, itemStyle:{color:'#7048e8'}}
+    ]
+  });
+  window.addEventListener('resize', function(){chart.resize();});
+})();
 """
 
 def group_card_html(g, idx):
@@ -641,7 +715,22 @@ def year_card_html(year):
         .replace("@@SC@@", ("+" + str(YEAR_TOTALS[year])) if YEAR_TOTALS[year] > 0 else str(YEAR_TOTALS[year])) \
         .replace("@@SUM@@", YEAR_SUMMARIES[year]).replace("@@ROWS@@", "".join(rows))
 
+def level_of(score):
+    if score >= 10: return "强景气"
+    if score >= 3: return "结构性景气"
+    if score >= -2: return "筑底/盘整"
+    return "低迷期"
+
 def main():
+    # 加载实证权重（calc_factor_weights.py 输出）
+    weights_path = os.path.join(BASE, "..", "results", "factor_weights.json")
+    WEIGHTS = {}
+    if os.path.exists(weights_path):
+        with open(weights_path, encoding="utf-8") as f:
+            WEIGHTS = json.load(f)
+    # 注入 DATA
+    DATA["weights"] = WEIGHTS
+
     group_cards = "".join(group_card_html(g, i + 1) for i, g in enumerate(GROUPS))
     grp_rows = []
     for i, g in enumerate(GROUPS):
@@ -696,6 +785,27 @@ def main():
                 "up" if xdiff >= 0 else "dn", xdiff,
                 m["dgs10_mean"][y]))
     year_cards = "".join(year_card_html(y) for y in [2022, 2023, 2024, 2025])
+
+    # 加权敏感性年度对照行
+    wy_rows = []
+    if WEIGHTS.get("weighted_years"):
+        w_eq = WEIGHTS["weighted_years"]["equal"]
+        w_sc = WEIGHTS["weighted_years"]["weighted_scaled"]
+        for y in [2022, 2023, 2024, 2025, 2026]:
+            eq, sc = w_eq[str(y)], w_sc[str(y)]
+            delta = sc - eq
+            lv_eq = level_of(eq)
+            lv_sc = level_of(sc)
+            change = "不变" if lv_eq == lv_sc else "档位变化"
+            wy_rows.append(
+                '<tr><td><b>{}</b></td>'
+                '<td class="{}">{:+.0f}</td><td class="{}">{:+.1f}</td><td class="{}">{:+.1f}</td>'
+                '<td>{}</td><td>{}</td><td>{}</td></tr>'.format(
+                    y,
+                    "up" if eq > 0 else ("dn" if eq < 0 else "ne"), eq,
+                    "up" if sc > 0 else ("dn" if sc < 0 else "ne"), sc,
+                    "up" if delta > 0 else ("dn" if delta < 0 else "ne"), delta,
+                    lv_eq, lv_sc, change))
     html = HTML.replace("@@TODAY@@", TODAY).replace("@@TOTAL@@", str(TOTAL)) \
         .replace("@@LEVEL@@", LEVEL).replace("@@LEVEL_CN@@", LEVEL_CN) \
         .replace("@@POS@@", str(POS)).replace("@@NEU@@", str(NEU)).replace("@@NEG@@", str(NEG)) \
@@ -705,6 +815,7 @@ def main():
         .replace("@@YEAR_ROWS@@", "".join(year_rows)) \
         .replace("@@YEAR_CARDS@@", year_cards) \
         .replace("@@COMPARE_ROWS@@", "".join(cmp_rows)) \
+        .replace("@@WEIGHTED_YEAR_ROWS@@", "".join(wy_rows)) \
         .replace("@@CORR@@", str(m["corr"]))
     data_json = json.dumps(DATA, ensure_ascii=False, allow_nan=False)
     html = html.replace("var DATA = __DATA_JSON__;", "var DATA = " + data_json + ";")

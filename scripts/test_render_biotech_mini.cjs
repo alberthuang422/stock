@@ -19,7 +19,7 @@ async function main() {
     if (!html.includes(String(y) + ' 年核查明细')) errors.push('缺少年份明细卡片 ' + y);
   }
   if (!html.includes('◎ 融资与资本面')) errors.push('缺少 2026 当前核查板块卡片');
-  const needTxt = ['融资与资本面', '并购与退出通道', '临床与研发', '宏观利率与政策', '强景气', '低迷期', '0.494', '双口径对照'];
+  const needTxt = ['融资与资本面', '并购与退出通道', '临床与研发', '宏观利率与政策', '强景气', '低迷期', '0.494', '双口径对照', '加权敏感性', '平权总分', '加权总分', '敏感性扫描'];
   for (const t of needTxt) {
     if (!html.includes(t)) errors.push('缺少关键文本: ' + t);
   }
@@ -41,7 +41,7 @@ async function main() {
     return out;
   });
   checks['chart'] = chartInfo;
-  if (Object.keys(chartInfo).length < 3) errors.push('图表数量不足 3');
+  if (Object.keys(chartInfo).length < 4) errors.push('图表数量不足 4');
   for (const [id, v] of Object.entries(chartInfo)) if (v !== 'canvas-ok') errors.push('图表无 canvas: ' + id);
 
   const hasEcharts = await page.evaluate(() => typeof window.echarts !== 'undefined');
