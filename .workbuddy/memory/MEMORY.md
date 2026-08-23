@@ -9,6 +9,7 @@
 - **FRED 可直连**：`https://fred.stlouisfed.org/graph/fredgraph.csv?id=DGS2`（/DGS10/...）curl 即可；缺失值读后 `pd.to_numeric(errors="coerce")` + dropna。
 - venv python：`C:\Users\Administrator\.workbuddy\binaries\python\envs\default\Scripts\python.exe`。
 - node：`C:\Users\Administrator\.workbuddy\binaries\node\versions\22.22.2\node.exe`；npm 装到 `C:\Users\Administrator\.workbuddy\binaries\node\workspace\node_modules\`（**目录需自行 mkdir**）。
+- **期权数据（富途 futu MCP，唯一来源）**：① `quote_option_expiration_date`（symbol 如 `US.SBUX`）拿全部到期日（WEEK 周度/MONTH 月度+季度）；② `quote_option_chain`（symbol + start/end=同一到期日）拿某个到期日的全部 call/put 合约列表（**只有合约元数据，无 OI**）；③ **OI/成交量/IV/希腊字母须逐合约调 `quote_stock_quote`（code_list 一次性≤400 个，option_ex_data.open_interest 为 OI，volume 为成交量）**。返回体极大时会落盘到 .workbuddy/projects/.../tool-results/*.txt，用 python 解析。现货价同样从 quote_stock_quote 拿（last_price）。注意：富途 OI 是交易所公布值，行权价=真实 OI；周三/周度到期 OI 会明显弱于月度。
 
 ## 回测规则（用户确认口径）
 水下金叉(DIF<0,DEA<0) → 金叉后3日内收盘上穿 EMA10&EMA20（严格无容差）→ 站稳 y=3/4/5 天（允许1天跌破次日收复）→ 买点=（金叉前10日盘整最高价+确认日EMA20）/2 → 30日内首次回踩(low≤买点)成交，未回踩=错过；收益金叉日收→T+N、买点→B+5/10/20；10日内多次金叉合并计1次。结果：hold5 T+5 胜率 52.7%→84.8%（10只均 56.5%→88.2%）；等确认+回踩 T+5 缩水但 T+20 反超（72.7% vs 66.7%）→ 回踩买应持 20 天；最差年 2024（22%/−3.33%）、2018、2016；2017 最好 88%。
@@ -55,6 +56,9 @@
 流程：定义池子 → load adj_close → pct_change 算 ret → fwdN = shift(-N)/close−1 → mask evt → 需 fwd10 非 NaN → 对照=非evt/小涨 → **超额须把基准的 fwdN（不是价格）merge 后相减** → stats(n, mean, med, win%, std, p25/p75, t检验, 胜率二项近似)。池子按波动分组避免高波动主导。稳健性加 cooldown 剔除重叠。**报告评审规范（见用户级 skill quant-report-review）**：独立性假设最易高估（聚类/去拥挤日）、超额=α 须市场模型、幸存者偏差要披露、后验切类标"样本内"、显著性数字一律视作上限。
 
 ## 关键结论（2026-08）
+- **生物医药景气度核查（08-23）**：16 项打分总分 **+10 → 强景气区间下沿**（13 向好/0 平稳/3 恶化）。四板块：资金+1（一级 725.6 亿 +41.7%、BD 总对价近千亿美元创纪录，但尾部 Down Round/现金跑道不足-1×2）、研发+4（IND+14.1%、依沃西 HARMONi-6 进 ASCO 首个中国 Plenary、CXO 订单反转）、商业化+4（国谈成功率 88%、西达基奥仑赛 18.9 亿美元、百济/信达盈利拐点）、政策+1（BTD 放量/双目录落地/集采降幅收窄，BIOSECURE 2025-12 成法为最大负项）。**定性=头部强景气+尾部弱景气的结构性分化**；跟踪点=HARMONi-3 终局(2026H2)、OMB 名单(2026-12)、BD 退货率。脚本 build_biopharma_prosperity.py → reports/21。
+- **【08-23 追加·美股口径】用户要求改分析美股非中国生物科技公司+关键数据附出处链接**：重写后 16 项 **+9 = 结构性景气上沿**（11 向好/3 平稳/2 恶化）。资金+3（VC H1 $9.1B 2022 以来峰值、IPO 18家/$5B、>$10B 并购 4 起）、研发+3（FDA H1 26 款、daraxonrasib HR0.40、IQVIA 在手 $342亿；ASCO 美企主场 0）、商业化+4（Mounjaro $99.4亿+91%、ALNY/ARGX/LEGN 盈利拐点、royalty 兑现）、政策-1（IRA 司美-71%、MFN；BIOSECURE/232/BINSA）。report 62 个来源链接（⧉）。**中美对比要点：中国+10 强景气 vs 美股+9 结构性景气；中国强在政策支持端，美国弱在定价+地缘端，但美国资本通道/商业化体量更优。**
+- **【08-23 再追加·三年对比】报告升级为 2024/2025/2026 三年演化（同 16 项清单美股口径）**：2024=**+8 结构性景气**（GLP-1 超级周期、IPO 30家/$4B、FDA 50 款；M&A 腰斩/CRO 低谷/39% 现金<12月）→ 2025=**-1 筑底**（IPO 8家/$1.6B、折价 32%、BIOSECURE 12 月成法；并购 +133% 反弹）→ 2026=**+9 结构性景气上沿**。**结论=V 型修复，且 2026 修复由商业化+资本通道双驱动、质量高于 2024**。报告现含三年对比表+演化折线图+逐年卡片，94 个来源链接。
 - **药明康德**：日收益相关 vs 5 大药企 0.01-0.04、vs IBB/XBI 0.10-0.12 → **药明=全球研发外包景气代理，≠美国大药企销售代理**；2026-02 以来 +80.4% vs 大药企 +10.6% 完全独立；**药明强≠大药企强**。
 - **IBB/GILD/AMGN/VRTX 三方**：IBB×GILD 0.576（分界后 0.515）；AMGN×VRTX 0.482/0.518。AMGN=利好脱钩、VRTX=贴板块弱弹性(β0.93)、GILD=利空脱钩。前十大前3净拖累，引擎=NTRA/ILMN/RVMD+中小市值；ALNY 最大反向(超额−46.4pp)。
 - **GILD 2/10 Q4 窗口**：财报前 1/5→2/11 独自+31.7%（个股α，2/11 新高$155.39）→ 财报后 −13.1%；催化 Yeztugo+上调，回落=指引保守。与 8/4 Q2（板块主升浪 GILD 跑输）形态相反。
