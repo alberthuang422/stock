@@ -30,11 +30,23 @@ const path = require("path");
     return el ? el.innerText : "NO-VERDICT";
   });
   const items = await page.evaluate(() => document.querySelectorAll("table tbody tr").length);
+  const yearRows = await page.evaluate(() => {
+    const rows = Array.from(document.querySelectorAll("table tbody tr"));
+    const data = [];
+    rows.forEach(r => {
+      const tds = r.querySelectorAll("td");
+      if (tds.length >= 3 && /^202[456]$/.test(tds[0].textContent.trim())) data.push(tds[0].textContent.trim() + ":" + tds[1].textContent.trim());
+    });
+    return data;
+  });
+  const links = await page.evaluate(() => document.querySelectorAll("a.lnk").length);
   console.log("h1:", h1);
   console.log("verdict:", totalTxt);
   console.log("echarts loaded:", hasEcharts);
   console.log("charts:", JSON.stringify(chartInfo, null, 1));
   console.log("table rows:", items);
+  console.log("year rows:", JSON.stringify(yearRows));
+  console.log("source links:", links);
   console.log("errors:", errors.length ? errors.join("\n") : "none");
   await page.screenshot({ path: path.resolve(__dirname, "../results/biopharma_prosperity_render_top.png"), fullPage: false });
   await page.screenshot({ path: path.resolve(__dirname, "../results/biopharma_prosperity_render_full.png"), fullPage: true });

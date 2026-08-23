@@ -154,6 +154,63 @@ ITEMS = [
 ]
 
 GROUPS = ["资金与资本面", "研发与研发服务", "商业化兑现与销售", "政策与外部环境"]
+
+# ============ 2024 / 2025 年逐项数据（美股口径，同 16 项清单，与 ITEMS 顺序一一对应）============
+# 每项: (score, brief, label, url)
+YEARLY = {
+    2024: [
+        (1,  "美欧生物医药 VC 约 $25-26B（416 轮），较 2023 约 $20B 增 20-30%", "SVB 2024 年报", "https://www.svb.com/trends-insights/reports/healthcare-investments-and-exits/healthcare-investments-and-exits-annual-2024/"),
+        (0,  "折价/平价轮占比约 28% 创近年新高，但 biopharma 折价轮已开始回落", "GVB 2024 年中报", "https://www.gvbworld.com/trends-insights/reports/healthcare-investments-and-exits/2024-mid-year/index.html"),
+        (1,  "IPO 30 家/募资约 $4.0B（vs 2023 年 18 家/$2.9B，+39%）；CG Oncology $437M 居首", "EY Beyond Borders 2025", "https://www.ey.com/zh_tw/insights/health/beyond-borders-2025"),
+        (-1, "生物医药 M&A 约 $79B vs 2023 约 $158B 腰斩；全年无 >$10B 制药并购（Novo-Catalent $16.5B 为 CDMO）", "BioSpace 并购盘点", "https://www.biospace.com/business/pharma-has-kept-m-a-spending-small-this-year-with-just-one-deal-topping-5b"),
+        (-1, "39% 公司现金 <12 个月（2019 以来最高）；上市 biotech 783 家 vs 2022 年 939 家，破产密集", "EY Beyond Borders 2025", "https://www.ey.com/zh_tw/insights/health/beyond-borders-2025"),
+        (1,  "FDA 批 50 款（34 NME+16 BLA），略降于 2023 年 55 款但居历史次高位；22 款 first-in-class", "FDA Novel Drug Approvals 2024", "https://www.fda.gov/drugs/novel-drug-approvals-fda/novel-drug-approvals-2024"),
+        (1,  "Kisunla（AD）7 月、Cobenfy（精神分裂首创新机制）9 月获批；orforglipron III 期减重达标；ATTAIN-1 不及预期", "礼来官方新闻稿", "https://e.lilly/4673Bo6"),
+        (1,  "洛拉替尼 CROWN 5 年 PFS 60%、T-DXd DB-06、ADRIATIC mOS 55.9 月改写指南；中国 ADC 军团崛起", "国信证券 ASCO 总结", "https://pdf.dfcfw.com/pdf/H3_AP202407111637793753_1.pdf"),
+        (-1, "CRO 仍处低谷：IQVIA +2.8%（$154.1 亿）、Charles River -1.9% 净利降 95%、2025 指引再降", "医药魔方 CRO TOP10", "https://www.phirda.com/artilce_39111.html"),
+        (1,  "替尔泊肽合计 $164.6 亿（+208%）、司美全系约 $293 亿（+38%）、Keytruda $294.8 亿（+18%）", "礼来 Q4 官方", "https://investor.lilly.com/node/51906"),
+        (1,  "AMGN $334 亿（+19%）、REGN $142 亿（+8%）、BIIB FCF 翻倍、VRTX $110 亿（+12%）盈利现金流稳健", "Amgen 2024Q4 财报", "https://investors.amgen.com/news-releases/news-release-details/amgen-reports-fourth-quarter-and-full-year-2024-financial"),
+        (1,  "Royalty Pharma 组合收入约 $28 亿（+13%）、synthetic royalty $925M 创纪录", "Royalty Pharma", "https://www.royaltypharma.com/?p=5831"),
+        (1,  "礼来 MS&A 占总收入 19%（收入 +32%）、Non-GAAP 营业利润率升至 32%（净利 +102%）", "礼来 Q4 官方", "https://investor.lilly.com/node/51906"),
+        (1,  "审批高效：50 款、94% 达成 PDUFA 目标、68% 美国全球首发；加速批准新指南落地", "FDA 加速批准指南", "https://www.fda.gov/media/184120/download"),
+        (0,  "IRA 首批 10 药 2 月报价、9 月公布最高公平价（Eliquis -56%），2026 生效；当期无直接冲击", "BioSpace 谈判参与", "https://www.biospace.com/ten-pharma-companies-register-to-participate-in-medicare-drug-price-negotiation-program"),
+        (1,  "BIOSECURE 5/9 月两院通过但 12/7 未被纳入 NDAA、118 届国会立法流产；当年无实质冲击", "JDSupra 立法史", "https://jdsupra.com/legalnews/it-s-baaack-the-biosecure-act-passes-7946306/"),
+    ],
+    2025: [
+        (0,  "VC 融资总额约 $338 亿/1,171 笔，与 2024 年基本持平（$319 亿/1,091）", "BioSpace/PitchBook", "https://www.biospace.com/business/early-stage-biotechs-suffer-in-2025-as-vc-shuns-risk-pitchbook"),
+        (-1, "折价融资事件约 60 起、占比约 32%；Q2 后 IPO 上市后平均 -18.7%", "Gibson Dunn 资本市场复盘", "https://biotechbriefings.gibsondunn.com/q2-2025-life-sciences-capital-markets-recap"),
+        (-1, "IPO 仅 8 家/约 $1.6B（2024 年 19 家）；年初潮后半年冻结，Follow-on Q2 掉 49%", "Patient Daily 复盘", "https://patientdaily.com/biotech-ipo-activity-slows-sharply-in-2025-as-investor-scrutiny-increases"),
+        (1,  "MNC 并购约 $1,330 亿（+133%），≥$10B 4-5 起：J&J/Intra-Cellular $146 亿、Novartis/Avidity $120 亿", "IQVIA M&A 展望", "https://www.iqvia.com/en-gb/locations/emea/blogs/2026/01/biopharma-m-and-a-outlook-for-2026"),
+        (-1, "33% 上市 Biotech 现金 <12 个月（较 2024 年 39% 改善 6pp）；约 11 家公司倒闭", "BioSpace/EY", "https://www.biospace.com/business/four-years-and-219-lost-companies-later-biotech-still-has-a-cash-problem"),
+        (1,  "FDA 批 46 款（NME 34+BLA 12）；first-in-class 22 款（占 48%），加速批准占 24%（+10pp）", "RAPS 审批盘点", "https://www.raps.org/resource/cder-approved-46-novel-drugs-in-2025-half-for-rar.html"),
+        (0,  "阳性：VRTX 非阿片止痛 Journavx、礼来 retatrutide/orforglipron III 期成功；失败：诺和司美 AD（EVOKE）双失败、BMS Cobenfy 三期失败", "Patient Daily 失败盘点", "https://patientdaily.com/stories/677147914-major-clinical-trial-failures-mark-challenging-year-for-biopharma-companies"),
+        (1,  "ASCO 2025 中国 LBA 11 项、ADC 研究近半（百利天恒双抗 ADC 领跑）；美国药企稳定", "摩熵/药研", "https://www.pharnexcloud.com/zixun/trz_47816"),
+        (-1, "复苏弱：IQVIA +5.87%（在手订单 +4.1%）、Thermo Fisher +3.9%、Charles River -0.85% 承压", "新浪财经梳理", "https://cj.sina.cn/articles/view/5557080256/14b3a50c002001k1o4"),
+        (1,  "Mounjaro $229.6 亿（+99%）、Zepbound $135.4 亿（+175%）、Keytruda $316.8 亿（+7%）、Dupixent $178 亿（+26%）", "礼来 2025 财报", "https://investor.lilly.com/node/53786"),
+        (1,  "VRTX $120.7 亿（+9%）、REGN $143.4 亿（+1%）、礼来 $651.8 亿（+44%）净利 +95%、AMGN $368 亿（+10%）", "AMGN 2025 全年财报", "https://www.nasdaq.com/press-release/amgen-reports-fourth-quarter-and-full-year-2025-financial-results-2026-02-03"),
+        (1,  "Royalty Pharma 组合分账收入 $32.54 亿（+16%）、royalty 市场规模 $100 亿新高", "Royalty Pharma 2025", "https://www.royaltypharma.com/news/royalty-pharma-reports-q4-and-full-year-2025-results/"),
+        (0,  "礼来 SG&A 率约 37%；辉瑞 SG&A 率约 38%，盈利质量改善但费用刚性", "辉瑞 2025 全年业绩", "https://investors.pfizer.com/Investors/news-events/News/news-details/2026/Pfizer-Reports-Solid-Full-Year-2025-Results-And-Reaffirms-2026-Guidance/default.aspx"),
+        (-1, "CDER 年内五任主任、裁员 3,500 人；加速批准趋严（确认性试验「在进行中」要求）", "Morgan Lewis 分析", "https://www.morganlewis.com/blogs/as-prescribed/2025/02/fdas-recent-guidance-on-accelerated-approval-and-implications-for-rare-diseases"),
+        (-1, "IRA 首批 10 药谈判价公布、降幅 38-79%（均约 50%），2026/1 生效；Amgen Otezla 减值 $12 亿", "CMS 新闻稿", "https://cms.gov/newsroom/press-releases/hhs-announces-15-additional-drugs-selected-medicare-drug-price-negotiations-continued-effort-lower"),
+        (-1, "BIOSECURE 2025-12-18 随 FY2026 NDAA 成法（药明系未被点名）；MFN 定价行政令 4 月落地", "Latham & Watkins", "https://www.lw.com/admin/upload/SiteAttachments/BIOSECURE-Act-Becomes-Law-Limiting-Grants-With-Biotechnology-Companies-of-Concern.pdf"),
+    ],
+}
+
+# 逐年总览
+YEAR_TOTALS   = {2024: 8, 2025: -1, 2026: 9}
+YEAR_LEVELS   = {2024: "结构性景气", 2025: "筑底/盘整期", 2026: "结构性景气"}
+YEAR_CN       = {2024: "11 向好 / 2 平稳 / 3 恶化", 2025: "6 向好 / 3 平稳 / 7 恶化", 2026: "11 向好 / 3 平稳 / 2 恶化"}
+YEAR_GROUP_POINTS = {
+    2024: {"资金与资本面": 0, "研发与研发服务": 2, "商业化兑现与销售": 4, "政策与外部环境": 2},
+    2025: {"资金与资本面": -2, "研发与研发服务": 1, "商业化兑现与销售": 3, "政策与外部环境": -3},
+    2026: {"资金与资本面": 3, "研发与研发服务": 3, "商业化兑现与销售": 4, "政策与外部环境": -1},
+}
+YEAR_SUMMARIES = {
+    2024: "GLP-1 超级周期点燃、IPO 与授权交易回暖、FDA 批 50 款，典型「K 型分化」结构性景气年——头部繁荣（礼来/诺和/辉瑞放量）、尾部出清（39% 现金<12 月、M&A 腰斩、CRO 低谷）并存。",
+    2025: "「资金通道收紧 + 政策扰动密集」的筑底年：IPO 骤降至 8 家、折价融资 32%、BIOSECURE 年末成法、IRA 首批降价公布；但并购转暖（+133%）与创新资产（GLP-1/ADC）基本面强劲提供向上弹性，逐项重算合计 -1 落筑底区间上沿。",
+    2026: "「融资-退出双修复 + 商业放量验证 + 盈利拐点确认」上升周期：VC $9.1B 峰值、IPO 18 家/$5B、>$10B 并购 4 起、中型 Biotech 批量盈利；压制端为 IRA+MFN 定价与 BIOSECURE/关税合规成本，结构性景气上沿（+9）。",
+}
+
 GROUP_SUMMARIES = {
     "资金与资本面": "2026 美股生物科技处于\"融资-退出双修复\"周期：一级总量创新高（H1 $9.1B）、IPO 窗口重开（18 家/$5B）、MNC >$10B 并购密集（4 起）三轮共振；但早期融资缺口、1/3 公司 <12 个月现金与估值倒挂仍存。较中国口径（+1）偏强：美股资本通道更宽、IPO 全球首选。",
     "研发与研发服务": "FDA 审批节奏高位（H1 26 款）、重磅读出含金量高（口服 GLP-1 心血管获益、泛 RAS 抑制剂胰腺癌 HR 0.40）、CRO/CDMO 订单全面反转（IQVIA 在手 $342 亿）；ASCO/AACR 美企主场。较中国口径（+4）略低一分：学术会议主场优势对等、但中国数据质量跃迁更快。",
@@ -183,6 +240,12 @@ DATA = dict(
     groups=[dict(name=g, score=SCORES[g], n=sum(1 for it in ITEMS if it["group"] == g),
                  summary=GROUP_SUMMARIES[g]) for g in GROUPS],
     items=ITEMS,
+    yearly=dict(
+        totals=YEAR_TOTALS, levels=YEAR_LEVELS, cn=YEAR_CN,
+        group_points=YEAR_GROUP_POINTS, summaries=YEAR_SUMMARIES,
+        groups=GROUPS,
+        per_item={str(y): [[s, t, lb, u] for (s, t, lb, u) in YEARLY[y]] for y in YEARLY},
+    ),
 )
 
 def md_link(label, url):
@@ -293,10 +356,39 @@ HTML = """<!DOCTYPE html>
     <div class="note">注：得分 = 各板块 16 项逐项 ±1 加总；颜色遵循「红涨绿跌」惯例与色弱安全（叠加 +/- 符号与文字标签）。</div>
   </div>
 
-  @@GROUP_CARDS@@
+  <div class="card">
+    <h2>二、2024 → 2025 → 2026 三年景气度演化对比</h2>
+    <div class="grp-summary">同一套 16 项核查清单、同一打分口径（美股上市非中国公司），逐年回溯打分。2024 = 结构性景气（+8，GLP-1 超级周期）→ 2025 = 筑底（-1，IPO 冻结/BIOSECURE 成法/IRA 降价）→ 2026 = 结构性景气上沿（+9，融资-退出双修复+盈利拐点）。三年呈现明显的「V 型修复」，且 2026 的修复由商业化兑现与资本通道共同驱动，质量高于 2024 年。</div>
+    <div class="scroll">
+      <table style="min-width:720px;">
+        <thead><tr>
+          <th>年度</th><th>合计得分</th><th>景气区间</th>
+          @@TH_GROUPS@@
+          <th>向好/平稳/恶化</th>
+        </tr></thead>
+        <tbody>
+          @@YEAR_ROWS@@
+        </tbody>
+      </table>
+    </div>
+    <div class="chart sm" id="chart_years"></div>
+    <div class="note">注：上表与上图展示三年各板块得分演化；红=正分（涨）、绿=负分（跌），色弱安全叠加数字与文字。2024/2025 数据为回溯口径，来源链接见下方逐年明细。</div>
+  </div>
 
   <div class="card">
-    <h2>六、风险提示与跟踪节点</h2>
+    <h2>三、逐年景气度明细（2024 / 2025 回溯 + 2026）</h2>
+    <div class="grp-summary">以下逐年列出 16 项核查的关键依据与来源链接。2024/2025 为回溯打分（同口径），2026 为当前核查。点击 ⧉ 进入一手来源（FDA/CMS/SEC/公司新闻稿/权威行业统计）。</div>
+    @@YEAR_CARDS@@
+  </div>
+
+  <div class="card">
+    <h2>四、2026 年板块核查明细（16 项）</h2>
+    <div class="grp-summary">以下四个板块卡片为 2026 年当前核查的逐项明细（与「一、总体评分结构」对应），关键数据均附来源链接（⧉ 一手来源）。</div>
+    @@GROUP_CARDS@@
+  </div>
+
+  <div class="card">
+    <h2>五、风险提示与跟踪节点</h2>
     <div class="warn">
       <b>1. 数据依赖与时效：</b>本报告数据截至 2026-08-23，主要来自各公司 2026Q2/H1 财报、FDA/CMS/GovInfo 官方页面及行业统计（BioPharma Dive、PitchBook、DealForma、EY/SVB、Fierce Pharma 等）；所有关键数据均已附来源链接（⧉ 符号）。美股 NASDAQ 前 8 月 IPO 精确家数、Down Round 全样本占比等官方口径存在统计差异，已采用主流口径并注明。
     </div>
@@ -354,6 +446,38 @@ RENDER_JS = r"""
   });
   window.addEventListener('resize', function(){chart.resize();});
 })();
+
+// 2) 三年景气度演化：总分折线 + 板块得分堆叠
+(function(){
+  var el = document.getElementById('chart_years');
+  if(!el) return;
+  var chart = echarts.init(el);
+  var years = Object.keys(DATA.yearly.totals).map(Number).sort();
+  var groups = DATA.yearly.groups;
+  var series = groups.map(function(g){
+    return {
+      name: g,
+      type: 'line',
+      smooth: true,
+      symbol: 'circle',
+      symbolSize: 8,
+      lineWidth: 2.5,
+      data: years.map(function(y){ return DATA.yearly.group_points[y][g]; }),
+      itemStyle: { color: null }
+    };
+  });
+  var colors = ['#e03131','#1e66d6','#0aa06e','#7048e8'];
+  series.forEach(function(s, i){ s.itemStyle.color = colors[i]; s.lineStyle = {width: 2.5, color: colors[i]}; s.itemStyle.color = colors[i]; });
+  chart.setOption({
+    tooltip:{trigger:'axis'},
+    legend:{top:0, textStyle:{fontSize:12}},
+    grid:{left:10,right:52,top:30,bottom:24,containLabel:true},
+    xAxis:{type:'category',data:years.map(String),axisLabel:{fontSize:13}},
+    yAxis:{type:'value',min:-4,max:5,splitLine:{lineStyle:{type:'dashed',color:'#eef0f3'}},axisLabel:{formatter:function(v){return (v>0?'+':'')+v;}}},
+    series: series
+  });
+  window.addEventListener('resize', function(){chart.resize();});
+})();
 """
 
 def group_card_html(g, idx):
@@ -384,6 +508,35 @@ def group_card_html(g, idx):
   </table></div>
 </div>""".replace("@@CN@@", cn).replace("@@GNAME@@", g).replace("@@CLS@@", sc_cls).replace("@@SC@@", ("+" + str(sc)) if sc > 0 else str(sc)).replace("@@SUMMARY@@", GROUP_SUMMARIES[g]).replace("@@ROWS@@", "".join(rows))
 
+def year_card_html(year):
+    """生成某历史年份的 16 项明细卡片（2024/2025 回溯）"""
+    rows = []
+    year_data = YEARLY[year]
+    for i, it in enumerate(ITEMS):
+        no = it["no"] - 1
+        s, brief, label, url = year_data[no]
+        sc_class = {1: "up", -1: "dn", 0: "ne"}[s]
+        sc_txt = {1: "+1 向好", -1: "-1 恶化", 0: "0 平稳"}[s]
+        rows.append(
+            '<tr>'
+            '<td>{}. {}</td>'.format(it["no"], it["item"])
+            + '<td class="{}">{}</td>'.format(sc_class, sc_txt)
+            + '<td style="white-space:normal;min-width:420px;">{} <a class="lnk" href="{}" target="_blank" rel="noopener">⧉ {}</a></td>'.format(brief, url, label)
+            + '</tr>'
+        )
+    tag = "回溯口径" if year < 2026 else "当前核查"
+    return """<div class="card">
+  <h2>三、@@YEAR@@ 年核查明细 <span class="tag">@@TAG@@</span> <span class="grp-score @@CLS@@">合计 @@SC@@</span></h2>
+  <div class="grp-summary">@@SUM@@</div>
+  <div class="scroll"><table>
+    <thead><tr><th style="min-width:200px">核查项</th><th style="width:80px">打分</th><th style="min-width:440px">关键数据与依据（含来源链接）</th></tr></thead>
+    <tbody>@@ROWS@@</tbody>
+  </table></div>
+</div>""".replace("@@YEAR@@", str(year)).replace("@@TAG@@", tag) \
+        .replace("@@CLS@@", "s1" if YEAR_TOTALS[year] > 0 else "s0") \
+        .replace("@@SC@@", ("+" + str(YEAR_TOTALS[year])) if YEAR_TOTALS[year] > 0 else str(YEAR_TOTALS[year])) \
+        .replace("@@SUM@@", YEAR_SUMMARIES[year]).replace("@@ROWS@@", "".join(rows))
+
 def main():
     group_cards = "".join(group_card_html(g, i + 1) for i, g in enumerate(GROUPS))
     grp_rows = []
@@ -401,11 +554,32 @@ def main():
                 "up" if sc > 0 else ("ne" if sc == 0 else "dn"), sc_txt,
                 p, z, n, GROUP_SUMMARIES[g])
         )
+    # 三年对比表
+    th_groups = "".join('<th>{}</th>'.format(g) for g in GROUPS)
+    year_rows = []
+    for y in [2024, 2025, 2026]:
+        sc = YEAR_TOTALS[y]
+        sc_txt = ("+" + str(sc)) if sc > 0 else str(sc)
+        lv_cls = "up" if sc > 0 else ("dn" if sc < 0 else "ne")
+        cells = "".join(
+            '<td class="{}">{}</td>'.format(
+                ("up" if YEAR_GROUP_POINTS[y][g] > 0 else ("dn" if YEAR_GROUP_POINTS[y][g] < 0 else "ne")),
+                ("+" + str(YEAR_GROUP_POINTS[y][g])) if YEAR_GROUP_POINTS[y][g] > 0 else str(YEAR_GROUP_POINTS[y][g]))
+            for g in GROUPS)
+        year_rows.append(
+            '<tr><td><b>{}</b></td><td class="{}">{}</td><td>{}</td>{}{}</tr>'.format(
+                y, lv_cls, sc_txt, YEAR_LEVELS[y], cells,
+                '<td>{}</td>'.format(YEAR_CN[y]))
+        )
+    year_cards = year_card_html(2024) + year_card_html(2025)
     html = HTML.replace("@@TODAY@@", TODAY).replace("@@TOTAL@@", str(TOTAL)) \
         .replace("@@LEVEL@@", LEVEL).replace("@@LEVEL_CN@@", LEVEL_CN) \
         .replace("@@POS@@", str(POS)).replace("@@NEU@@", str(NEU)).replace("@@NEG@@", str(NEG)) \
         .replace("@@GROUP_ROWS@@", "".join(grp_rows)) \
-        .replace("@@GROUP_CARDS@@", group_cards)
+        .replace("@@GROUP_CARDS@@", group_cards) \
+        .replace("@@TH_GROUPS@@", th_groups) \
+        .replace("@@YEAR_ROWS@@", "".join(year_rows)) \
+        .replace("@@YEAR_CARDS@@", year_cards)
     data_json = json.dumps(DATA, ensure_ascii=False, allow_nan=False)
     html = html.replace("var DATA = __DATA_JSON__;", "var DATA = " + data_json + ";")
     html = html.replace("@@RENDER_JS__", RENDER_JS)
