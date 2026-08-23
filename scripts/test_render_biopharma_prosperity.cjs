@@ -35,9 +35,21 @@ const path = require("path");
     const data = [];
     rows.forEach(r => {
       const tds = r.querySelectorAll("td");
-      if (tds.length >= 3 && /^202[456]$/.test(tds[0].textContent.trim())) data.push(tds[0].textContent.trim() + ":" + tds[1].textContent.trim());
+      if (tds.length >= 3 && /^202[2-6]$/.test(tds[0].textContent.trim())) data.push(tds[0].textContent.trim() + ":" + tds[1].textContent.trim());
     });
     return data;
+  });
+  const xbiRow = await page.evaluate(() => {
+    const els = Array.from(document.querySelectorAll("h2"));
+    const h = els.find(e => e.textContent.indexOf("口径辨析") >= 0);
+    if (!h) return "NO-XBI-SECTION";
+    const card = h.closest(".card");
+    const firstRow = card ? card.querySelector("tbody tr") : null;
+    return firstRow ? firstRow.textContent.replace(/\s+/g, " ").trim().slice(0, 90) : "NO-ROW";
+  });
+  const corr = await page.evaluate(() => {
+    const m = document.body.innerText.match(/相关系数 = ([0-9.]+)/);
+    return m ? m[1] : "NO-CORR";
   });
   const links = await page.evaluate(() => document.querySelectorAll("a.lnk").length);
   console.log("h1:", h1);
@@ -46,6 +58,8 @@ const path = require("path");
   console.log("charts:", JSON.stringify(chartInfo, null, 1));
   console.log("table rows:", items);
   console.log("year rows:", JSON.stringify(yearRows));
+  console.log("xbi first row:", xbiRow);
+  console.log("corr:", corr);
   console.log("source links:", links);
   console.log("errors:", errors.length ? errors.join("\n") : "none");
   await page.screenshot({ path: path.resolve(__dirname, "../results/biopharma_prosperity_render_top.png"), fullPage: false });

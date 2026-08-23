@@ -155,9 +155,45 @@ ITEMS = [
 
 GROUPS = ["资金与资本面", "研发与研发服务", "商业化兑现与销售", "政策与外部环境"]
 
-# ============ 2024 / 2025 年逐项数据（美股口径，同 16 项清单，与 ITEMS 顺序一一对应）============
+# ============ 2022 / 2023 / 2024 / 2025 年逐项数据（美股口径，同 16 项清单，与 ITEMS 顺序一一对应）============
 # 每项: (score, brief, label, url)
 YEARLY = {
+    2022: [
+        (-1, "生物科技/制药 VC 融资约 $30.7B，较 2021 年 $39B 降约 21%，事件数 1,054 起（-26%），典型融资寒冬", "NVCA/PitchBook 汇总", "https://technewslit.com/sciencebusiness/?p=44332"),
+        (-1, "折价/平轮占比升至历史高位；34% 市值<10B 公司股价低于账上现金（创纪录）", "SVB 2022 年报", "https://www.svb.com/trends-insights/reports/healthcare-investments-and-exits/healthcare-investments-and-exits-annual-2022/"),
+        (-1, "生物科技 IPO 仅约 22 家/募资 <$2B（vs 2021 年 104 家/$15B），窗口基本关闭", "Cooley 2022 生命科学回顾", "https://cooleyma.com/2023/01/25/cooleys-2022-life-sciences-ma-year-in-review/"),
+        (0,  ">$10B 并购仅 2 笔：Amgen-Horizon $27.8B（12 月）、Pfizer-Biohaven $11.6B（5 月）；M&A 总值降至约 $70B（-61%）", "FiercePharma 2022 十大并购", "https://www.fiercepharma.com/pharma/top-10-ma-deals-2022"),
+        (-1, "87 家 biotech 裁员；Kaleido、Genocea 等破产/退市，现金告急成常态", "FierceBiotech 裁员盘点", "https://www.fiercebiotech.com/special-reports/biotech-bankruptcies-break-10-year-record-2023"),
+        (-1, "FDA 批 37 款（2016 年以来最低、低于 10 年均值 43），vs 2021 年 50、2020 年 53", "FDA New Drug Approvals 2022", "https://www.fda.gov/drugs/new-drugs-fda-cders-new-molecular-entities-and-new-therapeutic-biological-products/new-drug-therapy-approvals-2022"),
+        (0,  "阳性：lecanemab Clarity AD（CDR-SB -27%）、tirzepatide SURMOUNT-1（减重 22.5%）；失败：罗氏 TIGIT 两连败、BMS NKTR-214", "卫材 lecanemab 新闻稿", "https://www.eisai.com/news/2022/pdf/enews202271pdf.pdf"),
+        (1,  "ASCO 2022：Enhertu DESTINY-Breast04（HER2-low 乳癌全场瞩目）、dostarlimab dMMR 直肠癌 100% 临床完全缓解", "BCRF ASCO 2022 回顾", "https://www.bcrf.org/blog/asco-2022-metastatic-breast-cancer-research-updates-bcrf/"),
+        (0,  "IQVIA 收入 $14.4B、在手订单 $27.2B 新高；Charles River +12.3%；板块增速 12.2%（2021 年 22.9%）仍景气但减速", "Delancey Street Pharma Services 2022 回顾", "https://www.delanceystreetpartners.com/wp-content/uploads/2023/02/Pharma-Services-2022-Year-in-Review_.pdf"),
+        (1,  "Keytruda $20.9B（+22% 登顶药王）、Ozempic $8.4B（+77%）、Dupixent $8.7B（+40%）、Mounjaro 首年 $0.48B", "GlobalData 2022 药企收入榜", "https://www.globaldata.com/press-release/15-of-top-20-biopharmaceutical-companies-by-revenue-report-52-yoy-growth-in-2022-reveals-globaldata/"),
+        (0,  "AMGN $26.3B（+1%）/NI $6.6B；VRTX $8.9B（+18%）；REGN $12.2B（-24%，新冠抗体退坡）；GILD NI -26%", "Amgen 2022 全年财报", "https://www.amgen.com/newsroom/press-releases/2023/01/amgen-reports-fourth-quarter-and-full-year-2022-financial-results"),
+        (1,  "Royalty Pharma $1.31B 购 Trelegy 权益、$250M 购 olpasiran 权益；非稀释融资成主流", "Royalty Pharma Trelegy 交易", "https://www.royaltypharma.com/news/royalty-pharma-agrees-acquire-royalty-interest-trelegy-ellipta"),
+        (0,  "辉瑞 SI&A 13.6%（新冠摊薄）；礼来 SG&A 约 23%、营业利润率约 30%；盈利质量被新冠红利美化", "辉瑞 2022 年报", "https://pfizer.com/sites/default/files/investors/financial_reports/annual_reports/2022/performance/"),
+        (0,  "Califf 2 月重返局长；PDUFA 达成率 97% 但批准量新低，加速批准遭质疑（Pepaxto 12 月撤销）", "PharmaVoice FDA 2022 盘点", "https://dive.pharmavoice.com/news/FDA-2022-drug-approvals-fell-by-the-numbers/640690/"),
+        (-1, "IRA 8 月 16 日签署成法：首次授权 CMS 直接谈判药价（2026 首批 10 药）、通胀返利 2023 起、$2000 自付上限", "CMS IRA 实施更新", "https://cms.hhs.gov/newsroom/fact-sheets/anniversary-inflation-reduction-act-update-cms-implementation"),
+        (-1, "BIOSECURE 2022 年尚未提出；俄乌冲突致药企暂停俄投资/试验、供应链成本上升；中国封控扰动 CXO 产能", "GEP 俄乌供应链影响", "https://www.gep.com/blog/mind/how-pharma-business-can-absorb-impact-of-russia-ukraine-war"),
+    ],
+    2023: [
+        (-1, "biopharma VC 约 $22.9B、同比 -23%（HSBC 口径）；仅为疫情前五年均值 $47.5B 的 40%，处底部区域", "SVB 2023 年报", "https://www.svb.com/trends-insights/reports/healthcare-investments-and-exits/healthcare-investments-and-exits-annual-2023/"),
+        (-1, "Down round 占比高企：Q2 达 15% 集中于后期公司，近半轮次为内部人/增发轮；「史上最高比例」公司股价低于账面现金", "SVB 2023 年报", "https://www.svb.com/trends-insights/reports/healthcare-investments-and-exits/healthcare-investments-and-exits-annual-2023/"),
+        (-1, "IPO 仅 12-16 起/募资约 $2.8B（Acelyrin $621M、Apogee $345M）；Follow-on 约 $25.7B 相对活跃", "Gibson Dunn 生命科学展望", "https://www.gibsondunn.com/life-sciences-2024-outlook"),
+        (1,  "并购大年：全年 M&A 约 $179-203B（+70~86%）；Pfizer-Seagen $43B、BMS-Karuna $14B、Merck-Prometheus $10.8B、AbbVie-ImmunoGen $10.1B", "EY Beyond Borders 2024", "https://www.ey.com/content/dam/ey-unified-site/ey-com/en-us/campaigns/life-sciences/beyond-borders/documents/ey-beyond-borders-biotechnology-report-2024-texas-edition.pdf"),
+        (-1, "破产 18 家创 10 年新高（2022 年仅 8 家）；裁员 187 次（+57%）；约三成新兴 biotech 现金跑道 <12 个月", "FierceBiotech 破产纪录", "https://www.fiercebiotech.com/special-reports/biotech-bankruptcies-break-10-year-record-2023"),
+        (1,  "FDA 批 55 款创历史次高（vs 2022 年 37 款，+49%）；First-in-class 20 款、加速批准 9 款；CBER 批首款 CRISPR 疗法 Casgevy", "FDA Novel Drug Approvals 2023", "https://www.fda.gov/drugs/novel-drug-approvals-fda/novel-drug-approvals-2023"),
+        (1,  "Leqembi 1 月获批（AD 首个抗淀粉样抗体）；SELECT 显示 Wegovy 心血管事件 -20%；donanemab III 期阳性；Zepbound 11 月获批", "诺和诺德 SELECT 新闻稿", "https://www.novonordisk.com/news-and-media/news-and-ir-materials/news-details.html?id=166301"),
+        (1,  "ASCO 2023 ADC 主角：Dato-DXd、Enhertu DESTINY-PanTumor02、NATALEE 早期乳腺癌、mRNA-4157 黑色素瘤疫苗", "Clinical Trials Arena ASCO 复盘", "https://www.clinicaltrialsarena.com/analyst-comment/asco-2023-daiichi-astrazeneca-adcs/"),
+        (-1, "下半年需求明显回落：IQVIA 营收 $14.98B（+4.1%）但 Q4 新签降温；Charles River Q4 -7.9%；Thermo -5%", "IQVIA 2023 全年财报", "https://www.iqvia.com/newsroom/2024/02/iqvia-reports-fourth-quarter-and-full-year-2023-results/"),
+        (1,  "GLP-1 大爆发元年：Keytruda $250.1 亿（+19%）；司美格鲁肽三产品 $211.6 亿（Ozempic +60%、Wegovy +407%）；Mounjaro $51.6 亿；Darzalex $97.4 亿（+40%）", "Drug Discovery Trends 2023 畅销药", "https://www.drugdiscoverytrends.com/best-selling-pharmaceuticals-2023"),
+        (1,  "VRTX $98.7 亿（+11%）净利 $36.2 亿；REGN $131.2 亿（+7%）；GILD $271.2 亿净利 $56.7 亿；AMGN $281.9 亿；唯 BIIB 净利 -62%", "Vertex 2023 全年财报", "https://investors.vrtx.com/news-releases/news-release-details/vertex-reports-fourth-quarter-and-full-year-2023-financial"),
+        (0,  "Royalty Pharma 组合收入 $3.05B；Alnylam-Roche zilebesiran $3B 合作为年度代表（$310M 预付款）", "Alnylam 2023 回顾", "https://news.alnylam.com/perspectives/articles/2023-year-review-ceo-yvonne-greenstreet-reflects-year-substantial-growth-and"),
+        (-1, "明显分化：辉瑞营收 $584.96 亿（-42%）净利 -93%、SG&A 占收入升至约 43%；礼来营收 +20%、SG&A 降至约 22%", "辉瑞 2023 10-K 分析", "https://companiesmarketcap.com/eur/pfizer/sec-reports-10k/0000078003-24-000039"),
+        (1,  "审批提速、框架趋严但明确：优先审评 25 款；12 月发布加速批准指南草案（落实 CAA 2023，强化确证性试验）", "FDA 加速批准指南", "https://www.fda.gov/drugs/guidances-drugs/guidance-documents-rare-disease-drug-development"),
+        (-1, "IRA 定价压力落地：8/29 CMS 公布首批 10 药谈判名单（Eliquis、Jardiance、Xarelto 等，占 Part D 费用 20%、$50.5B）", "HHS 首批谈判名单公告", "https://www.hhs.gov/about/news/2023/08/29/hhs-selects-the-first-drugs-for-medicare-drug-price-negotiation.html"),
+        (-1, "对华脱钩启动：BIOSECURE 2023-12-20 参议院首提（S.3558，列名药明康德等）；对华监管与供应链审查趋紧", "Goodwin BIOSECURE 时间线", "https://www.goodwinlaw.com/en/insights/publications/2024/09/insights-lifesciences-biosecure-act-timeline"),
+    ],
     2024: [
         (1,  "美欧生物医药 VC 约 $25-26B（416 轮），较 2023 约 $20B 增 20-30%", "SVB 2024 年报", "https://www.svb.com/trends-insights/reports/healthcare-investments-and-exits/healthcare-investments-and-exits-annual-2024/"),
         (0,  "折价/平价轮占比约 28% 创近年新高，但 biopharma 折价轮已开始回落", "GVB 2024 年中报", "https://www.gvbworld.com/trends-insights/reports/healthcare-investments-and-exits/2024-mid-year/index.html"),
@@ -197,19 +233,33 @@ YEARLY = {
 }
 
 # 逐年总览
-YEAR_TOTALS   = {2024: 8, 2025: -1, 2026: 9}
-YEAR_LEVELS   = {2024: "结构性景气", 2025: "筑底/盘整期", 2026: "结构性景气"}
-YEAR_CN       = {2024: "11 向好 / 2 平稳 / 3 恶化", 2025: "6 向好 / 3 平稳 / 7 恶化", 2026: "11 向好 / 3 平稳 / 2 恶化"}
+YEAR_TOTALS   = {2022: -4, 2023: -1, 2024: 8, 2025: -1, 2026: 9}
+YEAR_LEVELS   = {2022: "低迷期", 2023: "筑底/盘整期", 2024: "结构性景气", 2025: "筑底/盘整期", 2026: "结构性景气"}
+YEAR_CN       = {2022: "3 向好 / 6 平稳 / 7 恶化", 2023: "7 向好 / 1 平稳 / 8 恶化", 2024: "11 向好 / 2 平稳 / 3 恶化", 2025: "6 向好 / 3 平稳 / 7 恶化", 2026: "11 向好 / 3 平稳 / 2 恶化"}
 YEAR_GROUP_POINTS = {
+    2022: {"资金与资本面": -4, "研发与研发服务": 0, "商业化兑现与销售": 2, "政策与外部环境": -2},
+    2023: {"资金与资本面": -3, "研发与研发服务": 2, "商业化兑现与销售": 1, "政策与外部环境": -1},
     2024: {"资金与资本面": 0, "研发与研发服务": 2, "商业化兑现与销售": 4, "政策与外部环境": 2},
     2025: {"资金与资本面": -2, "研发与研发服务": 1, "商业化兑现与销售": 3, "政策与外部环境": -3},
     2026: {"资金与资本面": 3, "研发与研发服务": 3, "商业化兑现与销售": 4, "政策与外部环境": -1},
 }
 YEAR_SUMMARIES = {
+    2022: "「资本寒冬」与「科学兑现」严重错配之年：VC -21%、IPO 关闭、Down Round 历史高位、IRA 8 月成法、FDA 仅批 37 款，景气度落入低迷期（-4）；但 GLP-1（Mounjaro/SURMOUNT）、ADC（Enhertu DB-04）、阿尔茨海默（lecanemab）三大科学主线与商业化放量构成结构性亮点。",
+    2023: "「资金筑底、产业向好」之年：一级/二级融资与估值仍处冰点（-1 板块），但 FDA 批 55 款创历史次高、GLP-1/ADC/AD 临床与商业化全面爆发、MNC 并购火力全开（$180B+，Pfizer-Seagen $43B）；IRA 首批谈判名单与加速批准新规构成政策逆风，合计 -1 落筑底区间。",
     2024: "GLP-1 超级周期点燃、IPO 与授权交易回暖、FDA 批 50 款，典型「K 型分化」结构性景气年——头部繁荣（礼来/诺和/辉瑞放量）、尾部出清（39% 现金<12 月、M&A 腰斩、CRO 低谷）并存。",
     2025: "「资金通道收紧 + 政策扰动密集」的筑底年：IPO 骤降至 8 家、折价融资 32%、BIOSECURE 年末成法、IRA 首批降价公布；但并购转暖（+133%）与创新资产（GLP-1/ADC）基本面强劲提供向上弹性，逐项重算合计 -1 落筑底区间上沿。",
     2026: "「融资-退出双修复 + 商业放量验证 + 盈利拐点确认」上升周期：VC $9.1B 峰值、IPO 18 家/$5B、>$10B 并购 4 起、中型 Biotech 批量盈利；压制端为 IRA+MFN 定价与 BIOSECURE/关税合规成本，结构性景气上沿（+9）。",
 }
+
+# ============ XBI 口径辨析数据（本地量化 + 调研）============
+XBI_ANALYSIS = dict(
+    xbi_ret={2022: -25.9, 2023: 7.6, 2024: 1.0, 2025: 35.9, 2026: 34.1},
+    xph_ret={2022: -9.8, 2023: 3.0, 2024: 4.9, 2025: 31.6, 2026: 29.3},
+    ibb_ret={2022: -13.7, 2023: 3.8, 2024: -2.4, 2025: 28.0, 2026: 17.6},
+    ma_amt={2022: 105, 2023: 154, 2024: 77, 2025: 133, 2026: 134},
+    corr=0.494,
+    xbi_ma_score={2022: -1, 2023: 1, 2024: 0, 2025: 1, 2026: 1},
+)
 
 GROUP_SUMMARIES = {
     "资金与资本面": "2026 美股生物科技处于\"融资-退出双修复\"周期：一级总量创新高（H1 $9.1B）、IPO 窗口重开（18 家/$5B）、MNC >$10B 并购密集（4 起）三轮共振；但早期融资缺口、1/3 公司 <12 个月现金与估值倒挂仍存。较中国口径（+1）偏强：美股资本通道更宽、IPO 全球首选。",
@@ -246,6 +296,7 @@ DATA = dict(
         groups=GROUPS,
         per_item={str(y): [[s, t, lb, u] for (s, t, lb, u) in YEARLY[y]] for y in YEARLY},
     ),
+    xbi=XBI_ANALYSIS,
 )
 
 def md_link(label, url):
@@ -357,10 +408,10 @@ HTML = """<!DOCTYPE html>
   </div>
 
   <div class="card">
-    <h2>二、2024 → 2025 → 2026 三年景气度演化对比</h2>
-    <div class="grp-summary">同一套 16 项核查清单、同一打分口径（美股上市非中国公司），逐年回溯打分。2024 = 结构性景气（+8，GLP-1 超级周期）→ 2025 = 筑底（-1，IPO 冻结/BIOSECURE 成法/IRA 降价）→ 2026 = 结构性景气上沿（+9，融资-退出双修复+盈利拐点）。三年呈现明显的「V 型修复」，且 2026 的修复由商业化兑现与资本通道共同驱动，质量高于 2024 年。</div>
+    <h2>二、2022 → 2026 五年景气度演化对比</h2>
+    <div class="grp-summary">同一套 16 项核查清单、同一打分口径（美股上市非中国公司），逐年回溯打分。五年呈现明显的「深 V 型修复」：2022 低迷期（-4，资本寒冬）→ 2023 筑底（-1，融资冰点但并购/FDA 转暖）→ 2024 结构性景气（+8，GLP-1 超级周期）→ 2025 筑底（-1，IPO 冻结/BIOSECURE 成法）→ 2026 结构性景气上沿（+9，融资-退出双修复+盈利拐点）。其中 2025 的「回调」与 2023 的「筑底」均系资金面（IPO/融资）主导、产业面（销售/临床）托底，2026 修复由商业化兑现与资本通道共同驱动，质量高于 2024。</div>
     <div class="scroll">
-      <table style="min-width:720px;">
+      <table style="min-width:760px;">
         <thead><tr>
           <th>年度</th><th>合计得分</th><th>景气区间</th>
           @@TH_GROUPS@@
@@ -372,23 +423,41 @@ HTML = """<!DOCTYPE html>
       </table>
     </div>
     <div class="chart sm" id="chart_years"></div>
-    <div class="note">注：上表与上图展示三年各板块得分演化；红=正分（涨）、绿=负分（跌），色弱安全叠加数字与文字。2024/2025 数据为回溯口径，来源链接见下方逐年明细。</div>
+    <div class="note">注：上表与上图展示五年各板块得分演化；红=正分（涨）、绿=负分（跌），色弱安全叠加数字与文字。2022-2025 数据为回溯口径，来源链接见下方逐年明细。</div>
   </div>
 
   <div class="card">
-    <h2>三、逐年景气度明细（2024 / 2025 回溯 + 2026）</h2>
-    <div class="grp-summary">以下逐年列出 16 项核查的关键依据与来源链接。2024/2025 为回溯打分（同口径），2026 为当前核查。点击 ⧉ 进入一手来源（FDA/CMS/SEC/公司新闻稿/权威行业统计）。</div>
+    <h2>三、口径辨析：大型制药（MNC）景气 ≠ XBI 小型 Biotech 景气</h2>
+    <div class="grp-summary"><b>核查主体说明：</b>本报告 16 项清单以大型制药/平台型 Biotech（礼来、诺和、默沙东、VRTX、REGN、ALNY 等）为主——它们的景气由「销售放量 + 盈利兑现」驱动。<b>XBI（SPDR S&P Biotech ETF）</b>是修正等权的纯小盘指数（约 155 只、成分中位市值 $2.3B、约 80% 未盈利），其景气由「融资（IPO/Follow-on）→ 并购 → 临床/FDA 数据」驱动，两者是<b>不同的周期</b>。本地数据验证（XBI vs XPH 逐年收益）：2022 年 XBI -25.9% vs 大药企 -9.8%（小 biotech 深跌 16pp）；2024 年 XBI +1.0% vs 大药企 +4.9%（大药企 GLP-1 盈利驱动跑赢）；2025/2026 并购大年 XBI 反超（+35.9% vs +31.6%、+34.1% vs +29.3%）。</div>
+    <div class="scroll">
+      <table style="min-width:760px;">
+        <thead><tr><th>年度</th><th>XBI 收益</th><th>大药企(XPH)</th><th>IBB</th><th>并购额($B)</th><th>XBI−XPH</th><th>XBI 景气(并购视角)</th></tr></thead>
+        <tbody>
+          @@XBI_ROWS@@
+        </tbody>
+      </table>
+    </div>
+    <div class="chart sm" id="chart_xbi"></div>
+    <div class="keypoint" style="margin-top:12px;">
+      <b>结论：</b>① <b>XBI 年度收益与并购金额相关系数 = @@XBI_CORR@@</b>（2022-2026，本地 XBI 数据 × 调研并购额）——并购强度是小 biotech 最重要的景气代理，逻辑链条：并购 = 退出通道 + 溢价重估同平台资产（如 Novartis-Avidity $12B 带动 Dyne 等同类上涨）。② 以「并购活跃度」为核心指标的 XBI 景气打分：<b>2022 -1、2023 +1、2024 0、2025 +1、2026（至今）+1</b>，与本报告 16 项（大药企视角）得分在 2024 年出现方向分歧（本报告 +8 强 vs XBI 0 平淡）——<b>这正是 2024 年「大药企靠 GLP-1 赚钱、小 biotech 融资/并购双冷」的脱钩实证</b>。③ 使用建议：看 XBI 景气用「并购 + 融资 + 利率」三因子，本报告 16 项更适合判断大药企/平台型资产景气。
+    </div>
+    <div class="note">来源：XBI/IBB/XPH 年度收益为本地 Yahoo 前复权日线计算（2006-2026-08）；并购额为 EY/IQVIA/PharmaVoice 年度统计（2026 为 H1 口径）；XBI 成分特征见 <a class="lnk" href="https://www.ssga.com/us/en/intermediary/etfs/funds/spdr-sp-biotech-etf-xbi" target="_blank" rel="noopener">⧉ SSGA 官网</a>、<a class="lnk" href="https://assets.ey.com/content/dam/ey-sites/ey-com/en_us/noindex/ey-beyond-borders-ey-biotechnology-report-2023.pdf" target="_blank" rel="noopener">⧉ EY Beyond Borders 2023</a>、<a class="lnk" href="https://www.iqvia.com/en-gb/locations/emea/blogs/2026/01/biopharma-m-and-a-outlook-for-2026" target="_blank" rel="noopener">⧉ IQVIA 2026 M&A 展望</a>。</div>
+  </div>
+
+  <div class="card">
+    <h2>四、逐年景气度明细（2022-2026 回溯）</h2>
+    <div class="grp-summary">以下逐年列出 16 项核查的关键依据与来源链接。2022-2025 为回溯打分（同口径），2026 为当前核查。点击 ⧉ 进入一手来源（FDA/CMS/SEC/公司新闻稿/权威行业统计）。</div>
     @@YEAR_CARDS@@
   </div>
 
   <div class="card">
-    <h2>四、2026 年板块核查明细（16 项）</h2>
+    <h2>五、2026 年板块核查明细（16 项）</h2>
     <div class="grp-summary">以下四个板块卡片为 2026 年当前核查的逐项明细（与「一、总体评分结构」对应），关键数据均附来源链接（⧉ 一手来源）。</div>
     @@GROUP_CARDS@@
   </div>
 
   <div class="card">
-    <h2>五、风险提示与跟踪节点</h2>
+    <h2>六、风险提示与跟踪节点</h2>
     <div class="warn">
       <b>1. 数据依赖与时效：</b>本报告数据截至 2026-08-23，主要来自各公司 2026Q2/H1 财报、FDA/CMS/GovInfo 官方页面及行业统计（BioPharma Dive、PitchBook、DealForma、EY/SVB、Fierce Pharma 等）；所有关键数据均已附来源链接（⧉ 符号）。美股 NASDAQ 前 8 月 IPO 精确家数、Down Round 全样本占比等官方口径存在统计差异，已采用主流口径并注明。
     </div>
@@ -478,6 +547,39 @@ RENDER_JS = r"""
   });
   window.addEventListener('resize', function(){chart.resize();});
 })();
+
+// 3) XBI vs 大药企 vs 并购：双轴图（XBI/IBB/XPH 收益柱 + 并购额折线）
+(function(){
+  var el = document.getElementById('chart_xbi');
+  if(!el) return;
+  var chart = echarts.init(el);
+  var d = DATA.xbi;
+  var years = Object.keys(d.xbi_ret).map(Number).sort();
+  var yrs = years.map(String);
+  var series = [
+    {name:'XBI 小biotech', type:'bar', barWidth:16, data: years.map(function(y){return d.xbi_ret[y];}),
+     itemStyle:{color:'#e03131',borderRadius:[3,3,0,0]}},
+    {name:'IBB 大中市值', type:'bar', barWidth:16, data: years.map(function(y){return d.ibb_ret[y];}),
+     itemStyle:{color:'#1e66d6',borderRadius:[3,3,0,0]}},
+    {name:'XPH 大药企', type:'bar', barWidth:16, data: years.map(function(y){return d.xph_ret[y];}),
+     itemStyle:{color:'#7048e8',borderRadius:[3,3,0,0]}},
+    {name:'并购额($B)', type:'line', yAxisIndex:1, smooth:true, symbol:'diamond', symbolSize:9,
+     data: years.map(function(y){return d.ma_amt[y];}),
+     lineStyle:{width:2.5,color:'#0aa06e'}, itemStyle:{color:'#0aa06e'}}
+  ];
+  chart.setOption({
+    tooltip:{trigger:'axis'},
+    legend:{top:0, textStyle:{fontSize:12}},
+    grid:{left:10,right:52,top:30,bottom:24,containLabel:true},
+    xAxis:{type:'category',data:yrs,axisLabel:{fontSize:13}},
+    yAxis:[
+      {type:'value',name:'年度收益%',min:-30,max:45,splitLine:{lineStyle:{type:'dashed',color:'#eef0f3'}},axisLabel:{formatter:function(v){return v+'%';}}},
+      {type:'value',name:'并购额 $B',min:0,max:180,splitLine:{show:false},axisLabel:{formatter:function(v){return '$'+v;}}}
+    ],
+    series: series
+  });
+  window.addEventListener('resize', function(){chart.resize();});
+})();
 """
 
 def group_card_html(g, idx):
@@ -554,10 +656,10 @@ def main():
                 "up" if sc > 0 else ("ne" if sc == 0 else "dn"), sc_txt,
                 p, z, n, GROUP_SUMMARIES[g])
         )
-    # 三年对比表
+    # 五年对比表
     th_groups = "".join('<th>{}</th>'.format(g) for g in GROUPS)
     year_rows = []
-    for y in [2024, 2025, 2026]:
+    for y in [2022, 2023, 2024, 2025, 2026]:
         sc = YEAR_TOTALS[y]
         sc_txt = ("+" + str(sc)) if sc > 0 else str(sc)
         lv_cls = "up" if sc > 0 else ("dn" if sc < 0 else "ne")
@@ -571,7 +673,26 @@ def main():
                 y, lv_cls, sc_txt, YEAR_LEVELS[y], cells,
                 '<td>{}</td>'.format(YEAR_CN[y]))
         )
-    year_cards = year_card_html(2024) + year_card_html(2025)
+    # XBI 口径辨析表
+    xbi = XBI_ANALYSIS
+    xbi_rows = []
+    for y in [2022, 2023, 2024, 2025, 2026]:
+        diff = xbi["xbi_ret"][y] - xbi["xph_ret"][y]
+        mscore = xbi["xbi_ma_score"][y]
+        msc_cls = "up" if mscore > 0 else ("dn" if mscore < 0 else "ne")
+        msc_txt = {1: "+1 景气", -1: "-1 低迷", 0: "0 平淡"}[mscore]
+        xbi_rows.append(
+            '<tr><td><b>{}</b></td>'
+            '<td class="{}">{:+.1f}%</td><td class="{}">{:+.1f}%</td><td class="{}">{:+.1f}%</td>'
+            '<td>${}</td><td class="{}">{:+.1f}pp</td><td class="{}">{}</td></tr>'.format(
+                y,
+                "up" if xbi["xbi_ret"][y] >= 0 else "dn", xbi["xbi_ret"][y],
+                "up" if xbi["xph_ret"][y] >= 0 else "dn", xbi["xph_ret"][y],
+                "up" if xbi["ibb_ret"][y] >= 0 else "dn", xbi["ibb_ret"][y],
+                xbi["ma_amt"][y],
+                "up" if diff >= 0 else "dn", diff,
+                msc_cls, msc_txt))
+    year_cards = "".join(year_card_html(y) for y in [2022, 2023, 2024, 2025])
     html = HTML.replace("@@TODAY@@", TODAY).replace("@@TOTAL@@", str(TOTAL)) \
         .replace("@@LEVEL@@", LEVEL).replace("@@LEVEL_CN@@", LEVEL_CN) \
         .replace("@@POS@@", str(POS)).replace("@@NEU@@", str(NEU)).replace("@@NEG@@", str(NEG)) \
@@ -579,7 +700,9 @@ def main():
         .replace("@@GROUP_CARDS@@", group_cards) \
         .replace("@@TH_GROUPS@@", th_groups) \
         .replace("@@YEAR_ROWS@@", "".join(year_rows)) \
-        .replace("@@YEAR_CARDS@@", year_cards)
+        .replace("@@YEAR_CARDS@@", year_cards) \
+        .replace("@@XBI_ROWS@@", "".join(xbi_rows)) \
+        .replace("@@XBI_CORR@@", str(xbi["corr"]))
     data_json = json.dumps(DATA, ensure_ascii=False, allow_nan=False)
     html = html.replace("var DATA = __DATA_JSON__;", "var DATA = " + data_json + ";")
     html = html.replace("@@RENDER_JS__", RENDER_JS)
