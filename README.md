@@ -33,6 +33,7 @@
 - **[支撑 / 阻力位 AI 识别 Demo](reports/13_kbwb支撑位/support_levels_ms_demo.html)** · 支撑位识别方法（MS 示例）
 - **[下降趋势线突破识别方法](reports/13_kbwb支撑位/trendline_breakout_report.html)** · AI 识别「下降趋势线突破」的方法 + 证据
 - **[月线 EMA20 支撑位买入回测](reports/月线EMA20支撑位买入_回测报告.html)** · 月线级别支撑位买入回测
+- **[蓝筹区间下沿支撑 × 周线EMA20压制（三组对照）](reports/31_蓝筹区间下沿支撑_周线EMA20压制回测/index.html)** · 47只低波动蓝筹 1570个下沿触达事件；周线EMA20压制本身影响有限（A vs B T+20 差异不显著），死叉显著放大尾部风险（C组P10=-10.7% vs A组-6.7%、T+20破位率71.4% vs 62.8%）
 
 ### 支撑 / 弱势板块研究
 - **[道指板块支撑](reports/13_道指板块支撑/djia_sector_support_report.html)** · 平量 T+10 胜率 81% vs 放量 54%
