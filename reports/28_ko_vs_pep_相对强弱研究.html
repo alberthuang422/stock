@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>可口可乐（KO）基本面分析暨 KO vs 百事（PEP）相对强势拆解</title>
+<script src="../scripts/lib/echarts.min.js"></script>
+<style>
+  :root{
+    --bg:#ffffff; --fg:#1a1a2e; --muted:#5b5f76; --line:#e4e7f0;
+    --blue:#0072B2; --orange:#E69F00; --sky:#56B4E9; --green:#009E73;
+    --purple:#CC79A7; --vermillion:#D55E00; --black:#000000;
+    --panel:#f7f8fc; --accent:#B22222;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{background:var(--bg); color:var(--fg); font-family:-apple-system,"Segoe UI","Microsoft YaHei",sans-serif; line-height:1.75; padding:0 0 60px;}
+  .wrap{max-width:1000px; margin:0 auto; padding:0 24px;}
+  header{background:linear-gradient(135deg,#1a1a2e 0%,#3d3d5c 100%); color:#fff; padding:44px 0 38px; margin-bottom:34px;}
+  header .wrap{padding:0 24px;}
+  .kicker{font-size:13px; letter-spacing:2px; text-transform:uppercase; color:#aab3d0; margin-bottom:10px;}
+  h1{font-size:26px; font-weight:700; line-height:1.4; margin-bottom:10px;}
+  .sub{font-size:15px; color:#c6cde2;}
+  h2{font-size:20px; margin:44px 0 16px; padding-left:12px; border-left:4px solid var(--blue);}
+  h3{font-size:16px; margin:26px 0 10px; color:#333;}
+  p{margin:10px 0;}
+  .verdict{background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:24px 26px; margin:26px 0; box-shadow:0 2px 10px rgba(26,26,46,.05);}
+  .verdict-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px 30px; margin-top:14px;}
+  .vg-item{display:flex; justify-content:space-between; border-bottom:1px dashed var(--line); padding:7px 0; font-size:14.5px;}
+  .vg-item .k{color:var(--muted);}
+  .vg-item .v{font-weight:600;}
+  .badge{display:inline-block; padding:2px 12px; border-radius:14px; font-weight:700; font-size:13px;}
+  .b-bull{background:#e6f4ef; color:#007a5e;}
+  .b-strong{background:#e8f0fb; color:#0056b8;}
+  .b-med{background:#fdf3e0; color:#8a5a00;}
+  .b-high{background:#e8f0fb; color:#0056b8;}
+  table{width:100%; border-collapse:collapse; margin:16px 0; font-size:14px;}
+  th{background:#eef1f8; color:#333; text-align:left; padding:9px 12px; border:1px solid var(--line); font-weight:600;}
+  td{padding:8px 12px; border:1px solid var(--line);}
+  tr:nth-child(even) td{background:#fafbfe;}
+  .pos{color:var(--accent); font-weight:600;}
+  .neg{color:var(--green); font-weight:600;}
+  .num{font-variant-numeric:tabular-nums; text-align:right;}
+  .chart{background:#fff; border:1px solid var(--line); border-radius:10px; padding:16px; margin:18px 0; box-shadow:0 2px 8px rgba(26,26,46,.04);}
+  .chart-title{font-size:14px; font-weight:600; color:#333; margin-bottom:4px;}
+  .chart-note{font-size:12px; color:var(--muted); margin-bottom:8px;}
+  .note{font-size:12.5px; color:var(--muted); margin-top:6px;}
+  .callout{background:#fdf7ed; border:1px solid #f0dcb4; border-left:4px solid var(--orange); padding:14px 18px; border-radius:6px; margin:18px 0; font-size:14.5px;}
+  .warn{background:#fdf0f0; border:1px solid #f2cccc; border-left:4px solid var(--vermillion); padding:14px 18px; border-radius:6px; margin:18px 0; font-size:14.5px;}
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:18px;}
+  @media(max-width:760px){.grid2,.verdict-grid{grid-template-columns:1fr;}}
+  .score-ring{text-align:center;}
+  .score-num{font-size:42px; font-weight:800; color:var(--blue);}
+  .score-label{font-size:13px; color:var(--muted);}
+  .dim-row{display:flex; align-items:center; gap:10px; margin:8px 0; font-size:14px;}
+  .dim-name{width:96px; color:#333; font-weight:600;}
+  .dim-bar{flex:1; height:12px; background:#edf0f7; border-radius:6px; overflow:hidden;}
+  .dim-fill{height:100%; border-radius:6px;}
+  .dim-val{width:44px; text-align:right; font-weight:700; color:#333;}
+  ul,ol{margin:10px 0 10px 22px;}
+  li{margin:5px 0;}
+  .src{font-size:12.5px; color:var(--muted); word-break:break-all;}
+  .src li{margin:3px 0;}
+  .footer{margin-top:50px; padding-top:18px; border-top:1px solid var(--line); font-size:12.5px; color:var(--muted); text-align:center;}
+  .tags{display:flex; gap:8px; flex-wrap:wrap; margin:10px 0;}
+  .tag{background:#eef1f8; color:#3d3d5c; padding:2px 10px; border-radius:12px; font-size:12px;}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="kicker">Fundamental Analysis · KO vs PEP</div>
+    <h1>可口可乐（KO）基本面分析<br>暨 KO vs 百事（PEP）相对强势拆解</h1>
+    <div class="sub">数据截至 2026-08-21 · 行情数据为本地 Yahoo 日线（复权） · 财务数据来自财报与二级权威聚合源</div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- ===================== 一、结论速览 ===================== -->
+<h2>一、结论速览</h2>
+
+<div class="verdict">
+  <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+    <div>
+      <span class="badge b-bull">Bullish 看多</span>
+      <span style="margin-left:8px; font-size:15px; font-weight:700;">总评分 74 / 100</span>
+    </div>
+    <div><span class="badge b-med">Confidence: Medium-High</span></div>
+  </div>
+  <div class="verdict-grid">
+    <div class="vg-item"><span class="k">Resolved entity</span><span class="v">Coca-Cola Co.（NYSE: KO，美国）</span></div>
+    <div class="vg-item"><span class="k">Data snapshot</span><span class="v">2026-08-21 / Q2 2026（7/28 报）</span></div>
+    <div class="vg-item"><span class="k">Verdict</span><span class="v" style="color:var(--accent);">Bullish（估值偏贵，属优质溢价）</span></div>
+    <div class="vg-item"><span class="k">Data quality</span><span class="v">Coverage 90% · Conflicts 1 · Fresh: TTM+最新季度</span></div>
+    <div class="vg-item"><span class="k">股价（8/21）</span><span class="v">$91.10（52周区间 $65.35–$91.87）</span></div>
+    <div class="vg-item"><span class="k">股息率</span><span class="v">2.33%（连续 63 年增长）</span></div>
+  </div>
+  <p style="margin-top:16px; font-size:15px;">
+    <strong>核心结论：</strong>KO 是一家经营质量极优、现金流充沛、资产负债表稳健的全球化饮料龙头。
+    2026 Q2 营收与可比 EPS 双超预期、全球销量 +5%、连续第 8 个季度盈利超预期并上调全年指引，
+    叠加防御性资金轮动与自身定价权，推动股价创历史新高。评分 74 属「强劲」（75-84 为强劲，接近）。
+    当前唯一显著短板是估值——PE 27.4 倍显著高于五年中枢，处于近十年高位，安全边际有限。
+    相对 PEP，KO 的强势是<strong>基本面与估值双重分化</strong>的结果，且有明确的量价证据，详见第三、四部分。
+  </p>
+</div>
+
+<div class="callout">
+  <strong>关于「为什么最近 KO 比 PEP 强」的先行回答：</strong>过去一年 KO 上涨 +32.5%、PEP 下跌 -1.0%，两者的差距并非最近才出现，而是
+  <strong>2024 年以来三段式走阔</strong>（2024 +16.5pp、2025 +17.0pp、2026 YTD +30.7pp 超额）。核心原因：
+  ①KO 经营质量（毛利率 63% vs 54%、净利率 33% vs 12%）持续碾压，且 Q2 获 8 连 beat + 上调指引，PEP 微 miss + 维持指引；
+  ②PEP 的北美零食业务被「GLP-1 减重药冲击 + 美国消费降级（汽油 $4.56/加仑冲击便利店冲动消费）+ 降价促销」三重夹击，而 KO 是纯饮料、组合多元且单箱量 +5%；
+  ③市场风偏转向防御，资金从波动性 AI 龙头轮入高股息低波动消费股，KO 作为「防御锚」受益，PEP 则受成长属性折价。
+</div>
+
+<!-- ===================== 二、KO 基本面五维评分 ===================== -->
+<h2>二、KO 基本面五维评分（100 分制 · 均衡权重）</h2>
+<p style="font-size:14px; color:var(--muted);">权重：经营质量 30 / 资产负债表 25 / 现金流 20 / 估值 20 / 资本配置 5。行业调整：饮料为品牌驱动轻资产模式，重点看利润率与品牌壁垒。</p>
+
+<div class="grid2" style="margin-top:8px;">
+  <div class="chart">
+    <div class="chart-title">五维得分</div>
+    <div class="score-ring" style="float:left; width:150px; margin-right:16px;">
+      <div class="score-num">74</div><div class="score-label">总分 / Confidence: M-H</div>
+    </div>
+    <div style="overflow:hidden;">
+      <div class="dim-row"><span class="dim-name">经营质量</span><div class="dim-bar"><div class="dim-fill" style="width:92%; background:var(--blue);"></div></div><span class="dim-val">92</span></div>
+      <div class="dim-row"><span class="dim-name">资产负债表</span><div class="dim-bar"><div class="dim-fill" style="width:72%; background:var(--sky);"></div></div><span class="dim-val">72</span></div>
+      <div class="dim-row"><span class="dim-name">现金流</span><div class="dim-bar"><div class="dim-fill" style="width:88%; background:var(--orange);"></div></div><span class="dim-val">88</span></div>
+      <div class="dim-row"><span class="dim-name">估值</span><div class="dim-bar"><div class="dim-fill" style="width:38%; background:var(--vermillion);"></div></div><span class="dim-val">38</span></div>
+      <div class="dim-row"><span class="dim-name">资本配置</span><div class="dim-bar"><div class="dim-fill" style="width:60%; background:var(--purple);"></div></div><span class="dim-val">60</span></div>
+    </div>
+    <div style="clear:both;"></div>
+    <div class="note">修正项：数据完整 +1；估值处于十年高位 -4（周期顶部盈利失真）；评级为均衡（blend）口径。终分 74。</div>
+  </div>
+  <div class="chart">
+    <div class="chart-title">快速筛查 7 项</div>
+    <table style="margin:6px 0 0;">
+      <tr><th>检查项</th><th>结果</th></tr>
+      <tr><td>市值门槛 &gt;$2B</td><td>✅ 391.96B</td></tr>
+      <tr><td>流动性（流动/速动）</td><td>✅ 1.30 / 1.12</td></tr>
+      <tr><td>债务合理性</td><td>✅ 净债 $27.9B / EBITDA 2.5x，饮料业合理</td></tr>
+      <tr><td>盈利趋势（10年盈利年数）</td><td>✅ 连续盈利</td></tr>
+      <tr><td>现金流趋势（FCF 为正且改善）</td><td>✅ TTM FCF $14.3B</td></tr>
+      <tr><td>回报质量（ROE/ROIC）</td><td>✅ ROE 44% / ROIC ~20%</td></tr>
+      <tr><td>估值合理性</td><td>⚠️ PE 27.4x 高于自身五年均，仅此一项偏贵</td></tr>
+    </table>
+    <div class="note">7 项通过 6 项 → 高基础置信度；估值项压分。</div>
+  </div>
+</div>
+
+<h3>① 经营质量 — 92/100（行业顶尖）</h3>
+<table>
+  <tr><th>指标（TTM）</th><th class="num">KO</th><th class="num">PEP</th><th>解读</th></tr>
+  <tr><td>毛利率</td><td class="num">62.9%</td><td class="num">54.0%</td><td>KO 资产轻、以浓缩液+特许装瓶为主，天然高毛利</td></tr>
+  <tr><td>营业利润率</td><td class="num">35.0%</td><td class="num">16.5%</td><td>KO 是 PEP 的 2.1 倍</td></tr>
+  <tr><td>净利率</td><td class="num">32.9%</td><td class="num">12.3%</td><td>KO 约 PEP 的 2.7 倍</td></tr>
+  <tr><td>ROE</td><td class="num">44.2%</td><td class="num">51.6%</td><td>两者都靠杠杆放大；KO 权益基数小（回购+高留存）</td></tr>
+  <tr><td>ROIC</td><td class="num">~20%</td><td class="num">~20.7%</td><td>资本回报基本相当</td></tr>
+  <tr><td>营收增长（Q2 YoY）</td><td class="num">+7%（有机+6%）</td><td class="num">+6.4%（有机+2.4%）</td><td>KO 有机增速是 PEP 的 2.5 倍</td></tr>
+  <tr><td>EPS 超预期（Q2）</td><td class="num">+5.4% beat</td><td class="num">-0.5% miss</td><td>KO 连续第 8 季 beat；PEP 微 miss</td></tr>
+</table>
+<p>KO 的「全气候（all-weather）」策略在 Q2 得到验证：全球单箱量 +5%（可口可乐品牌 +5%、零度 +16%、无糖可乐 +7%），北美洲营收 +7%、拉美 +16%，有机营收 +6% 量价齐升。相比之下 PEP 北美有机销售 -0.5%、饮料量 -4%、零食量持平，管理曾直言美国消费者「比预期更差」。</p>
+
+<h3>② 资产负债表 — 72/100（稳健，杠杆偏高）</h3>
+<table>
+  <tr><th>指标（TTM）</th><th class="num">KO</th><th class="num">PEP</th><th>解读</th></tr>
+  <tr><td>总债务</td><td class="num">$44.3B</td><td class="num">$53.2B</td><td>PEP 债务规模更大</td></tr>
+  <tr><td>净债务</td><td class="num">$27.9B</td><td class="num">$42.5B</td><td>KO 净债比 PEP 少 $14.6B</td></tr>
+  <tr><td>净债务 / EBITDA</td><td class="num">≈2.5x</td><td class="num">≈2.7x</td><td>两者相当，PEP 略高</td></tr>
+  <tr><td>流动比率 / 速动比率</td><td class="num">1.30 / 1.12</td><td class="num">0.93 / 0.74</td><td>KO 流动性显著好于 PEP（PEP &lt;1）</td></tr>
+  <tr><td>权益总额</td><td class="num">$38.3B</td><td class="num">$22.3B</td><td>KO 权益厚实</td></tr>
+</table>
+<p>KO 资产负债率为 64.5%（PEP 80.2%），流动比率 1.30 优于 PEP 的 0.93。净债务约 $27.9B、对 EBITDA 约 2.5x，对一家现金流稳定的消费巨头属合理区间，但 <strong>负的净现金账面与长期回购意味着财务灵活性不如巅峰期</strong>。利息保障倍数约 8-9x（EBIT/利息），无兑付风险。</p>
+
+<h3>③ 现金流 — 88/100（印钞机）</h3>
+<table>
+  <tr><th>指标（TTM）</th><th class="num">KO</th><th class="num">PEP</th></tr>
+  <tr><td>经营活动现金流</td><td class="num">$16.3B</td><td class="num">$5.9B*</td></tr>
+  <tr><td>自由现金流</td><td class="num">$14.3B</td><td class="num">~$5.4B*</td></tr>
+  <tr><td>FCF 利润率</td><td class="num">28.5%</td><td class="num">~7.5%*</td></tr>
+  <tr><td>FCF 收益率（对市值）</td><td class="num">3.6%</td><td class="num">~2.8%*</td></tr>
+</table>
+<p class="note">*PEP 的现金流指标为 TTM H1 年化估算，存在较大不确定性，仅作量级参考。</p>
+<p>KO 现金流质量极高：TTM 经营活动现金流 $16.3B、FCF $14.3B，FCF 利润率 28.5%，为全球饮料业的标杆。分红 $11.1B 全部由 FCF 覆盖且有余（63 年连增）。唯一需要留意的是 TTM 经营活动现金流包含了 $7.7B 的非经常性营运资本改善（各季间有噪音），FY2025 实际为 $7.4B、FCF $5.3B，属正常波动区间；不影响长期判断。</p>
+
+<h3>④ 估值 — 38/100（昂贵，唯一短板）</h3>
+<table>
+  <tr><th>指标</th><th class="num">KO</th><th class="num">PEP</th><th>解读</th></tr>
+  <tr><td>P/E（TTM）</td><td class="num">27.4x</td><td class="num">18.8x</td><td>KO 较 PEP 溢价 46%</td></tr>
+  <tr><td>Forward P/E</td><td class="num">26.8x</td><td class="num">16.5x</td><td>前瞻溢价更明显</td></tr>
+  <tr><td>P/S</td><td class="num">7.2x</td><td class="num">2.0x</td><td>品牌资产溢价</td></tr>
+  <tr><td>EV/EBITDA</td><td class="num">≈20x</td><td class="num">≈14x</td><td>均高于各自五年中枢</td></tr>
+  <tr><td>股息率</td><td class="num">2.33%</td><td class="num">4.13%</td><td>PEP 股息率高出 180bp</td></tr>
+  <tr><td>FCF Yield</td><td class="num">3.6%</td><td class="num">~2.8%</td><td>KO 现金流回报更优</td></tr>
+</table>
+<p>KO 当前 27.4x PE 显著高于自身五年均值（约 22-23x），处于近十年高位。市场愿意为「更干净的增长 + 更强的定价权 + 防御属性」支付大幅溢价；但这种溢价意味着 <strong>一旦宏观转向风险偏好回暖或增长降速，估值压缩空间大</strong>。PEP 的 18.8x 相对便宜，市场已定价其「零食困境」。两者估值差本身也是本次相对强弱的一个结果变量。</p>
+
+<h3>⑤ 资本配置 — 60/100（稳健但有拖累）</h3>
+<ul>
+  <li><strong>回购</strong>：TTM 回购 $0.94B（2025 全年 $0.75B），节奏温和，未激进推高 ROE。</li>
+  <li><strong>分红</strong>：$2.12/股/年，连续 63 年增加（Dividend King），FCF 覆盖充分。</li>
+  <li><strong>稀释</strong>：SBC 规模小（TTM $266M，占市值 <0.1%），股本净减少（回购 &gt; 发行）。</li>
+  <li><strong>会计红旗</strong>：Q2 TTM 经营现金流含约 $7.7B 营运资本一次性改善，需剔除看（见③注释）；无其他重大红旗。</li>
+  <li><strong>风险事件</strong>：旗下 Fairlife 乳制品子公司遭遇勒索软件攻击（7/28 财报前），正影响部分产能，构成短期运营不确定性。</li>
+</ul>
+
+<!-- ===================== 三、KO vs PEP 相对强弱量化验证 ===================== -->
+<h2>三、KO vs PEP 相对强弱：量化验证</h2>
+
+<div class="chart">
+  <div class="chart-title">KO / PEP 相对强弱比率（复权收盘价之比的月度序列，2021 至今）</div>
+  <div class="chart-note">比率上升 = KO 相对 PEP 走强。2021-2023 低位徘徊，2024 起趋势反转，2026 加速攀升至历史高位（当前 0.635 为 1995 年以来最高水平）。</div>
+  <div id="ratioChart" style="width:100%; height:360px;"></div>
+</div>
+
+<h3>3.1 多窗口收益对比（截至 2026-08-21，复权）</h3>
+<table>
+  <tr><th>窗口</th><th class="num">KO</th><th class="num">PEP</th><th class="num">相对超额（KO-PEP）</th></tr>
+  <tr><td>1 个月</td><td class="num pos">+12.2%</td><td class="num pos">+6.3%</td><td class="num pos">+5.9pp</td></tr>
+  <tr><td>3 个月</td><td class="num pos">+13.0%</td><td class="num neg">-2.6%</td><td class="num pos">+15.6pp</td></tr>
+  <tr><td>6 个月</td><td class="num pos">+15.6%</td><td class="num neg">-11.3%</td><td class="num pos">+26.9pp</td></tr>
+  <tr><td>年初至今</td><td class="num pos">+33.6%</td><td class="num pos">+2.9%</td><td class="num pos">+30.7pp</td></tr>
+  <tr><td>1 年</td><td class="num pos">+32.5%</td><td class="num neg">-1.0%</td><td class="num pos">+33.5pp</td></tr>
+  <tr><td>3 年</td><td class="num pos">+64.5%</td><td class="num neg">-12.1%</td><td class="num pos">+76.6pp</td></tr>
+  <tr><td>5 年</td><td class="num pos">+84.6%</td><td class="num pos">+7.4%</td><td class="num pos">+77.2pp</td></tr>
+</table>
+<p>所有时间窗口 KO 均全面领先，且差距随窗口拉长而扩大——这不是短期事件驱动，而是 <strong>结构性重估</strong>。</p>
+
+<h3>3.2 年度收益分解：强势的起点在 2024</h3>
+<table>
+  <tr><th>年份</th><th class="num">KO</th><th class="num">PEP</th><th class="num">超额</th><th>阶段特征</th></tr>
+  <tr><td>2021</td><td class="num pos">+15.8%</td><td class="num pos">+23.9%</td><td class="num neg">-8.2pp</td><td>PEP 占优（疫情后零食景气）</td></tr>
+  <tr><td>2022</td><td class="num pos">+10.4%</td><td class="num pos">+7.2%</td><td class="num pos">+3.2pp</td><td>分化初现</td></tr>
+  <tr><td>2023</td><td class="num neg">-3.4%</td><td class="num neg">-2.6%</td><td class="num neg">-0.8pp</td><td>均回调，差距持平</td></tr>
+  <tr><td><strong>2024</strong></td><td class="num pos">+7.3%</td><td class="num neg">-9.2%</td><td class="num pos"><strong>+16.5pp</strong></td><td><strong>结构拐点：PEP 盈利失速+减值</strong></td></tr>
+  <tr><td>2025</td><td class="num pos">+16.4%</td><td class="num neg">-0.6%</td><td class="num pos">+17.0pp</td><td>分化巩固</td></tr>
+  <tr><td>2026 YTD</td><td class="num pos">+33.6%</td><td class="num pos">+2.9%</td><td class="num pos">+30.7pp</td><td><strong>加速：Q2 财报分水岭</strong></td></tr>
+</table>
+
+<h3>3.3 60 日滚动超额收益：最近一次反转在 2025 年 10 月</h3>
+<div class="chart">
+  <div class="chart-title">KO - PEP 滚动 3 个月超额收益（百分点）</div>
+  <div class="chart-note">正值 = KO 跑赢。2024-11 见底（-5.6pp），2025 年中曾冲高回落，2025-10-13 触及 -15.3pp 低点后强势反转，当前 +15.6pp —— 本轮加速上行始于 2026 年 5 月。</div>
+  <div id="excessChart" style="width:100%; height:320px;"></div>
+</div>
+
+<h3>3.4 2026 年月度收益：KO 与 PEP 的分化在 5 月后急剧拉开</h3>
+<table>
+  <tr><th>月份</th><th class="num">KO</th><th class="num">PEP</th><th class="num">差额</th></tr>
+  <tr><td>2 月</td><td class="num pos">+9.0%</td><td class="num pos">+10.5%</td><td class="num neg">-1.5pp</td></tr>
+  <tr><td>3 月</td><td class="num neg">-6.1%</td><td class="num neg">-7.7%</td><td class="num pos">+1.6pp</td></tr>
+  <tr><td>4 月</td><td class="num pos">+3.6%</td><td class="num pos">+2.1%</td><td class="num pos">+1.5pp</td></tr>
+  <tr><td>5 月</td><td class="num pos">+0.3%</td><td class="num neg">-9.0%</td><td class="num pos">+9.3pp</td></tr>
+  <tr><td>6 月</td><td class="num pos">+3.5%</td><td class="num neg">-5.1%</td><td class="num pos">+8.6pp</td></tr>
+  <tr><td>7 月</td><td class="num pos">+7.8%</td><td class="num pos">+3.1%</td><td class="num pos">+4.7pp</td></tr>
+  <tr><td>8 月（截至 8/21）</td><td class="num pos">+4.0%</td><td class="num pos">+2.8%</td><td class="num pos">+1.2pp</td></tr>
+</table>
+<p>2026 年 5-6 月是分化最剧烈的时段：PEP 5 月 -9.0%、6 月 -5.1%（Q2 财报后下跌+估值下调），KO 同期持续收涨。进入 7 月 KO 交出 8 连 beat 财报后再创新高，PEP 维持指引乏善可陈——<strong>两者 Q2 财报窗口（7/9 PEP vs 7/28 KO）是今年分化的重要催化</strong>。</p>
+
+<div class="callout">
+  <strong>风险偏好佐证：</strong>近 1 年 KO 波动率年化 18.6% 低于 PEP 的 21.2%；KO 最大回撤仅 -7.9% vs PEP -19.3%；KO β（对 PEP）仅 0.51、相关性 0.58。
+  在「伊朗战争 + 关税升级 + 高油价的宏观噪音」背景下的市场，KO 是更纯粹的防御资产——这正是资金选择它的原因，也是它相对强的自我强化机制。
+</div>
+
+<!-- ===================== 四、为什么 KO 比 PEP 强：归因 ===================== -->
+<h2>四、为什么最近 KO 比 PEP 强：五层归因</h2>
+
+<h3>4.1 盈利质量差距：一切的分母</h3>
+<p>两家盈利模式的底层差异决定了估值分化的合理性：</p>
+<table>
+  <tr><th>维度</th><th>KO</th><th>PEP</th></tr>
+  <tr><td>商业模式</td><td>纯饮料（浓缩液+特许装瓶，资产轻）</td><td>饮料+零食（重资产制造+自有分销）</td></tr>
+  <tr><td>净利率</td><td class="num pos">≈33%</td><td class="num neg">≈12%</td></tr>
+  <tr><td>利润来源</td><td>单箱量 + 定价权 + 汇率顺风</td><td>零食易受原料（土豆/玉米/油）+价格战侵蚀</td></tr>
+  <tr><td>Q2 2026 表现</td><td>有机 +6%，量 +5%，op margin +86bp</td><td>有机 +2.4%，北美 -0.5%，核心 op margin -40bp</td></tr>
+  <tr><td>市场对其预期</td><td>连续 8 季 beat，指引上调</td><td>微 miss、指引未上调、四家投行下调目标价</td></tr>
+</table>
+<p>当一家公司「每季都超预期并上调」、另一家「勉强符合但下调预期」，市场对两者的盈利预期曲线方向相反，估值自然被拉开。这不是情绪，而是 <strong>盈利预期的正负反馈</strong>。</p>
+
+<h3>4.2 PEP 的三重逆风 vs KO 的免疫</h3>
+<ol>
+  <li><strong>GLP-1 减重药对零食的结构性威胁</strong>：增长最猛的健康趋势直接冲击 Frito-Lay 的咸味零食需求，而 KO 的饮料组合已多元化到水、运动饮料、茶、咖啡、低糖/无糖产品（零度可乐 +16%），反而受益于健康化。
+      2025 年 PEP 曾因 Rockstar 品牌减值 $1.99B 一次性减记，进一步印证其零食/能量饮料业务的脆弱性。</li>
+  <li><strong>美国消费降级 + 高油价</strong>：Q2 美国汽油均价一度达 $4.56/加仑（四年新高），直接打击便利店冲动消费（零食+饮料的黄金渠道）。PEP 管理层直言「消费者比预期更差」，北美饮料量 -4%、零食量持平；KO 的北美营收仍 +7%（瓶装厂并表+定价），受影响有限。</li>
+  <li><strong>降价促销侵蚀利润</strong>：PEP 对 Lay&rsquo;s/Doritos 等最高降价 15% 以保份额，Q2 核心营业利润率 -40bp；KO 则 Q2 价格/组合 +2% 且利润率高、无需降价促销。</li>
+</ol>
+<p>KO 并非没有逆风（铝罐/PET 成本上行、印度份额下滑、Fairlife 勒索软件），但 <strong>其逆风的量级与 PEP 的零食困境完全不在一个维度</strong>。</p>
+
+<h3>4.3 防御性资金轮动：KO 是更纯的防御锚</h3>
+<p>2026 年市场在「伊朗战争、关税、AI 龙头高估值」三重噪音下波动放大，资金从高波动科技股轮入低波动高股息消费股。KO（β 0.34、63 年连增股息、全球最知名品牌）成为防御资金首选；PEP 虽然也是消费股，但其零食业务受 GLP-1 逆风 + 消费降级拖累，防御属性打折——资金宁可溢价买「更纯的防御」也不愿折价持有「有瑕疵的防御」。KO 还借力了 <strong>FIFA 世界杯</strong>（官方赞助商）带来的夏季销量催化。</p>
+
+<h3>4.4 估值差的形成与自我强化</h3>
+<p>KO 27.4x vs PEP 18.8x 的估值差本身是结果变量：盈利增长差 → 预期差 → 估值差 → 资金流入 KO 强化相对强弱 → 更高的相对强弱吸引更多防御资金，形成闭环。这种自我强化在趋势未破坏前会持续，但也意味着 <strong>一旦 KO 增长失速或风险偏好回归，压缩空间同样大</strong>。</p>
+
+<h3>4.5 关键数字总结</h3>
+<table>
+  <tr><th>指标</th><th class="num">KO</th><th class="num">PEP</th><th class="num">差距方向</th></tr>
+  <tr><td>YTD 收益</td><td class="num pos">+33.6%</td><td class="num neg">+2.9%</td><td class="num">KO +30.7pp</td></tr>
+  <tr><td>Q2 营收 / 有机增速</td><td class="num">$13.38B / +6%</td><td class="num">$24.18B / +2.4%</td><td class="num">KO 有机增速 2.5 倍</td></tr>
+  <tr><td>Q2 净利率</td><td class="num pos">32.9%</td><td class="num neg">12.3%</td><td class="num">KO 2.7 倍</td></tr>
+  <tr><td>P/E（TTM）</td><td class="num">27.4x</td><td class="num">18.8x</td><td class="num">KO 贵 46%</td></tr>
+  <tr><td>股息率</td><td class="num">2.33%</td><td class="num">4.13%</td><td class="num">PEP 高 180bp</td></tr>
+  <tr><td>1Y 最大回撤</td><td class="num pos">-7.9%</td><td class="num neg">-19.3%</td><td class="num">KO 波动小一半</td></tr>
+</table>
+
+<!-- ===================== 五、估值成立条件与风险 ===================== -->
+<h2>五、估值成立条件、风险与结论</h2>
+
+<h3>5.1 Valuation Justification Check（当前估值成立需发生什么）</h3>
+<ul>
+  <li><strong>需实现</strong>：全年有机营收 ~5%（指引上调后）、可比 EPS 增 9-10%（2025 基数 $3）；零度可乐/无糖可乐持续双位数增长；汇率顺风延续（Q3 指引 1-3% 顺风）。若每季都能维持「量 +4-5% + 定价 +2%」的组合，27x PE 有望通过盈利增长逐步消化。</li>
+  <li><strong>最快打破论点</strong>：①宏观风险偏好大幅回暖（AI 龙头重新领涨），防御溢价压缩；②Fairlife 勒索软件影响扩大或美国消费转弱导致销量失速；③铝/PET 成本持续超预期上行侵蚀利润率；④印度份额持续下滑（Q2 已失份额）。</li>
+</ul>
+
+<h3>5.2 Top 3 Risks</h3>
+<ol>
+  <li><strong>估值风险（最高）</strong>：PE 27.4x 处十年高位，对增长与利率敏感，防御交易一旦反转回撤空间大。分析师目标价中值 $94.7，较现价仅 +4% 隐含上行空间，说明市场已price-in大量利好。</li>
+  <li><strong>宏观/汇率风险</strong>：新兴市场（拉美、亚太）增长与汇率波动双向影响；中东冲突推高能源与包装（铝/PET）成本。</li>
+  <li><strong>运营与监管风险</strong>：Fairlife 勒索软件攻击导致美国产能暂停（增长品牌）；IRS 旧案潜在税务负债 ~$3.3B；全球糖税/塑料包装监管趋严。</li>
+</ol>
+
+<h3>5.3 相对强弱展望（KO vs PEP）</h3>
+<ul>
+  <li><strong>趋势未破坏</strong>：60 日滚动超额当前 +15.6pp 且 2026 年 5 月起持续走高；相对强弱比率创 1995 年以来新高。趋势交易视角下 KO 相对强势仍完好。</li>
+  <li><strong>边际关注</strong>：①KO 8 连 beat 的「预期透支」——若 Q3（10 月报）增速回落，超预期交易可能逆转；②PEP 估值（18.8x）已含大量负面预期，若美消费企稳或 GLP-1 冲击证伪，存在均值回归反弹空间——这是做空 PEP 的最主要风险。</li>
+  <li><strong>判断</strong>：KO 相对强势的<strong>基本面根基扎实</strong>（盈利质量差距不可逆），但估值差已大，未来相对收益更可能来自 PEG 而非多杀多；PEP 的「困境反转」期权价值正在累积。若未来 6 个月想博相对收益，<strong>做多 KO 的性价比不如从前</strong>，需等待回调或 Q3 财报验证。</li>
+</ul>
+
+<div class="warn">
+  <strong>Final Impression（6 行）：</strong>KO 是全球质量最高的消费品牌之一：33% 净利率、28.5% FCF 利润率、63 年连增股息、8 连 beat 且刚上调指引——经营面无可挑剔。资产负债表稳健但净债务 $27.9B 意味着财务弹性有限。唯一实质性软肋是估值：27.4x PE 处于十年高位，分析师目标价隐含上行仅 +4%，说明预期已打满。我的操作倾向：<strong>持有者继续持有（吃股息+享受质量溢价），新增资金不追高，等 PE 回到 22-24x 区间（约 $74-80）或 Q3 财报后回调再介入</strong>。相对 PEP，KO 的竞争优势真实且持久，但当前价差已充分定价——追涨是风险，等待是策略。
+</div>
+
+<!-- ===================== 最近新闻 ===================== -->
+<h2>六、Latest Relevant News（近 60 天关键事件）</h2>
+<table>
+  <tr><th>日期</th><th>标题</th><th>重要性</th></tr>
+  <tr><td>2026-07-28</td><td>KO Q2 财报：营收 $13.38B（+7%）超预期、可比 EPS $0.97（+11%）超预期、全球单箱量 +5%（零度 +16%），连续第 8 季 beat，上调全年指引（有机营收 ~5%，可比 EPS +9-10%）</td><td style="color:var(--accent); font-weight:700;">高</td></tr>
+  <tr><td>2026-07-09</td><td>PEP Q2 财报：营收 $24.18B 超预期但可比 EPS $2.20 微 miss，北美有机 -0.5%、饮料量 -4%，维持全年指引，四家投行下调目标价</td><td style="color:var(--accent); font-weight:700;">高</td></tr>
+  <tr><td>2026-07-中旬</td><td>Fairlife 子公司遭勒索软件攻击，美国产能暂停，公司称产品质量安全未受影响、正在恢复</td><td>中</td></tr>
+  <tr><td>2026-06-26 / 07-02</td><td>Motley Fool / 多家媒体对比 KO vs PEP：强调 KO 净利率（29% vs 11%）与 GLP-1 对零食的冲击是核心分歧点</td><td>中</td></tr>
+  <tr><td>2026-08-20</td><td>FXStreet：能源成本仍在 7 月同比 +14.7%、非酒精饮料通胀 +4.1%，KO 的定价权对比 PEP 的降价促销形成鲜明反差</td><td>中</td></tr>
+</table>
+
+<!-- ===================== 来源 ===================== -->
+<h2>七、Sources</h2>
+<ul class="src">
+  <li>Coca-Cola Q2 2026 财报（营收/EPS/指引/细分销量）：Nasdaq 转引 Zacks 报道 — nasdaq.com/articles/coca-cola-q2-earnings-sales-beat-estimates-volume-growth；nasdaq.com/articles/coca-colas-momentum-builds-after-strong-q2-earnings-etfs-consider（2026-07-28 发布）</li>
+  <li>PepsiCo Q2 2026 财报（营收/EPS/北美/指引）：finnhub.io 转引公司新闻稿；alphaarvion.com — PEP Q2 2026 Earnings（2026-07-10）；marketdash.com — PepsiCo Says High Gas Prices…（2026-07）</li>
+  <li>财务数据（市值/PE/股息/负债/现金流）：stockanalysis.com/stocks/ko 与 stockanalysis.com/stocks/pep（Overview、Balance Sheet、Cash Flow Statement，S&P Global 数据源，2026-08-24 抓取）</li>
+  <li>KO vs PEP 归因分析：Motley Fool 2026-06-26/07-02；FXStreet 2026-08-20「Coke vs Pepsi: The next inflation battle starts in the Grocery Aisle」；tradingnews.com「Coca Cola Stock Pricing Power and a Defensive Bid…」</li>
+  <li>10 年期表现对比：Yahoo Finance「Had You Invested $1,000 in Coca-Cola or PepsiCo 10 Years Ago」</li>
+  <li>行情数据：本地 Yahoo 日线（KO/PEP，1990-01-02 ~ 2026-08-21，复权，脚本 scripts/ko_pep_relative.py）</li>
+</ul>
+<p class="note">⚠️ 本报告为教育性与信息性内容，基于公开信息整理，不构成投资建议。ROE 等指标受回购与权益基数影响，与经营质量不完全等同；PEP 部分现金流指标为估算，标注 *。投资有风险，决策需谨慎。</p>
+
+<div class="footer">
+  鹏城信息AI专家 · Fundamental Analysis · 报告日期 2026-08-24 · 股价数据截至 2026-08-21
+</div>
+
+</div>
+
+<script>
+(function(){
+  const theme = {blue:'#0072B2', orange:'#E69F00', sky:'#56B4E9', green:'#009E73', purple:'#CC79A7', vermillion:'#D55E00', black:'#000000', gray:'#8a8fa3', line:'#e4e7f0'};
+
+  // ===== 内联数据（自包含，避免 file:// 下 fetch 被 CORS 拦截） =====
+  const RATIO_DATA = [{"date":"2021-01-31","ratio":0.3561},{"date":"2021-02-28","ratio":0.383},{"date":"2021-03-31","ratio":0.3765},{"date":"2021-04-30","ratio":0.3783},{"date":"2021-05-31","ratio":0.3776},{"date":"2021-06-30","ratio":0.369},{"date":"2021-07-31","ratio":0.3672},{"date":"2021-08-31","ratio":0.3638},{"date":"2021-09-30","ratio":0.3527},{"date":"2021-10-31","ratio":0.3527},{"date":"2021-11-30","ratio":0.3345},{"date":"2021-12-31","ratio":0.345},{"date":"2022-01-31","ratio":0.3559},{"date":"2022-02-28","ratio":0.3847},{"date":"2022-03-31","ratio":0.3753},{"date":"2022-04-30","ratio":0.3813},{"date":"2022-05-31","ratio":0.3828},{"date":"2022-06-30","ratio":0.3826},{"date":"2022-07-31","ratio":0.3717},{"date":"2022-08-31","ratio":0.3631},{"date":"2022-09-30","ratio":0.348},{"date":"2022-10-31","ratio":0.3343},{"date":"2022-11-30","ratio":0.3502},{"date":"2022-12-31","ratio":0.3574},{"date":"2023-01-31","ratio":0.3639},{"date":"2023-02-28","ratio":0.3481},{"date":"2023-03-31","ratio":0.3457},{"date":"2023-04-30","ratio":0.3414},{"date":"2023-05-31","ratio":0.3324},{"date":"2023-06-30","ratio":0.3305},{"date":"2023-07-31","ratio":0.3358},{"date":"2023-08-31","ratio":0.3394},{"date":"2023-09-30","ratio":0.3361},{"date":"2023-10-31","ratio":0.352},{"date":"2023-11-30","ratio":0.3534},{"date":"2023-12-31","ratio":0.3531},{"date":"2024-01-31","ratio":0.3593},{"date":"2024-02-29","ratio":0.3667},{"date":"2024-03-31","ratio":0.3559},{"date":"2024-04-30","ratio":0.3575},{"date":"2024-05-31","ratio":0.3706},{"date":"2024-06-30","ratio":0.3929},{"date":"2024-07-31","ratio":0.3935},{"date":"2024-08-31","ratio":0.4267},{"date":"2024-09-30","ratio":0.4299},{"date":"2024-10-31","ratio":0.4},{"date":"2024-11-30","ratio":0.4018},{"date":"2024-12-31","ratio":0.4161},{"date":"2025-01-31","ratio":0.4281},{"date":"2025-02-28","ratio":0.4716},{"date":"2025-03-31","ratio":0.4847},{"date":"2025-04-30","ratio":0.543},{"date":"2025-05-31","ratio":0.5566},{"date":"2025-06-30","ratio":0.5417},{"date":"2025-07-31","ratio":0.4976},{"date":"2025-08-31","ratio":0.4692},{"date":"2025-09-30","ratio":0.4764},{"date":"2025-10-31","ratio":0.4758},{"date":"2025-11-30","ratio":0.4959},{"date":"2025-12-31","ratio":0.4901},{"date":"2026-01-31","ratio":0.4899},{"date":"2026-02-28","ratio":0.4834},{"date":"2026-03-31","ratio":0.4917},{"date":"2026-04-30","ratio":0.4989},{"date":"2026-05-31","ratio":0.5502},{"date":"2026-06-30","ratio":0.6002},{"date":"2026-07-31","ratio":0.6276},{"date":"2026-08-31","ratio":0.6349}];
+  const EXCESS_DATA = [{"date":"2024-01-02","value":5.69},{"date":"2024-01-03","value":6.21},{"date":"2024-01-04","value":7.15},{"date":"2024-01-05","value":8.5},{"date":"2024-01-08","value":7.71},{"date":"2024-01-09","value":9.98},{"date":"2024-01-10","value":10.0},{"date":"2024-01-11","value":9.31},{"date":"2024-01-12","value":8.64},{"date":"2024-01-16","value":9.68},{"date":"2024-01-17","value":9.06},{"date":"2024-01-18","value":7.11},{"date":"2024-01-19","value":8.48},{"date":"2024-01-22","value":6.86},{"date":"2024-01-23","value":4.98},{"date":"2024-01-24","value":5.56},{"date":"2024-01-25","value":3.7},{"date":"2024-01-26","value":2.45},{"date":"2024-01-29","value":2.96},{"date":"2024-01-30","value":2.22},{"date":"2024-01-31","value":2.15},{"date":"2024-02-01","value":2.85},{"date":"2024-02-02","value":3.63},{"date":"2024-02-05","value":2.77},{"date":"2024-02-06","value":2.92},{"date":"2024-02-07","value":2.49},{"date":"2024-02-08","value":0.68},{"date":"2024-02-09","value":4.23},{"date":"2024-02-12","value":2.74},{"date":"2024-02-13","value":3.52},{"date":"2024-02-14","value":4.36},{"date":"2024-02-15","value":4.24},{"date":"2024-02-16","value":4.43},{"date":"2024-02-20","value":5.73},{"date":"2024-02-21","value":5.79},{"date":"2024-02-22","value":5.57},{"date":"2024-02-23","value":4.46},{"date":"2024-02-26","value":4.56},{"date":"2024-02-27","value":3.8},{"date":"2024-02-28","value":4.15},{"date":"2024-02-29","value":3.86},{"date":"2024-03-01","value":3.08},{"date":"2024-03-04","value":3.33},{"date":"2024-03-05","value":4.71},{"date":"2024-03-06","value":4.57},{"date":"2024-03-07","value":3.46},{"date":"2024-03-08","value":3.49},{"date":"2024-03-11","value":3.43},{"date":"2024-03-12","value":3.15},{"date":"2024-03-13","value":4.27},{"date":"2024-03-14","value":4.08},{"date":"2024-03-15","value":4.26},{"date":"2024-03-18","value":0.1},{"date":"2024-03-19","value":-0.06},{"date":"2024-03-20","value":1.23},{"date":"2024-03-21","value":0.15},{"date":"2024-03-22","value":1.23},{"date":"2024-03-25","value":0.83},{"date":"2024-03-26","value":0.84},{"date":"2024-03-27","value":1.48},{"date":"2024-03-28","value":0.94},{"date":"2024-04-01","value":1.21},{"date":"2024-04-02","value":1.17},{"date":"2024-04-03","value":1.94},{"date":"2024-04-04","value":0.85},{"date":"2024-04-05","value":0.98},{"date":"2024-04-08","value":-1.02},{"date":"2024-04-09","value":-1.51},{"date":"2024-04-10","value":-2.85},{"date":"2024-04-11","value":-2.76},{"date":"2024-04-12","value":-3.74},{"date":"2024-04-15","value":-3.53},{"date":"2024-04-16","value":-4.01},{"date":"2024-04-17","value":-4.29},{"date":"2024-04-18","value":-5.13},{"date":"2024-04-19","value":-4.47},{"date":"2024-04-22","value":-5.23},{"date":"2024-04-23","value":-0.78},{"date":"2024-04-24","value":-2.63},{"date":"2024-04-25","value":-1.69},{"date":"2024-04-26","value":-0.57},{"date":"2024-04-29","value":-0.85},{"date":"2024-04-30","value":-0.55},{"date":"2024-05-01","value":0.21},{"date":"2024-05-02","value":-0.49},{"date":"2024-05-03","value":-0.3},{"date":"2024-05-06","value":1.03},{"date":"2024-05-07","value":0.66},{"date":"2024-05-08","value":1.35},{"date":"2024-05-09","value":2.74},{"date":"2024-05-10","value":-0.98},{"date":"2024-05-13","value":0.51},{"date":"2024-05-14","value":-0.15},{"date":"2024-05-15","value":-0.62},{"date":"2024-05-16","value":-2.47},{"date":"2024-05-17","value":-3.4},{"date":"2024-05-20","value":-3.82},{"date":"2024-05-21","value":-4.53},{"date":"2024-05-22","value":-5.2},{"date":"2024-05-23","value":-4.24},{"date":"2024-05-24","value":-3.65},{"date":"2024-05-28","value":-0.62},{"date":"2024-05-29","value":-0.28},{"date":"2024-05-30","value":0.97},{"date":"2024-05-31","value":1.51},{"date":"2024-06-03","value":2.51},{"date":"2024-06-04","value":0.97},{"date":"2024-06-05","value":1.76},{"date":"2024-06-06","value":2.6},{"date":"2024-06-07","value":2.51},{"date":"2024-06-10","value":4.9},{"date":"2024-06-11","value":4.77},{"date":"2024-06-12","value":3.81},{"date":"2024-06-13","value":4.21},{"date":"2024-06-14","value":5.0},{"date":"2024-06-17","value":7.17},{"date":"2024-06-18","value":7.12},{"date":"2024-06-20","value":5.4},{"date":"2024-06-21","value":6.84},{"date":"2024-06-24","value":8.09},{"date":"2024-06-25","value":8.79},{"date":"2024-06-26","value":9.33},{"date":"2024-06-27","value":8.99},{"date":"2024-06-28","value":9.86},{"date":"2024-07-01","value":10.18},{"date":"2024-07-02","value":9.63},{"date":"2024-07-03","value":10.09},{"date":"2024-07-05","value":10.69},{"date":"2024-07-08","value":10.01},{"date":"2024-07-09","value":10.37},{"date":"2024-07-10","value":9.38},{"date":"2024-07-11","value":10.12},{"date":"2024-07-12","value":9.11},{"date":"2024-07-15","value":11.4},{"date":"2024-07-16","value":11.93},{"date":"2024-07-17","value":10.96},{"date":"2024-07-18","value":10.96},{"date":"2024-07-19","value":12.6},{"date":"2024-07-22","value":11.44},{"date":"2024-07-23","value":13.14},{"date":"2024-07-24","value":10.37},{"date":"2024-07-25","value":11.02},{"date":"2024-07-26","value":10.9},{"date":"2024-07-29","value":9.66},{"date":"2024-07-30","value":10.84},{"date":"2024-07-31","value":9.95},{"date":"2024-08-01","value":9.91},{"date":"2024-08-02","value":10.43},{"date":"2024-08-05","value":10.81},{"date":"2024-08-06","value":11.11},{"date":"2024-08-07","value":12.91},{"date":"2024-08-08","value":12.28},{"date":"2024-08-09","value":12.49},{"date":"2024-08-12","value":12.5},{"date":"2024-08-13","value":12.47},{"date":"2024-08-14","value":12.19},{"date":"2024-08-15","value":12.7},{"date":"2024-08-16","value":15.09},{"date":"2024-08-19","value":14.13},{"date":"2024-08-20","value":13.45},{"date":"2024-08-21","value":13.92},{"date":"2024-08-22","value":13.63},{"date":"2024-08-23","value":14.4},{"date":"2024-08-26","value":15.5},{"date":"2024-08-27","value":14.65},{"date":"2024-08-28","value":14.77},{"date":"2024-08-29","value":15.43},{"date":"2024-08-30","value":15.28},{"date":"2024-09-03","value":12.42},{"date":"2024-09-04","value":10.89},{"date":"2024-09-05","value":8.04},{"date":"2024-09-06","value":7.77},{"date":"2024-09-09","value":8.32},{"date":"2024-09-10","value":5.4},{"date":"2024-09-11","value":5.42},{"date":"2024-09-12","value":5.14},{"date":"2024-09-13","value":5.61},{"date":"2024-09-16","value":7.05},{"date":"2024-09-17","value":8.18},{"date":"2024-09-18","value":9.3},{"date":"2024-09-19","value":8.77},{"date":"2024-09-20","value":11.8},{"date":"2024-09-23","value":9.72},{"date":"2024-09-24","value":10.19},{"date":"2024-09-25","value":9.95},{"date":"2024-09-26","value":9.65},{"date":"2024-09-27","value":9.7},{"date":"2024-09-30","value":9.15},{"date":"2024-10-01","value":8.77},{"date":"2024-10-02","value":7.83},{"date":"2024-10-03","value":8.06},{"date":"2024-10-04","value":7.82},{"date":"2024-10-07","value":6.77},{"date":"2024-10-08","value":5.89},{"date":"2024-10-09","value":4.97},{"date":"2024-10-10","value":4.69},{"date":"2024-10-11","value":2.97},{"date":"2024-10-14","value":2.5},{"date":"2024-10-15","value":4.28},{"date":"2024-10-16","value":5.8},{"date":"2024-10-17","value":3.87},{"date":"2024-10-18","value":4.29},{"date":"2024-10-21","value":1.59},{"date":"2024-10-22","value":1.78},{"date":"2024-10-23","value":1.74},{"date":"2024-10-24","value":0.64},{"date":"2024-10-25","value":0.89},{"date":"2024-10-28","value":0.36},{"date":"2024-10-29","value":1.16},{"date":"2024-10-30","value":1.94},{"date":"2024-10-31","value":0.85},{"date":"2024-11-01","value":0.25},{"date":"2024-11-04","value":-0.83},{"date":"2024-11-05","value":-2.31},{"date":"2024-11-06","value":-2.97},{"date":"2024-11-07","value":-2.53},{"date":"2024-11-08","value":-2.64},{"date":"2024-11-11","value":-2.84},{"date":"2024-11-12","value":-2.54},{"date":"2024-11-13","value":-3.82},{"date":"2024-11-14","value":-5.36},{"date":"2024-11-15","value":-1.83},{"date":"2024-11-18","value":-0.95},{"date":"2024-11-19","value":0.46},{"date":"2024-11-20","value":0.46},{"date":"2024-11-21","value":0.12},{"date":"2024-11-22","value":-1.91},{"date":"2024-11-25","value":-3.06},{"date":"2024-11-26","value":-3.37},{"date":"2024-11-27","value":-5.24},{"date":"2024-11-29","value":-5.56},{"date":"2024-12-02","value":-4.09},{"date":"2024-12-03","value":-2.46},{"date":"2024-12-04","value":-1.34},{"date":"2024-12-05","value":-0.77},{"date":"2024-12-06","value":-1.02},{"date":"2024-12-09","value":-1.69},{"date":"2024-12-10","value":-1.92},{"date":"2024-12-11","value":0.02},{"date":"2024-12-12","value":-0.28},{"date":"2024-12-13","value":-1.69},{"date":"2024-12-16","value":-1.19},{"date":"2024-12-17","value":-0.84},{"date":"2024-12-18","value":0.5},{"date":"2024-12-19","value":-1.41},{"date":"2024-12-20","value":-1.67},{"date":"2024-12-23","value":-1.68},{"date":"2024-12-24","value":-2.36},{"date":"2024-12-26","value":-2.3},{"date":"2024-12-27","value":-3.05},{"date":"2024-12-30","value":-3.01},{"date":"2024-12-31","value":-2.0},{"date":"2025-01-02","value":-1.6},{"date":"2025-01-03","value":-1.33},{"date":"2025-01-06","value":-0.5},{"date":"2025-01-07","value":1.13},{"date":"2025-01-08","value":3.16},{"date":"2025-01-10","value":5.07},{"date":"2025-01-13","value":5.46},{"date":"2025-01-14","value":6.23},{"date":"2025-01-15","value":5.57},{"date":"2025-01-16","value":5.15},{"date":"2025-01-17","value":3.85},{"date":"2025-01-21","value":4.21},{"date":"2025-01-22","value":3.06},{"date":"2025-01-23","value":3.62},{"date":"2025-01-24","value":3.59},{"date":"2025-01-27","value":4.47},{"date":"2025-01-28","value":5.35},{"date":"2025-01-29","value":6.32},{"date":"2025-01-30","value":6.6},{"date":"2025-01-31","value":6.83},{"date":"2025-02-03","value":5.65},{"date":"2025-02-04","value":9.55},{"date":"2025-02-05","value":9.12},{"date":"2025-02-06","value":9.92},{"date":"2025-02-07","value":11.53},{"date":"2025-02-10","value":13.72},{"date":"2025-02-11","value":17.43},{"date":"2025-02-12","value":20.36},{"date":"2025-02-13","value":21.75},{"date":"2025-02-14","value":21.8},{"date":"2025-02-18","value":22.22},{"date":"2025-02-19","value":23.83},{"date":"2025-02-20","value":19.51},{"date":"2025-02-21","value":18.44},{"date":"2025-02-24","value":14.63},{"date":"2025-02-25","value":14.98},{"date":"2025-02-26","value":16.59},{"date":"2025-02-27","value":17.08},{"date":"2025-02-28","value":16.52},{"date":"2025-03-03","value":15.87},{"date":"2025-03-04","value":14.2},{"date":"2025-03-05","value":14.42},{"date":"2025-03-06","value":15.07},{"date":"2025-03-07","value":15.28},{"date":"2025-03-10","value":15.61},{"date":"2025-03-11","value":16.34},{"date":"2025-03-12","value":17.12},{"date":"2025-03-13","value":17.37},{"date":"2025-03-14","value":16.96},{"date":"2025-03-17","value":15.38},{"date":"2025-03-18","value":14.89},{"date":"2025-03-19","value":15.98},{"date":"2025-03-20","value":17.12},{"date":"2025-03-21","value":15.13},{"date":"2025-03-24","value":14.84},{"date":"2025-03-25","value":14.06},{"date":"2025-03-26","value":14.62},{"date":"2025-03-27","value":14.43},{"date":"2025-03-28","value":14.26},{"date":"2025-03-31","value":16.08},{"date":"2025-04-01","value":17.17},{"date":"2025-04-02","value":16.69},{"date":"2025-04-03","value":17.98},{"date":"2025-04-04","value":15.45},{"date":"2025-04-07","value":15.01},{"date":"2025-04-08","value":16.58},{"date":"2025-04-09","value":14.81},{"date":"2025-04-10","value":16.28},{"date":"2025-04-11","value":15.68},{"date":"2025-04-14","value":15.93},{"date":"2025-04-15","value":17.27},{"date":"2025-04-16","value":19.28},{"date":"2025-04-17","value":19.8},{"date":"2025-04-21","value":20.45},{"date":"2025-04-22","value":21.84},{"date":"2025-04-23","value":22.61},{"date":"2025-04-24","value":26.88},{"date":"2025-04-25","value":26.76},{"date":"2025-04-28","value":25.95},{"date":"2025-04-29","value":26.69},{"date":"2025-04-30","value":25.36},{"date":"2025-05-01","value":23.43},{"date":"2025-05-02","value":24.16},{"date":"2025-05-05","value":25.4},{"date":"2025-05-06","value":23.37},{"date":"2025-05-07","value":24.18},{"date":"2025-05-08","value":21.93},{"date":"2025-05-09","value":20.26},{"date":"2025-05-12","value":16.48},{"date":"2025-05-13","value":12.5},{"date":"2025-05-14","value":11.4},{"date":"2025-05-15","value":12.04},{"date":"2025-05-16","value":12.46},{"date":"2025-05-19","value":12.67},{"date":"2025-05-20","value":11.88},{"date":"2025-05-21","value":15.28},{"date":"2025-05-22","value":14.92},{"date":"2025-05-23","value":17.61},{"date":"2025-05-27","value":16.42},{"date":"2025-05-28","value":14.23},{"date":"2025-05-29","value":14.07},{"date":"2025-05-30","value":15.59},{"date":"2025-06-02","value":15.63},{"date":"2025-06-03","value":15.86},{"date":"2025-06-04","value":16.22},{"date":"2025-06-05","value":15.83},{"date":"2025-06-06","value":15.51},{"date":"2025-06-09","value":17.1},{"date":"2025-06-10","value":15.1},{"date":"2025-06-11","value":15.17},{"date":"2025-06-12","value":14.36},{"date":"2025-06-13","value":14.39},{"date":"2025-06-16","value":13.5},{"date":"2025-06-17","value":13.33},{"date":"2025-06-18","value":12.51},{"date":"2025-06-20","value":10.78},{"date":"2025-06-23","value":12.55},{"date":"2025-06-24","value":12.09},{"date":"2025-06-25","value":12.98},{"date":"2025-06-26","value":12.71},{"date":"2025-06-27","value":11.61},{"date":"2025-06-30","value":11.83},{"date":"2025-07-01","value":9.58},{"date":"2025-07-02","value":7.18},{"date":"2025-07-03","value":8.96},{"date":"2025-07-07","value":7.93},{"date":"2025-07-08","value":8.04},{"date":"2025-07-09","value":7.4},{"date":"2025-07-10","value":4.64},{"date":"2025-07-11","value":6.67},{"date":"2025-07-14","value":3.79},{"date":"2025-07-15","value":4.13},{"date":"2025-07-16","value":3.05},{"date":"2025-07-17","value":-4.01},{"date":"2025-07-18","value":-5.23},{"date":"2025-07-21","value":-3.62},{"date":"2025-07-22","value":-7.76},{"date":"2025-07-23","value":-8.4},{"date":"2025-07-24","value":-7.76},{"date":"2025-07-25","value":-11.12},{"date":"2025-07-28","value":-11.94},{"date":"2025-07-29","value":-11.42},{"date":"2025-07-30","value":-11.83},{"date":"2025-07-31","value":-8.6},{"date":"2025-08-01","value":-8.16},{"date":"2025-08-04","value":-8.56},{"date":"2025-08-05","value":-9.82},{"date":"2025-08-06","value":-11.27},{"date":"2025-08-07","value":-12.32},{"date":"2025-08-08","value":-12.16},{"date":"2025-08-11","value":-11.24},{"date":"2025-08-12","value":-10.34},{"date":"2025-08-13","value":-12.97},{"date":"2025-08-14","value":-15.69},{"date":"2025-08-15","value":-17.29},{"date":"2025-08-18","value":-17.86},{"date":"2025-08-19","value":-18.53},{"date":"2025-08-20","value":-16.3},{"date":"2025-08-21","value":-16.68},{"date":"2025-08-22","value":-16.98},{"date":"2025-08-25","value":-19.11},{"date":"2025-08-26","value":-16.69},{"date":"2025-08-27","value":-16.8},{"date":"2025-08-28","value":-16.34},{"date":"2025-08-29","value":-17.96},{"date":"2025-09-02","value":-19.46},{"date":"2025-09-03","value":-16.33},{"date":"2025-09-04","value":-16.42},{"date":"2025-09-05","value":-17.46},{"date":"2025-09-08","value":-14.87},{"date":"2025-09-09","value":-15.96},{"date":"2025-09-10","value":-14.87},{"date":"2025-09-11","value":-17.63},{"date":"2025-09-12","value":-16.13},{"date":"2025-09-15","value":-14.59},{"date":"2025-09-16","value":-12.95},{"date":"2025-09-17","value":-13.27},{"date":"2025-09-18","value":-13.34},{"date":"2025-09-19","value":-13.67},{"date":"2025-09-22","value":-14.65},{"date":"2025-09-23","value":-13.59},{"date":"2025-09-24","value":-15.97},{"date":"2025-09-25","value":-14.49},{"date":"2025-09-26","value":-14.13},{"date":"2025-09-29","value":-13.14},{"date":"2025-09-30","value":-11.6},{"date":"2025-10-01","value":-11.01},{"date":"2025-10-02","value":-12.79},{"date":"2025-10-03","value":-12.05},{"date":"2025-10-06","value":-9.64},{"date":"2025-10-07","value":-8.85},{"date":"2025-10-08","value":-7.53},{"date":"2025-10-09","value":-12.31},{"date":"2025-10-10","value":-14.54},{"date":"2025-10-13","value":-15.31},{"date":"2025-10-14","value":-14.85},{"date":"2025-10-15","value":-9.19},{"date":"2025-10-16","value":-10.12},{"date":"2025-10-17","value":-11.11},{"date":"2025-10-20","value":-7.23},{"date":"2025-10-21","value":-2.42},{"date":"2025-10-22","value":-3.67},{"date":"2025-10-23","value":-4.76},{"date":"2025-10-24","value":-4.93},{"date":"2025-10-27","value":-5.36},{"date":"2025-10-28","value":-3.28},{"date":"2025-10-29","value":-5.56},{"date":"2025-10-30","value":-6.03},{"date":"2025-10-31","value":-5.02},{"date":"2025-11-03","value":-4.79},{"date":"2025-11-04","value":-2.95},{"date":"2025-11-05","value":-2.21},{"date":"2025-11-06","value":0.48},{"date":"2025-11-07","value":0.84},{"date":"2025-11-10","value":2.44},{"date":"2025-11-11","value":4.32},{"date":"2025-11-12","value":5.5},{"date":"2025-11-13","value":5.06},{"date":"2025-11-14","value":5.25},{"date":"2025-11-17","value":3.45},{"date":"2025-11-18","value":1.84},{"date":"2025-11-19","value":1.7},{"date":"2025-11-20","value":3.73},{"date":"2025-11-21","value":6.94},{"date":"2025-11-24","value":6.48},{"date":"2025-11-25","value":6.37},{"date":"2025-11-26","value":5.76},{"date":"2025-11-28","value":5.76},{"date":"2025-12-01","value":5.26},{"date":"2025-12-02","value":2.99},{"date":"2025-12-03","value":3.5},{"date":"2025-12-04","value":4.84},{"date":"2025-12-05","value":2.01},{"date":"2025-12-08","value":2.29},{"date":"2025-12-09","value":2.49},{"date":"2025-12-10","value":0.55},{"date":"2025-12-11","value":-0.2},{"date":"2025-12-12","value":-0.91},{"date":"2025-12-15","value":-1.15},{"date":"2025-12-16","value":-1.81},{"date":"2025-12-17","value":-0.61},{"date":"2025-12-18","value":0.26},{"date":"2025-12-19","value":0.47},{"date":"2025-12-22","value":1.34},{"date":"2025-12-23","value":3.83},{"date":"2025-12-24","value":3.27},{"date":"2025-12-26","value":3.76},{"date":"2025-12-29","value":3.07},{"date":"2025-12-30","value":2.74},{"date":"2025-12-31","value":4.18},{"date":"2026-01-02","value":4.38},{"date":"2026-01-05","value":3.14},{"date":"2026-01-06","value":2.91},{"date":"2026-01-07","value":3.57},{"date":"2026-01-08","value":4.29},{"date":"2026-01-09","value":9.36},{"date":"2026-01-12","value":10.79},{"date":"2026-01-13","value":10.09},{"date":"2026-01-14","value":9.33},{"date":"2026-01-15","value":7.89},{"date":"2026-01-16","value":8.17},{"date":"2026-01-20","value":8.57},{"date":"2026-01-21","value":9.51},{"date":"2026-01-22","value":6.43},{"date":"2026-01-23","value":8.24},{"date":"2026-01-26","value":7.26},{"date":"2026-01-27","value":7.12},{"date":"2026-01-28","value":6.77},{"date":"2026-01-29","value":5.38},{"date":"2026-01-30","value":4.08},{"date":"2026-02-02","value":3.76},{"date":"2026-02-03","value":-0.18},{"date":"2026-02-04","value":-2.26},{"date":"2026-02-05","value":-3.23},{"date":"2026-02-06","value":-4.34},{"date":"2026-02-09","value":-5.04},{"date":"2026-02-10","value":-8.31},{"date":"2026-02-11","value":-7.52},{"date":"2026-02-12","value":-5.28},{"date":"2026-02-13","value":-5.25},{"date":"2026-02-17","value":-0.01},{"date":"2026-02-18","value":-1.32},{"date":"2026-02-19","value":0.0},{"date":"2026-02-20","value":0.94},{"date":"2026-02-23","value":-1.45},{"date":"2026-02-24","value":-3.03},{"date":"2026-02-25","value":-5.66},{"date":"2026-02-26","value":-4.63},{"date":"2026-02-27","value":-4.19},{"date":"2026-03-02","value":-3.3},{"date":"2026-03-03","value":-2.69},{"date":"2026-03-04","value":-2.16},{"date":"2026-03-05","value":-0.19},{"date":"2026-03-06","value":-0.91},{"date":"2026-03-09","value":-1.59},{"date":"2026-03-10","value":-0.6},{"date":"2026-03-11","value":-0.45},{"date":"2026-03-12","value":-0.08},{"date":"2026-03-13","value":3.16},{"date":"2026-03-16","value":6.61},{"date":"2026-03-17","value":5.96},{"date":"2026-03-18","value":5.34},{"date":"2026-03-19","value":5.62},{"date":"2026-03-20","value":5.63},{"date":"2026-03-23","value":5.57},{"date":"2026-03-24","value":4.76},{"date":"2026-03-25","value":3.81},{"date":"2026-03-26","value":1.72},{"date":"2026-03-27","value":1.31},{"date":"2026-03-30","value":-0.13},{"date":"2026-03-31","value":0.52},{"date":"2026-04-01","value":1.09},{"date":"2026-04-02","value":0.12},{"date":"2026-04-06","value":1.31},{"date":"2026-04-07","value":2.02},{"date":"2026-04-08","value":2.32},{"date":"2026-04-09","value":0.57},{"date":"2026-04-10","value":-1.26},{"date":"2026-04-13","value":-3.3},{"date":"2026-04-14","value":-2.74},{"date":"2026-04-15","value":-2.45},{"date":"2026-04-16","value":-3.55},{"date":"2026-04-17","value":-0.33},{"date":"2026-04-20","value":-0.36},{"date":"2026-04-21","value":-1.03},{"date":"2026-04-22","value":-1.39},{"date":"2026-04-23","value":-1.92},{"date":"2026-04-24","value":-2.6},{"date":"2026-04-27","value":-1.9},{"date":"2026-04-28","value":1.27},{"date":"2026-04-29","value":3.19},{"date":"2026-04-30","value":0.45},{"date":"2026-05-01","value":2.39},{"date":"2026-05-04","value":4.01},{"date":"2026-05-05","value":6.71},{"date":"2026-05-06","value":8.45},{"date":"2026-05-07","value":6.46},{"date":"2026-05-08","value":8.41},{"date":"2026-05-11","value":11.02},{"date":"2026-05-12","value":13.15},{"date":"2026-05-13","value":13.78},{"date":"2026-05-14","value":12.82},{"date":"2026-05-15","value":12.76},{"date":"2026-05-18","value":9.88},{"date":"2026-05-19","value":11.48},{"date":"2026-05-20","value":12.54},{"date":"2026-05-21","value":11.31},{"date":"2026-05-22","value":11.58},{"date":"2026-05-26","value":13.67},{"date":"2026-05-27","value":14.01},{"date":"2026-05-28","value":12.5},{"date":"2026-05-29","value":11.83},{"date":"2026-06-01","value":13.35},{"date":"2026-06-02","value":12.63},{"date":"2026-06-03","value":13.8},{"date":"2026-06-04","value":11.17},{"date":"2026-06-05","value":13.92},{"date":"2026-06-08","value":14.93},{"date":"2026-06-09","value":15.42},{"date":"2026-06-10","value":17.35},{"date":"2026-06-11","value":15.64},{"date":"2026-06-12","value":15.64},{"date":"2026-06-15","value":10.94},{"date":"2026-06-16","value":9.8},{"date":"2026-06-17","value":12.7},{"date":"2026-06-18","value":11.8},{"date":"2026-06-22","value":12.31},{"date":"2026-06-23","value":12.48},{"date":"2026-06-24","value":13.17},{"date":"2026-06-25","value":14.64},{"date":"2026-06-26","value":16.62},{"date":"2026-06-29","value":18.3},{"date":"2026-06-30","value":19.99},{"date":"2026-07-01","value":15.72},{"date":"2026-07-02","value":17.07},{"date":"2026-07-06","value":16.61},{"date":"2026-07-07","value":16.07},{"date":"2026-07-08","value":16.58},{"date":"2026-07-09","value":17.61},{"date":"2026-07-10","value":19.33},{"date":"2026-07-13","value":20.35},{"date":"2026-07-14","value":21.62},{"date":"2026-07-15","value":21.47},{"date":"2026-07-16","value":22.5},{"date":"2026-07-17","value":21.7},{"date":"2026-07-20","value":22.31},{"date":"2026-07-21","value":22.4},{"date":"2026-07-22","value":22.27},{"date":"2026-07-23","value":20.79},{"date":"2026-07-24","value":19.84},{"date":"2026-07-27","value":19.54},{"date":"2026-07-28","value":24.08},{"date":"2026-07-29","value":21.65},{"date":"2026-07-30","value":21.69},{"date":"2026-07-31","value":22.95},{"date":"2026-08-03","value":21.61},{"date":"2026-08-04","value":20.49},{"date":"2026-08-05","value":20.9},{"date":"2026-08-06","value":20.63},{"date":"2026-08-07","value":21.82},{"date":"2026-08-10","value":21.48},{"date":"2026-08-11","value":17.04},{"date":"2026-08-12","value":16.75},{"date":"2026-08-13","value":14.43},{"date":"2026-08-14","value":14.03},{"date":"2026-08-17","value":14.64},{"date":"2026-08-18","value":15.09},{"date":"2026-08-19","value":15.19},{"date":"2026-08-20","value":15.52},{"date":"2026-08-21","value":15.55}];
+
+  // ===== 图1：KO/PEP 相对强弱比率（月度） =====
+  (function(){
+    const dates = RATIO_DATA.map(d=>d.date);
+    const vals = RATIO_DATA.map(d=>d.ratio);
+    const chart = echarts.init(document.getElementById('ratioChart'));
+    chart.setOption({
+      grid:{left:56, right:20, top:30, bottom:30},
+      tooltip:{trigger:'axis', valueFormatter:v=>v.toFixed(3)},
+      xAxis:{type:'category', data:dates, axisLabel:{color:'#5b5f76', fontSize:11}, axisLine:{lineStyle:{color:theme.line}}},
+      yAxis:{type:'value', scale:true, axisLabel:{color:'#5b5f76', fontSize:11, formatter:v=>v.toFixed(2)}, splitLine:{lineStyle:{color:'#eef1f8'}}},
+      dataZoom:[{type:'inside', start:0, end:100}, {type:'slider', height:18, bottom:8, start:0, end:100, borderColor:'#e4e7f0', fillerColor:'rgba(0,114,178,0.12)'}],
+      series:[{
+        type:'line', data:vals, smooth:true, showSymbol:false, lineStyle:{color:theme.blue, width:2.5},
+        areaStyle:{color:{type:'linear', x:0, y:0, x2:0, y2:1, colorStops:[{offset:0, color:'rgba(0,114,178,0.25)'},{offset:1, color:'rgba(0,114,178,0.02)'}]}},
+        markPoint:{
+          symbol:'pin', symbolSize:46,
+          data:[
+            {type:'min', name:'低点', itemStyle:{color:theme.green}, label:{color:'#fff', fontSize:10}},
+            {type:'max', name:'高点', itemStyle:{color:theme.vermillion}, label:{color:'#fff', fontSize:10}}
+          ]
+        }
+      }]
+    });
+    window.addEventListener('resize', ()=>chart.resize());
+  })();
+
+  // ===== 图2：KO-PEP 60日滚动超额收益（百分点） =====
+  (function(){
+    const dates = EXCESS_DATA.map(d=>d.date);
+    const vals = EXCESS_DATA.map(d=>d.value);
+    const chart = echarts.init(document.getElementById('excessChart'));
+    let lowIdx = dates.indexOf('2025-10-13');
+    if(lowIdx < 0){ let mn=0; for(let i=1;i<vals.length;i++) if(vals[i]<vals[mn]) mn=i; lowIdx = mn; }
+    const minVal = vals[lowIdx];
+    chart.setOption({
+      grid:{left:56, right:20, top:30, bottom:30},
+      tooltip:{trigger:'axis', valueFormatter:v=>v.toFixed(1)+'pp'},
+      xAxis:{type:'category', data:dates, axisLabel:{color:'#5b5f76', fontSize:11}, axisLine:{lineStyle:{color:theme.line}}},
+      yAxis:{type:'value', axisLabel:{color:'#5b5f76', fontSize:11, formatter:v=>v+'%'}, splitLine:{lineStyle:{color:'#eef1f8'}}, axisLine:{show:true}},
+      dataZoom:[{type:'inside', start:0, end:100}, {type:'slider', height:18, bottom:8, start:0, end:100, borderColor:'#e4e7f0', fillerColor:'rgba(0,114,178,0.12)'}],
+      series:[{
+        type:'line', data:vals, smooth:true, showSymbol:false, lineStyle:{color:theme.orange, width:2.5},
+        markLine:{silent:true, symbol:'none', data:[{yAxis:0}], lineStyle:{color:theme.gray, type:'dashed'}},
+        areaStyle:{color:{type:'linear', x:0, y:0, x2:0, y2:1, colorStops:[{offset:0, color:'rgba(230,159,0,0.22)'},{offset:1, color:'rgba(230,159,0,0.02)'}]}},
+        markPoint:{
+          symbol:'pin', symbolSize:48,
+          data:[
+            {coord:[dates[lowIdx], minVal], value:minVal.toFixed(1)+'pp', itemStyle:{color:theme.green}, label:{color:'#fff', fontSize:10}},
+            {type:'max', name:'近高', itemStyle:{color:theme.vermillion}, label:{color:'#fff', fontSize:10}}
+          ]
+        }
+      }]
+    });
+    window.addEventListener('resize', ()=>chart.resize());
+  })();
+})();
+</script>
+</body>
+</html>
