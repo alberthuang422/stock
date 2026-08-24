@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>艾伯维 ABBV 全面研究 | 全球药企史上最成功的大单品切换样本</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<style>
+  :root { --ink:#1f2733; --sub:#5b6675; --line:#e3e8ef; --bg:#f7f9fc; --card:#fff;
+          --blue:#0072B2; --orange:#E69F00; --sky:#56B4E9; --green:#009E73; --purple:#CC79A7;
+          --red:#C0392B; --verm:#D55E00; --gold:#E69F00; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--ink); font-family: -apple-system, "PingFang SC",
+         "Microsoft YaHei", "Helvetica Neue", sans-serif; line-height: 1.65; padding: 24px 16px 60px; }
+  .wrap { max-width: 1120px; margin: 0 auto; }
+  h1 { font-size: 26px; letter-spacing: .5px; margin-bottom: 4px; }
+  .subtitle { color: var(--sub); font-size: 13px; margin-bottom: 22px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+          padding: 20px 22px; margin-bottom: 18px; box-shadow: 0 1px 3px rgba(20,30,50,.05); }
+  .card h2 { font-size: 17px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .card h2::before { content: ""; width: 4px; height: 16px; background: var(--blue); border-radius: 2px; }
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 4px; }
+  .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .kv { background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; }
+  .kv .k { font-size: 12px; color: var(--sub); }
+  .kv .v { font-size: 20px; font-weight: 700; margin-top: 2px; }
+  .kv .v small { font-size: 12px; font-weight: 400; color: var(--sub); }
+  .kv .muted { font-size: 12.5px; color: var(--sub); margin-top: 4px; font-weight: 400; }
+  .up { color: var(--red); } .down { color: var(--green); }
+  .tag { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 20px;
+         background: #eef3fb; color: var(--blue); margin-left: 6px; vertical-align: 2px; }
+  .tag.amber { background: #fdf3e3; color: var(--verm); }
+  .tag.green { background: #eaf6f1; color: var(--green); }
+  table { width: 100%; border-collapse: collapse; font-size: 12.5px; margin-top: 6px; }
+  th, td { padding: 9px 10px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); }
+  th { background: #f1f4f9; font-weight: 600; white-space: nowrap; }
+  td.num { text-align: center; white-space: nowrap; }
+  td.tk { white-space: nowrap; }
+  .badge { display: inline-block; font-size: 11px; padding: 2px 9px; border-radius: 20px; white-space: nowrap; }
+  .badge-hi { background: #fdecea; color: var(--verm); border: 1px solid #f5c6bd; }
+  .badge-mid { background: #fdf6ec; color: #a16207; border: 1px solid #f0d9a8; }
+  .badge-lo { background: #eaf6f1; color: var(--green); border: 1px solid #b8e0cf; }
+  .chart { width: 100%; height: 380px; }
+  .chart-sm { width: 100%; height: 320px; }
+  .concl { border-left: 4px solid var(--blue); background: #f4f8ff; padding: 12px 16px;
+           border-radius: 0 8px 8px 0; font-size: 14px; margin-top: 10px; }
+  .warn { border-left: 4px solid var(--verm); background: #fdf6ec; padding: 10px 14px;
+          border-radius: 0 8px 8px 0; font-size: 13px; margin-top: 10px; }
+  .note { font-size: 12px; color: var(--sub); margin-top: 10px; }
+  .src { font-size: 11.5px; color: var(--sub); margin-top: 8px; line-height: 1.7; }
+  .seg { display:inline-flex; border:1px solid var(--line); border-radius:8px; overflow:hidden; margin-bottom:8px; }
+  .seg button { border:0; background:var(--card); padding:6px 14px; font-size:12px; color:var(--sub); cursor:pointer; }
+  .seg button.on { background:var(--blue); color:#fff; }
+  .disclaimer { font-size: 12px; color: var(--sub); margin-top: 16px; border-top: 1px dashed var(--line);
+                padding-top: 12px; }
+  @media (max-width: 720px) { .grid3, .grid4 { grid-template-columns: 1fr 1fr; } .chart, .chart-sm { height: 300px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>艾伯维（ABBV）全面研究</h1>
+  <div class="subtitle">穿越"药王" Humira 断崖后逆势增长：新兴免疫双雄 + 第二增长支柱神经科学 · 2033 核心专利到期与 IRA 定价是长期试金石 · 数据截至 2026-08-21 收盘</div>
+
+  <!-- 核心结论 -->
+  <div class="card">
+    <h2>核心结论（TL;DR）</h2>
+    <div class="grid4">
+      <div class="kv"><div class="k">最新价（2026-08-21）</div>
+        <div class="v">$264.96 <small>+1.2%</small></div>
+        <div class="muted up">YTD +18.7% · 20日 +2.16% · 52周 $189.40–$267.47</div></div>
+      <div class="kv"><div class="k">总市值</div>
+        <div class="v">$4682 <small>亿</small></div>
+        <div class="muted">PE(TTM) 74.9x（GAAP扭曲）· 前瞻PE 约19x（2026指引口径）</div></div>
+      <div class="kv"><div class="k">2025 财年</div>
+        <div class="v">$611.6 <small>亿营收</small></div>
+        <div class="muted up">历史新高 · 调整后EPS $10.00 · 股息连续12年增长</div></div>
+      <div class="kv"><div class="k">2026 指引</div>
+        <div class="v">$676 亿</div>
+        <div class="muted">调整后EPS $13.87–14.07 · Skyrizi+Rinvoq &gt;$310 亿</div></div>
+    </div>
+
+    <div class="grid3" style="margin-top:12px;">
+      <div class="kv"><div class="k">一句话本质</div>
+        <div class="v" style="font-size:15px;">买艾伯维 = 买"免疫双雄放量 + 神经科学第二支柱"的确定性切换</div>
+        <div class="muted">Humira 断崖已出清 ~90%，Skyrizi+Rinvoq 2026Q2 单季合计 $80.3 亿已超 Humira 巅峰期单季；本质是"已证明的复利增长 + 12 年连续增派股息"</div></div>
+      <div class="kv"><div class="k">核心增长引擎（2026Q2）</div>
+        <div class="v" style="font-size:15px;">Skyrizi $55.05亿（+24.4%）</div>
+        <div class="muted">Rinvoq $25.25亿（+24.5%）· 2026 合计目标 &gt;$310 亿 · 神经科学 +20.3%</div></div>
+      <div class="kv"><div class="k">综合评级</div>
+        <div class="v" style="font-size:16px;">买入 <span class="badge badge-lo">高质量复利</span></div>
+        <div class="muted">本报告：中期看好，长期看 2033 专利墙与 IRA（见投资结论）</div></div>
+    </div>
+  </div>
+
+  <!-- 一、公司与业务结构 -->
+  <div class="card">
+    <h2>① 公司与业务结构<span class="tag">2013 年从雅培分拆</span></h2>
+    <p style="font-size:13.5px;margin-bottom:10px;">
+      艾伯维 2013 年从雅培（Abbott）分拆独立，靠 Humira（修美乐）登顶"全球药王"，2020 年收购艾尔建（Allergan）扩充医美与神经板块，2023 年起以 Skyrizi + Rinvoq 完成史上最成功的大单品切换。2025 财年营收结构：
+    </p>
+    <table>
+      <thead><tr><th>业务板块</th><th>2025FY 营收</th><th>占比</th><th>同比</th><th>定位</th></tr></thead>
+      <tbody>
+        <tr><td class="tk">免疫 Immunology</td><td class="num">$304.06 亿</td><td class="num">49.7%</td><td class="num up">+14.0%</td><td><span class="badge badge-lo">增长引擎</span></td></tr>
+        <tr><td class="tk">神经科学 Neuroscience</td><td class="num">$107.67 亿</td><td class="num">17.6%</td><td class="num up">+19.7%</td><td><span class="badge badge-lo">第二支柱</span></td></tr>
+        <tr><td class="tk">肿瘤 Oncology</td><td class="num">$66.55 亿</td><td class="num">10.9%</td><td class="num up">+1.5%</td><td><span class="badge badge-mid">成熟/承压</span></td></tr>
+        <tr><td class="tk">其他 Other</td><td class="num">$63.63 亿</td><td class="num">10.4%</td><td class="num down">-4.8%</td><td><span class="badge badge-mid">含内分泌等</span></td></tr>
+        <tr><td class="tk">医美 Aesthetics</td><td class="num">$48.60 亿</td><td class="num">8.0%</td><td class="num down">-6.1%</td><td><span class="badge badge-mid">消费属性</span></td></tr>
+        <tr><td class="tk">眼科 Eye Care</td><td class="num">$21.09 亿</td><td class="num">3.4%</td><td class="num down">-5.9%</td><td><span class="badge badge-mid">次要</span></td></tr>
+      </tbody>
+    </table>
+    <div class="note">地域：美国 ~76.2%、中国 ~1.6%（$10.06 亿，+9.7%）——高度依赖美国本土，IRA 定价谈判直接影响面大。核心产品：免疫 Skyrizi（IL-23）/Rinvoq（JAK1）；神经 Vraylar/Botox 治疗/偏头痛三件套（Ubrelvy+Qulipta+Botox）/帕金森（Vyalev+tavapadon）；肿瘤 Venclexta/Imbruvica/Elahere。</div>
+    <div class="src">来源：艾伯维 2025 年报（investors.abbvie.com，2026-02 发布）与 neodata 营收结构（2025FY）。</div>
+  </div>
+
+  <!-- 二、财务全景 -->
+  <div class="card">
+    <h2>② 财务全景：GAAP 与"调整后"是两家公司<span class="tag amber">必读口径</span></h2>
+    <div class="seg" id="seg_fin"><button class="on" onclick="showChart('fin','chart1')">营收 vs 净利润</button><button onclick="showChart('fin','chart2')">GAAP vs 调整后EPS</button><button onclick="showChart('fin','chart3')">壁垒与回报</button></div>
+    <div id="chart1" class="chart"></div>
+    <div id="chart2" class="chart" style="display:none;"></div>
+    <div id="chart3" class="chart" style="display:none;"></div>
+
+    <table style="margin-top:14px;">
+      <thead><tr><th>指标（美元）</th><th>2021</th><th>2022</th><th>2023</th><th>2024</th><th>2025</th><th>2026Q2(单季)</th></tr></thead>
+      <tbody>
+        <tr><td class="tk">净营收（亿）</td><td class="num">562</td><td class="num">580</td><td class="num">543</td><td class="num">563</td><td class="num up">612（新高）</td><td class="num up">169.9（+10.2%）</td></tr>
+        <tr><td class="tk">GAAP 净利润（亿）</td><td class="num">115</td><td class="num">118（峰值）</td><td class="num">48</td><td class="num">43</td><td class="num">42</td><td class="num">36</td></tr>
+        <tr><td class="tk">GAAP 摊薄EPS</td><td class="num">6.45</td><td class="num">6.63</td><td class="num">2.72</td><td class="num">2.39</td><td class="num">2.36</td><td class="num up">2.03（+290%）</td></tr>
+        <tr><td class="tk">调整后摊薄EPS</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">10.12</td><td class="num">10.00</td><td class="num up">3.65（+22.9%）</td></tr>
+        <tr><td class="tk">调整后营业利润率</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">≈45%</td><td class="num up">48.3%</td></tr>
+        <tr><td class="tk">自由现金流（亿）</td><td class="num">220</td><td class="num">243</td><td class="num">221</td><td class="num">178</td><td class="num">178</td><td class="num">31（单季）</td></tr>
+        <tr><td class="tk">股东权益（亿）</td><td class="num">154</td><td class="num">173</td><td class="num">104</td><td class="num">33</td><td class="num down">-33</td><td class="num down">-59（Q2末）</td></tr>
+      </tbody>
+    </table>
+
+    <div class="warn">
+      <b>为什么 GAAP 净利润只有 42 亿、调整后却有 100+ 亿？</b>：GAAP 利润被三块"纸面费用"压着——① 无形资产摊销（2025 年 $7,377 百万，主要来自 Allergan/Cerevel/ImmunoGen 并购）；② 强制性 IPR&D 与里程碑费用（2025 年 $50.16 亿）；③ 或有对价公允价值变动（$14 亿级）。这些都是非现金项目，且历史上的并购是"用现金买增长"，所以市场看 <b>调整后 EPS 与自由现金流</b>：2025 调整后 EPS $10.00 → 2026 指引 $13.87–14.07（+39~41% 增长）。<b>股东权益为负（-$59 亿）</b>是持续回购+收购多年累积的会计结果，不代表经营恶化，但意味着 <b>PB 指标完全失真</b>，估值只能用 PE/现金流。
+    </div>
+    <div class="src">来源：艾伯维 2025 年报（10-K/新闻稿，2026-02）、2026Q2 财报（2026-07-31）、westock finance（2026Q2 数据）；Fidelity/Morningstar 财务摘要。</div>
+  </div>
+
+  <!-- 三、Humira 切换 -->
+  <div class="card">
+    <h2>③ 史上最成功的"药王继承"：Humira 断崖 vs Skyrizi/Rinvoq 接力<span class="tag green">已完成 90%</span></h2>
+    <div class="seg" id="seg_hum"><button class="on" onclick="showChart('hum','chart4')">产品更替轨迹</button><button onclick="showChart('hum','chart5')">Skyrizi 2026 单季</button></div>
+    <div id="chart4" class="chart"></div>
+    <div id="chart5" class="chart" style="display:none;"></div>
+    <table>
+      <thead><tr><th>年份</th><th>Humira 全球销售</th><th>同比</th><th>Skyrizi</th><th>Rinvoq</th><th>备注</th></tr></thead>
+      <tbody>
+        <tr><td class="tk">2021</td><td class="num">$206.9 亿</td><td class="num up">+3.5%</td><td class="num">—</td><td class="num">—</td><td>药王鼎盛期</td></tr>
+        <tr><td class="tk">2022</td><td class="num">$212.4 亿（峰值）</td><td class="num up">+2.6%</td><td class="num">—</td><td class="num">—</td><td>全球处方药第一</td></tr>
+        <tr><td class="tk">2023</td><td class="num">$144.1 亿</td><td class="num down">-32.2%</td><td class="num">$77 亿+</td><td class="num">$40 亿+</td><td>美国 2023-01 LOE，生物类似药涌入</td></tr>
+        <tr><td class="tk">2024</td><td class="num">$89.9 亿</td><td class="num down">-38%</td><td class="num">$117.2 亿</td><td class="num">$59.7 亿</td><td>免疫组合 +2.9%（经营口径）</td></tr>
+        <tr><td class="tk">2025</td><td class="num">约 $45 亿</td><td class="num down">-50%</td><td class="num">约 $180 亿</td><td class="num">约 $80+ 亿</td><td>双雄合计 $260 亿（+40%）</td></tr>
+        <tr><td class="tk">2026Q2</td><td class="num">$7.56 亿（单季）</td><td class="num down">-35.9%</td><td class="num up">$55.05 亿（单季，+24.4%）</td><td class="num up">$25.25 亿（单季，+24.5%）</td><td><b>双雄单季 $80.3 亿 &gt; Humira 全盛期单季</b></td></tr>
+      </tbody>
+    </table>
+    <div class="concl">
+      <b>艾伯维十年磨一剑的资本配置链条</b>：Humira 巅峰现金流（2022 峰 $212 亿/年）→ 预研 Skyrizi/Rinvoq → 2023 断崖时双雄恰已放量 → 公司营收 2025 年创新高 $611.6 亿，<b>反超 Humira 峰值年份</b>。管理层指引：Skyrizi+Rinvoq 2026 合计 &gt;$310 亿（+20%+）、2030 目标 $380 亿。Humira 已缩水 79%，后续影响趋近于零。
+    </div>
+    <div class="src">来源：艾伯维年报/季报（2024 年报披露 2024FY 数据，2025 年报与 2026Q2 公告）；赛诺菲/再生元财报对比报道（2026-08-19，需核实原文）。2025FY Humira 数据为各季加总口径（约 $45 亿），Skyrizi 2025FY 为 Q1-Q4 加总（约 $180 亿）。</div>
+  </div>
+
+  <!-- 四、管线与专利 -->
+  <div class="card">
+    <h2>④ 管线与新适应症：下一轮增长的弹药</h2>
+    <table>
+      <thead><tr><th>资产</th><th>领域</th><th>进展</th><th>峰值潜力/意义</th></tr></thead>
+      <tbody>
+        <tr><td class="tk">Skyrizi</td><td>克罗恩病皮下诱导</td><td class="num">2026 秋美国获批推进中</td><td class="num">拉动 2027 销售</td></tr>
+        <tr><td class="tk">Rinvoq</td><td>白癜风 / 斑秃</td><td class="num">欧已批（2026）；美获批 2026 底-2027 初</td><td class="num">两适应症合计峰值近 $20 亿</td></tr>
+        <tr><td class="tk">Rinvoq</td><td>化脓性汗腺炎 / 狼疮</td><td class="num">2026 III 期读出</td><td class="num">潜在新适应症浪潮（未来数年最多 5 个新适应症）</td></tr>
+        <tr><td class="tk">tavapadon</td><td>帕金森口服药</td><td class="num">FDA 决定 2026Q3</td><td class="num">帕金森特许经营峰值 &gt;$50 亿（含 Vyalev）</td></tr>
+        <tr><td class="tk">Vyalev</td><td>帕金森 24h 输注</td><td class="num">2026 冲击重磅药</td><td class="num">国际放量中</td></tr>
+        <tr><td class="tk">Venclexta</td><td>CLL 一线扩展</td><td class="num">FDA 批准联合 acalabrutinib 一线</td><td class="num">巩固血液瘤基本盘</td></tr>
+        <tr><td class="tk">Elahere / Epkinly / Decnapaz</td><td>肿瘤 ADC / 双抗</td><td class="num">Decnapaz 获批（首个血液瘤 ADC）；Elahere 加速审批；Epkinly III 期 PFS 显著改善</td><td class="num">肿瘤接力（Imbruvica 下滑对冲）</td></tr>
+        <tr><td class="tk">zumilokibart（Apogee）</td><td>特应性皮炎/哮喘 IL-13</td><td class="num">$109 亿收购，2026Q3 完成</td><td class="num">一年注射 2-4 次 vs DUPIXENT；2032 起增厚</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 五、专利悬崖 -->
+  <div class="card">
+    <h2>⑤ 专利悬崖：第一波已过，下一波在 2033（十年后）</h2>
+    <table>
+      <thead><tr><th>产品</th><th>专利到期（美国核心化合物）</th><th>影响</th><th>状态</th></tr></thead>
+      <tbody>
+        <tr class="risk-低危"><td class="tk">Humira</td><td class="num">2023-01（已过）</td><td class="num">2022 峰值 $212 亿 → 2026Q2 单季 $7.56 亿（-85%）</td><td><span class="badge badge-lo">已出清 ~90%</span></td></tr>
+        <tr class="risk-中危"><td class="tk">Imbruvica</td><td class="num">IRA 2026 年 Medicare 谈判</td><td class="num">AZN Calquence/百济 Zanubrutinib 挤压，持续下滑</td><td><span class="badge badge-mid">在发生</span></td></tr>
+        <tr class="risk-高危"><td class="tk">Skyrizi / Rinvoq</td><td class="num">核心化合物约 2033</td><td class="num">免疫双雄 2030 目标 $380 亿，2033 起面临生物类似药</td><td><span class="badge badge-mid">10 年缓冲</span></td></tr>
+        <tr class="risk-低危"><td class="tk">Rinvoq（额外保护）</td><td class="num">和解推迟仿制药至 2037-04</td><td class="num">美国仿制药准入延后 4 年</td><td><span class="badge badge-lo">已锁保护</span></td></tr>
+      </tbody>
+    </table>
+    <div class="concl">
+      与 NVS 形成镜像：诺华的悬崖在 <b>2025-2030 当下</b>（正"渡劫"），艾伯维的最艰难一役已在 <b>2023-2025 完成</b>，下一波 <b>2033</b> 还有 7 年主动窗口。艾伯维已用 Humira 的现金流证明了自己"悬崖前预研、断崖时接棒"的执行力曲线，这正是其相对诺华的<b>确定性溢价来源</b>——但也意味着市场对 2033 的担忧将随时间临近逐步定价。
+    </div>
+    <div class="src">来源：Investment House 研报（2026-07-05，需核实原文）；雅虎财经 JPM26 纪要（2026-01-14，需核实原文）；公司指引。</div>
+  </div>
+
+  <!-- 六、收购史 -->
+  <div class="card">
+    <h2>⑥ 并购史：Humira 现金流买时间，已验证的思路</h2>
+    <div class="grid4">
+      <div class="kv"><div class="k">2015 Pharmacyclics</div><div class="v" style="font-size:14px;">$210 亿</div><div class="muted">获 Imbruvica（肿瘤基本盘）</div></div>
+      <div class="kv"><div class="k">2020 Allergan</div><div class="v" style="font-size:14px;">$630 亿</div><div class="muted">获 Botox/Vraylar/Juvederm，奠定医美+神经板块，被验证的决定性交易</div></div>
+      <div class="kv"><div class="k">2024 ImmunoGen + Cerevel</div><div class="v" style="font-size:14px;">$101 亿 + $87 亿</div><div class="muted">Elahere（ADC）+ 神经管线（tavapadon 等）</div></div>
+      <div class="kv"><div class="k">2026 Apogee</div><div class="v" style="font-size:14px;">$109 亿</div><div class="muted">zumilokibart（IL-13），五年最大收购；债务融资，短期摊薄</div></div>
+    </div>
+    <div class="note">另有 2026-01 与特朗普政府协议：未来 10 年对美投资 $1000 亿，换取关税豁免与豁免未来强制价格令——重大政策性缓冲（需核实原文）。资本配置总思路：并购 + 股息为主、回购温和（2026Q1 回购 $10.65 亿）。2026 上半年净现金流 $31.14 亿（Q2）支撑分红。</div>
+    <div class="src">来源：艾伯维公告/媒体（雅虎财经、Investment House 2026-07-05，需核实原文）；westock finance 现金流数据。</div>
+  </div>
+
+  <!-- 七、估值 -->
+  <div class="card">
+    <h2>⑦ 估值：为什么"两家公司"决定了定价方法</h2>
+    <div class="seg" id="seg_val"><button class="on" onclick="showChart('val','chart6')">估值对比（前瞻）</button><button onclick="showChart('val','chart7')">股息点位</button></div>
+    <div id="chart6" class="chart-sm"></div>
+    <div id="chart7" class="chart-sm" style="display:none;"></div>
+    <table>
+      <thead><tr><th>指标</th><th>ABBV</th><th>NVS（诺华）</th><th>PFE（辉瑞）</th><th>MRK（默沙东）</th></tr></thead>
+      <tbody>
+        <tr><td class="tk">现价（$，2026-08-21）</td><td class="num">264.96</td><td class="num">158.86</td><td class="num">28.07</td><td class="num">152.55</td></tr>
+        <tr><td class="tk">市值（亿$）</td><td class="num">4682</td><td class="num">3020</td><td class="num">1600</td><td class="num">3764</td></tr>
+        <tr><td class="tk">PE(TTM) GAAP</td><td class="num">74.9x（扭曲）</td><td class="num">24.0x</td><td class="num">36.9x（扭曲）</td><td class="num">122x（扭曲）</td></tr>
+        <tr><td class="tk">前瞻PE（调整后口径）</td><td class="num"><b>约 19x</b>（2026 指引中值）</td><td class="num">16-18x</td><td class="num">8-9x</td><td class="num">8-10x</td></tr>
+        <tr><td class="tk">股息率(TTM)</td><td class="num">2.58%</td><td class="num">1.94%</td><td class="num">6.13%</td><td class="num">2.23%</td></tr>
+        <tr><td class="tk">YTD 涨幅</td><td class="num up">+18.7%</td><td class="num up">+19.3%</td><td class="num up">+18.6%</td><td class="num up">+47.1%</td></tr>
+        <tr><td class="tk">机构目标价</td><td class="num">均值 $278.9（+5~11%）</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr>
+      </tbody>
+    </table>
+    <div class="note">
+      口径说明：艾伯维 GAAP PE 失真（无形资产摊销 + IPR&amp;D 费用），<b>前瞻 PE 用 2026 调整后 EPS 指引 $13.87–14.07 中值 $13.97 → 约 19x</b>（若按券商更高的市场一致预期则约 18x）；无论哪种口径，<b>均处于大药企中档</b>，高于辉瑞/默沙东价值档（但后两家增长质量/确定性弱），与诺华前瞻基本相当。机构 75% 买入/增持（2026-08），目标价隐含 5-11% 空间——市场已相当认可，但尚未极度拥挤。
+    </div>
+    <div class="concl"><b>估值定位</b>：艾伯维不是"便宜股"，是<b>确定性溢价合理性验证中的质量成长股</b>。前瞻约 19x 对应 2026 调整后 EPS +40%、且 2029 前高个位数营收 CAGR 指引——市场买的是"已验证的复利 + 股息厚实度（连续 12 年增派）"，赚的是业绩钱；估值进一步扩张需要 zumilokibart 等新引擎兑现。</div>
+    <div class="src">来源：westock 行情 2026-08-21（TTM 口径）；公司 2026 指引；机构目标价/评级为财经媒体汇总（2026-08，需核实原文）。</div>
+  </div>
+
+  <!-- 八、股息 -->
+  <div class="card">
+    <h2>⑧ 股息：连续 12 年增长（自 2013 分拆），年化约 $6.92</h2>
+    <table>
+      <thead><tr><th>年份</th><th>季度每股派息</th><th>全年现金股息</th><th>同比增长</th></tr></thead>
+      <tbody>
+        <tr><td class="tk">2024</td><td class="num">$1.55</td><td class="num">$110.3 亿</td><td class="num up">+5.4%</td></tr>
+        <tr><td class="tk">2025</td><td class="num">$1.64</td><td class="num">$116.6 亿</td><td class="num up">+5.8%</td></tr>
+        <tr><td class="tk">2026（至今）</td><td class="num">$1.73 ×3</td><td class="num">年化 $6.92/股</td><td class="num up">+5.5%</td></tr>
+      </tbody>
+    </table>
+    <div class="concl">分红支付额 ~$117 亿/年，自由现金流 ~$178-220 亿/年 → <b>支付率约 60%</b>，有缓冲；2026Q2 单季自由现金流 $31 亿仍覆盖季度股息（约 $30 亿）。股息是艾伯维估值"底部支撑"的重要来源——即便股价回调，2.6% 股息率 + 5%+ 年增派率提供类债券的地板逻辑。</div>
+    <div class="src">来源：westock 分红数据、neodata 分红派息明细、艾伯维 2025 年报。</div>
+  </div>
+
+  <!-- 九、风险 -->
+  <div class="card">
+    <h2>⑨ 风险清单</h2>
+    <table>
+      <thead><tr><th>风险</th><th>类型</th><th>程度</th><th>触发信号</th></tr></thead>
+      <tbody>
+        <tr class="risk-高危"><td class="tk">2033 免疫双雄核心专利到期（Skyrizi/Rinvoq）</td><td>结构性</td><td><span class="badge badge-hi">高（长期）</span></td><td>2030 后生物类似药申报；Rinvoq 已和解至 2037-04</td></tr>
+        <tr class="risk-中危"><td class="tk">IRA Medicare 谈判：Imbruvica 2026 首批</td><td>政策</td><td><span class="badge badge-mid">中</span></td><td>降价幅度落地；辐射偏头痛/免疫药价</td></tr>
+        <tr class="risk-中危"><td class="tk">竞争：JNJ Icotyde（口服银屑病）侵蚀 Skyrizi</td><td>竞争</td><td><span class="badge badge-mid">中</span></td><td>Skyrizi 银屑病处方份额下滑</td></tr>
+        <tr class="risk-中危"><td class="tk">杠杆：资产负债率 104%，股东权益为负</td><td>财务</td><td><span class="badge badge-mid">中</span></td><td>Apogee 债务融资后净杠杆短期抬升；管理层承诺 2-3 年内回 2x</td></tr>
+        <tr class="risk-中危"><td class="tk">并购摊薄：Apogee 2026 摊薄每股 $0.14</td><td>财务</td><td><span class="badge badge-mid">中</span></td><td>zumilokibart III 期结果决定 2030s 增厚能否兑现</td></tr>
+        <tr class="risk-低危"><td class="tk">医美/消费软：Botox 美学 -6%（中国 23Q2 疲弱）</td><td>经营</td><td><span class="badge badge-lo">低</span></td><td>消费降级压制美学板块</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 十、预期差与结论 -->
+  <div class="card">
+    <h2>⑩ 市场共识 vs 预期差</h2>
+    <div class="grid3">
+      <div class="kv"><div class="k">市场已定价（共识）</div><div class="v" style="font-size:14px;">"Humira 切换已成功"</div><div class="muted">双雄 +20%+ 增长、神经第二支柱、2026 指引连续上调 —— 已在股价（+18.7% YTD）中</div></div>
+      <div class="kv"><div class="k">真正的预期差</div><div class="v" style="font-size:14px;">2033 之后靠什么？</div><div class="muted">zumilokibart（IL-13）能否复制双雄路径、Vraylar 专利（还需核实）与肿瘤 ADC 管线的纵深，是 2033 前必须落地的答案</div></div>
+      <div class="kv"><div class="k">易被忽视的缓冲</div><div class="v" style="font-size:14px;">政策 + 神经科爆发</div><div class="muted">$1000 亿对美投资协议换取的价格政策豁免；神经科学 +19.7% 已近 $108 亿，tavapadon 2026Q3 上市有望再造 $50 亿+ 特许经营</div></div>
+    </div>
+    <div class="concl">
+      反向声音：市场把艾伯维当"确定性复利"定价（前瞻约 19x），但对 <b>GAAP 利润与自由现金流的背离（股东权益 -$59 亿、摊销/IPR&D 费用吞噬账面利润）</b>定价不足——若未来并购节奏放缓或抵扣耗尽、营销费用率回升，<b>"调整后口径"与"现金口径"的鸿沟可能反噬估值逻辑</b>。这是"质量成长股"标签下最容易忽视的数学隐患。<br><br>
+      <b>短期（3-6 个月）</b>：催密集——tavapadon 获批（2026Q3）、Skyrizi 克罗恩 SC 获批（秋）、Q3 指引兑现；但股价已近 52 周高点（267.47），兑现即利好出尽的概率不低，追高需谨慎。<br>
+      <b>中期（1-3 年）</b>：高确定性增长 + 股息守护，若神经系统持续双击、zumilokibart III 期顺利，是"持有收息 + 赚业绩钱"的优选大药企之一。<br>
+      <b>验证清单</b>：① tavapadon 获批 ② Skyrizi 克罗恩 SC ③ Rinvoq 白癜风/斑秃获批 ④ zumilokibart III 期 ⑤ 2026Q3 指引兑现 ⑥ 净杠杆回落。
+    </div>
+  </div>
+
+  <p class="disclaimer">本报告仅供研究参考，不构成个人投资建议。数据来源：westock（2026-08-21 收盘）、艾伯维 SEC 财报/公告（investors.abbvie.com）、Fidelity/Morningstar/WSJ 财务数据、财经媒体与券商研报（雅虎财经、Investment House 等，需核实原文）；GAAP 与调整后口径并存，跨公司比价请统一口径。医药研发/获批存在不确定性与政策风险。</p>
+
+</div>
+
+<script>
+function showChart(seg, chartId) {
+  document.querySelectorAll('#' + seg + ' button').forEach(function(b) { b.classList.remove('on'); });
+  if (seg === 'fin') { ['chart1','chart2','chart3'].forEach(function(c){ document.getElementById(c).style.display = (c === chartId) ? 'block' : 'none'; }); }
+  if (seg === 'hum') { ['chart4','chart5'].forEach(function(c){ document.getElementById(c).style.display = (c === chartId) ? 'block' : 'none'; }); }
+  if (seg === 'val') { ['chart6','chart7'].forEach(function(c){ document.getElementById(c).style.display = (c === chartId) ? 'block' : 'none'; }); }
+  document.querySelector('#' + seg + ' button[onclick*="' + chartId + '"]').classList.add('on');
+}
+
+// ② 财务图表（GAAP 口径）
+echarts.init(document.getElementById('chart1')).setOption({
+  tooltip: { trigger: 'axis' },
+  legend: { data: ['净营收', 'GAAP净利润'] },
+  grid: { left: 60, right: 60, top: 40, bottom: 30 },
+  xAxis: { type: 'category', data: ['2021', '2022', '2023', '2024', '2025', '2026Q2'] },
+  yAxis: [
+    { type: 'value', name: '营收(亿$)' },
+    { type: 'value', name: '净利润(亿$)' }
+  ],
+  series: [
+    { name: '净营收', type: 'bar', data: [562, 580, 543, 563, 612, 170], itemStyle: { color: '#0072B2' } },
+    { name: 'GAAP净利润', type: 'line', yAxisIndex: 1, data: [115, 118, 48, 43, 42, 36], itemStyle: { color: '#D55E00' } }
+  ]
+});
+
+echarts.init(document.getElementById('chart2')).setOption({
+  tooltip: { trigger: 'axis' },
+  legend: { data: ['GAAP摊薄EPS', '调整后摊薄EPS'] },
+  grid: { left: 60, right: 60, top: 40, bottom: 30 },
+  xAxis: { type: 'category', data: ['2024', '2025', '2026E(指引)', '2027E(市场)'] },
+  yAxis: { type: 'value', name: '美元' },
+  series: [
+    { name: 'GAAP摊薄EPS', type: 'bar', data: [2.39, 2.36, null, null], itemStyle: { color: '#56B4E9' } },
+    { name: '调整后摊薄EPS', type: 'bar', data: [10.12, 10.00, 13.97, null], itemStyle: { color: '#E69F00' } }
+  ]
+});
+
+echarts.init(document.getElementById('chart3')).setOption({
+  tooltip: { trigger: 'axis' },
+  legend: { data: ['毛利率', '自由现金流(十亿$)'] },
+  grid: { left: 60, right: 60, top: 40, bottom: 30 },
+  xAxis: { type: 'category', data: ['2021', '2022', '2023', '2024', '2025'] },
+  yAxis: [
+    { type: 'value', name: '%', max: 90 },
+    { type: 'value', name: '十亿$' }
+  ],
+  series: [
+    { name: '毛利率', type: 'line', data: [69.5, 70.1, 62.4, 70.0, 70.1], itemStyle: { color: '#009E73' }, smooth: true },
+    { name: '自由现金流(十亿$)', type: 'bar', yAxisIndex: 1, data: [22, 24.3, 22.1, 17.8, 17.8], itemStyle: { color: '#CC79A7' } }
+  ]
+});
+// 调整后营业利润率仅 2026Q2 有公告口径（48.3%）；毛利率 2023 偏低系 Humira 断崖当年产品组合变化
+
+// ③ 产品更替轨迹（Humira 与免疫双雄年度数据；2025 为约数、2026Q2 为单季年化）
+echarts.init(document.getElementById('chart4')).setOption({
+  tooltip: { trigger: 'axis' },
+  legend: { data: ['Humira', 'Skyrizi', 'Rinvoq'] },
+  grid: { left: 60, right: 60, top: 40, bottom: 30 },
+  xAxis: { type: 'category', data: ['2022', '2023', '2024', '2025E', '2026E(年化)'] },
+  yAxis: { type: 'value', name: '年度销售(亿$)' },
+  series: [
+    { name: 'Humira', type: 'line', data: [212, 144, 90, 45, 30], itemStyle: { color: '#D55E00' }, smooth: true },
+    { name: 'Skyrizi', type: 'line', data: [null, null, 117, 180, 220], itemStyle: { color: '#0072B2' }, smooth: true },
+    { name: 'Rinvoq', type: 'line', data: [null, null, 60, 80, 101], itemStyle: { color: '#E69F00' }, smooth: true }
+  ]
+});
+// 2019 前 Humira 分季数据无可靠来源；2025E 为机构/媒体口径约数，2026E 由 2026Q2 单季年均化（Skyrizi $55.05亿 ×4≈$220亿）
+
+echarts.init(document.getElementById('chart5')).setOption({
+  tooltip: { trigger: 'axis' },
+  grid: { left: 60, right: 30, top: 40, bottom: 30 },
+  xAxis: { type: 'category', data: ['2026Q1', '2026Q2'] },
+  yAxis: { type: 'value', name: '单季销售(亿$)' },
+  series: [
+    { name: 'Skyrizi单季(2026)', type: 'bar', data: [52.0, 55.05], itemStyle: { color: '#0072B2' }, label: { show: true, position: 'top' } }
+  ]
+});
+// 2026Q1 为媒体口径（约 $52 亿），2026Q2 为公司公告 $55.05 亿
+
+// ⑦ 估值对比
+echarts.init(document.getElementById('chart6')).setOption({
+  tooltip: { trigger: 'axis' },
+  grid: { left: 60, right: 30, top: 40, bottom: 30 },
+  xAxis: { type: 'category', data: ['ABBV', 'NVS', 'PFE', 'MRK', '板块平均'] },
+  yAxis: { type: 'value', name: '前瞻PE(x)' },
+  series: [{
+    name: '前瞻PE',
+    type: 'bar',
+    data: [19, 17, 8.5, 9, 18],
+    itemStyle: { color: function(p) { return p.dataIndex === 0 ? '#D55E00' : '#0072B2'; } },
+    label: { show: true, position: 'top' }
+  }]
+});
+
+echarts.init(document.getElementById('chart7')).setOption({
+  tooltip: { trigger: 'axis' },
+  legend: { data: ['季度派息($/股)'] },
+  grid: { left: 60, right: 30, top: 40, bottom: 30 },
+  xAxis: { type: 'category', data: ['2020', '2021', '2022', '2023', '2024', '2025', '2026'] },
+  yAxis: { type: 'value', name: '$/股' },
+  series: [
+    { name: '季度派息($/股)', type: 'bar', data: [1.18, 1.30, 1.41, 1.48, 1.55, 1.64, 1.73], itemStyle: { color: '#009E73' }, label: { show: true, position: 'top' } }
+  ]
+});
+</script>
+</body>
+</html>

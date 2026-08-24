@@ -2,6 +2,7 @@
 
 > 项目：MACD 回测 + 相关性分阶段分析 + 个股财报/估值/景气度研究
 > 逐日明细见 .workbuddy/memory/YYYY-MM-DD.md，脚本 scripts/，报告 reports/（中文目录名）
+> **报告检索：README.md 是唯一入口（6 大分类索引），每出新报告必须同步更新 README 对应分类（标题+链接+一句话结论）**
 
 ## 数据与拉数
 - Yahoo 日线唯一可靠途径：本机 Chrome CDP 原生 WebSocket（Chrome `run_in_background=true`，端口 `localhost:9222`，拉数脚本 `dangerouslyDisableSandbox=true`）。模板 scripts/fetch_banks_cdp.cjs（建 tab→navigate→sleep→Runtime.evaluate→close；新版 Chrome PUT /json/new 忽略 url，须建 tab 后 navigate）。用完必须关闭 Chrome(9222 进程树)+cdp-proxy。
