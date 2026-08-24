@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>星巴克 SBUX 基本面分析 · 2026-08-24</title>
+<style>
+  :root{
+    --ink:#1a1a2e; --sub:#5a5a72; --line:#dde1e8; --bg:#f7f8fa; --card:#ffffff;
+    --blue:#0072B2; --orange:#E69F00; --sky:#56B4E9; --green:#009E73; --purple:#CC79A7; --red:#D55E00; --black:#000000;
+    --ok:#0072B2; --warn:#E69F00; --bad:#D55E00;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"PingFang SC","Microsoft YaHei",-apple-system,sans-serif;background:var(--bg);color:var(--ink);line-height:1.65;padding:28px 16px}
+  .wrap{max-width:1080px;margin:0 auto}
+  .head{background:linear-gradient(135deg,#1a1a2e 0%,#2d2f4e 100%);color:#fff;border-radius:14px;padding:28px 32px;margin-bottom:24px}
+  .head h1{font-size:26px;font-weight:700;letter-spacing:.5px}
+  .head .sub{margin-top:6px;color:#c9cbe0;font-size:13.5px}
+  .head .verdict-line{margin-top:16px;display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+  .badge{display:inline-block;padding:5px 14px;border-radius:20px;font-size:14px;font-weight:700;color:#fff}
+  .badge.neutral{background:#7a7a8e}
+  .badge.hc{background:#009E73}
+  .badge.mc{background:#E69F00;color:#1a1a2e}
+  .badge.lc{background:#D55E00}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-top:18px}
+  .kpi{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:10px;padding:12px 14px}
+  .kpi .label{font-size:12px;color:#b9bcd6}
+  .kpi .val{font-size:20px;font-weight:700;margin-top:2px}
+  .kpi .note{font-size:11px;color:#c9cbe0}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px 26px;margin-bottom:18px}
+  .card h2{font-size:19px;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+  .card h2 .idx{background:var(--blue);color:#fff;width:24px;height:24px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;font-size:13px;flex:none}
+  .card h3{font-size:15.5px;margin:16px 0 8px;color:#2d2f4e}
+  .lead{font-size:14px;color:var(--sub);margin-bottom:16px}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:10px 0}
+  th{background:#f0f2f7;color:#2d2f4e;text-align:left;padding:9px 11px;font-weight:600;border-bottom:2px solid var(--line)}
+  td{padding:8px 11px;border-bottom:1px solid #eef1f5}
+  tr:hover td{background:#f8fafc}
+  .num{font-variant-numeric:tabular-nums;text-align:right}
+  .pos{color:var(--red);font-weight:600}
+  .neg{color:var(--green);font-weight:600}
+  .neutral-flag{color:var(--purple);font-weight:600}
+  .tag{display:inline-block;font-size:11.5px;padding:2px 9px;border-radius:10px;margin-right:6px;background:#eef1f6;color:#444}
+  .tag.blue{background:#e3f0fb;color:#006a9e}
+  .tag.orange{background:#fdf0df;color:#a8690a}
+  .tag.green{background:#e0f4ec;color:#007a58}
+  .tag.red{background:#fde8e0;color:#b04418}
+  .scorebar{display:flex;align-items:center;gap:12px;margin:10px 0}
+  .scorebar .bar{flex:1;height:12px;border-radius:6px;background:#eceef3;overflow:hidden}
+  .scorebar .fill{height:100%;border-radius:6px;background:linear-gradient(90deg,#009E73,#E69F00 70%,#D55E00);width:63%}
+  .note{font-size:12.5px;color:var(--sub)}
+  .warnbox{background:#fff8ec;border:1px solid #f3d9a4;border-radius:10px;padding:14px 16px;font-size:13.5px;margin:12px 0}
+  .riskbox{background:#fdf3f0;border:1px solid #f2c9bc;border-radius:10px;padding:14px 16px;font-size:13.5px;margin:12px 0}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:760px){.grid2{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}}
+  .src{font-size:11.5px;color:#8a8aa0;margin-top:6px}
+  .chart{width:100%;height:380px}
+  .tabbtns{display:flex;gap:8px;margin:10px 0 4px}
+  .tabbtn{padding:6px 16px;border:1px solid var(--line);border-radius:8px;background:#fff;font-size:13px;cursor:pointer;color:#2d2f4e}
+  .tabbtn.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+  .tblwrap{display:none}
+  .tblwrap.on{display:block}
+  .chartwrap{display:block}
+  .chartwrap.off{display:none}
+  ul{margin:6px 0 6px 22px;font-size:13.5px}
+  li{margin:5px 0}
+  .finally{background:#f2f4fa;border-left:4px solid var(--blue);border-radius:0 10px 10px 0;padding:16px 18px;font-size:14px}
+  .small{font-size:12px;color:var(--sub)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- 头部 -->
+  <div class="head">
+    <h1>星巴克（SBUX · NASDAQ）基本面分析</h1>
+    <div class="sub">鹏城信息AI专家 · 基本面股票分析 · 数据快照 2026-08-21（最近收盘）｜报告日期 2026-08-24</div>
+    <div class="verdict-line">
+      <span class="badge neutral">NEUTRAL 中性</span>
+      <span style="font-size:15px;font-weight:600">综合评分 63 / 100</span>
+      <span class="badge mc">置信度：中等</span>
+      <span style="font-size:13px;color:#c9cbe0">业绩拐点真实性待 Q4 验证 · 估值已充分反映预期</span>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><div class="label">收盘价（2026-08-21）</div><div class="val">$107.08</div><div class="note">+2.97% / 52周区间 $76.05–109.88</div></div>
+      <div class="kpi"><div class="label">总市值</div><div class="val">$1,221亿</div><div class="note">约36× 全年调整EPS指引中枢</div></div>
+      <div class="kpi"><div class="label">PE(TTM)</div><div class="val">61.9×</div><div class="note">FY25盈利谷底致分母失真</div></div>
+      <div class="kpi"><div class="label">PS(TTM)</div><div class="val">~3.3×</div><div class="note">PE的分位数据源未覆盖，PS更稳健</div></div>
+      <div class="kpi"><div class="label">股息率(TTM)</div><div class="val">2.32%</div><div class="note">连续65季派息 · 季息$0.62</div></div>
+      <div class="kpi"><div class="label">年初至今</div><div class="val" style="color:#ff8f6b">+29.5%</div><div class="note">近20日 +4.3%</div></div>
+    </div>
+  </div>
+
+  <!-- 结论摘要 -->
+  <div class="card">
+    <h2><span class="idx">1</span>结论摘要（TL;DR）</h2>
+    <p class="lead">Buy the story, verify the numbers. 星巴克正处于 CEO 布莱恩·尼科尔（Brian Niccol）任期第3年、"Back to Starbucks"转型的实质性兑现期：北美客流与客单价双升、同店销售连续4季正增长、利润率连续2季扩张，叠加中国市场"60%控股权售予博裕资本、转为轻资产授权/合营"的重大结构优化——这些是真实的经营拐点信号。但当前估值已把大部分好消息定价：PE(TTM)61.9×、对FY26调整EPS指引中枢约36×，处于自身历史高位；Q3净利暴增87%中一次性因素（中国交易税项+关税退款）占比较高，Q4才是"干净读数"。</p>
+    <div class="warnbox"><b>核心判断：</b>基本面处于<b>困境反转的验证期</b>，趋势向好但<b>赔率一般</b>——现价更多是赚"验证钱"而非"预期差钱"。给 NEUTRAL（中性），倾向"已持有者持有观察、未持有者等回调或等Q4财报验证"。</div>
+  </div>
+
+  <!-- 价格走势 -->
+  <div class="card">
+    <h2><span class="idx">2</span>近期价格走势</h2>
+    <p class="lead">2026年股价阶梯上行：3月触底85.7 → 4月中旬站上100 → 7/29 Q3财报超预期后冲52周新高108-109 → 8月中旬高位震荡。年初至今+29.5%，现价处于52周区间上沿。（前复权日线，富途行情数据）</p>
+    <div class="tabbtns"><button class="tabbtn on" onclick="switchTab('price')">图</button><button class="tabbtn" onclick="switchTab('price')">表</button></div>
+    <div id="chart-price" class="chartwrap" style="height:400px"></div>
+    <div id="tbl-price" class="tblwrap"></div>
+    <div class="src">数据来源：富途行情日K（前复权），2026-01-08 至 2026-08-21</div>
+  </div>
+
+  <!-- 业务与转型 -->
+  <div class="card">
+    <h2><span class="idx">3</span>业务结构与转型双轮</h2>
+    <div class="grid2">
+      <div>
+        <h3>业务构成（FY2026 Q3）</h3>
+        <table>
+          <tr><th>分部</th><th>营收</th><th>同店</th><th>营业利润率</th></tr>
+          <tr><td>北美</td><td class="num">$74.0亿（+7%）</td><td class="num pos">+8.1%</td><td class="num">13.6%</td></tr>
+          <tr><td>国际</td><td class="num">$13.2亿（-34%）</td><td class="num pos">+5.7%</td><td class="num">19.1%（+550bps）</td></tr>
+          <tr><td>渠道发展(CPG)</td><td class="num">$5.88亿（+22%）</td><td class="num">—</td><td class="num">52.1%（+700bps）</td></tr>
+          <tr><td>合并</td><td class="num">$93.2亿（-1%）</td><td class="num pos">+7.9%</td><td class="num">14.4%（adj）</td></tr>
+        </table>
+        <div class="small">国际分部营收大降因中国业务出表，转为按40%权益法列报；90%海外门店已转授权/特许模式。</div>
+      </div>
+      <div>
+        <h3>转型关键动作</h3>
+        <ul>
+          <li><b>门店改造（uplift）</b>：完成1000+家北美门店翻新（提前达标），FY26底目标1500家，单店投入约$15万；早期数据各时段客流均增。</li>
+          <li><b>服务提速</b>："绿围裙"模式，美国门店人手配齐，多数门店/免下车订单4分钟内交付；2/3直营店达4星+服务标准。</li>
+          <li><b>产品引擎</b>：Refreshers成$20亿年销平台（Q3两位数增长），测试气泡版Spritzers补午后客流。</li>
+          <li><b>成本削减</b>：FY2028底目标削$20亿成本；总部持续精简（2026再裁200+人）。</li>
+          <li><b>中国轻资产化</b>：$24-40亿售中国60%股权予博裕资本（2026年4月交割），长期目标2万家门店、下沉县城。</li>
+        </ul>
+      </div>
+    </div>
+    <div class="src">数据来源：FY2026Q3财报（2026-07-29发布）、新浪财经/智通财经/富途新闻（需核实原文）</div>
+  </div>
+
+  <!-- 财务数据 -->
+  <div class="card">
+    <h2><span class="idx">4</span>10年财务轨迹</h2>
+    <p class="lead">营收十年近翻倍（191.6→371.8亿美元），净利润呈明显周期性：FY2020疫情谷底（9.3亿）、FY2025转型阵痛谷底（18.6亿）、中间FY2018/FY2023双峰。FY2026Q3净利同比+87%为主要拐点信号。</p>
+    <div class="tabbtns"><button class="tabbtn on" onclick="switchTab('fin')">图</button><button class="tabbtn" onclick="switchTab('fin')">表</button></div>
+    <div id="chart-fin" class="chartwrap" style="height:400px"></div>
+    <div id="tbl-fin" class="tblwrap"></div>
+    <div class="src">数据来源：neodata年报数据、westock财务、SEC 10-K；FY2018毛利率口径调整（租金计入销售成本）不可与FY2017前直接比较。</div>
+  </div>
+
+  <!-- 估值 -->
+  <div class="card">
+    <h2><span class="idx">5</span>估值：贵不贵？</h2>
+    <div class="grid2">
+      <div>
+        <h3>估值分位与同业（2026-08-21）</h3>
+        <table>
+          <tr><th>指标</th><th>SBUX</th><th>注释</th></tr>
+          <tr><td>PE(TTM)</td><td class="num">61.9×</td><td class="small">FY25盈利谷底失真</td></tr>
+          <tr><td>Forward PE（FY26指引中枢2.60）</td><td class="num">~41×</td><td class="small">若按2.60算</td></tr>
+          <tr><td>Forward PE（FY27市场预期~2.95）</td><td class="num">~36×</td><td class="small">对标MCD 22×、YUM 19×、CMG 34×</td></tr>
+          <tr><td>PS(TTM)</td><td class="num">~3.3×</td><td class="small">估值锚更稳健</td></tr>
+          <tr><td>PE 5Y分位</td><td class="num">48.4%</td><td class="small">富途估值引擎（相对自身5年）</td></tr>
+          <tr><td>股息率</td><td class="num">2.32%</td><td class="small">连续65季派息</td></tr>
+        </table>
+      </div>
+      <div>
+        <h3>市场已定价了什么？</h3>
+        <ul>
+          <li>✅ 北美客流/客单价持续回升（Q3同店+8.1%）</li>
+          <li>✅ 利润率连续2季扩张（Q2/Q3营业利润率11.9%→14.4% adj）</li>
+          <li>✅ 中国业务出表消除报表包袱（国际分部利润率+550bps）</li>
+          <li>✅ 全年指引再度上调（EPS 2.55-2.65，原2.25-2.45）</li>
+          <li>⚠️ <b>尚未充分定价</b>：Q4同店能否延续6.5%+、关税退款结束后利润率能否自主扩张、中国40%权益法的真实利润贡献、Refreshers平台化后的增量</li>
+        </ul>
+      </div>
+    </div>
+    <div class="warnbox"><b>估值判断：偏贵。</b>经营质量改善是真实的，但当前价格已把"转型成功"当作大概率事件定价。以FY27预期EPS ~2.95计算约36×PE，仍显著高于成熟餐饮同业（MCD 22×、YUM 19×、QSR 22×）。市场在为"利润率从14.4%向历史常态17-18%回归"支付溢价——若Q4利润率扩张停滞，估值有下修风险。</div>
+  </div>
+
+  <!-- 资产负债表 -->
+  <div class="card">
+    <h2><span class="idx">6</span>资产负债表安全</h2>
+    <div class="grid2">
+      <div>
+        <table>
+          <tr><th>指标</th><th>FY26Q3（2026-06-30）</th></tr>
+          <tr><td>长期债务</td><td class="num">$117.8亿（已降$28亿）</td></tr>
+          <tr><td>现金</td><td class="num">$34.5亿</td></tr>
+          <tr><td>净债务/EBITDA</td><td class="num">~2.9×</td></tr>
+          <tr><td>股东权益</td><td class="num neg">-$84.6亿（负）</td></tr>
+          <tr><td>资产负债率</td><td class="num">127.7%（>100%）</td></tr>
+          <tr><td>FCF（本季/Q3）</td><td class="num">$0.92亿（+$38亿并入中国交易回款）</td></tr>
+        </table>
+      </div>
+      <div>
+        <h3>解读</h3>
+        <ul>
+          <li><b>负股东权益 ≠ 资不抵债</b>：是长期"举债回购+高派息"资本返还策略的会计结果，非经营恶化。</li>
+          <li><b>杠杆在主动下降</b>：用中国交易所得偿还$18亿债务，杠杆已从高位降至2.9×，财务健康边际改善。</li>
+          <li><b>流动比率0.92略低于1</b>：作为现金流极强的消费连锁，短期偿债无实质压力，但需要注意。</li>
+          <li><b>股息安全垫</b>：季息$0.62、连续65季派息，FCF覆盖率健康。</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 评分体系 -->
+  <div class="card">
+    <h2><span class="idx">7</span>五维评分（blend 权重）</h2>
+    <table>
+      <tr><th>维度</th><th>得分</th><th>满分</th><th>依据</th></tr>
+      <tr><td>经营质量</td><td class="num">22</td><td class="num">30</td><td class="small">同店连4季正增长、利润率连2季扩张，但净利率仅5.4%（Q3）远低于历史10%+，盈利绝对值处于周期低位</td></tr>
+      <tr><td>资产负债表</td><td class="num">15</td><td class="num">25</td><td class="small">杠杆降至2.9×、有改善，但负权益、负债率128%、流动比率<1</td></tr>
+      <tr><td>现金流</td><td class="num">16</td><td class="num">20</td><td class="small">FCF长期为正且FY25达$24.4亿，本季FCF受中国交易回款提振；现金奶牛属性强</td></tr>
+      <tr><td>估值</td><td class="num">10</td><td class="num">20</td><td class="small">Forward PE~36× vs 同业中位20×，安全边际薄；PE(TTM)61.9×失真</td></tr>
+      <tr><td>资本配置</td><td class="num">4.5</td><td class="num">5</td><td class="small">持续派息+回购、理性降杠杆、剥离中国重资产，资本配置纪律良好</td></tr>
+      <tr><td><b>基础分</b></td><td class="num"><b>67.5</b></td><td class="num">100</td><td></td></tr>
+    </table>
+    <div class="scorebar"><div class="bar"><div class="fill"></div></div><span style="font-size:14px;font-weight:700">63 / 100</span></div>
+    <p class="small">置信度修正：一次性EPS噪音 -3；中国出表带来结构性报表变化（口径不可比） -4；多源数据一致性极佳 +2 → 终分 62.5 ≈ <b>63</b>。数据质量：覆盖率>90%、冲突0、新鲜度TTM+最新季度，支撑中等置信度。</p>
+  </div>
+
+  <!-- 风险 -->
+  <div class="card">
+    <h2><span class="idx">8</span>三大风险</h2>
+    <div class="riskbox"><b>① 验证风险（短期）：</b>Q3净利暴增87%中"一次性因素占比较高"（中国交易税项+关税退款），CFO明确表示"Q4是更干净的读数"。若Q4（10月底披露）利润率扩张不及指引中的6.5%同店隐含水平，估值将快速回吐。</div>
+    <div class="riskbox"><b>② 估值倒挂（中期）：</b>36× forward PE 已相当"转型圆满成功"定价。参照2023年历史，一旦增速动能低于指引隐含值，市场可从36×杀向28-30×，跌幅可达20%+。</div>
+    <div class="riskbox"><b>③ 中国市场双刃剑（中期）：</b>出表改善报表，但星巴克中国份额已从34%滑至14%，合资公司2万家目标需要博裕的执行力；若合资公司盈利持续恶化，40%权益法的投资收益将反向拖累。</div>
+  </div>
+
+  <!-- 失效条件 -->
+  <div class="card">
+    <h2><span class="idx">9</span>观点失效触发条件</h2>
+    <ul>
+      <li><b>看多论点失效</b>：Q4（10月底）美国同店增速 <5% 或营业利润率环比收缩；北美客流恢复停滞。</li>
+      <li><b>估值重估下修</b>：股价跌破$100（约32× forward PE）将打破"转型兑现"定价，下一个支撑$95-97。</li>
+      <li><b>看多论点强化</b>：若Q4利润率自发性扩张（非关税退款）至15%+，且FY27指引隐含EPS>3.0，当前估值即被消化，可上修。</li>
+    </ul>
+  </div>
+
+  <!-- 最终印象 -->
+  <div class="card">
+    <h2><span class="idx">10</span>最终印象</h2>
+    <div class="finally">
+      星巴克是2026年美股消费板块最清晰的反转故事之一：Niccol 用两年时间把"第三空间"体验、客流和客单价重新拉了回来，又用一纸中国合资协议卸下了最大包袱——基本面方向我认可，趋势是真的。但作为基本面分析，我的工作是评估<b>价格是否合理买入</b>：现价已把"转型成功"定价大半，短线盈利中一次性因素待消化，赔率一般。<br><br>
+      <b>操作倾向</b>：未持有者不追高，等待Q4财报（10月底）验证利润率自主扩张，或回调至$97-100区间再评估；已持有者可持有，以"Q4美国同店≥6%且利润率环比不收缩"为止盈/减仓观察线。这不是"回避"评级，而是"等更好的价格"评级。
+    </div>
+  </div>
+
+  <!-- 来源 -->
+  <div class="card">
+    <h2><span class="idx">11</span>数据来源</h2>
+    <ul class="small">
+      <li>行情/估值：富途行情、westock-data（usSBUX，2026-08-21收盘快照）</li>
+      <li>财务：neodata年报/季报、westock财务（FY2015-FY2026Q3）</li>
+      <li>新闻：Starbucks FY2026Q3财报（2026-07-29）、新浪财经/智通财经/CNBC/Yahoo Finance/中央社（均为非一手源，需核实原文）</li>
+      <li>欧睿国际（中国市场份额34%→14%，2019 vs 2024）</li>
+      <li>富途估值引擎：PE 5Y分位48.4%（2026-08-21）</li>
+    </ul>
+    <div class="src">本报告为教育与信息性内容，基于公开数据整理，不构成投资建议。投资有风险，决策需谨慎。</div>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<script>
+/* ============ 数据 ============ */
+var PRICE_DATA = {dates:["20260108", "20260109", "20260112", "20260113", "20260114", "20260115", "20260116", "20260120", "20260121", "20260122", "20260123", "20260126", "20260127", "20260128", "20260129", "20260130", "20260202", "20260203", "20260204", "20260205", "20260206", "20260209", "20260210", "20260211", "20260212", "20260213", "20260217", "20260218", "20260219", "20260220", "20260223", "20260224", "20260225", "20260226", "20260227", "20260302", "20260303", "20260304", "20260305", "20260306", "20260309", "20260310", "20260311", "20260312", "20260313", "20260316", "20260317", "20260318", "20260319", "20260320", "20260323", "20260324", "20260325", "20260326", "20260327", "20260330", "20260331", "20260401", "20260402", "20260406", "20260407", "20260408", "20260409", "20260410", "20260413", "20260414", "20260415", "20260416", "20260417", "20260420", "20260421", "20260422", "20260423", "20260424", "20260427", "20260428", "20260429", "20260430", "20260501", "20260504", "20260505", "20260506", "20260507", "20260508", "20260511", "20260512", "20260513", "20260514", "20260515", "20260518", "20260519", "20260520", "20260521", "20260522", "20260526", "20260527", "20260528", "20260529", "20260601", "20260602", "20260603", "20260604", "20260605", "20260608", "20260609", "20260610", "20260611", "20260612", "20260615", "20260616", "20260617", "20260618", "20260622", "20260623", "20260624", "20260625", "20260626", "20260629", "20260630", "20260701", "20260702", "20260706", "20260707", "20260708", "20260709", "20260710", "20260713", "20260714", "20260715", "20260716", "20260717", "20260720", "20260721", "20260722", "20260723", "20260724", "20260727", "20260728", "20260729", "20260730", "20260731", "20260803", "20260804", "20260805", "20260806", "20260807", "20260810", "20260811", "20260812", "20260813", "20260814", "20260817", "20260818", "20260819", "20260820", "20260821"],close:[86.61, 87.29, 88.36, 88.94, 89.52, 91.62, 91.33, 91.99, 94.71, 94.12, 95.88, 94.61, 94.01, 93.46, 92.21, 90.31, 90.05, 91.38, 95.24, 94.36, 97.68, 97.21, 95.79, 97.35, 95.03, 92.71, 94.29, 94.66, 94.7, 96.37, 93.69, 95.4, 96.8, 96.95, 96.89, 95.65, 95.57, 96.03, 97.55, 97.85, 98.62, 99.61, 100.27, 99.03, 98.01, 96.69, 96.45, 91.59, 94.73, 91.49, 92.75, 90.92, 91.63, 90.17, 85.81, 85.72, 88.56, 89.39, 89.33, 93.69, 94.11, 96.09, 95.8, 95.49, 96.36, 97.34, 97.21, 97.23, 98.85, 97.81, 96.67, 98.37, 98.39, 97.53, 96.76, 96.16, 104.29, 104.12, 104.68, 103.76, 103.73, 105.22, 103.06, 103.72, 104.52, 105.35, 104.73, 105.18, 106.2, 105.99, 105.77, 105.89, 103.54, 102.52, 100.84, 101.52, 100.17, 98.59, 95.96, 94.96, 95.34, 93.6, 94.75, 94.28, 96.85, 98.2, 101.7, 102.45, 101.01, 101.1, 99.25, 100.08, 99.58, 100.47, 102.94, 102.57, 104.0, 103.47, 101.61, 102.8, 103.67, 101.53, 103.02, 103.28, 105.8, 105.4, 106.73, 105.56, 104.51, 107.75, 104.89, 104.21, 103.85, 103.39, 102.62, 102.66, 103.06, 102.51, 103.55, 105.25, 104.65, 102.78, 104.37, 105.39, 104.56, 104.98, 104.05, 106.05, 107.87, 107.93, 107.69, 107.92, 106.01, 104.98, 103.99, 107.08]};
+var FIN_DATA = {
+  years: ['FY15','FY16','FY17','FY18','FY19','FY20','FY21','FY22','FY23','FY24','FY25'],
+  rev:   [191.6,213.2,223.9,247.2,265.1,235.2,290.6,322.5,359.8,361.8,371.8],
+  ni:    [27.6,28.2,28.8,45.2,36.0,9.3,42.0,32.8,41.2,37.6,18.6],
+  gm:    [null,null,null,22.7,21.6,13.6,22.7,19.6,21.7,21.2,16.4],
+  eps:   [1.82,1.90,1.97,3.24,2.92,0.79,3.55,2.83,3.58,3.31,1.63]
+};
+
+/* ============ 图表 ============ */
+var priceChart = echarts.init(document.getElementById('chart-price'));
+priceChart.setOption({
+  tooltip: { trigger: 'axis', valueFormatter: function(v){ return '$' + v; } },
+  grid: { left: 50, right: 60, top: 40, bottom: 40 },
+  xAxis: { type: 'category', data: PRICE_DATA.dates, axisLabel: { interval: 14 } },
+  yAxis: [
+    { type: 'value', name: '价格($)', scale: true },
+    { type: 'value', name: '成交量(百万)', splitLine: { show: false } }
+  ],
+  dataZoom: [{ type: 'inside' }, { type: 'slider', height: 18, bottom: 4 }],
+  series: [
+    { name: '收盘价', type: 'line', data: PRICE_DATA.close, showSymbol: false, lineStyle: { width: 2, color: '#0072B2' }, areaStyle: { color: 'rgba(0,114,178,0.10)' } },
+    { name: '成交量', type: 'bar', yAxisIndex: 1, data: [], barWidth: '60%', itemStyle: { color: 'rgba(86,180,233,0.35)' } }
+  ]
+});
+
+var finChart = echarts.init(document.getElementById('chart-fin'));
+finChart.setOption({
+  tooltip: { trigger: 'axis' },
+  legend: { data: ['营收(亿美元)', '净利润(亿美元)', '毛利率(%)'], selected: { '毛利率(%)': false } },
+  grid: { left: 60, right: 60, top: 50, bottom: 40 },
+  xAxis: { type: 'category', data: FIN_DATA.years },
+  yAxis: [
+    { type: 'value', name: '亿美元' },
+    { type: 'value', name: '%', min: 0, max: 70 }
+  ],
+  series: [
+    { name: '营收(亿美元)', type: 'bar', data: FIN_DATA.rev, itemStyle: { color: '#0072B2' }, barWidth: '42%' },
+    { name: '净利润(亿美元)', type: 'bar', data: FIN_DATA.ni, itemStyle: { color: '#E69F00' }, barWidth: '42%' },
+    { name: '毛利率(%)', type: 'line', yAxisIndex: 1, data: FIN_DATA.gm, connectNulls: true, lineStyle: { width: 2, color: '#009E73' }, symbol: 'circle', symbolSize: 6 }
+  ]
+});
+
+/* ============ 图/表切换 ============ */
+function buildPriceTable(){
+  var h = '<table><tr><th>日期</th><th>收盘($)</th><th>涨跌(%)</th></tr>';
+  var d = PRICE_DATA.dates, c = PRICE_DATA.close;
+  for (var i = d.length - 40; i < d.length; i++){
+    var chg = i > 0 ? ((c[i] / c[i-1] - 1) * 100).toFixed(2) : '—';
+    h += '<tr><td>' + d[i].slice(0,4) + '-' + d[i].slice(4,6) + '-' + d[i].slice(6,8) + '</td><td class="num">' + c[i].toFixed(2) + '</td><td class="num ' + (chg >= 0 ? 'pos' : 'neg') + '">' + chg + '%</td></tr>';
+  }
+  h += '</table>';
+  document.getElementById('tbl-price').innerHTML = h;
+}
+function buildFinTable(){
+  var h = '<table><tr><th>财年</th><th>营收(亿美元)</th><th>净利润(亿美元)</th><th>毛利率(%)</th><th>EPS(美元)</th></tr>';
+  for (var i = 0; i < FIN_DATA.years.length; i++){
+    h += '<tr><td>' + FIN_DATA.years[i] + '</td><td class="num">' + FIN_DATA.rev[i] + '</td><td class="num ' + (FIN_DATA.ni[i] < 0 ? 'neg' : '') + '">' + FIN_DATA.ni[i] + '</td><td class="num">' + (FIN_DATA.gm[i] === null ? '—' : FIN_DATA.gm[i]) + '</td><td class="num">' + FIN_DATA.eps[i] + '</td></tr>';
+  }
+  h += '</table><div class="small">FY2018起新口径（租金计入成本）</div>';
+  document.getElementById('tbl-fin').innerHTML = h;
+}
+function switchTab(name){
+  var isPrice = (name === 'price');
+  var chartId = isPrice ? 'chart-price' : 'chart-fin';
+  var tblId = isPrice ? 'tbl-price' : 'tbl-fin';
+  var chartWrap = document.getElementById(chartId), tblWrap = document.getElementById(tblId);
+  var isOn = tblWrap.classList.contains('on');
+  if (isOn) { tblWrap.classList.remove('on'); chartWrap.classList.remove('off'); }
+  else { tblWrap.classList.add('on'); chartWrap.classList.add('off'); }
+  var btns = tblWrap.previousElementSibling ? tblWrap.previousElementSibling.querySelectorAll('.tabbtn') : [];
+  btns.forEach(function(b){ b.classList.toggle('on'); });
+}
+/* 初始化表格 */
+buildPriceTable();
+buildFinTable();
+</script>
+</body>
+</html>
