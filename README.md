@@ -71,6 +71,7 @@
 - **[银行卡网络 V/MA](reports/27_银行卡网络_银行科技相关性/visa_master_corr_report.html)** · 支付网络 vs 银行 / 科技板块相关性拆解
 - **[KBWB × MS](reports/13_kbwb支撑位/kbwb_ms_corr_report.html)** · 银行板块 ETF 与投行巨头相关性
 - **[VST × UTES 分阶段演化](reports/05_vst_utes阶段分析/vst_utes_phase_report.html)** · β 0.84→2.41，α 全在低相关期赚
+- **[KO × 科技/制药/医疗保健 相关性](reports/32_ko_科技医药相关性/index.html)** · KO×XLK 分界后由正转负 −0.40（z=8.63）、KO×XPH(代理IHE) 衰减至 0.03（z=4.67）、KO×XLV 稳定 0.41（不显著）——防御结构三向分裂
 
 ---
 
