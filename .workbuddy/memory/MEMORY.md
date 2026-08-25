@@ -11,6 +11,7 @@
 - 期权数据（富途 futu MCP 唯一来源）：expiration_date 拿到期日 → option_chain 拿该日全部合约（无 OI）→ **OI/量/IV/希腊字母逐合约 quote_stock_quote（code_list≤400，option_ex_data.open_interest）**；返回值过大自动落盘 .workbuddy/projects/.../tool-results/*.txt 用 python 解析。**quote_financials_statements 只传 symbol 可用，加 financial_type/statement_type 必校验失败**。
 
 ## 回测/方法要点
+- **T+N 口径（08-25 明确）：T+5/T+10/T+20 等，数字一律指交易日数，非日历日期+N**。即 T+5=事件后第 5 个交易日、T+10=第 10 个交易日……fwdN 即 N 个交易日未来收益，用交易日对齐（跳过周末/假日），绝不用自然日或日期相减。
 - 水下金叉→3日内上穿EMA10&20→站稳→买点=(金叉前10日盘整高+确认日EMA20)/2→30日回踩成交；hold5 T+5 胜率 52.7%→84.8%（确认+回踩后），T+20 反超（72.7%）→ 回踩买应持 20 天。
 - 事件研究流程：池子→adj_close→pct_change→fwdN→mask→对照→**超额=基准 fwdN（非价格）merge 相减**→stats(n,mean,med,win%,std,p25/75,t,二项近似)。独立性最易高估（聚类/拥挤日）、显著性一律视作上限（skill quant-report-review）。
 - 历史点位用 adj_close 复权口径；回报统计一律百分数（×100）；json.dump 前 clean() 转 None、numpy 转 int；ECharts markArea 二维数组；f-string 嵌 JS 用 @@PLACEH@@+.replace()。
@@ -20,6 +21,7 @@
 - **交付不附图（08-23）**：报告不再附渲染截图（SSR 测试保留仅验证）；删除历史全部 results/*.png；test_render_*.cjs 已去掉截图逻辑。
 - 严格口径：不要股息/容差缓冲；**红涨绿跌 + 色弱安全（Okabe-Ito，叠符号/线型）**；报告浅底深字研报风+ECharts；对照默认窗口 2025-09 起、超额分四档；报告目录中文名「编号_中文名」；财报问题先确认财报期。
 - **相关性分析口径（08-23 设定，已修正）**：以 **60 日滚动为主口径**（历史一致）。13 日曾试点但被实证否定——单点 SE=0.32（±0.62）、极端日扭曲（2026-04"回弹 0.76"在 120 日口径仅 0.42，噪音假象）、lag1 自相关 0.94+；结论一律以 60/120 日为准，13/30 日仅辅助。
+- **Dashboard 布局（08-25 设定）**：超长事件清单（数百~上千条）**另起独立选项卡「事件明细」收录**，主 tab 只留结论/图表/对照表，不放明细表（构建脚本里把 trades_table 模块 tab 改为独立 tab 并追加）。
 - Token 优化：build 脚本只 print `written: path size`；报告 JSON 瘦身（画廊只注入代表事件）；分析脚本只打汇总；拉数→分析→报告拆三段。
 
 ## 关键结论（2026-08）

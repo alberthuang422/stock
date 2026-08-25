@@ -226,6 +226,7 @@ def main():
     # ---- extra modules ----
     extra = [metric_table, line_chart, conv_module, env_module] + texts
 
+    # ---- 调用渲染器生成默认模块，随后调整布局 ----
     report_data = build_dashboard_data(
         equity_curve=None,
         trade_history=trades,
@@ -241,6 +242,24 @@ def main():
             "subtitle": "蓝筹周线MACD收敛 × 支撑位 · 事件研究",
         },
     )
+    # 超长事件清单单独放「事件明细」选项卡，主 tab 不放表格
+    mods = report_data["modules"]
+    events_tab_tbl = None
+    for m in mods:
+        if m.get("type") == "trades_table":
+            events_tab_tbl = m
+            break
+    if events_tab_tbl is not None:
+        events_tab_tbl["tab"] = "events"
+        events_tab_tbl["title"] = f"事件明细（共 {len(trades)} 条：分组 / 收敛长度 / T+20 / 超额 / 破位）"
+        events_tab_tbl["subtitle"] = "事件 = 触支撑日；T+20 为事件后第 20 个交易日个股收益，超额为相对 SPY 同窗"
+        mods = [m for m in mods if m.get("type") != "trades_table"]
+        mods.append(events_tab_tbl)
+    report_data["modules"] = mods
+    report_data["ui"]["tabs"] = [
+        {"id": "overview", "label": "汇总"},
+        {"id": "events", "label": "事件明细"},
+    ]
     out_html = os.path.join(OUT_DIR, "index.html")
     render_dashboard(report_data, output_path=out_html, template_path=TEMPLATE)
     print(f"written: {out_html}")
