@@ -74,6 +74,7 @@
 - **[KBWB × MS](reports/13_kbwb支撑位/kbwb_ms_corr_report.html)** · 银行板块 ETF 与投行巨头相关性
 - **[VST × UTES 分阶段演化](reports/05_vst_utes阶段分析/vst_utes_phase_report.html)** · β 0.84→2.41，α 全在低相关期赚
 - **[KO × 科技/制药/医疗保健 相关性](reports/32_ko_科技医药相关性/index.html)** · KO×XLK 分界后由正转负 −0.40（z=8.63）、KO×XPH(代理IHE) 衰减至 0.03（z=4.67）、KO×XLV 稳定 0.41（不显著）——防御结构三向分裂
+- **[CSCO × PANW/CRWD 相关性与脱钩](reports/31_网安vs网络设备/index.html)** · 2026-02 起 CSCO×网安 r 仅 0.18-0.23（2025 全年 0.45 腰斩），PANW×CRWD 高度抱团 0.84 逐月增强至 0.89；CSCO 最大单日波动全为财报事件（02-12/05-14/08-13），网安零跟随（承接 19 号 CSCO×BUG，个股级深化）
 
 ---
 
