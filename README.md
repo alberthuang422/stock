@@ -44,7 +44,7 @@
 
 ### 超买与事件统计
 - **[周线超买](reports/12_周线超买/weekline_ob_report.html)** · 周线超买信号（前提不成立的论证）
-- **[KO RSI 超买](reports/17_KO超买/ko_rsi_overbought_report.html)** · 个股 RSI 超买回测
+- **[KO RSI 超买](reports/17_KO超买/ko_rsi_overbought_report.html)** · 个股 RSI 超买回测（超买≠必回调；窗口路径：20 日内平均先冲 +3.46% 再回吐 ≈3.4%）
 - **[涨 3% 事件研究](reports/10_涨3%事件/3pct_event_report.html)** · 单日大涨后的统计规律
 
 ---

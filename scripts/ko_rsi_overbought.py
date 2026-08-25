@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
 """
-KO 日线 RSI14 进入超买区间(上穿70)后的 T+5 / T+10 表现
+KO 日线 RSI14 进入超买区间(上穿70)后的 T+5 / T+10 / T+20 表现
 事件定义：RSI14(adj_close, Wilder) 自下而上穿越 70 的首日（前一日<70，当日>=70），以当日收盘为基准。
 阶段划分：
   A 疫情前        : 数据起点 ~ 2020-02-19（美股疫情暴跌前夜，SPY 2020-02-19 见顶）
   B 疫情及股灾后  : 2020-02-20 ~ 2022-12-31（细分 B1 暴跌+V反 / B2 放水牛 / B3 2022熊市）
   C 本轮牛市      : 2023-01-01 ~ 今（自 2022-10 低点反转后的牛市，另按 2023/2024/2025/2026YTD 逐年）
 对照：全历史所有交易日基率；RSI<70 日；SPY / XLP 同期 fwd 超额。
+新增窗口路径统计（用户 08-25 要求）：
+  runup_N  = 事件后 T+1..T+N 内最高 adj_close（含收盘/盘中 peak）相对事件收盘的最大涨幅
+  peakdd_N = 该窗口峰值到 T+N 收盘的回撤（peak -> close），衡量"拿满 N 天 vs 在顶离场"的机会差
+  maxdd_N  = 窗口内从峰值到其后最低点的最大峰谷回撤（更激进的回吐度量）
 统计单位：一律百分数（×100）。结果写 results/ko_rsi_overbought.json（不打印明细）。
 """
 import pandas as pd
@@ -24,8 +28,12 @@ def load_stock(name):
     f = sorted(cands)[0]
     df = pd.read_csv(f, parse_dates=["date"])
     col = "adj_close" if "adj_close" in df.columns else "close"
-    df = df[["date", col]].rename(columns={col: "px"})
-    df = df.dropna().sort_values("date").reset_index(drop=True)
+    # 复权因子：adj_close/close，将 high/low 折算为复权口径
+    fac = df[col] / df["close"]
+    df["hi"] = pd.to_numeric(df["high"], errors="coerce") * fac
+    df["lo"] = pd.to_numeric(df["low"], errors="coerce") * fac
+    df = df[["date", col, "hi", "lo"]].rename(columns={col: "px"})
+    df = df.dropna(subset=["px"]).sort_values("date").reset_index(drop=True)
     return df
 
 def rsi_14(close, period=14):
@@ -44,6 +52,40 @@ xlp = load_stock("xlp").rename(columns={"px": "xlp"})
 ko["rsi"] = rsi_14(ko["px"])
 for N in (5, 10, 20):
     ko[f"fwd{N}"] = (ko["px"].shift(-N) / ko["px"] - 1) * 100
+
+# 窗口路径：显式前看窗口 T+1..T+N（避免 shift(-1)+rolling 回看污染）
+px_a = ko["px"].values
+hi_a = ko["hi"].values
+lo_a = ko["lo"].values
+n_all = len(ko)
+for N in (5, 10, 20):
+    runup = np.full(n_all, np.nan)
+    peakdd = np.full(n_all, np.nan)
+    maxdd = np.full(n_all, np.nan)
+    peakpos = np.full(n_all, np.nan)
+    for i in range(n_all - 1):
+        j1, j2 = i + 1, min(i + N, n_all - 1)
+        if j1 > j2:
+            continue
+        seg_hi = hi_a[j1:j2 + 1]
+        seg_lo = lo_a[j1:j2 + 1]
+        valid = ~np.isnan(seg_hi)
+        if not valid.any():
+            continue
+        pk = np.nanmax(seg_hi)
+        runup[i] = (pk / px_a[i] - 1) * 100
+        peakdd[i] = (px_a[j2] / pk - 1) * 100  # 峰值 -> T+N 收盘（N 不足时用最后一个可用日）
+        pk_idx = int(np.nanargmax(seg_hi))
+        # 峰后谷：只取峰值日之后的低点（含峰值日），衡量窗口内最大峰谷回撤
+        after = seg_lo[pk_idx:]
+        if len(after) > 0 and not np.isnan(after).all():
+            mn = np.nanmin(after)
+            maxdd[i] = (mn / pk - 1) * 100
+        peakpos[i] = pk_idx + 1  # 1..N，事件后第几天见顶
+    ko[f"runup{N}"] = runup
+    ko[f"peakdd{N}"] = peakdd
+    ko[f"maxdd{N}"] = maxdd
+    ko[f"peakpos{N}"] = peakpos
 
 ko = ko.merge(spy[["date", "spy"]], on="date", how="left") \
        .merge(xlp[["date", "xlp"]], on="date", how="left")
@@ -92,6 +134,18 @@ def block(df):
         out[f"T{N}"] = stats(df, f"fwd{N}")
         out[f"T{N}_ex_spy"] = stats(df.assign(x=df[f"fwd{N}"] - df[f"spy_fwd{N}"]), "x")
         out[f"T{N}_ex_xlp"] = stats(df.assign(x=df[f"fwd{N}"] - df[f"xlp_fwd{N}"]), "x")
+        # 窗口路径（用户 08-25：最多涨多少 + 从最高点回撤多少）
+        out[f"T{N}_runup"] = stats(df, f"runup{N}")
+        out[f"T{N}_peakdd"] = stats(df, f"peakdd{N}")
+        out[f"T{N}_maxdd"] = stats(df, f"maxdd{N}")
+        # 峰值位置：事件后第 N 天见顶的比例分布（1..N）
+        pos = df[f"peakpos{N}"].dropna().astype(int)
+        if len(pos) > 0:
+            pcount = pos.value_counts().sort_index()
+            pdist = {int(k): int(v) for k, v in pcount.items()}
+            out[f"T{N}_peakdist"] = pdist
+        else:
+            out[f"T{N}_peakdist"] = {}
     return out
 
 ev_all = ko[ko["cross70"]].copy()
@@ -135,21 +189,23 @@ res = {
     "rsi75_robust": block(ko[ko["cross75"]]),
 }
 
-# 事件明细（瘦身：只留必要列）
+# 事件明细（瘦身：只留必要列；含窗口路径 runup/peakdd/maxdd）
 ev_list = []
 for _, r in ev_all.iterrows():
+    def g(col, nd=2):
+        v = r.get(col)
+        if v is None or pd.isna(v): return None
+        return round(float(v), nd)
     ev_list.append({
         "date": str(r["date"].date()), "rsi": round(float(r["rsi"]), 1),
         "px": round(float(r["px"]), 2), "stage": r["stage"], "substage": r["substage"],
-        "fwd5": None if pd.isna(r["fwd5"]) else round(float(r["fwd5"]), 2),
-        "fwd10": None if pd.isna(r["fwd10"]) else round(float(r["fwd10"]), 2),
-        "fwd20": None if pd.isna(r["fwd20"]) else round(float(r["fwd20"]), 2),
-        "spy5": None if pd.isna(r["spy_fwd5"]) else round(float(r["spy_fwd5"]), 2),
-        "spy10": None if pd.isna(r["spy_fwd10"]) else round(float(r["spy_fwd10"]), 2),
-        "spy20": None if pd.isna(r["spy_fwd20"]) else round(float(r["spy_fwd20"]), 2),
-        "xlp5": None if pd.isna(r["xlp_fwd5"]) else round(float(r["xlp_fwd5"]), 2),
-        "xlp10": None if pd.isna(r["xlp_fwd10"]) else round(float(r["xlp_fwd10"]), 2),
-        "xlp20": None if pd.isna(r["xlp_fwd20"]) else round(float(r["xlp_fwd20"]), 2),
+        "fwd5": g("fwd5"), "fwd10": g("fwd10"), "fwd20": g("fwd20"),
+        "spy5": g("spy_fwd5"), "spy10": g("spy_fwd10"), "spy20": g("spy_fwd20"),
+        "xlp5": g("xlp_fwd5"), "xlp10": g("xlp_fwd10"), "xlp20": g("xlp_fwd20"),
+        # 窗口路径
+        "runup5": g("runup5"), "runup10": g("runup10"), "runup20": g("runup20"),
+        "peakdd5": g("peakdd5"), "peakdd10": g("peakdd10"), "peakdd20": g("peakdd20"),
+        "maxdd5": g("maxdd5"), "maxdd10": g("maxdd10"), "maxdd20": g("maxdd20"),
     })
 res["events"] = ev_list
 
@@ -189,6 +245,11 @@ def fmt(s, k="T5"):
     if not t or t.get("n", 0) == 0: return "n=0"
     return f"n={t['n']} mean={t['mean']:+.2f}% win={t['win']}%"
 
+def fmtpath(s, k):
+    t = s.get(k, {})
+    if not t or t.get("n", 0) == 0: return "n=0"
+    return f"n={t['n']} mean={t['mean']:+.2f}% med={t['median']:+.2f}%"
+
 print(f"数据范围: {res['meta']['data_range']}  | 当前RSI={cur['rsi_now']} 超买中={cur['in_overbought']}")
 print(f"上穿70事件总数: {len(ev_all)}  (cooldown10: {len(ev_cd10)})")
 print(f"  全历史基率: T5: {fmt(res['baseline_all_days'])} | T10: {fmt(res['baseline_all_days'],'T10')} | T20: {fmt(res['baseline_all_days'],'T20')}")
@@ -200,4 +261,11 @@ for ss in sorted(res["by_substage"]):
     b = res["by_substage"][ss]
     print(f"    {ss}: T5: {fmt(b)} | T10: {fmt(b,'T10')} | T20: {fmt(b,'T20')}")
 print(f"  RSI>=75 稳健性: T5: {fmt(res['rsi75_robust'])} | T10: {fmt(res['rsi75_robust'],'T10')} | T20: {fmt(res['rsi75_robust'],'T20')}")
+# 窗口路径摘要（用户 08-25 新增）
+ev20 = res["event_stats_all"]
+print("  -- 窗口路径 (T+20 窗口) 全部事件 --")
+print(f"    runup20 (窗口内最大涨幅): {fmtpath(ev20,'T20_runup')} | peakdd20 (峰值->T+20收盘): {fmtpath(ev20,'T20_peakdd')} | maxdd20 (峰->谷): {fmtpath(ev20,'T20_maxdd')}")
+for st, lab in [("A_pre", "疫情前"), ("B_post", "疫情及股灾后"), ("C_bull", "本轮牛市")]:
+    b = res["by_stage"][st]
+    print(f"    [{lab}] runup20: {fmtpath(b,'T20_runup')} | peakdd20: {fmtpath(b,'T20_peakdd')}")
 print(f"written: {os.path.join(OUT, 'ko_rsi_overbought.json')}")

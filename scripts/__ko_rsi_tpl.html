@@ -56,35 +56,36 @@ __ECHARTS__
 
 <div class="card">
   <h1>KO 日线 RSI 进入超买区间后的 T+5 / T+10 / T+20 表现</h1>
-  <div class="meta">事件研究 · 数据 1995-01-03 ~ 2026-08-20（Yahoo 复权价 adj_close，约 7,960 个交易日）· 生成于 2026-08-21</div>
+  <div class="meta">事件研究 · 数据 1990-01-02 ~ 2026-08-21（Yahoo 复权价 adj_close，约 9,200 个交易日）· 生成于 2026-08-25</div>
   <div class="callout blue">
-    <b>口径定义：</b>事件 = 日线 RSI14（Wilder，基于 adj_close）自下而上<b>首次穿越 70</b>（前一日 &lt; 70，当日 ≥ 70），以当日收盘价为基准计算 T+5 / T+10 / T+20 收益（共 161 个事件）。
+    <b>口径定义：</b>事件 = 日线 RSI14（Wilder，基于 adj_close）自下而上<b>首次穿越 70</b>（前一日 &lt; 70，当日 ≥ 70），以当日收盘价为基准计算 T+5 / T+10 / T+20 收益（共 186 个事件）。
     阶段划分：<span class="st st-a">疫情前</span> 数据起点 ~ 2020-02-19（美股疫情暴跌前夜）；<span class="st st-b">疫情及股灾后</span> 2020-02-20 ~ 2022-12-31（细分 B1 暴跌+V反 / B2 放水牛 / B3 2022 熊市）；<span class="st st-c">本轮牛市</span> 2023-01-01 至今。对照 = 全历史所有交易日基率。
   </div>
   <div class="callout">
-    <b>当前状态（2026-08-20 收盘）：</b>KO 收 $90.50 = <b>历史最高复权收盘价</b>。短周期 RSI6 = <b>80.7（8/19 已进入超买）</b>，日线 RSI14 = 69.2，距 70 超买线一步之遥——若后续上穿，将是本轮牛市第 22 个超买事件。
+    <b>当前状态（2026-08-21 收盘）：</b>KO 收 $91.10，日线 RSI14 于 8/21 正式<b>上穿 70（70.9）</b>——本轮牛市第 22 个超买事件已在运行中（尚无可计算的前瞻收益）。
   </div>
   <div class="kpis">
-    <div class="kpi"><div class="num warn">69.2</div><div class="lab">当前日线 RSI14（8/20）</div></div>
-    <div class="kpi"><div class="num up">80.7</div><div class="lab">当前 RSI6（已超买）</div></div>
-    <div class="kpi"><div class="num">161</div><div class="lab">历史超买事件总数（1995 起）</div></div>
+    <div class="kpi"><div class="num warn">70.9</div><div class="lab">当前日线 RSI14（8/21，已上穿超买线）</div></div>
+    <div class="kpi"><div class="num up">$91.10</div><div class="lab">当前收盘价（复权）</div></div>
+    <div class="kpi"><div class="num">186</div><div class="lab">历史超买事件总数（1990 起）</div></div>
     <div class="kpi"><div class="num up">+1.06% / 71%</div><div class="lab">本轮牛市 T+5 均值/胜率（n=21，t=2.84）</div></div>
     <div class="kpi"><div class="num up">+0.95% / 67%</div><div class="lab">本轮牛市 T+20 均值/胜率（n=21）</div></div>
     <div class="kpi"><div class="num dn">−1.28% / 15%</div><div class="lab">疫情及股灾后 T+5 均值/胜率（n=13）</div></div>
-    <div class="kpi"><div class="num">+0.21% / 54%</div><div class="lab">疫情前 T+5 均值/胜率（n=127）</div></div>
+    <div class="kpi"><div class="num">+3.56%</div><div class="lab">本轮牛市 T+20 窗口内平均最大涨幅</div></div>
   </div>
 </div>
 
 <div class="card">
   <h2>结论速览</h2>
-  <div class="verdict"><b>① 超买信号在 KO 上没有稳定的"看空 edge"，但阶段分化极大。</b>全样本 161 个事件 T+5 均值 +0.20%、胜率 52.8%，与全历史基率（+0.22% / 54.2%）几乎无差异；T+10 +0.01%、T+20 −0.10% 均弱于基率（+0.43% / +0.84%）——"超买后必回调"在 KO 上统计不成立。</div>
+  <div class="verdict"><b>① 超买信号在 KO 上没有稳定的"看空 edge"，但阶段分化极大。</b>全样本 185 个有效事件 T+5 均值 +0.13%、胜率 52.4%，与全历史基率（+0.25% / 54.4%）几乎无差异；T+10 +0.0%、T+20 +0.0%（中位 +0.3%）均弱于基率（+0.50% / +0.99%）——"超买后必回调"在 KO 上统计不成立。</div>
   <div class="verdict"><b>② 震荡/下行环境：超买是真实的卖出信号。</b>疫情及股灾后（2020-02~2022-12，n=13）T+5 均值 −1.28%、胜率仅 15.4%；其中 2020-06~2021 放水牛（B2）8 个事件 T+5 <b>全部为负</b>（KO 在 42~52 区间横盘，超买 = 区间上沿 = 均值回归起点），2020-02-21 更是撞上疫情股灾（T+5 −11%）。</div>
-  <div class="verdict"><b>③ 趋势牛市：超买是趋势延续信号，T+20 进一步回升。</b>本轮牛市（2023~，n=21）T+5 +1.06%、胜率 71.4%（t=2.84，统计显著），超买常伴随加速上行；T+10 回落至 +0.47% / 57.1%，但 T+20 重新回升 +0.95% / 66.7%——趋势市里超买后的回撤是短期的，按 20 日持有反而更优。不过 2026 YTD 的 5 个事件 T+5 高达 +1.86% / 80%，T+10 转 −0.01% / 40%，T+20 亦回吐——短追长不追。</div>
-  <div class="verdict"><b>④ 深超买（RSI≥75）全样本为负且 T+20 加深。</b>66 个事件 T+5 −0.44%（胜率 42.4%）、T+10 −0.68%（40.9%）、T+20 −0.96%（40.9%）——70 线上方再冲到 75 以上，反而是阶段性高点的概率更大，且越持有越差。</div>
+  <div class="verdict"><b>③ 趋势牛市：超买是趋势延续信号，T+20 进一步回升。</b>本轮牛市（2023~，n=21）T+5 +1.06%、胜率 71.4%（t=2.84，统计显著），超买常伴随加速上行；T+10 回落至 +0.47% / 57.1%，但 T+20 重新回升 +0.95% / 66.7%——趋势市里超买后的回撤是短期的，按 20 日持有反而更优。不过 2026 YTD 的 5 个事件 T+5 高达 +1.85% / 80%，T+10 转 −0.01% / 40%，T+20 亦回吐——短追长不追。</div>
+  <div class="verdict"><b>④ [新增] 20 日窗口内的"路径"真相：普遍先冲高、再回吐。</b>185 个有前瞻数据的超买事件，T+20 窗口内最大涨幅（runup，含盘中）均值 <b>+3.46%</b>（中位 +2.85%），远超最终的 T+20 收盘收益（+0.0%）——即事件后 20 日里几乎都会先创出 2~3% 以上的高点，但随后从峰值平均回撤 <b>−3.42%</b> 到窗口末。即使牛市里 T+20 最终为正（+0.95%），窗口内峰值回撤也有 −2.52%（中位 −1.95%）——"拿满 20 天"多数时候是把峰值利润还回去大半。</div>
+  <div class="verdict"><b>⑤ 深超买（RSI≥75）全样本为负且 T+20 加深。</b>76 个事件 T+5 −0.41%（胜率 42.1%）、T+10 −0.70%（40.8%）、T+20 −0.70%（42.1%）——70 线上方再冲到 75 以上，反而是阶段性高点的概率更大。</div>
 </div>
 
 <div class="card">
-  <h2>一、历史全景：价格 × RSI14 × 超买事件（1995~2026）</h2>
+  <h2>一、历史全景：价格 × RSI14 × 超买事件（1990~2026）</h2>
   <div class="chart tall" id="ch_main"></div>
   <div class="src">上图：复权收盘价与三阶段底纹；紫菱形 = RSI14 上穿 70 事件日。下图：RSI14 走势，虚线为 70/30 参考线。可拖动下方缩放轴查看局部。</div>
 </div>
@@ -92,7 +93,7 @@ __ECHARTS__
 <div class="card">
   <h2>二、近况：2025-06 以来日线（RSI6 已超买，RSI14 逼近）</h2>
   <div class="chart tall" id="ch_recent"></div>
-  <div class="src">8/18-8/20 三连阳创新高（$88.8 → $90.5），RSI6 于 8/19 上穿 70（当前 80.7），RSI14 升至 69.2。历史上 RSI6 超买领先 RSI14 上穿约 0~3 个交易日。</div>
+  <div class="src">8/19-8/21 三连阳（$88.6 → $91.1），RSI14 于 8/21 正式上穿 70（70.9）——最近 20 日累计涨幅约 8%，超买事件已成立，历史上 RSI6 超买领先 RSI14 上穿约 0~3 个交易日。</div>
 </div>
 
 <div class="card">
@@ -111,7 +112,38 @@ __ECHARTS__
 </div>
 
 <div class="card">
-  <h2>四、疫情及股灾后细分（2020-02 ~ 2022-12）</h2>
+  <h2>四、窗口路径：T+20 内"最多涨了多少"与"从峰值回撤了多少"</h2>
+  <div class="callout blue">
+    <b>口径：</b>对每个超买事件，取事件日收盘为起点、其后 20 个交易日内（T+1~T+20）：
+    <b>① 最大涨幅 runup</b> = 窗口内最高价（含盘中 high，复权）相对事件收盘的最大涨幅；<b>② 峰值回撤 peakdd</b> = 窗口峰值到 T+20 收盘的回撤（拿满 20 天 vs 在峰顶离场的机会差）；<b>③ 峰谷回撤 maxdd</b> = 窗口内峰值之后的最大回落（更保守的"最大疼痛"度量）。三者均为百分数（×100）。
+  </div>
+  <div class="grid2">
+    <div class="chart" id="ch_pathbar"></div>
+    <div class="chart" id="ch_pathscatter"></div>
+  </div>
+  <div class="scroll" style="margin-top:10px">
+  <table>
+    <thead><tr><th>阶段</th><th>n</th><th>T+5 窗口峰值</th><th>T+5 峰→收盘</th><th>T+10 窗口峰值</th><th>T+10 峰→收盘</th><th>T+20 窗口峰值</th><th>T+20 峰→收盘</th><th>T+20 峰→谷</th></tr></thead>
+    <tbody>{{path_rows}}</tbody>
+  </table>
+  </div>
+  <h3>本轮牛市逐年（T+20 窗口路径）</h3>
+  <div class="scroll">
+  <table style="max-width:800px">
+    <thead><tr><th>年份</th><th>n</th><th>T+5 窗口峰值</th><th>T+5 峰→收盘</th><th>T+10 窗口峰值</th><th>T+10 峰→收盘</th><th>T+20 窗口峰值</th><th>T+20 峰→收盘</th><th>T+20 峰→谷</th></tr></thead>
+    <tbody>{{path_year_rows}}</tbody>
+  </table>
+  </div>
+  <ul class="tight" style="margin-top:10px">
+    <li><b>全样本：事件后 20 日"先冲高 3.5%、再回吐 ≈3.4%"。</b>185 个有效事件 T+20 窗口平均最大涨幅 <b>+3.46%</b>（中位 +2.85%），但最终 T+20 收盘收益仅 +0.0%（中位 +0.3%）——两者之差 ≈ 3.4pp 就是"没在峰顶卖"的机会成本。峰谷回撤 maxdd 更甚，平均 −5.25%（中位 −4.16%），说明多数超买事件在 20 日窗口内都曾出现 4~5% 以上的深度回调。</li>
+    <li><b>本轮牛市同样存在"冲高回吐"，但幅度最温和。</b>T+20 窗口峰值 +3.56%（与全样本相近），峰→收盘回撤仅 <b>−2.52%</b>（中位 −1.95%）、峰谷回撤 −3.64%——显著好于疫情前（−3.42% / −5.30%）与疫情后（−4.88% / −7.31%）。牛市里超买后的"回吐"更浅，但以"拿满 20 天"论，2.5% 的平均峰值回撤仍意味着择时离场有明显收益。</li>
+    <li><b>2026 YTD：冲高后回吐最凶。</b>5 个事件 T+20 峰值平均 +4.46%，但峰→收盘回撤 <b>−4.95%</b>（如 2/20 事件：先冲 +2.71% 后一路回吐至 T+20 −5.73%，峰值回撤 −8.21%）——2026 年"高位钝化 + 冲高回落"组合已取代牛市初期的"一路持有"。</li>
+  </ul>
+  <div class="src">左图：各阶段 T+20 窗口 runup / peakdd / maxdd 均值（%）。右图：事件级散点，X = 窗口内最大涨幅（runup），Y = 峰值→T+20 收盘回撤（peakdd），形状/颜色区分阶段；越靠右下表示"冲高越多、回吐越多"。</div>
+</div>
+
+<div class="card">
+  <h2>五、疫情及股灾后细分（2020-02 ~ 2022-12）</h2>
   <div class="scroll">
   <table>
     <thead><tr><th>子阶段</th><th>n</th><th>T+5 均值</th><th>T+5 胜率</th><th>T+10 均值</th><th>T+10 胜率</th><th>T+20 均值</th><th>T+20 胜率</th></tr></thead>
@@ -126,7 +158,7 @@ __ECHARTS__
 </div>
 
 <div class="card">
-  <h2>五、本轮牛市逐年拆解（2023~2026 YTD）与疫情前逐年</h2>
+  <h2>六、本轮牛市逐年拆解（2023~2026 YTD）与疫情前逐年</h2>
   <div class="chart" id="ch_year"></div>
   <div class="grid2" style="margin-top:12px">
     <div>
@@ -137,7 +169,7 @@ __ECHARTS__
       </table>
     </div>
     <div>
-      <h3>疫情前逐年（1995~2020-02）</h3>
+      <h3>疫情前逐年（1990~2020-02）</h3>
       <div class="scroll">
       <table>
         <thead><tr><th>年份</th><th>n</th><th>T+5 均值</th><th>胜率</th><th>T+10 均值</th><th>胜率</th><th>T+20 均值</th><th>胜率</th></tr></thead>
@@ -153,7 +185,7 @@ __ECHARTS__
 </div>
 
 <div class="card">
-  <h2>六、超额收益视角（vs SPY / XLP）与稳健性</h2>
+  <h2>七、超额收益视角（vs SPY / XLP）与稳健性</h2>
   <div class="scroll">
   <table>
     <thead><tr><th>阶段</th><th>T+5 超额(vs SPY)</th><th>T+10 超额(vs SPY)</th><th>T+20 超额(vs SPY)</th><th>T+5 超额(vs XLP)</th><th>T+10 超额(vs XLP)</th><th>T+20 超额(vs XLP)</th></tr></thead>
@@ -173,24 +205,25 @@ __ECHARTS__
 </div>
 
 <div class="card">
-  <h2>七、事件明细（161 个，按日期倒序）</h2>
+  <h2>八、事件明细（186 个，按日期倒序）</h2>
   <div class="evbox">
   <table>
-    <thead><tr><th>日期</th><th>RSI14</th><th>收盘(复权$)</th><th>阶段</th><th>T+5</th><th>T+10</th><th>T+20</th><th>SPY T+5</th><th>SPY T+10</th><th>SPY T+20</th></tr></thead>
+    <thead><tr><th>日期</th><th>RSI14</th><th>收盘(复权$)</th><th>阶段</th><th>T+5</th><th>T+10</th><th>T+20</th><th>T+20 窗口峰值</th><th>T+20 峰→收盘</th><th>T+20 峰→谷</th><th>SPY T+5</th><th>SPY T+10</th><th>SPY T+20</th></tr></thead>
     <tbody>{{ev_rows}}</tbody>
   </table>
   </div>
 </div>
 
 <div class="card">
-  <h2>八、结论与操作含义</h2>
+  <h2>九、结论与操作含义</h2>
   <ul class="tight">
     <li><b>[前提校验]</b> "RSI 超买 → 回调"在 KO 31 年样本中整体不成立（T+5/T+10 与基率无显著差异），该命题必须先分市场结构再讨论。</li>
-    <li><b>[关键证据]</b> 三阶段方向相反：疫情前中性（T+5 +0.21%，T+20 +0.05%）→ 疫情及股灾后显著为负（T+5 −1.28% 胜率 15%，T+20 恶化至 −3.15%）→ 本轮牛市显著为正且持有期延长不衰减（T+5 +1.06% / T+10 +0.47% / T+20 +0.95%，胜率 67%）。同一指标在不同结构下给出相反答案。</li>
-    <li><b>[客观分析]</b> 机制：KO 是低波动防御股，震荡市中 RSI 上穿 70 多因脉冲式补涨（随后均值回归，T+20 继续恶化）；趋势牛市中则反映防御资金持续流入（T+20 重新回升，持有越久越占优）。2026 年以来"创新高 + RSI6 超买"组合出现 5 次，T+5 胜率 80% 但 T+10 已衰减至 40%、T+20 亦转平，高位钝化迹象初现。</li>
-    <li><b>[结论与置信度：中]</b> 对当前（8/20 RSI14=69.2、历史新高）：若 RSI14 上穿 70，按本轮牛市基率 T+5 继续上行的概率约七成、T+20 维持正收益，但 (a) 若冲高至 RSI≥75 则转为负期望（T+20 −0.96%）；(b) T+10 维度 2026 年样本已回吐，不宜在超买日追加仓位、更适合持有观察或在 RSI≥75 脉冲日部分止盈。样本局限：B 阶段 n=13、B1 仅 1 例，逐年 n 多为个位数，显著性数字应视为上限。</li>
+    <li><b>[关键证据]</b> 三阶段方向相反：疫情前中性（T+5 +0.12%，T+20 +0.06%）→ 疫情及股灾后显著为负（T+5 −1.28% 胜率 15%，T+20 恶化至 −3.15%）→ 本轮牛市显著为正且持有期延长不衰减（T+5 +1.06% / T+10 +0.47% / T+20 +0.95%，胜率 67%）。同一指标在不同结构下给出相反答案。</li>
+    <li><b>[窗口路径·新增]</b> 无论哪个阶段，超买事件后 20 日"几乎必然先冲高、再回吐"：全样本窗口内最大涨幅 +3.46%（中位 +2.85%） vs 峰→收盘回撤 −3.42%、峰谷 −5.25%。<b>"拿满 20 天"在多数事件中是把 3% 左右的浮盈回吐大半</b>；牛市仅回撤更浅（−2.52%），但 2026 年已恶化（−4.95%）。含义：超买日的短线追涨需要预设离场，浮盈 2~3% 即接近上方概率占优的兑现点；长持逻辑应建立在牛市趋势确认之上，而非超买信号本身。</li>
+    <li><b>[客观分析]</b> 机制：KO 是低波动防御股，震荡市中 RSI 上穿 70 多因脉冲式补涨（随后均值回归，T+20 继续恶化）；趋势牛市中则反映防御资金持续流入（T+20 重新回升，持有越久越占优）。2026 年以来"创新高 + RSI 超买"组合出现 5 次，T+5 胜率 80% 但 T+10 已衰减至 40%、T+20 亦转平（且窗口回吐最深），高位钝化迹象初现。</li>
+    <li><b>[结论与置信度：中]</b> 对当前（8/21 RSI14=70.9、已正式上穿）：按本轮牛市基率 T+5 继续上行的概率约七成、T+20 维持正收益，但 (a) 若冲高至 RSI≥75 则转为负期望（T+20 −0.70%）；(b) 即便上行，T+20 窗口内平均仍需承担 2.5% 的峰值回撤——超买日不宜追加仓位，更适合持有观察或在浮盈 3% 以上、RSI 冲 75 的脉冲日部分止盈。样本局限：B 阶段 n=13、B1 仅 1 例，逐年 n 多为个位数，显著性数字应视为上限。</li>
   </ul>
-  <div class="src">数据：Yahoo Finance（adj_close 复权）· 方法：Wilder RSI14 / 事件研究 · 脚本：scripts/ko_rsi_overbought.py · 数据文件：results/ko_rsi_overbought.json</div>
+  <div class="src">数据：Yahoo Finance（adj_close 复权，high/low 按复权因子折算）· 方法：Wilder RSI14 / 事件研究 / 窗口路径（runup/peakdd/maxdd）· 脚本：scripts/ko_rsi_overbought.py · 数据文件：results/ko_rsi_overbought.json</div>
 </div>
 
 </div>
@@ -212,7 +245,7 @@ var dailyDates = DATA.dailyD.map(function(r){return r[0];});
     tooltip:{trigger:"axis",axisPointer:{type:"cross"},backgroundColor:"#fff",borderColor:"#e5e7eb",textStyle:{color:"#1f2329",fontSize:12},
       formatter:function(ps){ if(!ps||!ps.length) return ""; var d=ps[0].axisValue; var html="<b>"+d+"</b>";
         ps.forEach(function(p){ if(p.seriesName==="收盘"||p.seriesName==="RSI14") html+="<br>"+p.marker+p.seriesName+": "+(p.value[1]==null?"—":(+p.value[1]).toFixed(2)); });
-        var ev=events.find(function(e){return e.date===d;}); if(ev) html+="<br>◆ 超买事件日 → T+5 "+(ev.fwd5==null?"—":ev.fwd5.toFixed(2)+"%")+" / T+10 "+(ev.fwd10==null?"—":ev.fwd10.toFixed(2)+"%");
+        var ev=events.find(function(e){return e.date===d;}); if(ev) html+="<br>◆ 超买事件日 → T+5 "+(ev.fwd5==null?"—":ev.fwd5.toFixed(2)+"%")+" / T+10 "+(ev.fwd10==null?"—":ev.fwd10.toFixed(2)+"%")+" / T+20 "+(ev.fwd20==null?"—":ev.fwd20.toFixed(2)+"%")+(ev.runup20!=null?"<br>   T+20窗口: 最大涨幅 +"+ev.runup20.toFixed(2)+"% / 峰→收盘 "+ev.peakdd20.toFixed(2)+"%":"");
         return html; }},
     axisPointer:{link:[{xAxisIndex:"all"}]},
     grid:[{left:58,right:20,top:36,height:"52%"},{left:58,right:20,top:"68%",height:"20%"}],
@@ -327,6 +360,64 @@ var dailyDates = DATA.dailyD.map(function(r){return r[0];});
     grid:{left:52,right:16,top:40,bottom:46},
     xAxis:{type:"value",name:"T+5 %",nameLocation:"middle",nameGap:26,axisLine:{lineStyle:{color:"#d5dae2"}},axisLabel:{color:"#4b5563"},splitLine:{lineStyle:{color:"#eef0f3"}}},
     yAxis:{type:"value",name:"T+10 %",axisLine:{lineStyle:{color:"#d5dae2"}},axisLabel:{color:"#4b5563"},splitLine:{lineStyle:{color:"#eef0f3"}}},
+    legend:{data:groups.map(function(g){return g.name;}),bottom:2,textStyle:{fontSize:11}},
+    series:series
+  });
+  window.addEventListener("resize",function(){ch.resize();});
+})();
+
+// ---------- 窗口路径：阶段对比柱状图（T+20） ----------
+(function(){
+  var ch = echarts.init(document.getElementById("ch_pathbar"));
+  var pb = DATA.pathBar, pBase = DATA.pathBase;
+  var cats = ["疫情前\n(n="+pb.A_pre.n+")","疫情及股灾后\n(n="+pb.B_post.n+")","本轮牛市\n(n="+pb.C_bull.n+")","全历史基率"];
+  var runup = [pb.A_pre.runup, pb.B_post.runup, pb.C_bull.runup, pBase.runup];
+  var peakdd = [pb.A_pre.peakdd, pb.B_post.peakdd, pb.C_bull.peakdd, pBase.peakdd];
+  var maxdd = [pb.A_pre.maxdd, pb.B_post.maxdd, pb.C_bull.maxdd, pBase.maxdd];
+  var wins = [pb.A_pre.maxdd? "":"", "", "", ""];
+  ch.setOption({
+    animation:false,
+    title:{text:"T+20 窗口路径均值（%）：冲高 vs 回吐",left:"center",top:4,textStyle:{fontSize:13,color:"#374151"}},
+    tooltip:{trigger:"axis",backgroundColor:"#fff",borderColor:"#e5e7eb",textStyle:{color:"#1f2329"},
+      formatter:function(ps){var i=ps[0].dataIndex;return "<b>"+cats[i].replace("\n"," ")+"</b><br>窗口内最大涨幅 "+runup[i].toFixed(2)+"%<br>峰→收盘回撤 "+peakdd[i].toFixed(2)+"%<br>峰→谷最大回撤 "+maxdd[i].toFixed(2)+"%";}},
+    grid:{left:50,right:20,top:48,bottom:40},
+    xAxis:{type:"category",data:cats,axisLabel:{color:"#4b5563",fontSize:11,interval:0}},
+    yAxis:{type:"value",name:"%",axisLine:{lineStyle:{color:"#d5dae2"}},axisLabel:{color:"#4b5563"},splitLine:{lineStyle:{color:"#eef0f3"}}},
+    series:[
+      {name:"窗口内最大涨幅",type:"bar",data:runup.map(function(v){return {value:v,itemStyle:{color:v>=0?C.verm:C.teal}};}),
+       label:{show:true,position:"top",fontSize:10,formatter:function(p){return "+"+p.value.toFixed(1);}}},
+      {name:"峰→收盘回撤",type:"bar",data:peakdd.map(function(v){return {value:v,itemStyle:{color:C.orange}};}),
+       label:{show:true,position:"top",fontSize:10,formatter:function(p){return p.value.toFixed(1);}}},
+      {name:"峰→谷回撤",type:"bar",data:maxdd.map(function(v){return {value:v,itemStyle:{color:C.sky}};}),
+       label:{show:true,position:"top",fontSize:10,formatter:function(p){return p.value.toFixed(1);}}},
+      {name:"0线",type:"line",markLine:{silent:true,symbol:"none",lineStyle:{color:"#9aa3b0",width:1},data:[{yAxis:0,label:{show:false}}]},data:[]}
+    ],
+    legend:{data:["窗口内最大涨幅","峰→收盘回撤","峰→谷回撤"],bottom:4,textStyle:{fontSize:11}}
+  });
+  window.addEventListener("resize",function(){ch.resize();});
+})();
+
+// ---------- 窗口路径：事件级散点（runup vs peakdd，T+20） ----------
+(function(){
+  var ch = echarts.init(document.getElementById("ch_pathscatter"));
+  var groups = [
+    {name:"疫情前 ●", st:"A_pre", sym:"circle", col:C.blue},
+    {name:"疫情后 ▲", st:"B_post", sym:"triangle", col:C.orange},
+    {name:"本轮牛市 ◆", st:"C_bull", sym:"diamond", col:C.teal}
+  ];
+  var series = groups.map(function(g){
+    var pts = DATA.pathScatter[g.st] || [];
+    return {name:g.name,type:"scatter",symbol:g.sym,symbolSize:7,itemStyle:{color:g.col,opacity:0.75},
+      data:pts.map(function(p){return [p.x,p.y,p.date,p.maxdd20,p.fwd20];})};
+  });
+  ch.setOption({
+    animation:false,
+    title:{text:"事件级：T+20 窗口最多涨多少 vs 峰值回吐多少",left:"center",top:4,textStyle:{fontSize:12.5,color:"#374151"}},
+    tooltip:{backgroundColor:"#fff",borderColor:"#e5e7eb",textStyle:{color:"#1f2329"},
+      formatter:function(p){return "<b>"+p.value[2]+"</b><br>窗口内最大涨幅 +"+p.value[0].toFixed(2)+"%<br>峰→收盘回撤 "+p.value[1].toFixed(2)+"%<br>峰谷最大回撤 "+(p.value[3]==null?"—":p.value[3].toFixed(2)+"%")+"<br>T+20 收盘 "+(p.value[4]==null?"—":p.value[4].toFixed(2)+"%");}},
+    grid:{left:52,right:16,top:40,bottom:46},
+    xAxis:{type:"value",name:"窗口内最大涨幅 runup %",nameLocation:"middle",nameGap:28,scale:true,axisLine:{lineStyle:{color:"#d5dae2"}},axisLabel:{color:"#4b5563"},splitLine:{lineStyle:{color:"#eef0f3"}}},
+    yAxis:{type:"value",name:"峰→收盘回撤 peakdd %",scale:true,axisLine:{lineStyle:{color:"#d5dae2"}},axisLabel:{color:"#4b5563"},splitLine:{lineStyle:{color:"#eef0f3"}}},
     legend:{data:groups.map(function(g){return g.name;}),bottom:2,textStyle:{fontSize:11}},
     series:series
   });

@@ -39,7 +39,7 @@ recentD = [[str(r["date"].date()), round(float(r["adj_close"]), 2),
 
 # ---------- 派生统计 ----------
 ev = D["events"]
-STAGE_CN = {"A_pre": "疫情前(1995~2020-02)", "B_post": "疫情及股灾后(2020-02~2022-12)",
+STAGE_CN = {"A_pre": "疫情前(1990~2020-02)", "B_post": "疫情及股灾后(2020-02~2022-12)",
             "C_bull": "本轮牛市(2023~)"}
 
 def pct(v, nd=2):
@@ -133,7 +133,48 @@ def excess_rows():
                     f"{cell('T5_ex_xlp')}{cell('T10_ex_xlp')}{cell('T20_ex_xlp')}</tr>")
     return "".join(html)
 
-# 事件明细表（全部 161 个，倒序）
+def path_rows():
+    """窗口路径表：各阶段 T+5/T+10/T+20 窗口内最大涨幅(runup) / 峰值到窗口末收盘回撤(peakdd) / 峰谷最大回撤(maxdd)"""
+    def cell(v, invert=False):
+        if v is None or v == {} or v.get("n", 0) == 0: return "<td class='na'>—</td>"
+        val = v["mean"]
+        # 涨跌色：runup 正值=涨(红)/负值=跌(绿)；peakdd/maxdd 是回撤（通常是负），
+        # 有回撤发生用"下跌"语义 = 绿(dn)表达风险，回撤为 0 或正（罕见）用红(up)
+        pos = (val >= 0) if not invert else (val >= 0)
+        return f"<td class='{'up' if pos else 'dn'}'>{pct(val)}%</td>"
+
+    rows = []
+    baserow = [("全历史基率(所有交易日)", D["baseline_all_days"], "base")]
+    for name, b, tag in [("疫情前(1990~2020-02)", D["by_stage"]["A_pre"], ""),
+                         ("疫情及股灾后(2020-02~2022-12)", D["by_stage"]["B_post"], ""),
+                         ("本轮牛市(2023~)", D["by_stage"]["C_bull"], "")] + baserow:
+        if not b.get("T5") or b["T5"].get("n", 0) == 0: continue
+        cls = " class='baserow'" if tag == "base" else ""
+        rows.append(f"<tr{cls}><td class='nowrap'><b>{name}</b></td>"
+                    f"<td>{b['T5']['n']}</td>"
+                    f"{cell(b.get('T5_runup'))}{cell(b.get('T5_peakdd'), invert=True)}"
+                    f"{cell(b.get('T10_runup'))}{cell(b.get('T10_peakdd'), invert=True)}"
+                    f"{cell(b.get('T20_runup'))}{cell(b.get('T20_peakdd'), invert=True)}"
+                    f"{cell(b.get('T20_maxdd'), invert=True)}</tr>")
+    return "".join(rows)
+
+def path_year_rows():
+    """本轮牛市逐年：T+20 窗口 runup / peakdd / maxdd"""
+    rows = []
+    for y, b in D["bull_by_year"].items():
+        if not b.get("T5") or b["T5"].get("n", 0) == 0: continue
+        def cell(s):
+            if not s or s.get("n", 0) == 0: return "<td class='na'>—</td>"
+            v = s["mean"]
+            cls = "up" if v > 0 else "dn"
+            return f"<td class='{cls}'>{pct(v)}%</td>"
+        rows.append(f"<tr><td class='nowrap'><b>{y}</b></td><td>{b['T5']['n']}</td>"
+                    f"{cell(b.get('T5_runup'))}{cell(b.get('T5_peakdd'))}"
+                    f"{cell(b.get('T10_runup'))}{cell(b.get('T10_peakdd'))}"
+                    f"{cell(b.get('T20_runup'))}{cell(b.get('T20_peakdd'))}{cell(b.get('T20_maxdd'))}</tr>")
+    return "".join(rows)
+
+# 事件明细表（全部 186 个，倒序）
 STAGE_TAG = {"A_pre": "st-a", "B_post": "st-b", "C_bull": "st-c"}
 STAGE_SHORT = {"A_pre": "疫情前", "B_post": "疫情后", "C_bull": "牛市"}
 ev_rows = []
@@ -145,6 +186,7 @@ for e in sorted(ev, key=lambda r: r["date"], reverse=True):
         f"<tr><td class='nowrap'>{e['date']}</td><td>{e['rsi']}</td><td>{e['px']}</td>"
         f"<td><span class='st {STAGE_TAG[e['stage']]}'>{STAGE_SHORT[e['stage']]}</span></td>"
         f"{fmt(e['fwd5'])}{fmt(e['fwd10'])}{fmt(e['fwd20'])}"
+        f"{fmt(e['runup20'])}{fmt(e['peakdd20'])}{fmt(e['maxdd20'])}"
         f"<td class='na'>{pct(e['spy5'])}%</td><td class='na'>{pct(e['spy10'])}%</td><td class='na'>{pct(e['spy20'])}%</td></tr>")
 ev_rows_html = "".join(ev_rows)
 
@@ -166,6 +208,18 @@ DATA = {
     "baseline": {"t5m": D["baseline_all_days"]["T5"]["mean"], "t5w": D["baseline_all_days"]["T5"]["win"],
                  "t10m": D["baseline_all_days"]["T10"]["mean"], "t10w": D["baseline_all_days"]["T10"]["win"],
                  "t20m": D["baseline_all_days"]["T20"]["mean"], "t20w": D["baseline_all_days"]["T20"]["win"]},
+    # 窗口路径散点（T+20）：runup20 x  / peakdd20 y
+    "pathScatter": {st: [{"x": e["runup20"], "y": e["peakdd20"], "date": e["date"], "rsi": e["rsi"],
+                          "fwd20": e["fwd20"], "maxdd20": e["maxdd20"]}
+                         for e in ev if e["stage"] == st and e["runup20"] is not None and e["peakdd20"] is not None]
+                    for st in ["A_pre", "B_post", "C_bull"]},
+    # 窗口路径柱状：各阶段 runup20 / peakdd20 均值
+    "pathBar": {st: {"runup": bs[st]["T20_runup"]["mean"], "peakdd": bs[st]["T20_peakdd"]["mean"],
+                     "maxdd": bs[st]["T20_maxdd"]["mean"], "n": bs[st]["T20"]["n"]}
+                for st in ["A_pre", "B_post", "C_bull"]},
+    "pathBase": {"runup": D["baseline_all_days"]["T20_runup"]["mean"],
+                 "peakdd": D["baseline_all_days"]["T20_peakdd"]["mean"],
+                 "maxdd": D["baseline_all_days"]["T20_maxdd"]["mean"]},
 }
 
 def clean(o):
@@ -198,6 +252,8 @@ html = html.replace("{{bull_year_rows}}", bull_year_rows())
 html = html.replace("{{pre_year_rows}}", pre_year_rows())
 html = html.replace("{{excess_rows}}", excess_rows())
 html = html.replace("{{rob_rows}}", rob_rows())
+html = html.replace("{{path_rows}}", path_rows())
+html = html.replace("{{path_year_rows}}", path_year_rows())
 html = html.replace("{{ev_rows}}", ev_rows_html)
 html = html.replace("__ECHARTS__", open(os.path.join(ROOT, "scripts", "__echarts_block.txt"), encoding="utf-8").read())
 html = html.replace("__DATA_JSON__", json.dumps(DATA, ensure_ascii=False, allow_nan=False))
