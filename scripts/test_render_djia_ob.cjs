@@ -9,7 +9,7 @@ const path = require("path");
   const logs = [];
   page.on("pageerror", e => logs.push("PAGEERROR: " + e.message));
   page.on("console", m => { if (m.type() === "error") logs.push("CONSOLE: " + m.text()); });
-  const file = "file:///" + path.resolve(__dirname, "../reports/32_道指板块超买横向/djia_ob_cross_report.html").replace(/\\/g, "/");
+  const file = "file:///" + path.resolve(__dirname, "../reports/34_道指板块超买横向/djia_ob_cross_report.html").replace(/\\/g, "/");
   await page.goto(file, { waitUntil: "networkidle", timeout: 60000 });
   await page.waitForTimeout(5000);
   const info = await page.evaluate(() => {

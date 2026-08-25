@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """构建横向研报：道指各板块代表股 RSI 超买事件研究
 读取 results/djia_ob_cross.json
-输出 reports/32_道指板块超买横向/djia_ob_cross_report.html
+输出 reports/34_道指板块超买横向/djia_ob_cross_report.html
 静默写盘：只打印 written 路径与体积。
 """
 import os, json, glob
@@ -10,7 +10,7 @@ import numpy as np
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RES = os.path.join(ROOT, "results")
-OUTD = os.path.join(ROOT, "reports", "32_道指板块超买横向")
+OUTD = os.path.join(ROOT, "reports", "34_道指板块超买横向")
 os.makedirs(OUTD, exist_ok=True)
 
 with open(os.path.join(RES, "djia_ob_cross.json"), encoding="utf-8") as f:
