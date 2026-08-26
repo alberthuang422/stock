@@ -1,0 +1,21 @@
+{
+  "meta": {
+    "strategy_name": "中期选举前标普500波动率放大（事件研究）",
+    "symbol": "SPY",
+    "start": "2000-11-05",
+    "end": "2025-11-04",
+    "market": "us",
+    "report_kind": "event_study",
+    "event_overview_mode": "stats",
+    "pnl_pct_definition": "选举前10个交易日平均波动率相对基准的放大%",
+    "generated_at": "2026-08-27T02:20:06.304542"
+  },
+  "summary": {
+    "total_trades": 6,
+    "avg_return_pct": 18.58,
+    "median_return_pct": 22.02,
+    "best_trade_pct": 69.16,
+    "worst_trade_pct": -36.01,
+    "win_rate_pct": 66.7
+  }
+}
