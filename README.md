@@ -125,7 +125,8 @@
 ## 6️⃣ 市场结构与情绪
 
 - **[IPP 大跌归因](reports/07_ipp大跌归因/ipp_drop_0818_report.html)** · 8/18 大跌残差 −5.29pp=叙事再定价，非 β
-- **[VIX 低位分析](reports/vix_low_spx_report.html)** · VIX 低位下 SPX 后续行情与低位持续性
+- **[VIX 低位分析](reports/vix_low_spx_report.html)** · VIX 低位下 SPX 后续行情与低位持续性（GSPC 口径 1990 起）
+- **[VIX 低位 × SPY 事件研究](reports/vix_low_spy_dashboard/index.html)** · SPY 口径（1995 起）：VIX<15 低位 178 段、中位仅 3 天/均值 13.5 天/P90 32 天；短持有（T+5/10）低位日略弱（−0.04~−0.15pp），T+20/60 无差异，T+120 显著更强（VIX<15 +0.80pp t=3.9、VIX<12 +1.47pp t=6.2）；从 <15 回到 VIX≥20 中位 57 交易日
 - **[期权墙八标的](reports/20_期权墙八标的/index.html)** · 2026-09-18 到期期权持仓结构分析
 
 ---
