@@ -1,0 +1,2558 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>蓝筹周线：0轴上方高位刚死叉 × 回踩EMA20支撑 · 事件研究</title>
+  <script>
+    // Set theme before CSS parses to avoid FOUC
+    document.documentElement.setAttribute(
+      'data-theme',
+      (function () { try { return localStorage.getItem('bt-theme') || 'light'; } catch (e) { return 'light'; } })()
+    );
+  </script>
+  <style>
+    /* ---------------- design tokens ---------------- */
+    :root[data-theme="dark"] {
+      --bg: #0d1117;
+      --bg-elev: #131722;
+      --surface: #161b22;
+      --surface-2: #1c2030;
+      --hover: #1f2433;
+      --border: #1f2230;
+      --border-strong: #2a2e3e;
+      --text: #d1d4dc;
+      --text-strong: #f0f3fa;
+      --muted: #787b86;
+      --muted-2: #50535e;
+      --accent: #2962ff;
+      --accent-glow: rgba(41, 98, 255, 0.18);
+      --gain: #26a69a;
+      --gain-strong: #2dd4bf;
+      --gain-glow: rgba(38, 166, 154, 0.18);
+      --loss: #ef5350;
+      --loss-strong: #f87171;
+      --loss-glow: rgba(239, 83, 80, 0.18);
+      --warn: #ff9800;
+      --neutral: #b2b5be;
+      --grid: rgba(255, 255, 255, 0.04);
+      --grid-strong: rgba(255, 255, 255, 0.10);
+      --crosshair: rgba(160, 167, 184, 0.50);
+      --shadow-soft: 0 1px 0 rgba(255,255,255,0.04) inset, 0 8px 24px rgba(0,0,0,0.32);
+    }
+
+    :root[data-theme="light"] {
+      --bg: #ffffff;
+      --bg-elev: #f8f9fc;
+      --surface: #ffffff;
+      --surface-2: #f3f5f9;
+      --hover: #eef1f8;
+      --border: #e6e8ee;
+      --border-strong: #d6dae3;
+      --text: #131722;
+      --text-strong: #0a0d14;
+      --muted: #6a6d78;
+      --muted-2: #8c8f99;
+      --accent: #2962ff;
+      --accent-glow: rgba(41, 98, 255, 0.12);
+      --gain: #089981;
+      --gain-strong: #00a884;
+      --gain-glow: rgba(8, 153, 129, 0.12);
+      --loss: #f23645;
+      --loss-strong: #ef4444;
+      --loss-glow: rgba(242, 54, 69, 0.12);
+      --warn: #ff9800;
+      --neutral: #4a4d57;
+      --grid: rgba(0, 0, 0, 0.04);
+      --grid-strong: rgba(0, 0, 0, 0.08);
+      --crosshair: rgba(60, 65, 80, 0.45);
+      --shadow-soft: 0 1px 0 rgba(0,0,0,0.02) inset, 0 6px 24px rgba(19,23,34,0.06);
+    }
+
+    /* Eastern color convention (A-share / HK): 涨红跌绿 — swap gain/loss palette */
+    :root[data-theme="dark"][data-color-scheme="eastern"] {
+      --gain: #ef5350;
+      --gain-strong: #f87171;
+      --gain-glow: rgba(239, 83, 80, 0.18);
+      --loss: #26a69a;
+      --loss-strong: #2dd4bf;
+      --loss-glow: rgba(38, 166, 154, 0.18);
+    }
+    :root[data-theme="light"][data-color-scheme="eastern"] {
+      --gain: #f23645;
+      --gain-strong: #ef4444;
+      --gain-glow: rgba(242, 54, 69, 0.12);
+      --loss: #089981;
+      --loss-strong: #00a884;
+      --loss-glow: rgba(8, 153, 129, 0.12);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'PingFang SC', 'Noto Sans SC', sans-serif;
+      font-feature-settings: 'tnum' 1, 'cv11' 1, 'ss01' 1;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      font-size: 14px;
+      letter-spacing: -0.01em;
+    }
+
+    .app { min-height: 100vh; display: flex; flex-direction: column; }
+
+    /* ---------------- topbar ---------------- */
+    .topbar {
+      height: 50px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 22px;
+      gap: 16px;
+      background: color-mix(in srgb, var(--bg) 85%, transparent);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .tb-left, .tb-right { display: flex; align-items: center; gap: 12px; }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      color: var(--text-strong);
+    }
+    .brand-logo {
+      width: 24px; height: 24px;
+      border-radius: 7px;
+      background: linear-gradient(135deg, var(--accent) 0%, #6b8eff 100%);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 800;
+      color: #fff;
+      box-shadow: 0 4px 12px var(--accent-glow);
+      letter-spacing: 0;
+    }
+    .brand-sep {
+      width: 1px;
+      height: 18px;
+      background: var(--border);
+      margin: 0 4px;
+    }
+    .brand-strategy {
+      color: var(--muted);
+      font-weight: 500;
+      max-width: 280px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .menu-chip {
+      padding: 6px 12px;
+      border-radius: 8px;
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text);
+      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+      cursor: default;
+      user-select: none;
+    }
+    .menu-chip:hover { background: var(--hover); }
+    .menu-chip.active {
+      background: var(--surface-2);
+      border-color: var(--border);
+      font-weight: 600;
+      color: var(--text-strong);
+    }
+
+    .dot { width: 6px; height: 6px; border-radius: 999px; background: var(--accent); display: inline-block; }
+    .dot.green { background: var(--gain); box-shadow: 0 0 0 2px var(--gain-glow); }
+
+    .icon-btn {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .icon-btn:hover {
+      background: var(--hover);
+      color: var(--text-strong);
+      border-color: var(--border-strong);
+    }
+
+    /* ---------------- page ---------------- */
+    .page {
+      width: 100%;
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 24px 28px 56px;
+    }
+
+    .report-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 24px;
+      padding: 4px 0 24px;
+      animation: fadeUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    .report-title {
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text-strong);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .symbol-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 10px;
+      border-radius: 6px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 600;
+      font-family: 'JetBrains Mono', 'SF Mono', 'Menlo', monospace;
+      letter-spacing: 0.02em;
+    }
+
+    .report-subtitle {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .live-pulse {
+      width: 7px; height: 7px;
+      border-radius: 999px;
+      background: var(--gain);
+      animation: pulse 2.4s ease-out infinite;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+    @keyframes pulse {
+      0%   { box-shadow: 0 0 0 0 rgba(38, 166, 154, 0.55); }
+      70%  { box-shadow: 0 0 0 8px rgba(38, 166, 154, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(38, 166, 154, 0); }
+    }
+
+    .date-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 13px;
+      color: var(--text);
+      font-feature-settings: 'tnum';
+    }
+    .date-badge .arrow { color: var(--muted); }
+
+    /* ---------------- tabs ---------------- */
+    .tabs {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 22px;
+      position: relative;
+      flex-wrap: wrap;
+    }
+    .tab {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      padding: 13px 18px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      position: relative;
+      transition: color 0.2s ease;
+      font-family: inherit;
+      letter-spacing: -0.005em;
+    }
+    .tab:hover { color: var(--text); }
+    .tab.active { color: var(--text-strong); font-weight: 600; }
+    .tab-indicator {
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      height: 2px;
+      width: 0;
+      background: var(--accent);
+      border-radius: 2px 2px 0 0;
+      transition: transform 0.4s cubic-bezier(0.5, 0, 0.2, 1), width 0.4s cubic-bezier(0.5, 0, 0.2, 1);
+      pointer-events: none;
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+
+    .tab-panels { display: block; }
+    .tab-panel {
+      display: none;
+      animation: fadeUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+    .tab-panel.active { display: block; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ---------------- modules ---------------- */
+    .module-grid {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .module {
+      grid-column: span 12;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+      animation: fadeUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+    .module.span-6 { grid-column: span 6; }
+    .module.span-4 { grid-column: span 4; }
+    .module.span-8 { grid-column: span 8; }
+
+    .module-grid > .module:nth-child(1) { animation-delay: 0.05s; }
+    .module-grid > .module:nth-child(2) { animation-delay: 0.12s; }
+    .module-grid > .module:nth-child(3) { animation-delay: 0.18s; }
+    .module-grid > .module:nth-child(4) { animation-delay: 0.24s; }
+    .module-grid > .module:nth-child(5) { animation-delay: 0.30s; }
+
+    .module-header {
+      padding: 22px 24px 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .module-header > div:first-child {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .module-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin: 0;
+      color: var(--text-strong);
+      letter-spacing: -0.01em;
+      line-height: 1.25;
+    }
+    .module-subtitle {
+      font-size: 13px;
+      color: var(--muted);
+      margin: 0;
+      line-height: 1.4;
+    }
+    .module-body { padding: 18px 22px; }
+
+    /* ---------------- KPI strip ---------------- */
+    .kpi-strip {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 28px;
+    }
+    .kpi-item { min-width: 0; }
+    .kpi-label {
+      color: var(--muted);
+      font-size: 11px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-weight: 600;
+    }
+    .kpi-value {
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--text-strong);
+      font-feature-settings: 'tnum';
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .kpi-sub {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 12px;
+      font-feature-settings: 'tnum';
+    }
+
+    .positive { color: var(--gain) !important; }
+    .negative { color: var(--loss) !important; }
+
+    /* ---------------- chart card ---------------- */
+    .tv-chart-card { padding: 0; }
+    .tv-chart-top {
+      padding: 22px 24px 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .tv-chart-stats {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 28px;
+      flex: 1;
+    }
+
+    .tv-chart-area { padding: 0; position: relative; }
+
+    .chart-shell {
+      width: 100%;
+      height: 460px;
+      position: relative;
+      background: transparent;
+    }
+    .chart-shell svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+    .chart-shell svg text { font-family: inherit; }
+
+    .chart-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 24px 16px;
+      border-top: 1px solid var(--border);
+    }
+    .toggle-row {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      flex-wrap: wrap;
+      font-size: 13px;
+    }
+    .toggle-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      user-select: none;
+      color: var(--text);
+      padding: 6px 10px;
+      border-radius: 6px;
+      transition: background 0.15s, color 0.15s;
+    }
+    .toggle-item:hover { background: var(--hover); }
+    .toggle-item.muted { color: var(--muted-2); }
+    .toggle-item.muted .toggle-swatch { opacity: 0.35; }
+    .toggle-swatch {
+      width: 14px;
+      height: 3px;
+      border-radius: 2px;
+      background: var(--gain);
+      transition: opacity 0.15s;
+    }
+    /* Marker legend lives inside toggle-row, separated by a divider.
+       Items are informational (not clickable) so they don't carry .toggle-item. */
+    .legend-divider {
+      width: 1px;
+      height: 14px;
+      background: var(--border);
+      margin: 0 6px;
+    }
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 4px;
+      color: var(--muted);
+      font-size: 12px;
+      user-select: none;
+    }
+    .legend-item svg { display: block; }
+
+    .mode-switch {
+      display: inline-flex;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 3px;
+      gap: 2px;
+    }
+    .mode-chip {
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.18s ease;
+      user-select: none;
+    }
+    .mode-chip:hover { color: var(--text); }
+    .mode-chip.active {
+      background: var(--bg);
+      color: var(--text-strong);
+      font-weight: 600;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.18);
+    }
+
+    /* ---------------- tooltip ---------------- */
+    .tooltip {
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      background: color-mix(in srgb, var(--surface-2) 92%, transparent);
+      border: 1px solid var(--border-strong);
+      border-radius: 9px;
+      padding: 12px 14px;
+      font-size: 12px;
+      pointer-events: none;
+      z-index: 5;
+      min-width: 200px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+      font-feature-settings: 'tnum';
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: opacity 0.12s ease;
+    }
+    .tooltip.hidden { opacity: 0; }
+    .tooltip-date {
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 9px;
+      font-weight: 600;
+    }
+    .tooltip-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      padding: 3px 0;
+    }
+    .tooltip-row .key {
+      color: var(--muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .tooltip-row .key::before {
+      content: '';
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+      background: var(--swatch, var(--accent));
+      flex-shrink: 0;
+    }
+    .tooltip-row .val {
+      color: var(--text-strong);
+      font-weight: 600;
+    }
+
+    /* ---------------- tables ---------------- */
+    .metric-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-feature-settings: 'tnum';
+    }
+    .metric-table-wrap { overflow-x: auto; }
+    .metric-table th, .metric-table td {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      text-align: right;
+      vertical-align: middle;
+    }
+    .metric-table th:first-child, .metric-table td:first-child {
+      text-align: left;
+      width: 40%;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 500;
+      white-space: normal;
+    }
+    .metric-table th:not(:first-child), .metric-table td:not(:first-child) { white-space: nowrap; }
+    .metric-table td:not(:first-child) {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-strong);
+      font-variant-numeric: tabular-nums;
+    }
+    .metric-table thead th {
+      color: var(--muted);
+      font-weight: 500;
+      font-size: 12px;
+      text-transform: none;
+      letter-spacing: 0;
+      background: transparent;
+      border-bottom: 1px solid var(--border);
+    }
+    .metric-table tbody tr { transition: background 0.12s ease; }
+    .metric-table tbody tr:hover { background: var(--hover); }
+    .metric-table tbody tr:last-child td { border-bottom: 0; }
+    .metric-main {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-strong);
+    }
+    .metric-secondary {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 3px;
+      font-weight: 500;
+    }
+
+    .trades-table-wrap { overflow-x: auto; }
+    .trades-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 720px;
+      font-feature-settings: 'tnum';
+    }
+    .trades-table th, .trades-table td {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      white-space: nowrap;
+    }
+    .trades-table td {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-strong);
+    }
+    .trades-table td.num,
+    .trades-table th.num {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+    .trades-table thead th {
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: none;
+      letter-spacing: 0;
+      background: transparent;
+      position: sticky;
+      top: 0;
+      font-weight: 500;
+      border-bottom: 1px solid var(--border);
+    }
+    .trades-table tbody tr { transition: background 0.12s ease; }
+    .trades-table tbody tr:hover { background: var(--hover); }
+    .trades-table tbody tr:last-child td { border-bottom: 0; }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 9px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+
+    .text-card {
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 14px;
+    }
+    .text-card > * + * { margin-top: 12px; }
+    .text-card h1, .text-card h2, .text-card h3, .text-card h4, .text-card h5, .text-card h6 {
+      color: var(--text-strong);
+      line-height: 1.3;
+      margin-top: 20px;
+    }
+    .text-card h1:first-child, .text-card h2:first-child, .text-card h3:first-child,
+    .text-card h4:first-child, .text-card h5:first-child, .text-card h6:first-child {
+      margin-top: 0;
+    }
+    .text-card p, .text-card ul, .text-card ol, .text-card blockquote, .text-card pre, .text-card table {
+      margin: 0;
+    }
+    .text-card ul, .text-card ol {
+      padding-left: 20px;
+    }
+    .text-card li + li {
+      margin-top: 6px;
+    }
+    .text-card a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .text-card a:hover {
+      text-decoration: underline;
+    }
+    .text-card code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 12px;
+      padding: 2px 6px;
+      border-radius: 6px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+    }
+    .text-card pre {
+      overflow-x: auto;
+      padding: 12px 14px;
+      border-radius: 10px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+    }
+    .text-card pre code {
+      padding: 0;
+      border: 0;
+      background: transparent;
+    }
+    .text-card blockquote {
+      padding-left: 14px;
+      border-left: 3px solid var(--accent);
+      color: var(--muted);
+    }
+    .text-card table {
+      width: 100%;
+      border-collapse: collapse;
+      font-feature-settings: 'tnum';
+    }
+    .text-card th, .text-card td {
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      text-align: left;
+      vertical-align: top;
+    }
+    .text-card thead th {
+      background: var(--surface-2);
+      color: var(--text-strong);
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .text-card hr {
+      border: 0;
+      border-top: 1px solid var(--border);
+    }
+
+    /* custom_html module: LLM-injected arbitrary HTML for strategy-specific
+       charts (echarts, d3, custom SVG, etc.). Keep embedded visuals within
+       the card's width and show mount_script errors prominently. */
+    .custom-html-body img,
+    .custom-html-body svg,
+    .custom-html-body canvas {
+      max-width: 100%;
+      height: auto;
+    }
+    .custom-html-error {
+      margin-top: 10px;
+      padding: 8px 12px;
+      background: var(--loss-glow);
+      color: var(--loss);
+      border: 1px solid var(--loss);
+      border-radius: 4px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 12px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+
+    .empty {
+      padding: 40px 16px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    /* ---------------- responsive ---------------- */
+    @media (max-width: 1180px) {
+      .kpi-strip, .tv-chart-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .module.span-6, .module.span-4, .module.span-8 { grid-column: span 12; }
+    }
+    @media (max-width: 720px) {
+      .topbar { flex-direction: column; align-items: flex-start; height: auto; padding: 12px; }
+      .report-header { flex-direction: column; align-items: stretch; }
+      .kpi-strip, .tv-chart-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .chart-shell { height: 360px; }
+      .page { padding: 16px; }
+    }
+
+    /* ---------------- scrollbar ---------------- */
+    ::-webkit-scrollbar { width: 10px; height: 10px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 6px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--muted-2); }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="topbar" id="topbar">
+      <div class="tb-left" id="topbar-left"></div>
+      <div class="tb-right" id="topbar-right"></div>
+    </div>
+
+    <main class="page">
+      <section class="report-header">
+        <div>
+          <h1 class="report-title" id="report-title"></h1>
+          <div class="report-subtitle" id="report-subtitle"></div>
+        </div>
+        <div class="date-badge" id="report-date"></div>
+      </section>
+
+      <div class="tabs" id="tabs"></div>
+      <div class="tab-panels" id="tab-panels"></div>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked@14.1.2/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
+  <script id="report-data" type="application/json">{"meta": {"strategy_name": "蓝筹周线：0轴上方高位刚死叉 × 回踩EMA20支撑 · 事件研究", "report_kind": "event_study", "event_overview_mode": "stats", "start": "1977-12-02", "end": "2026-07-17", "generated_at": "2026-08-26T17:37:21+08:00", "market": "us"}, "summary": {"total_return_pct": 5.887925246989844, "avg_return_pct": 5.887925246989844, "median_return_pct": 6.773259956535494, "best_trade_pct": 44.14534293961858, "worst_trade_pct": -51.457761151690775, "win_rate_pct": 71.27659574468085, "total_trades": 97}, "equity_curve": [], "pnl_curve": [], "drawdown_curve": [], "trade_history": [{"label": "ko 2011-05-27 · 死叉·距0轴上穿43周·DIF回落39%", "symbol": "ko", "event_date": "2011-05-27", "entry_date": "2011-05-27", "pnl_pct": 3.454115302744309, "exc20": 10.715819499186209, "group": "C", "broken20": 0, "display_symbol": "ko"}, {"label": "ko 2026-04-17 · 死叉·距0轴上穿23周·DIF回落28%", "symbol": "ko", "event_date": "2026-04-17", "entry_date": "2026-04-17", "pnl_pct": null, "exc20": null, "group": "C", "broken20": 0, "display_symbol": "ko"}, {"label": "brk.b 2020-11-06 · 死叉·距0轴上穿11周·DIF回落31%", "symbol": "brk.b", "event_date": "2020-11-06", "entry_date": "2020-11-06", "pnl_pct": 22.94468829768908, "exc20": 9.005210095179006, "group": "A", "broken20": 0, "display_symbol": "brk.b"}, {"label": "jnj 1996-08-30 · 死叉·距0轴上穿999周·DIF回落47%", "symbol": "jnj", "event_date": "1996-08-30", "entry_date": "1996-08-30", "pnl_pct": 4.705715109532416, "exc20": -15.21934570381229, "group": "C", "broken20": 1, "display_symbol": "jnj"}, {"label": "mcd 2005-10-21 · 未死叉·距0轴上穿10周·DIF回落25%", "symbol": "mcd", "event_date": "2005-10-21", "entry_date": "2005-10-21", "pnl_pct": 8.8695696067286, "exc20": -0.5621112357529601, "group": "B", "broken20": 0, "display_symbol": "mcd"}, {"label": "mcd 2020-11-13 · 死叉·距0轴上穿15周·DIF回落25%", "symbol": "mcd", "event_date": "2020-11-13", "entry_date": "2020-11-13", "pnl_pct": 6.8747444622112575, "exc20": -5.841058745835447, "group": "A", "broken20": 0, "display_symbol": "mcd"}, {"label": "pg 2023-09-08 · 死叉·距0轴上穿24周·DIF回落36%", "symbol": "pg", "event_date": "2023-09-08", "entry_date": "2023-09-08", "pnl_pct": 3.392276793875104, "exc20": -6.841252918563989, "group": "C", "broken20": 1, "display_symbol": "pg"}, {"label": "pep 1992-02-28 · 死叉·距0轴上穿10周·DIF回落31%", "symbol": "pep", "event_date": "1992-02-28", "entry_date": "1992-02-28", "pnl_pct": 12.461769619725429, "exc20": null, "group": "A", "broken20": 0, "display_symbol": "pep"}, {"label": "pep 1996-07-12 · 死叉·距0轴上穿999周·DIF回落26%", "symbol": "pep", "event_date": "1996-07-12", "entry_date": "1996-07-12", "pnl_pct": -8.65563593055575, "exc20": -27.001165915503865, "group": "C", "broken20": 1, "display_symbol": "pep"}, {"label": "pep 2025-11-14 · 未死叉·距0轴上穿12周·DIF回落27%", "symbol": "pep", "event_date": "2025-11-14", "entry_date": "2025-11-14", "pnl_pct": 9.675809984965, "exc20": 11.516127495466954, "group": "B", "broken20": 0, "display_symbol": "pep"}, {"label": "cnp 2026-07-17 · 死叉·距0轴上穿999周·DIF回落38%", "symbol": "cnp", "event_date": "2026-07-17", "entry_date": "2026-07-17", "pnl_pct": null, "exc20": null, "group": "C", "broken20": 1, "display_symbol": "cnp"}, {"label": "xel 2025-03-07 · 死叉·距0轴上穿31周·DIF回落45%", "symbol": "xel", "event_date": "2025-03-07", "entry_date": "2025-03-07", "pnl_pct": 8.643886879779284, "exc20": -2.6399144057801074, "group": "C", "broken20": 0, "display_symbol": "xel"}, {"label": "xel 2025-05-23 · 死叉·距0轴上穿42周·DIF回落54%", "symbol": "xel", "event_date": "2025-05-23", "entry_date": "2025-05-23", "pnl_pct": 17.944249702124427, "exc20": 4.534649229810951, "group": "C", "broken20": 1, "display_symbol": "xel"}, {"label": "mo 1977-12-02 · 死叉·距0轴上穿20周·DIF回落27%", "symbol": "mo", "event_date": "1977-12-02", "entry_date": "1977-12-02", "pnl_pct": 1.5942526499985066, "exc20": null, "group": "C", "broken20": 1, "display_symbol": "mo"}, {"label": "mo 1990-08-17 · 死叉·距0轴上穿20周·DIF回落26%", "symbol": "mo", "event_date": "1990-08-17", "entry_date": "1990-08-17", "pnl_pct": 11.104147665546948, "exc20": null, "group": "C", "broken20": 1, "display_symbol": "mo"}, {"label": "mo 1992-02-21 · 死叉·距0轴上穿999周·DIF回落30%", "symbol": "mo", "event_date": "1992-02-21", "entry_date": "1992-02-21", "pnl_pct": 6.986576481352325, "exc20": null, "group": "C", "broken20": 0, "display_symbol": "mo"}, {"label": "mo 1997-03-27 · 死叉·距0轴上穿20周·DIF回落26%", "symbol": "mo", "event_date": "1997-03-27", "entry_date": "1997-03-27", "pnl_pct": 16.66372651607897, "exc20": -0.3892766777862739, "group": "C", "broken20": 1, "display_symbol": "mo"}, {"label": "mo 1997-07-11 · 死叉·距0轴上穿35周·DIF回落36%", "symbol": "mo", "event_date": "1997-07-11", "entry_date": "1997-07-11", "pnl_pct": 1.36088394675149, "exc20": -3.2092930766171257, "group": "C", "broken20": 1, "display_symbol": "mo"}, {"label": "mo 2013-07-26 · 死叉·距0轴上穿999周·DIF回落30%", "symbol": "mo", "event_date": "2013-07-26", "entry_date": "2013-07-26", "pnl_pct": 4.76268583433237, "exc20": -1.072657395172727, "group": "C", "broken20": 1, "display_symbol": "mo"}, {"label": "mo 2017-07-14 · 死叉·距0轴上穿999周·DIF回落41%", "symbol": "mo", "event_date": "2017-07-14", "entry_date": "2017-07-14", "pnl_pct": -6.246715224038701, "exc20": -14.477871763158111, "group": "C", "broken20": 1, "display_symbol": "mo"}, {"label": "trv 1997-10-31 · 死叉·距0轴上穿57周·DIF回落32%", "symbol": "trv", "event_date": "1997-10-31", "entry_date": "1997-10-31", "pnl_pct": 16.388696953362313, "exc20": -3.7787606127862814, "group": "C", "broken20": 1, "display_symbol": "trv"}, {"label": "trv 2007-06-15 · 死叉·距0轴上穿58周·DIF回落45%", "symbol": "trv", "event_date": "2007-06-15", "entry_date": "2007-06-15", "pnl_pct": -2.221446027905416, "exc20": -1.468380201881769, "group": "C", "broken20": 1, "display_symbol": "trv"}, {"label": "trv 2010-04-16 · 死叉·距0轴上穿45周·DIF回落42%", "symbol": "trv", "event_date": "2010-04-16", "entry_date": "2010-04-16", "pnl_pct": -1.3934835481874577, "exc20": 5.260654759504879, "group": "C", "broken20": 1, "display_symbol": "trv"}, {"label": "wmt 1997-12-26 · 死叉·距0轴上穿42周·DIF回落39%", "symbol": "wmt", "event_date": "1997-12-26", "entry_date": "1997-12-26", "pnl_pct": 44.14534293961858, "exc20": 25.411277014901533, "group": "C", "broken20": 0, "display_symbol": "wmt"}, {"label": "wmt 2017-07-07 · 死叉·距0轴上穿17周·DIF回落30%", "symbol": "wmt", "event_date": "2017-07-07", "entry_date": "2017-07-07", "pnl_pct": 29.06905008997811, "exc20": 20.997483570208765, "group": "C", "broken20": 0, "display_symbol": "wmt"}, {"label": "vz 1997-07-25 · 死叉·距0轴上穿12周·DIF回落25%", "symbol": "vz", "event_date": "1997-07-25", "entry_date": "1997-07-25", "pnl_pct": 28.57200544203633, "exc20": 26.370621004349257, "group": "A", "broken20": 0, "display_symbol": "vz"}, {"label": "vz 2004-04-16 · 死叉·距0轴上穿13周·DIF回落27%", "symbol": "vz", "event_date": "2004-04-16", "entry_date": "2004-04-16", "pnl_pct": 10.183205853918032, "exc20": 11.325852939592965, "group": "A", "broken20": 1, "display_symbol": "vz"}, {"label": "vz 2006-04-28 · 未死叉·距0轴上穿10周·DIF回落30%", "symbol": "vz", "event_date": "2006-04-28", "entry_date": "2006-04-28", "pnl_pct": 9.751795134017735, "exc20": 8.49204672005661, "group": "B", "broken20": 1, "display_symbol": "vz"}, {"label": "vz 2026-04-24 · 死叉·距0轴上穿12周·DIF回落28%", "symbol": "vz", "event_date": "2026-04-24", "entry_date": "2026-04-24", "pnl_pct": null, "exc20": null, "group": "A", "broken20": 1, "display_symbol": "vz"}, {"label": "hon 1998-05-29 · 死叉·距0轴上穿15周·DIF回落27%", "symbol": "hon", "event_date": "1998-05-29", "entry_date": "1998-05-29", "pnl_pct": -10.762378882099268, "exc20": -8.63604011558462, "group": "A", "broken20": 1, "display_symbol": "hon"}, {"label": "hon 2013-12-13 · 死叉·距0轴上穿999周·DIF回落26%", "symbol": "hon", "event_date": "2013-12-13", "entry_date": "2013-12-13", "pnl_pct": 7.164797345021312, "exc20": 0.5365910255262119, "group": "C", "broken20": 0, "display_symbol": "hon"}, {"label": "pm 2012-08-24 · 死叉·距0轴上穿999周·DIF回落35%", "symbol": "pm", "event_date": "2012-08-24", "entry_date": "2012-08-24", "pnl_pct": 0.4820238799643661, "exc20": -4.74289073269778, "group": "C", "broken20": 1, "display_symbol": "pm"}, {"label": "amgn 2013-08-16 · 死叉·距0轴上穿999周·DIF回落43%", "symbol": "amgn", "event_date": "2013-08-16", "entry_date": "2013-08-16", "pnl_pct": 9.567633934150276, "exc20": -1.8592313853754483, "group": "C", "broken20": 0, "display_symbol": "amgn"}, {"label": "amgn 2013-11-08 · 死叉·距0轴上穿999周·DIF回落33%", "symbol": "amgn", "event_date": "2013-11-08", "entry_date": "2013-11-08", "pnl_pct": 7.472598546725906, "exc20": 1.815104607826834, "group": "C", "broken20": 0, "display_symbol": "amgn"}, {"label": "amgn 2024-02-23 · 死叉·距0轴上穿28周·DIF回落27%", "symbol": "amgn", "event_date": "2024-02-23", "entry_date": "2024-02-23", "pnl_pct": 15.215350789761196, "exc20": 4.24911405179067, "group": "C", "broken20": 1, "display_symbol": "amgn"}, {"label": "jpm 2024-08-02 · 死叉·距0轴上穿999周·DIF回落30%", "symbol": "jpm", "event_date": "2024-08-02", "entry_date": "2024-08-02", "pnl_pct": 20.044202595147965, "exc20": 8.398700086741773, "group": "C", "broken20": 0, "display_symbol": "jpm"}, {"label": "jpm 2026-01-16 · 死叉·距0轴上穿999周·DIF回落29%", "symbol": "jpm", "event_date": "2026-01-16", "entry_date": "2026-01-16", "pnl_pct": 0.4796080305305317, "exc20": -6.446380944344332, "group": "C", "broken20": 1, "display_symbol": "jpm"}, {"label": "hd 2000-04-14 · 死叉·距0轴上穿999周·DIF回落52%", "symbol": "hd", "event_date": "2000-04-14", "entry_date": "2000-04-14", "pnl_pct": -19.26360637421931, "exc20": -31.65995940468509, "group": "C", "broken20": 1, "display_symbol": "hd"}, {"label": "hd 2009-10-23 · 死叉·距0轴上穿28周·DIF回落26%", "symbol": "hd", "event_date": "2009-10-23", "entry_date": "2009-10-23", "pnl_pct": 25.47576626351158, "exc20": 18.072285259580514, "group": "C", "broken20": 1, "display_symbol": "hd"}, {"label": "hd 2015-09-04 · 死叉·距0轴上穿999周·DIF回落60%", "symbol": "hd", "event_date": "2015-09-04", "entry_date": "2015-09-04", "pnl_pct": 7.763837484434277, "exc20": 7.732572829127093, "group": "C", "broken20": 0, "display_symbol": "hd"}, {"label": "hd 2016-06-03 · 死叉·距0轴上穿999周·DIF回落42%", "symbol": "hd", "event_date": "2016-06-03", "entry_date": "2016-06-03", "pnl_pct": -3.408815041987989, "exc20": -6.214245169720989, "group": "C", "broken20": 1, "display_symbol": "hd"}, {"label": "hd 2016-08-26 · 死叉·距0轴上穿999周·DIF回落35%", "symbol": "hd", "event_date": "2016-08-26", "entry_date": "2016-08-26", "pnl_pct": 1.557876187099838, "exc20": -4.080629169907257, "group": "C", "broken20": 1, "display_symbol": "hd"}, {"label": "gild 2025-08-29 · 死叉·距0轴上穿56周·DIF回落46%", "symbol": "gild", "event_date": "2025-08-29", "entry_date": "2025-08-29", "pnl_pct": 12.072383982575596, "exc20": 4.231590999340673, "group": "C", "broken20": 0, "display_symbol": "gild"}, {"label": "mrk 2017-03-31 · 死叉·距0轴上穿51周·DIF回落43%", "symbol": "mrk", "event_date": "2017-03-31", "entry_date": "2017-03-31", "pnl_pct": -2.5147343435760083, "exc20": -5.973478360821449, "group": "C", "broken20": 0, "display_symbol": "mrk"}, {"label": "cvx 2008-01-11 · 死叉·距0轴上穿999周·DIF回落49%", "symbol": "cvx", "event_date": "2008-01-11", "entry_date": "2008-01-11", "pnl_pct": 10.87766209596712, "exc20": 10.239154502760291, "group": "C", "broken20": 1, "display_symbol": "cvx"}, {"label": "cvx 2013-08-09 · 死叉·距0轴上穿57周·DIF回落25%", "symbol": "cvx", "event_date": "2013-08-09", "entry_date": "2013-08-09", "pnl_pct": 3.938565448350495, "exc20": -5.770929667568803, "group": "C", "broken20": 1, "display_symbol": "cvx"}, {"label": "cvx 2018-07-13 · 死叉·距0轴上穿48周·DIF回落56%", "symbol": "cvx", "event_date": "2018-07-13", "entry_date": "2018-07-13", "pnl_pct": -2.2461580536242143, "exc20": -1.2832579188153723, "group": "C", "broken20": 1, "display_symbol": "cvx"}, {"label": "csco 2015-06-05 · 死叉·距0轴上穿59周·DIF回落36%", "symbol": "csco", "event_date": "2015-06-05", "entry_date": "2015-06-05", "pnl_pct": 4.320156394902752, "exc20": 4.399516130515247, "group": "C", "broken20": 1, "display_symbol": "csco"}, {"label": "xom 1996-06-14 · 死叉·距0轴上穿999周·DIF回落36%", "symbol": "xom", "event_date": "1996-06-14", "entry_date": "1996-06-14", "pnl_pct": 6.708970116698465, "exc20": 0.1423562792160826, "group": "C", "broken20": 0, "display_symbol": "xom"}, {"label": "xom 2023-10-20 · 未死叉·距0轴上穿10周·DIF回落50%", "symbol": "xom", "event_date": "2023-10-20", "entry_date": "2023-10-20", "pnl_pct": -0.6234035166974183, "exc20": -22.60983865643046, "group": "B", "broken20": 1, "display_symbol": "xom"}, {"label": "shw 2013-02-22 · 死叉·距0轴上穿999周·DIF回落30%", "symbol": "shw", "event_date": "2013-02-22", "entry_date": "2013-02-22", "pnl_pct": 19.002386258297776, "exc20": 7.642025095630878, "group": "C", "broken20": 0, "display_symbol": "shw"}, {"label": "blk 2012-04-27 · 死叉·距0轴上穿17周·DIF回落25%", "symbol": "blk", "event_date": "2012-04-27", "entry_date": "2012-04-27", "pnl_pct": -3.2436462790332965, "exc20": -8.666386487069245, "group": "C", "broken20": 1, "display_symbol": "blk"}, {"label": "blk 2021-11-19 · 死叉·距0轴上穿999周·DIF回落46%", "symbol": "blk", "event_date": "2021-11-19", "entry_date": "2021-11-19", "pnl_pct": -18.638242452242228, "exc20": -14.724253337954607, "group": "C", "broken20": 1, "display_symbol": "blk"}, {"label": "tmo 1991-11-29 · 死叉·距0轴上穿48周·DIF回落40%", "symbol": "tmo", "event_date": "1991-11-29", "entry_date": "1991-11-29", "pnl_pct": 5.214723179459635, "exc20": null, "group": "C", "broken20": 1, "display_symbol": "tmo"}, {"label": "tmo 2005-01-28 · 死叉·距0轴上穿12周·DIF回落31%", "symbol": "tmo", "event_date": "2005-01-28", "entry_date": "2005-01-28", "pnl_pct": -8.76778661223213, "exc20": -12.939140329320274, "group": "A", "broken20": 1, "display_symbol": "tmo"}, {"label": "tmo 2008-06-20 · 未死叉·距0轴上穿11周·DIF回落49%", "symbol": "tmo", "event_date": "2008-06-20", "entry_date": "2008-06-20", "pnl_pct": -34.43964565613731, "exc20": -6.185591811211079, "group": "B", "broken20": 1, "display_symbol": "tmo"}, {"label": "tmo 2012-04-27 · 未死叉·距0轴上穿10周·DIF回落30%", "symbol": "tmo", "event_date": "2012-04-27", "entry_date": "2012-04-27", "pnl_pct": 10.9095825002816, "exc20": 5.486842292245654, "group": "B", "broken20": 1, "display_symbol": "tmo"}, {"label": "aapl 2008-07-03 · 未死叉·距0轴上穿10周·DIF回落54%", "symbol": "aapl", "event_date": "2008-07-03", "entry_date": "2008-07-03", "pnl_pct": -51.457761151690775, "exc20": -14.778390131387212, "group": "B", "broken20": 1, "display_symbol": "aapl"}, {"label": "aapl 2016-11-18 · 死叉·距0轴上穿14周·DIF回落30%", "symbol": "aapl", "event_date": "2016-11-18", "entry_date": "2016-11-18", "pnl_pct": 30.80269359162564, "exc20": 22.05415891337077, "group": "A", "broken20": 0, "display_symbol": "aapl"}, {"label": "msft 1999-07-30 · 死叉·距0轴上穿999周·DIF回落46%", "symbol": "msft", "event_date": "1999-07-30", "entry_date": "1999-07-30", "pnl_pct": 34.30447012494362, "exc20": 26.25122637331452, "group": "C", "broken20": 0, "display_symbol": "msft"}, {"label": "msft 1999-10-01 · 死叉·距0轴上穿999周·DIF回落57%", "symbol": "msft", "event_date": "1999-10-01", "entry_date": "1999-10-01", "pnl_pct": 5.643326259297443, "exc20": 0.0575883017053246, "group": "C", "broken20": 1, "display_symbol": "msft"}, {"label": "gs 2011-02-04 · 死叉·距0轴上穿15周·DIF回落25%", "symbol": "gs", "event_date": "2011-02-04", "entry_date": "2011-02-04", "pnl_pct": -20.205113396704867, "exc20": -17.79738851939371, "group": "A", "broken20": 1, "display_symbol": "gs"}, {"label": "gs 2023-01-06 · 死叉·距0轴上穿9周·DIF回落40%", "symbol": "gs", "event_date": "2023-01-06", "entry_date": "2023-01-06", "pnl_pct": -3.9337429260120738, "exc20": -12.577080284759344, "group": "C", "broken20": 1, "display_symbol": "gs"}, {"label": "gs 2023-03-03 · 死叉·距0轴上穿17周·DIF回落40%", "symbol": "gs", "event_date": "2023-03-03", "entry_date": "2023-03-03", "pnl_pct": -0.6861325237550897, "exc20": -13.40338414101403, "group": "C", "broken20": 1, "display_symbol": "gs"}, {"label": "mmm 2004-05-21 · 死叉·距0轴上穿999周·DIF回落48%", "symbol": "mmm", "event_date": "2004-05-21", "entry_date": "2004-05-21", "pnl_pct": -3.9745438998548432, "exc20": -7.235355382606079, "group": "C", "broken20": 1, "display_symbol": "mmm"}, {"label": "mmm 2010-11-12 · 死叉·距0轴上穿999周·DIF回落25%", "symbol": "mmm", "event_date": "2010-11-12", "entry_date": "2010-11-12", "pnl_pct": 9.320091110403595, "exc20": -2.5199539676340024, "group": "C", "broken20": 0, "display_symbol": "mmm"}, {"label": "mmm 2025-03-28 · 死叉·距0轴上穿53周·DIF回落38%", "symbol": "mmm", "event_date": "2025-03-28", "entry_date": "2025-03-28", "pnl_pct": 5.727935879351032, "exc20": -10.411824484861157, "group": "C", "broken20": 1, "display_symbol": "mmm"}, {"label": "ms 2007-06-29 · 死叉·距0轴上穿999周·DIF回落41%", "symbol": "ms", "event_date": "2007-06-29", "entry_date": "2007-06-29", "pnl_pct": -23.435546730763, "exc20": -20.810856994630864, "group": "C", "broken20": 1, "display_symbol": "ms"}, {"label": "vrtx 2018-03-29 · 死叉·距0轴上穿55周·DIF回落47%", "symbol": "vrtx", "event_date": "2018-03-29", "entry_date": "2018-03-29", "pnl_pct": 8.037800004250517, "exc20": -0.7746332393770103, "group": "C", "broken20": 1, "display_symbol": "vrtx"}, {"label": "vrtx 2022-08-26 · 死叉·距0轴上穿35周·DIF回落27%", "symbol": "vrtx", "event_date": "2022-08-26", "entry_date": "2022-08-26", "pnl_pct": 6.837549796372522, "exc20": 7.660513246396206, "group": "C", "broken20": 0, "display_symbol": "vrtx"}, {"label": "vrtx 2022-12-16 · 死叉·距0轴上穿51周·DIF回落28%", "symbol": "vrtx", "event_date": "2022-12-16", "entry_date": "2022-12-16", "pnl_pct": 14.202759277774655, "exc20": 6.131455330237934, "group": "C", "broken20": 1, "display_symbol": "vrtx"}, {"label": "vrtx 2023-10-27 · 死叉·距0轴上穿999周·DIF回落35%", "symbol": "vrtx", "event_date": "2023-10-27", "entry_date": "2023-10-27", "pnl_pct": 14.75174618390691, "exc20": -10.281748326344587, "group": "C", "broken20": 0, "display_symbol": "vrtx"}, {"label": "dhr 1991-05-10 · 死叉·距0轴上穿13周·DIF回落31%", "symbol": "dhr", "event_date": "1991-05-10", "entry_date": "1991-05-10", "pnl_pct": 3.896089618087517, "exc20": null, "group": "A", "broken20": 1, "display_symbol": "dhr"}, {"label": "dhr 2015-12-31 · 死叉·距0轴上穿999周·DIF回落29%", "symbol": "dhr", "event_date": "2015-12-31", "entry_date": "2015-12-31", "pnl_pct": 6.499601745255057, "exc20": 5.185089518194386, "group": "C", "broken20": 1, "display_symbol": "dhr"}, {"label": "dhr 2018-03-02 · 死叉·距0轴上穿26周·DIF回落25%", "symbol": "dhr", "event_date": "2018-03-02", "entry_date": "2018-03-02", "pnl_pct": 5.614824598726687, "exc20": 0.7905762490689305, "group": "C", "broken20": 0, "display_symbol": "dhr"}, {"label": "axp 1999-02-12 · 未死叉·距0轴上穿11周·DIF回落26%", "symbol": "axp", "event_date": "1999-02-12", "entry_date": "1999-02-12", "pnl_pct": 38.20787897788796, "exc20": 24.82769564409504, "group": "B", "broken20": 0, "display_symbol": "axp"}, {"label": "axp 1999-09-24 · 死叉·距0轴上穿43周·DIF回落35%", "symbol": "axp", "event_date": "1999-09-24", "entry_date": "1999-09-24", "pnl_pct": 12.905492158378015, "exc20": 4.077409592607872, "group": "C", "broken20": 0, "display_symbol": "axp"}, {"label": "axp 2007-07-06 · 死叉·距0轴上穿46周·DIF回落26%", "symbol": "axp", "event_date": "2007-07-06", "entry_date": "2007-07-06", "pnl_pct": -9.335080917272553, "exc20": -3.9969960061464462, "group": "C", "broken20": 1, "display_symbol": "axp"}, {"label": "axp 2017-09-08 · 死叉·距0轴上穿46周·DIF回落28%", "symbol": "axp", "event_date": "2017-09-08", "entry_date": "2017-09-08", "pnl_pct": 19.13057041721993, "exc20": 1.7348464128206444, "group": "C", "broken20": 0, "display_symbol": "axp"}, {"label": "axp 2018-12-07 · 死叉·距0轴上穿999周·DIF回落28%", "symbol": "axp", "event_date": "2018-12-07", "entry_date": "2018-12-07", "pnl_pct": 11.079231078321785, "exc20": -1.3855495816332386, "group": "C", "broken20": 1, "display_symbol": "axp"}, {"label": "axp 2022-04-14 · 死叉·距0轴上穿999周·DIF回落35%", "symbol": "axp", "event_date": "2022-04-14", "entry_date": "2022-04-14", "pnl_pct": -17.006765264384207, "exc20": -6.989254783686839, "group": "C", "broken20": 1, "display_symbol": "axp"}, {"label": "axp 2024-09-06 · 死叉·距0轴上穿40周·DIF回落36%", "symbol": "axp", "event_date": "2024-09-06", "entry_date": "2024-09-06", "pnl_pct": 32.31875332070908, "exc20": 19.081755578784083, "group": "C", "broken20": 0, "display_symbol": "axp"}, {"label": "ibm 2018-02-23 · 未死叉·距0轴上穿12周·DIF回落35%", "symbol": "ibm", "event_date": "2018-02-23", "entry_date": "2018-02-23", "pnl_pct": -5.144286525599573, "exc20": -7.787179831838098, "group": "B", "broken20": 1, "display_symbol": "ibm"}, {"label": "trow 1992-09-18 · 未死叉·距0轴上穿10周·DIF回落67%", "symbol": "trow", "event_date": "1992-09-18", "entry_date": "1992-09-18", "pnl_pct": 23.34351869265121, "exc20": null, "group": "B", "broken20": 1, "display_symbol": "trow"}, {"label": "trow 1996-05-03 · 死叉·距0轴上穿999周·DIF回落46%", "symbol": "trow", "event_date": "1996-05-03", "entry_date": "1996-05-03", "pnl_pct": 18.798175365883356, "exc20": 10.950668891445403, "group": "C", "broken20": 1, "display_symbol": "trow"}, {"label": "trow 2002-04-19 · 死叉·距0轴上穿14周·DIF回落29%", "symbol": "trow", "event_date": "2002-04-19", "entry_date": "2002-04-19", "pnl_pct": -27.47490052810205, "exc20": -7.484647823555992, "group": "A", "broken20": 1, "display_symbol": "trow"}, {"label": "trow 2018-06-29 · 死叉·距0轴上穿999周·DIF回落38%", "symbol": "trow", "event_date": "2018-06-29", "entry_date": "2018-06-29", "pnl_pct": -16.88926207066227, "exc20": -18.249200686172134, "group": "C", "broken20": 1, "display_symbol": "trow"}, {"label": "trow 2020-11-06 · 死叉·距0轴上穿22周·DIF回落29%", "symbol": "trow", "event_date": "2020-11-06", "entry_date": "2020-11-06", "pnl_pct": 34.8254742221638, "exc20": 20.885996019653728, "group": "C", "broken20": 0, "display_symbol": "trow"}, {"label": "ge 1980-09-26 · 死叉·距0轴上穿15周·DIF回落28%", "symbol": "ge", "event_date": "1980-09-26", "entry_date": "1980-09-26", "pnl_pct": 15.894951212879626, "exc20": null, "group": "A", "broken20": 0, "display_symbol": "ge"}, {"label": "ge 1997-12-26 · 死叉·距0轴上穿999周·DIF回落51%", "symbol": "ge", "event_date": "1997-12-26", "entry_date": "1997-12-26", "pnl_pct": 17.640259738836672, "exc20": -1.093806185880375, "group": "C", "broken20": 0, "display_symbol": "ge"}, {"label": "ge 2013-08-23 · 死叉·距0轴上穿999周·DIF回落30%", "symbol": "ge", "event_date": "2013-08-23", "entry_date": "2013-08-23", "pnl_pct": 15.170148871790667, "exc20": 3.5135976462034915, "group": "C", "broken20": 0, "display_symbol": "ge"}, {"label": "ge 2014-07-11 · 死叉·距0轴上穿999周·DIF回落59%", "symbol": "ge", "event_date": "2014-07-11", "entry_date": "2014-07-11", "pnl_pct": 0.6166457449408691, "exc20": -5.262237148473514, "group": "C", "broken20": 1, "display_symbol": "ge"}, {"label": "regn 2023-03-10 · 死叉·距0轴上穿25周·DIF回落35%", "symbol": "regn", "event_date": "2023-03-10", "entry_date": "2023-03-10", "pnl_pct": -0.1204835157954886, "exc20": -19.41451532660884, "group": "C", "broken20": 1, "display_symbol": "regn"}, {"label": "regn 2023-10-20 · 未死叉·距0轴上穿10周·DIF回落30%", "symbol": "regn", "event_date": "2023-10-20", "entry_date": "2023-10-20", "pnl_pct": 19.83499860894016, "exc20": -2.151436530792882, "group": "B", "broken20": 1, "display_symbol": "regn"}, {"label": "sbux 2021-08-13 · 死叉·距0轴上穿50周·DIF回落29%", "symbol": "sbux", "event_date": "2021-08-13", "entry_date": "2021-08-13", "pnl_pct": 0.6118060537954051, "exc20": -6.617189096510967, "group": "C", "broken20": 1, "display_symbol": "sbux"}, {"label": "cat 2005-03-24 · 死叉·距0轴上穿25周·DIF回落30%", "symbol": "cat", "event_date": "2005-03-24", "entry_date": "2005-03-24", "pnl_pct": 18.22045436395112, "exc20": 12.742675499732137, "group": "C", "broken20": 1, "display_symbol": "cat"}, {"label": "cat 2012-04-05 · 死叉·距0轴上穿13周·DIF回落27%", "symbol": "cat", "event_date": "2012-04-05", "entry_date": "2012-04-05", "pnl_pct": -16.50027670741344, "exc20": -18.255177545692668, "group": "A", "broken20": 1, "display_symbol": "cat"}], "ui": {"subtitle": "蓝筹周线高位死叉回踩EMA20 · 事件研究", "active_tab": "overview", "tabs": [{"id": "overview", "label": "汇总"}, {"id": "events", "label": "事件明细"}], "topbar_menu": [], "window_status": "", "language": "zh", "i18n": {"brand": "回测", "drawdown_pane": "回撤", "tooltip_equity": "权益", "tooltip_return": "收益", "tooltip_drawdown": "回撤", "empty_data": "暂无数据", "empty_trades": "暂无已平仓交易", "empty_content": "暂无内容", "trades_col_symbol": "标的", "trades_col_event": "事件", "trades_col_side": "方向", "trades_col_entry_date": "开仓日", "trades_col_exit_date": "平仓日", "trades_col_holding": "持有 Bar", "trades_col_size": "数量", "trades_col_entry_price": "开仓价", "trades_col_exit_price": "平仓价", "trades_col_pnl": "盈亏", "trades_col_pnl_pct": "盈亏 %", "side_long": "多", "side_short": "空", "marker_buy": "买入", "marker_sell": "卖出", "marker_short": "做空", "marker_cover": "平空", "marker_event": "事件", "marker_pnl": "盈亏"}}, "modules": [{"type": "metric_table", "tab": "overview", "title": "事件指标", "subtitle": "蓝筹周线：0轴上方高位刚死叉 × 回踩EMA20支撑 · 事件研究 · 策略概览", "columns": ["指标", "全部"], "rows": [{"metric": "累计事件收益", "values": [{"main": "5.89%", "secondary": null, "raw": 5.887925246989844}]}, {"metric": "平均收益", "values": [{"main": "5.89%", "secondary": null, "raw": 5.887925246989844}]}, {"metric": "中位数收益", "values": [{"main": "6.77%", "secondary": null, "raw": 6.773259956535494}]}, {"metric": "事件数", "values": [{"main": "97", "secondary": null, "raw": null}]}, {"metric": "胜率", "values": [{"main": "71.28%", "secondary": null, "raw": 71.27659574468085}]}, {"metric": "最大单笔", "values": [{"main": "44.15%", "secondary": null, "raw": 44.14534293961858}]}, {"metric": "最小单笔", "values": [{"main": "-51.46%", "secondary": null, "raw": -51.457761151690775}]}]}, {"type": "metric_table", "tab": "overview", "title": "三组对照：收益 / 胜率 / 超额 / 破位率（周线级别）", "subtitle": "公共条件：0轴上方 + EMA多头 + 跌破EMA10收于EMA20上方1~3% + DIF较峰值回落≥25%", "columns": ["指标", "A 死叉·10~16周", "B 未死叉·10~16周", "C 死叉·窗口外"], "rows": [{"metric": "T+5 平均收益 (%)", "values": [{"main": "1.55", "raw": 1.5548614022211242}, {"main": "0.90", "raw": 0.8994213852851104}, {"main": "0.58", "raw": 0.5801284701622103}]}, {"metric": "T+5 中位数 (%)", "values": [{"main": "2.23", "raw": 2.2340987572900484}, {"main": "-1.26", "raw": -1.2579367480712644}, {"main": "0.78", "raw": 0.7787828260258145}]}, {"metric": "T+5 胜率 (%)", "values": [{"main": "64.3", "raw": 64.28571428571429}, {"main": "36.4", "raw": 36.36363636363637}, {"main": "56.3", "raw": 56.33802816901409}]}, {"metric": "T+5 超额均值 vs SPY (%)", "values": [{"main": "-1.24", "raw": -1.2384219235886726}, {"main": "-0.26", "raw": -0.26151370510850247}, {"main": "-0.77", "raw": -0.7685169722547764}]}, {"metric": "T+5 破位率(%)", "values": [{"main": "28.6", "raw": 28.57142857142857}, {"main": "72.7", "raw": 72.72727272727273}, {"main": "45.8", "raw": 45.83333333333333}]}, {"metric": "T+10 平均收益 (%)", "values": [{"main": "0.55", "raw": 0.5533383348379888}, {"main": "2.79", "raw": 2.792054957811772}, {"main": "1.83", "raw": 1.8291676264735126}]}, {"metric": "T+10 中位数 (%)", "values": [{"main": "-1.01", "raw": -1.0125655465423988}, {"main": "0.25", "raw": 0.2507961377485879}, {"main": "1.12", "raw": 1.1177183593144235}]}, {"metric": "T+10 胜率 (%)", "values": [{"main": "50.0", "raw": 50.0}, {"main": "63.6", "raw": 63.63636363636363}, {"main": "54.9", "raw": 54.929577464788736}]}, {"metric": "T+10 超额均值 vs SPY (%)", "values": [{"main": "-4.78", "raw": -4.7818860419993685}, {"main": "-1.36", "raw": -1.355401717520024}, {"main": "-1.39", "raw": -1.3936594455009588}]}, {"metric": "T+10 破位率(%)", "values": [{"main": "57.1", "raw": 57.14285714285714}, {"main": "72.7", "raw": 72.72727272727273}, {"main": "58.3", "raw": 58.333333333333336}]}, {"metric": "T+20 平均收益 (%)", "values": [{"main": "3.69", "raw": 3.6861301516631646}, {"main": "2.63", "raw": 2.62982333230429}, {"main": "6.81", "raw": 6.808817494143958}]}, {"metric": "T+20 中位数 (%)", "values": [{"main": "6.87", "raw": 6.8747444622112575}, {"main": "9.68", "raw": 9.675809984965}, {"main": "6.11", "raw": 6.113768812303045}]}, {"metric": "T+20 胜率 (%)", "values": [{"main": "61.5", "raw": 61.53846153846154}, {"main": "63.6", "raw": 63.63636363636363}, {"main": "74.3", "raw": 74.28571428571429}]}, {"metric": "T+20 超额均值 vs SPY (%)", "values": [{"main": "-0.22", "raw": -0.21976101268907158}, {"main": "-0.38", "raw": -0.37518360455484306}, {"main": "-0.83", "raw": -0.8348614134019561}]}, {"metric": "T+20 破位率(%)", "values": [{"main": "57.1", "raw": 57.14285714285714}, {"main": "72.7", "raw": 72.72727272727273}, {"main": "63.9", "raw": 63.888888888888886}]}, {"metric": "T+60 平均收益 (%)", "values": [{"main": "19.46", "raw": 19.461981305966553}, {"main": "20.00", "raw": 20.00340679187239}, {"main": "17.01", "raw": 17.009367548961066}]}, {"metric": "T+60 中位数 (%)", "values": [{"main": "22.24", "raw": 22.24103884711908}, {"main": "20.47", "raw": 20.46659963122881}, {"main": "16.30", "raw": 16.30316626485493}]}, {"metric": "T+60 胜率 (%)", "values": [{"main": "69.2", "raw": 69.23076923076923}, {"main": "60.0", "raw": 60.0}, {"main": "70.6", "raw": 70.58823529411765}]}, {"metric": "T+60 超额均值 vs SPY (%)", "values": [{"main": "2.42", "raw": 2.417929247281548}, {"main": "-0.64", "raw": -0.6355040216964049}, {"main": "-0.22", "raw": -0.22433962774485927}]}, {"metric": "T+60 破位率(%)", "values": [{"main": "57.1", "raw": 57.14285714285714}, {"main": "81.8", "raw": 81.81818181818183}, {"main": "70.8", "raw": 70.83333333333334}]}]}, {"type": "line_chart", "tab": "overview", "title": "事件后平均收益阶梯（T+5 → T+60 周）", "subtitle": "纵轴：平均收益 %", "series": [{"name": "死叉+10~16周窗口", "color": "#0072B2", "points": [{"date": "T+5", "value": 1.55}, {"date": "T+10", "value": 0.55}, {"date": "T+20", "value": 3.69}, {"date": "T+60", "value": 19.46}]}, {"name": "未死叉+10~16周窗口", "color": "#E69F00", "points": [{"date": "T+5", "value": 0.9}, {"date": "T+10", "value": 2.79}, {"date": "T+20", "value": 2.63}, {"date": "T+60", "value": 20.0}]}, {"name": "死叉+窗口外", "color": "#D55E00", "points": [{"date": "T+5", "value": 0.58}, {"date": "T+10", "value": 1.83}, {"date": "T+20", "value": 6.81}, {"date": "T+60", "value": 17.01}]}]}, {"type": "custom_html", "tab": "overview", "title": "参数敏感性：DIF回落阈值扫描 × 距0轴上穿窗口分档（T+20）", "html": "\n\u003cdiv class=\"bt-custom-sens-wrap\" style=\"display:flex;flex-wrap:wrap;gap:20px;\"\u003e\n  \u003cdiv style=\"flex:1 1 46%;min-width:320px;\"\u003e\n    \u003cdiv id=\"bt-custom-sens-dif\" style=\"height:280px;\"\u003e\u003c/div\u003e\n  \u003c/div\u003e\n  \u003cdiv style=\"flex:1 1 46%;min-width:320px;\"\u003e\n    \u003cdiv id=\"bt-custom-sens-win\" style=\"height:280px;\"\u003e\u003c/div\u003e\n  \u003c/div\u003e\n\u003c/div\u003e\n\u003cscript src=\"https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js\"\u003e\u003c/script\u003e\n\u003cscript\u003e\n(function(){\n  var c1 = echarts.init(document.getElementById('bt-custom-sens-dif'));\n  c1.setOption({\n    tooltip: {trigger:'axis'},\n    legend: {data:['n','T+20均值%'], top:0, textStyle:{color:'#333'}},\n    grid: {left:44,right:56,top:30,bottom:30},\n    xAxis: {type:'category', data:[\"\u003e=0.00\", \"\u003e=0.15\", \"\u003e=0.25\", \"\u003e=0.35\"], axisLabel:{color:'#333'}},\n    yAxis: [\n      {type:'value', name:'n', nameTextStyle:{color:'#555'}, axisLabel:{color:'#555'}},\n      {type:'value', name:'均值%', nameTextStyle:{color:'#555'}, axisLabel:{color:'#555'}}\n    ],\n    series: [\n      {name:'n', type:'bar', data:[37, 37, 14, 1], barWidth:'40%', itemStyle:{color:'#B0BEC5'},\n        label:{show:true, position:'top', color:'#333'}},\n      {name:'T+20均值%', type:'line', yAxisIndex:1, data:[2.63, 2.63, 0.12, -46.3], itemStyle:{color:'#0072B2'},\n        label:{show:true, position:'top', formatter:'{c}%', color:'#333'}}\n    ]\n  });\n  var c2 = echarts.init(document.getElementById('bt-custom-sens-win'));\n  c2.setOption({\n    tooltip: {trigger:'axis'},\n    legend: {data:['n','T+20均值%','胜率%'], top:0, textStyle:{color:'#333'}},\n    grid: {left:44,right:56,top:30,bottom:30},\n    xAxis: {type:'category', data:[\"5-10w\", \"10-16w\", \"16-24w\", \"24-40w\"], axisLabel:{color:'#333'}},\n    yAxis: [\n      {type:'value', name:'n', nameTextStyle:{color:'#555'}, axisLabel:{color:'#555'}},\n      {type:'value', name:'%', min:0, max:100, nameTextStyle:{color:'#555'}, axisLabel:{color:'#555'}}\n    ],\n    series: [\n      {name:'n', type:'bar', data:[2, 37, 75, 103], barWidth:'36%', itemStyle:{color:'#B0BEC5'},\n        label:{show:true, position:'top', color:'#333'}},\n      {name:'T+20均值%', type:'line', yAxisIndex:1, data:[4.26, 2.63, 7.07, 6.65], itemStyle:{color:'#0072B2'},\n        label:{show:true, position:'top', formatter:'{c}%', color:'#333'}},\n      {name:'胜率%', type:'line', yAxisIndex:1, data:[50.0, 62.2, 77.3, 74.8], itemStyle:{color:'#E69F00', type:'dashed'},\n        label:{show:true, position:'bottom', formatter:'{c}%', color:'#333'}}\n    ]\n  });\n  window.addEventListener('resize', function(){c1.resize(); c2.resize();});\n})();\n\u003c/script\u003e\n"}, {"type": "custom_html", "tab": "overview", "title": "市场环境分层（事件周前 8 周 SPY 收益）· T+20", "html": "\n\u003ctable style=\"width:100%;border-collapse:collapse;font-size:12.5px;\"\u003e\n  \u003cthead\u003e\u003ctr style=\"border-bottom:1px solid #d5d5d5;\"\u003e\n    \u003cth style=\"text-align:left;padding:6px 4px;\"\u003e分组\u003c/th\u003e\u003cth\u003e环境(SPY前8周)\u003c/th\u003e\u003cth\u003en\u003c/th\u003e\n    \u003cth\u003eT+20均值\u003c/th\u003e\u003cth\u003e超额\u003c/th\u003e\u003cth\u003e胜率\u003c/th\u003e\u003cth\u003e破位率\u003c/th\u003e\u003c/tr\u003e\u003c/thead\u003e\n  \u003ctbody\u003e\u003ctr\u003e\u003ctd\u003e死叉+10~16周窗口\u003c/td\u003e\u003ctd\u003e\u003c-3%\u003c/td\u003e\u003ctd\u003e1\u003c/td\u003e\u003ctd\u003e-10.76%\u003c/td\u003e\u003ctd\u003e-8.64%\u003c/td\u003e\u003ctd\u003e0.0%\u003c/td\u003e\u003ctd\u003e100.0%\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003e死叉+10~16周窗口\u003c/td\u003e\u003ctd\u003e-3~0%\u003c/td\u003e\u003ctd\u003e2\u003c/td\u003e\u003ctd\u003e+0.71%\u003c/td\u003e\u003ctd\u003e-0.81%\u003c/td\u003e\u003ctd\u003e50.0%\u003c/td\u003e\u003ctd\u003e100.0%\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003e死叉+10~16周窗口\u003c/td\u003e\u003ctd\u003e0~3%\u003c/td\u003e\u003ctd\u003e1\u003c/td\u003e\u003ctd\u003e+30.80%\u003c/td\u003e\u003ctd\u003e+22.05%\u003c/td\u003e\u003ctd\u003e100.0%\u003c/td\u003e\u003ctd\u003e0.0%\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003e死叉+10~16周窗口\u003c/td\u003e\u003ctd\u003e\u003e3%\u003c/td\u003e\u003ctd\u003e6\u003c/td\u003e\u003ctd\u003e-0.96%\u003c/td\u003e\u003ctd\u003e-2.33%\u003c/td\u003e\u003ctd\u003e50.0%\u003c/td\u003e\u003ctd\u003e57.1%\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003e未死叉+10~16周窗口\u003c/td\u003e\u003ctd\u003e\u003c-3%\u003c/td\u003e\u003ctd\u003e4\u003c/td\u003e\u003ctd\u003e-16.67%\u003c/td\u003e\u003ctd\u003e-11.43%\u003c/td\u003e\u003ctd\u003e25.0%\u003c/td\u003e\u003ctd\u003e100.0%\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003e未死叉+10~16周窗口\u003c/td\u003e\u003ctd\u003e-3~0%\u003c/td\u003e\u003ctd\u003e1\u003c/td\u003e\u003ctd\u003e+8.87%\u003c/td\u003e\u003ctd\u003e-0.56%\u003c/td\u003e\u003ctd\u003e100.0%\u003c/td\u003e\u003ctd\u003e0.0%\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003e未死叉+10~16周窗口\u003c/td\u003e\u003ctd\u003e0~3%\u003c/td\u003e\u003ctd\u003e4\u003c/td\u003e\u003ctd\u003e+6.30%\u003c/td\u003e\u003ctd\u003e+4.43%\u003c/td\u003e\u003ctd\u003e75.0%\u003c/td\u003e\u003ctd\u003e75.0%\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003e未死叉+10~16周窗口\u003c/td\u003e\u003ctd\u003e\u003e3%\u003c/td\u003e\u003ctd\u003e1\u003c/td\u003e\u003ctd\u003e+38.21%\u003c/td\u003e\u003ctd\u003e+24.83%\u003c/td\u003e\u003ctd\u003e100.0%\u003c/td\u003e\u003ctd\u003e0.0%\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003e死叉+窗口外\u003c/td\u003e\u003ctd\u003e\u003c-3%\u003c/td\u003e\u003ctd\u003e10\u003c/td\u003e\u003ctd\u003e+9.47%\u003c/td\u003e\u003ctd\u003e-2.81%\u003c/td\u003e\u003ctd\u003e80.0%\u003c/td\u003e\u003ctd\u003e60.0%\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003e死叉+窗口外\u003c/td\u003e\u003ctd\u003e-3~0%\u003c/td\u003e\u003ctd\u003e12\u003c/td\u003e\u003ctd\u003e+8.19%\u003c/td\u003e\u003ctd\u003e-1.00%\u003c/td\u003e\u003ctd\u003e83.3%\u003c/td\u003e\u003ctd\u003e76.9%\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003e死叉+窗口外\u003c/td\u003e\u003ctd\u003e0~3%\u003c/td\u003e\u003ctd\u003e17\u003c/td\u003e\u003ctd\u003e+5.84%\u003c/td\u003e\u003ctd\u003e-0.00%\u003c/td\u003e\u003ctd\u003e58.8%\u003c/td\u003e\u003ctd\u003e58.8%\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003e死叉+窗口外\u003c/td\u003e\u003ctd\u003e\u003e3%\u003c/td\u003e\u003ctd\u003e27\u003c/td\u003e\u003ctd\u003e+5.91%\u003c/td\u003e\u003ctd\u003e-0.55%\u003c/td\u003e\u003ctd\u003e74.1%\u003c/td\u003e\u003ctd\u003e60.7%\u003c/td\u003e\u003c/tr\u003e\u003c/tbody\u003e\n\u003c/table\u003e\n"}, {"type": "text", "tab": "overview", "title": "一句话结论", "text": "**在你的信号定义下（0轴上方高位刚死叉 + 多头排列未破坏 + 跌破EMA10但收于EMA20上方1~3% + 距0轴上穿10~16周），支撑位的有效性没有被削弱，破位率也没有被抬升。**\n- A组（n=14，严格信号）T+20 平均 **+3.69%** / 中位 6.87% / 胜率 61.5%；对 SPY 超额 **-0.22pp**——与随机周买入基线（+5.79%/64.1%）基本打平，支撑没有失效。\n- **破位率 57.1% 反而是三组最低**（B 未死叉 72.7%、C 窗口外 63.9%）——「刚死叉」没有让 EMA20 更容易被打穿。\n- 但两个重要反转：①**10~16周「首次回调」窗口是表现最差的一档**（放宽后仅 +2.63%，而 16~24 周 +7.07%、24~40 周 +6.65%）；②窗口外死叉（C）胜率最高（74.3%）。逐层检验见敏感性模块。"}, {"type": "text", "tab": "overview", "title": "信号与分组口径（严格无前视）", "text": "- 频率：**周线级别**（周bar=每周最后交易日，复权OHLC，来自 data/\u003csym\u003e/\u003csym\u003e, W.csv）。\n- **MACD(12,26,9)**，DIF/DEA/Hist 均用「已完成周序列 + 当周 to-date close 递推」，不含未来信息。\n- 公共条件：DIF\u003e0 且 DEA\u003e0（0轴上方）；EMA10\u003eEMA20（多头排列未破坏）；close\u003cEMA10（已跌破10）；close/EMA20−1 ∈ [1%,3%]（勉强收于20上方）；DIF 较近26周峰值回落 ≥25%。\n- **死叉当周** = 本周 Hist\u003c0 且上周 Hist≥0（刚触发死叉）。\n- **窗口** = 距最近一次 DIF 上穿 0 轴 10~16 周（A/B 组）或窗口外（C 组，含更早/更晚）。\n- 破位率 = 事件后 T 周内周收盘最低 \u003c 事件周 EMA20×0.98；超额 = 个股 − SPY 同窗。"}, {"type": "text", "tab": "overview", "title": "关键敏感性结果（参数扫描）", "text": "- **DIF回落阈值**：≥0 或 ≥0.15 时「死叉+10~16周」样本从 37→37 例、fwd20 +2.63%/胜率62%；提到 ≥0.25 样本骤减到 14 例、fwd20 降至 +0.12%（≥0.35 仅 1 例）——**DIF回落≥25% 是主要样本杀手，且未带来收益提升**（敏感性模块柱图）。\n- **窗口分档**（死叉，无回落约束）：5-10w n=2；**10-16w n=37 fwd20 +2.63%**；16-24w n=75 **+7.07%/胜率77%**；24-40w n=103 **+6.65%/75%**——10~16 周是全部分档里最弱的一段。\n- **窗口内死叉 vs 未死叉**：死叉 n=37 +2.63% vs 未死叉 n=205 +4.11%——死叉在收益上略弱（约 −1.5pp），但**破位率反而更低**（A 57% vs B 73%）。"}, {"type": "text", "tab": "overview", "title": "破位后行为（A组内部）", "text": "- A 组 20 周内破位（n=7）fwd20 平均 **−9.95%**，未破位（n=6）**+19.59%**——分化极大，破位与否决定短期盈亏；\n- 但破位组 fwd60（约 60 周）平均仍能收回至 **+8.1%**、未破位 +32.7%——周线级别破位后「收回」概率仍不低（与报告31的深死叉逻辑一致）；\n- 提示：EMA20 上方 1~3% 缓冲意味着「破位」需要跌穿 2%~4% 才算，一旦触发往往是真的破位，止损纪律比胜率更重要。"}, {"type": "text", "tab": "overview", "title": "已知局限", "text": "- **样本量极小**：A 组仅 14 例、B 组 11 例，统计功效低，所有均值/t 值仅作方向参考；加严 DIF回落≥25% 后 A 组实际 T+20 有效样本 13 例。\n- **三组并非等概率抽样**：C（窗口外，n=72）天然包含更长的牛市段，样本构成不同。\n- 幸存者偏差：47 只仍存续蓝筹，不适用于退市/衰败股；事件历史最早至 1980 年，早年 SPY 超额有缺口（exc 部分为 NaN）。\n- 事件聚集：同周≥3股占 0% 事件，t 值视为上限。\n- 参数未寻优；周线「当周」值为 to-date 递推，与收盘后实际 MACD 略有差异。"}, {"type": "text", "tab": "overview", "title": "下一步建议", "text": "- 若把「首次回调」当入场理由，数据更支持 **16~40 周** 而非 10~16 周；10~16 周是动能最不稳定段。\n- 建议弱化 DIF 回落阈值（≥0.15 即可），以换取样本量；或改用「跌幅/回撤深度」等连续变量替代硬阈值。\n- 破位后 fwd60 收回率高，可专门验证「破位 EMA20 后周收盘收回」作为二次买点的收益/回撤（承接报告31 深死叉超跌反弹线索）。\n- 扩展标的池（SP500 全成分、含已退市）提升样本并控制幸存者偏差。"}, {"type": "trades_table", "tab": "events", "title": "事件明细（共 97 条：分组 / 距0轴上穿 / DIF回落 / T+20 / 超额 / 破位）", "subtitle": "event = 回踩EMA20周；T+20 为事件周后第 20 周个股收益，超额为相对 SPY 同窗", "rows": [{"label": "ko 2011-05-27 · 死叉·距0轴上穿43周·DIF回落39%", "symbol": "ko", "event_date": "2011-05-27", "entry_date": "2011-05-27", "pnl_pct": 3.454115302744309, "exc20": 10.715819499186209, "group": "C", "broken20": 0, "display_symbol": "ko"}, {"label": "ko 2026-04-17 · 死叉·距0轴上穿23周·DIF回落28%", "symbol": "ko", "event_date": "2026-04-17", "entry_date": "2026-04-17", "pnl_pct": null, "exc20": null, "group": "C", "broken20": 0, "display_symbol": "ko"}, {"label": "brk.b 2020-11-06 · 死叉·距0轴上穿11周·DIF回落31%", "symbol": "brk.b", "event_date": "2020-11-06", "entry_date": "2020-11-06", "pnl_pct": 22.94468829768908, "exc20": 9.005210095179006, "group": "A", "broken20": 0, "display_symbol": "brk.b"}, {"label": "jnj 1996-08-30 · 死叉·距0轴上穿999周·DIF回落47%", "symbol": "jnj", "event_date": "1996-08-30", "entry_date": "1996-08-30", "pnl_pct": 4.705715109532416, "exc20": -15.21934570381229, "group": "C", "broken20": 1, "display_symbol": "jnj"}, {"label": "mcd 2005-10-21 · 未死叉·距0轴上穿10周·DIF回落25%", "symbol": "mcd", "event_date": "2005-10-21", "entry_date": "2005-10-21", "pnl_pct": 8.8695696067286, "exc20": -0.5621112357529601, "group": "B", "broken20": 0, "display_symbol": "mcd"}, {"label": "mcd 2020-11-13 · 死叉·距0轴上穿15周·DIF回落25%", "symbol": "mcd", "event_date": "2020-11-13", "entry_date": "2020-11-13", "pnl_pct": 6.8747444622112575, "exc20": -5.841058745835447, "group": "A", "broken20": 0, "display_symbol": "mcd"}, {"label": "pg 2023-09-08 · 死叉·距0轴上穿24周·DIF回落36%", "symbol": "pg", "event_date": "2023-09-08", "entry_date": "2023-09-08", "pnl_pct": 3.392276793875104, "exc20": -6.841252918563989, "group": "C", "broken20": 1, "display_symbol": "pg"}, {"label": "pep 1992-02-28 · 死叉·距0轴上穿10周·DIF回落31%", "symbol": "pep", "event_date": "1992-02-28", "entry_date": "1992-02-28", "pnl_pct": 12.461769619725429, "exc20": null, "group": "A", "broken20": 0, "display_symbol": "pep"}, {"label": "pep 1996-07-12 · 死叉·距0轴上穿999周·DIF回落26%", "symbol": "pep", "event_date": "1996-07-12", "entry_date": "1996-07-12", "pnl_pct": -8.65563593055575, "exc20": -27.001165915503865, "group": "C", "broken20": 1, "display_symbol": "pep"}, {"label": "pep 2025-11-14 · 未死叉·距0轴上穿12周·DIF回落27%", "symbol": "pep", "event_date": "2025-11-14", "entry_date": "2025-11-14", "pnl_pct": 9.675809984965, "exc20": 11.516127495466954, "group": "B", "broken20": 0, "display_symbol": "pep"}, {"label": "cnp 2026-07-17 · 死叉·距0轴上穿999周·DIF回落38%", "symbol": "cnp", "event_date": "2026-07-17", "entry_date": "2026-07-17", "pnl_pct": null, "exc20": null, "group": "C", "broken20": 1, "display_symbol": "cnp"}, {"label": "xel 2025-03-07 · 死叉·距0轴上穿31周·DIF回落45%", "symbol": "xel", "event_date": "2025-03-07", "entry_date": "2025-03-07", "pnl_pct": 8.643886879779284, "exc20": -2.6399144057801074, "group": "C", "broken20": 0, "display_symbol": "xel"}, {"label": "xel 2025-05-23 · 死叉·距0轴上穿42周·DIF回落54%", "symbol": "xel", "event_date": "2025-05-23", "entry_date": "2025-05-23", "pnl_pct": 17.944249702124427, "exc20": 4.534649229810951, "group": "C", "broken20": 1, "display_symbol": "xel"}, {"label": "mo 1977-12-02 · 死叉·距0轴上穿20周·DIF回落27%", "symbol": "mo", "event_date": "1977-12-02", "entry_date": "1977-12-02", "pnl_pct": 1.5942526499985066, "exc20": null, "group": "C", "broken20": 1, "display_symbol": "mo"}, {"label": "mo 1990-08-17 · 死叉·距0轴上穿20周·DIF回落26%", "symbol": "mo", "event_date": "1990-08-17", "entry_date": "1990-08-17", "pnl_pct": 11.104147665546948, "exc20": null, "group": "C", "broken20": 1, "display_symbol": "mo"}, {"label": "mo 1992-02-21 · 死叉·距0轴上穿999周·DIF回落30%", "symbol": "mo", "event_date": "1992-02-21", "entry_date": "1992-02-21", "pnl_pct": 6.986576481352325, "exc20": null, "group": "C", "broken20": 0, "display_symbol": "mo"}, {"label": "mo 1997-03-27 · 死叉·距0轴上穿20周·DIF回落26%", "symbol": "mo", "event_date": "1997-03-27", "entry_date": "1997-03-27", "pnl_pct": 16.66372651607897, "exc20": -0.3892766777862739, "group": "C", "broken20": 1, "display_symbol": "mo"}, {"label": "mo 1997-07-11 · 死叉·距0轴上穿35周·DIF回落36%", "symbol": "mo", "event_date": "1997-07-11", "entry_date": "1997-07-11", "pnl_pct": 1.36088394675149, "exc20": -3.2092930766171257, "group": "C", "broken20": 1, "display_symbol": "mo"}, {"label": "mo 2013-07-26 · 死叉·距0轴上穿999周·DIF回落30%", "symbol": "mo", "event_date": "2013-07-26", "entry_date": "2013-07-26", "pnl_pct": 4.76268583433237, "exc20": -1.072657395172727, "group": "C", "broken20": 1, "display_symbol": "mo"}, {"label": "mo 2017-07-14 · 死叉·距0轴上穿999周·DIF回落41%", "symbol": "mo", "event_date": "2017-07-14", "entry_date": "2017-07-14", "pnl_pct": -6.246715224038701, "exc20": -14.477871763158111, "group": "C", "broken20": 1, "display_symbol": "mo"}, {"label": "trv 1997-10-31 · 死叉·距0轴上穿57周·DIF回落32%", "symbol": "trv", "event_date": "1997-10-31", "entry_date": "1997-10-31", "pnl_pct": 16.388696953362313, "exc20": -3.7787606127862814, "group": "C", "broken20": 1, "display_symbol": "trv"}, {"label": "trv 2007-06-15 · 死叉·距0轴上穿58周·DIF回落45%", "symbol": "trv", "event_date": "2007-06-15", "entry_date": "2007-06-15", "pnl_pct": -2.221446027905416, "exc20": -1.468380201881769, "group": "C", "broken20": 1, "display_symbol": "trv"}, {"label": "trv 2010-04-16 · 死叉·距0轴上穿45周·DIF回落42%", "symbol": "trv", "event_date": "2010-04-16", "entry_date": "2010-04-16", "pnl_pct": -1.3934835481874577, "exc20": 5.260654759504879, "group": "C", "broken20": 1, "display_symbol": "trv"}, {"label": "wmt 1997-12-26 · 死叉·距0轴上穿42周·DIF回落39%", "symbol": "wmt", "event_date": "1997-12-26", "entry_date": "1997-12-26", "pnl_pct": 44.14534293961858, "exc20": 25.411277014901533, "group": "C", "broken20": 0, "display_symbol": "wmt"}, {"label": "wmt 2017-07-07 · 死叉·距0轴上穿17周·DIF回落30%", "symbol": "wmt", "event_date": "2017-07-07", "entry_date": "2017-07-07", "pnl_pct": 29.06905008997811, "exc20": 20.997483570208765, "group": "C", "broken20": 0, "display_symbol": "wmt"}, {"label": "vz 1997-07-25 · 死叉·距0轴上穿12周·DIF回落25%", "symbol": "vz", "event_date": "1997-07-25", "entry_date": "1997-07-25", "pnl_pct": 28.57200544203633, "exc20": 26.370621004349257, "group": "A", "broken20": 0, "display_symbol": "vz"}, {"label": "vz 2004-04-16 · 死叉·距0轴上穿13周·DIF回落27%", "symbol": "vz", "event_date": "2004-04-16", "entry_date": "2004-04-16", "pnl_pct": 10.183205853918032, "exc20": 11.325852939592965, "group": "A", "broken20": 1, "display_symbol": "vz"}, {"label": "vz 2006-04-28 · 未死叉·距0轴上穿10周·DIF回落30%", "symbol": "vz", "event_date": "2006-04-28", "entry_date": "2006-04-28", "pnl_pct": 9.751795134017735, "exc20": 8.49204672005661, "group": "B", "broken20": 1, "display_symbol": "vz"}, {"label": "vz 2026-04-24 · 死叉·距0轴上穿12周·DIF回落28%", "symbol": "vz", "event_date": "2026-04-24", "entry_date": "2026-04-24", "pnl_pct": null, "exc20": null, "group": "A", "broken20": 1, "display_symbol": "vz"}, {"label": "hon 1998-05-29 · 死叉·距0轴上穿15周·DIF回落27%", "symbol": "hon", "event_date": "1998-05-29", "entry_date": "1998-05-29", "pnl_pct": -10.762378882099268, "exc20": -8.63604011558462, "group": "A", "broken20": 1, "display_symbol": "hon"}, {"label": "hon 2013-12-13 · 死叉·距0轴上穿999周·DIF回落26%", "symbol": "hon", "event_date": "2013-12-13", "entry_date": "2013-12-13", "pnl_pct": 7.164797345021312, "exc20": 0.5365910255262119, "group": "C", "broken20": 0, "display_symbol": "hon"}, {"label": "pm 2012-08-24 · 死叉·距0轴上穿999周·DIF回落35%", "symbol": "pm", "event_date": "2012-08-24", "entry_date": "2012-08-24", "pnl_pct": 0.4820238799643661, "exc20": -4.74289073269778, "group": "C", "broken20": 1, "display_symbol": "pm"}, {"label": "amgn 2013-08-16 · 死叉·距0轴上穿999周·DIF回落43%", "symbol": "amgn", "event_date": "2013-08-16", "entry_date": "2013-08-16", "pnl_pct": 9.567633934150276, "exc20": -1.8592313853754483, "group": "C", "broken20": 0, "display_symbol": "amgn"}, {"label": "amgn 2013-11-08 · 死叉·距0轴上穿999周·DIF回落33%", "symbol": "amgn", "event_date": "2013-11-08", "entry_date": "2013-11-08", "pnl_pct": 7.472598546725906, "exc20": 1.815104607826834, "group": "C", "broken20": 0, "display_symbol": "amgn"}, {"label": "amgn 2024-02-23 · 死叉·距0轴上穿28周·DIF回落27%", "symbol": "amgn", "event_date": "2024-02-23", "entry_date": "2024-02-23", "pnl_pct": 15.215350789761196, "exc20": 4.24911405179067, "group": "C", "broken20": 1, "display_symbol": "amgn"}, {"label": "jpm 2024-08-02 · 死叉·距0轴上穿999周·DIF回落30%", "symbol": "jpm", "event_date": "2024-08-02", "entry_date": "2024-08-02", "pnl_pct": 20.044202595147965, "exc20": 8.398700086741773, "group": "C", "broken20": 0, "display_symbol": "jpm"}, {"label": "jpm 2026-01-16 · 死叉·距0轴上穿999周·DIF回落29%", "symbol": "jpm", "event_date": "2026-01-16", "entry_date": "2026-01-16", "pnl_pct": 0.4796080305305317, "exc20": -6.446380944344332, "group": "C", "broken20": 1, "display_symbol": "jpm"}, {"label": "hd 2000-04-14 · 死叉·距0轴上穿999周·DIF回落52%", "symbol": "hd", "event_date": "2000-04-14", "entry_date": "2000-04-14", "pnl_pct": -19.26360637421931, "exc20": -31.65995940468509, "group": "C", "broken20": 1, "display_symbol": "hd"}, {"label": "hd 2009-10-23 · 死叉·距0轴上穿28周·DIF回落26%", "symbol": "hd", "event_date": "2009-10-23", "entry_date": "2009-10-23", "pnl_pct": 25.47576626351158, "exc20": 18.072285259580514, "group": "C", "broken20": 1, "display_symbol": "hd"}, {"label": "hd 2015-09-04 · 死叉·距0轴上穿999周·DIF回落60%", "symbol": "hd", "event_date": "2015-09-04", "entry_date": "2015-09-04", "pnl_pct": 7.763837484434277, "exc20": 7.732572829127093, "group": "C", "broken20": 0, "display_symbol": "hd"}, {"label": "hd 2016-06-03 · 死叉·距0轴上穿999周·DIF回落42%", "symbol": "hd", "event_date": "2016-06-03", "entry_date": "2016-06-03", "pnl_pct": -3.408815041987989, "exc20": -6.214245169720989, "group": "C", "broken20": 1, "display_symbol": "hd"}, {"label": "hd 2016-08-26 · 死叉·距0轴上穿999周·DIF回落35%", "symbol": "hd", "event_date": "2016-08-26", "entry_date": "2016-08-26", "pnl_pct": 1.557876187099838, "exc20": -4.080629169907257, "group": "C", "broken20": 1, "display_symbol": "hd"}, {"label": "gild 2025-08-29 · 死叉·距0轴上穿56周·DIF回落46%", "symbol": "gild", "event_date": "2025-08-29", "entry_date": "2025-08-29", "pnl_pct": 12.072383982575596, "exc20": 4.231590999340673, "group": "C", "broken20": 0, "display_symbol": "gild"}, {"label": "mrk 2017-03-31 · 死叉·距0轴上穿51周·DIF回落43%", "symbol": "mrk", "event_date": "2017-03-31", "entry_date": "2017-03-31", "pnl_pct": -2.5147343435760083, "exc20": -5.973478360821449, "group": "C", "broken20": 0, "display_symbol": "mrk"}, {"label": "cvx 2008-01-11 · 死叉·距0轴上穿999周·DIF回落49%", "symbol": "cvx", "event_date": "2008-01-11", "entry_date": "2008-01-11", "pnl_pct": 10.87766209596712, "exc20": 10.239154502760291, "group": "C", "broken20": 1, "display_symbol": "cvx"}, {"label": "cvx 2013-08-09 · 死叉·距0轴上穿57周·DIF回落25%", "symbol": "cvx", "event_date": "2013-08-09", "entry_date": "2013-08-09", "pnl_pct": 3.938565448350495, "exc20": -5.770929667568803, "group": "C", "broken20": 1, "display_symbol": "cvx"}, {"label": "cvx 2018-07-13 · 死叉·距0轴上穿48周·DIF回落56%", "symbol": "cvx", "event_date": "2018-07-13", "entry_date": "2018-07-13", "pnl_pct": -2.2461580536242143, "exc20": -1.2832579188153723, "group": "C", "broken20": 1, "display_symbol": "cvx"}, {"label": "csco 2015-06-05 · 死叉·距0轴上穿59周·DIF回落36%", "symbol": "csco", "event_date": "2015-06-05", "entry_date": "2015-06-05", "pnl_pct": 4.320156394902752, "exc20": 4.399516130515247, "group": "C", "broken20": 1, "display_symbol": "csco"}, {"label": "xom 1996-06-14 · 死叉·距0轴上穿999周·DIF回落36%", "symbol": "xom", "event_date": "1996-06-14", "entry_date": "1996-06-14", "pnl_pct": 6.708970116698465, "exc20": 0.1423562792160826, "group": "C", "broken20": 0, "display_symbol": "xom"}, {"label": "xom 2023-10-20 · 未死叉·距0轴上穿10周·DIF回落50%", "symbol": "xom", "event_date": "2023-10-20", "entry_date": "2023-10-20", "pnl_pct": -0.6234035166974183, "exc20": -22.60983865643046, "group": "B", "broken20": 1, "display_symbol": "xom"}, {"label": "shw 2013-02-22 · 死叉·距0轴上穿999周·DIF回落30%", "symbol": "shw", "event_date": "2013-02-22", "entry_date": "2013-02-22", "pnl_pct": 19.002386258297776, "exc20": 7.642025095630878, "group": "C", "broken20": 0, "display_symbol": "shw"}, {"label": "blk 2012-04-27 · 死叉·距0轴上穿17周·DIF回落25%", "symbol": "blk", "event_date": "2012-04-27", "entry_date": "2012-04-27", "pnl_pct": -3.2436462790332965, "exc20": -8.666386487069245, "group": "C", "broken20": 1, "display_symbol": "blk"}, {"label": "blk 2021-11-19 · 死叉·距0轴上穿999周·DIF回落46%", "symbol": "blk", "event_date": "2021-11-19", "entry_date": "2021-11-19", "pnl_pct": -18.638242452242228, "exc20": -14.724253337954607, "group": "C", "broken20": 1, "display_symbol": "blk"}, {"label": "tmo 1991-11-29 · 死叉·距0轴上穿48周·DIF回落40%", "symbol": "tmo", "event_date": "1991-11-29", "entry_date": "1991-11-29", "pnl_pct": 5.214723179459635, "exc20": null, "group": "C", "broken20": 1, "display_symbol": "tmo"}, {"label": "tmo 2005-01-28 · 死叉·距0轴上穿12周·DIF回落31%", "symbol": "tmo", "event_date": "2005-01-28", "entry_date": "2005-01-28", "pnl_pct": -8.76778661223213, "exc20": -12.939140329320274, "group": "A", "broken20": 1, "display_symbol": "tmo"}, {"label": "tmo 2008-06-20 · 未死叉·距0轴上穿11周·DIF回落49%", "symbol": "tmo", "event_date": "2008-06-20", "entry_date": "2008-06-20", "pnl_pct": -34.43964565613731, "exc20": -6.185591811211079, "group": "B", "broken20": 1, "display_symbol": "tmo"}, {"label": "tmo 2012-04-27 · 未死叉·距0轴上穿10周·DIF回落30%", "symbol": "tmo", "event_date": "2012-04-27", "entry_date": "2012-04-27", "pnl_pct": 10.9095825002816, "exc20": 5.486842292245654, "group": "B", "broken20": 1, "display_symbol": "tmo"}, {"label": "aapl 2008-07-03 · 未死叉·距0轴上穿10周·DIF回落54%", "symbol": "aapl", "event_date": "2008-07-03", "entry_date": "2008-07-03", "pnl_pct": -51.457761151690775, "exc20": -14.778390131387212, "group": "B", "broken20": 1, "display_symbol": "aapl"}, {"label": "aapl 2016-11-18 · 死叉·距0轴上穿14周·DIF回落30%", "symbol": "aapl", "event_date": "2016-11-18", "entry_date": "2016-11-18", "pnl_pct": 30.80269359162564, "exc20": 22.05415891337077, "group": "A", "broken20": 0, "display_symbol": "aapl"}, {"label": "msft 1999-07-30 · 死叉·距0轴上穿999周·DIF回落46%", "symbol": "msft", "event_date": "1999-07-30", "entry_date": "1999-07-30", "pnl_pct": 34.30447012494362, "exc20": 26.25122637331452, "group": "C", "broken20": 0, "display_symbol": "msft"}, {"label": "msft 1999-10-01 · 死叉·距0轴上穿999周·DIF回落57%", "symbol": "msft", "event_date": "1999-10-01", "entry_date": "1999-10-01", "pnl_pct": 5.643326259297443, "exc20": 0.0575883017053246, "group": "C", "broken20": 1, "display_symbol": "msft"}, {"label": "gs 2011-02-04 · 死叉·距0轴上穿15周·DIF回落25%", "symbol": "gs", "event_date": "2011-02-04", "entry_date": "2011-02-04", "pnl_pct": -20.205113396704867, "exc20": -17.79738851939371, "group": "A", "broken20": 1, "display_symbol": "gs"}, {"label": "gs 2023-01-06 · 死叉·距0轴上穿9周·DIF回落40%", "symbol": "gs", "event_date": "2023-01-06", "entry_date": "2023-01-06", "pnl_pct": -3.9337429260120738, "exc20": -12.577080284759344, "group": "C", "broken20": 1, "display_symbol": "gs"}, {"label": "gs 2023-03-03 · 死叉·距0轴上穿17周·DIF回落40%", "symbol": "gs", "event_date": "2023-03-03", "entry_date": "2023-03-03", "pnl_pct": -0.6861325237550897, "exc20": -13.40338414101403, "group": "C", "broken20": 1, "display_symbol": "gs"}, {"label": "mmm 2004-05-21 · 死叉·距0轴上穿999周·DIF回落48%", "symbol": "mmm", "event_date": "2004-05-21", "entry_date": "2004-05-21", "pnl_pct": -3.9745438998548432, "exc20": -7.235355382606079, "group": "C", "broken20": 1, "display_symbol": "mmm"}, {"label": "mmm 2010-11-12 · 死叉·距0轴上穿999周·DIF回落25%", "symbol": "mmm", "event_date": "2010-11-12", "entry_date": "2010-11-12", "pnl_pct": 9.320091110403595, "exc20": -2.5199539676340024, "group": "C", "broken20": 0, "display_symbol": "mmm"}, {"label": "mmm 2025-03-28 · 死叉·距0轴上穿53周·DIF回落38%", "symbol": "mmm", "event_date": "2025-03-28", "entry_date": "2025-03-28", "pnl_pct": 5.727935879351032, "exc20": -10.411824484861157, "group": "C", "broken20": 1, "display_symbol": "mmm"}, {"label": "ms 2007-06-29 · 死叉·距0轴上穿999周·DIF回落41%", "symbol": "ms", "event_date": "2007-06-29", "entry_date": "2007-06-29", "pnl_pct": -23.435546730763, "exc20": -20.810856994630864, "group": "C", "broken20": 1, "display_symbol": "ms"}, {"label": "vrtx 2018-03-29 · 死叉·距0轴上穿55周·DIF回落47%", "symbol": "vrtx", "event_date": "2018-03-29", "entry_date": "2018-03-29", "pnl_pct": 8.037800004250517, "exc20": -0.7746332393770103, "group": "C", "broken20": 1, "display_symbol": "vrtx"}, {"label": "vrtx 2022-08-26 · 死叉·距0轴上穿35周·DIF回落27%", "symbol": "vrtx", "event_date": "2022-08-26", "entry_date": "2022-08-26", "pnl_pct": 6.837549796372522, "exc20": 7.660513246396206, "group": "C", "broken20": 0, "display_symbol": "vrtx"}, {"label": "vrtx 2022-12-16 · 死叉·距0轴上穿51周·DIF回落28%", "symbol": "vrtx", "event_date": "2022-12-16", "entry_date": "2022-12-16", "pnl_pct": 14.202759277774655, "exc20": 6.131455330237934, "group": "C", "broken20": 1, "display_symbol": "vrtx"}, {"label": "vrtx 2023-10-27 · 死叉·距0轴上穿999周·DIF回落35%", "symbol": "vrtx", "event_date": "2023-10-27", "entry_date": "2023-10-27", "pnl_pct": 14.75174618390691, "exc20": -10.281748326344587, "group": "C", "broken20": 0, "display_symbol": "vrtx"}, {"label": "dhr 1991-05-10 · 死叉·距0轴上穿13周·DIF回落31%", "symbol": "dhr", "event_date": "1991-05-10", "entry_date": "1991-05-10", "pnl_pct": 3.896089618087517, "exc20": null, "group": "A", "broken20": 1, "display_symbol": "dhr"}, {"label": "dhr 2015-12-31 · 死叉·距0轴上穿999周·DIF回落29%", "symbol": "dhr", "event_date": "2015-12-31", "entry_date": "2015-12-31", "pnl_pct": 6.499601745255057, "exc20": 5.185089518194386, "group": "C", "broken20": 1, "display_symbol": "dhr"}, {"label": "dhr 2018-03-02 · 死叉·距0轴上穿26周·DIF回落25%", "symbol": "dhr", "event_date": "2018-03-02", "entry_date": "2018-03-02", "pnl_pct": 5.614824598726687, "exc20": 0.7905762490689305, "group": "C", "broken20": 0, "display_symbol": "dhr"}, {"label": "axp 1999-02-12 · 未死叉·距0轴上穿11周·DIF回落26%", "symbol": "axp", "event_date": "1999-02-12", "entry_date": "1999-02-12", "pnl_pct": 38.20787897788796, "exc20": 24.82769564409504, "group": "B", "broken20": 0, "display_symbol": "axp"}, {"label": "axp 1999-09-24 · 死叉·距0轴上穿43周·DIF回落35%", "symbol": "axp", "event_date": "1999-09-24", "entry_date": "1999-09-24", "pnl_pct": 12.905492158378015, "exc20": 4.077409592607872, "group": "C", "broken20": 0, "display_symbol": "axp"}, {"label": "axp 2007-07-06 · 死叉·距0轴上穿46周·DIF回落26%", "symbol": "axp", "event_date": "2007-07-06", "entry_date": "2007-07-06", "pnl_pct": -9.335080917272553, "exc20": -3.9969960061464462, "group": "C", "broken20": 1, "display_symbol": "axp"}, {"label": "axp 2017-09-08 · 死叉·距0轴上穿46周·DIF回落28%", "symbol": "axp", "event_date": "2017-09-08", "entry_date": "2017-09-08", "pnl_pct": 19.13057041721993, "exc20": 1.7348464128206444, "group": "C", "broken20": 0, "display_symbol": "axp"}, {"label": "axp 2018-12-07 · 死叉·距0轴上穿999周·DIF回落28%", "symbol": "axp", "event_date": "2018-12-07", "entry_date": "2018-12-07", "pnl_pct": 11.079231078321785, "exc20": -1.3855495816332386, "group": "C", "broken20": 1, "display_symbol": "axp"}, {"label": "axp 2022-04-14 · 死叉·距0轴上穿999周·DIF回落35%", "symbol": "axp", "event_date": "2022-04-14", "entry_date": "2022-04-14", "pnl_pct": -17.006765264384207, "exc20": -6.989254783686839, "group": "C", "broken20": 1, "display_symbol": "axp"}, {"label": "axp 2024-09-06 · 死叉·距0轴上穿40周·DIF回落36%", "symbol": "axp", "event_date": "2024-09-06", "entry_date": "2024-09-06", "pnl_pct": 32.31875332070908, "exc20": 19.081755578784083, "group": "C", "broken20": 0, "display_symbol": "axp"}, {"label": "ibm 2018-02-23 · 未死叉·距0轴上穿12周·DIF回落35%", "symbol": "ibm", "event_date": "2018-02-23", "entry_date": "2018-02-23", "pnl_pct": -5.144286525599573, "exc20": -7.787179831838098, "group": "B", "broken20": 1, "display_symbol": "ibm"}, {"label": "trow 1992-09-18 · 未死叉·距0轴上穿10周·DIF回落67%", "symbol": "trow", "event_date": "1992-09-18", "entry_date": "1992-09-18", "pnl_pct": 23.34351869265121, "exc20": null, "group": "B", "broken20": 1, "display_symbol": "trow"}, {"label": "trow 1996-05-03 · 死叉·距0轴上穿999周·DIF回落46%", "symbol": "trow", "event_date": "1996-05-03", "entry_date": "1996-05-03", "pnl_pct": 18.798175365883356, "exc20": 10.950668891445403, "group": "C", "broken20": 1, "display_symbol": "trow"}, {"label": "trow 2002-04-19 · 死叉·距0轴上穿14周·DIF回落29%", "symbol": "trow", "event_date": "2002-04-19", "entry_date": "2002-04-19", "pnl_pct": -27.47490052810205, "exc20": -7.484647823555992, "group": "A", "broken20": 1, "display_symbol": "trow"}, {"label": "trow 2018-06-29 · 死叉·距0轴上穿999周·DIF回落38%", "symbol": "trow", "event_date": "2018-06-29", "entry_date": "2018-06-29", "pnl_pct": -16.88926207066227, "exc20": -18.249200686172134, "group": "C", "broken20": 1, "display_symbol": "trow"}, {"label": "trow 2020-11-06 · 死叉·距0轴上穿22周·DIF回落29%", "symbol": "trow", "event_date": "2020-11-06", "entry_date": "2020-11-06", "pnl_pct": 34.8254742221638, "exc20": 20.885996019653728, "group": "C", "broken20": 0, "display_symbol": "trow"}, {"label": "ge 1980-09-26 · 死叉·距0轴上穿15周·DIF回落28%", "symbol": "ge", "event_date": "1980-09-26", "entry_date": "1980-09-26", "pnl_pct": 15.894951212879626, "exc20": null, "group": "A", "broken20": 0, "display_symbol": "ge"}, {"label": "ge 1997-12-26 · 死叉·距0轴上穿999周·DIF回落51%", "symbol": "ge", "event_date": "1997-12-26", "entry_date": "1997-12-26", "pnl_pct": 17.640259738836672, "exc20": -1.093806185880375, "group": "C", "broken20": 0, "display_symbol": "ge"}, {"label": "ge 2013-08-23 · 死叉·距0轴上穿999周·DIF回落30%", "symbol": "ge", "event_date": "2013-08-23", "entry_date": "2013-08-23", "pnl_pct": 15.170148871790667, "exc20": 3.5135976462034915, "group": "C", "broken20": 0, "display_symbol": "ge"}, {"label": "ge 2014-07-11 · 死叉·距0轴上穿999周·DIF回落59%", "symbol": "ge", "event_date": "2014-07-11", "entry_date": "2014-07-11", "pnl_pct": 0.6166457449408691, "exc20": -5.262237148473514, "group": "C", "broken20": 1, "display_symbol": "ge"}, {"label": "regn 2023-03-10 · 死叉·距0轴上穿25周·DIF回落35%", "symbol": "regn", "event_date": "2023-03-10", "entry_date": "2023-03-10", "pnl_pct": -0.1204835157954886, "exc20": -19.41451532660884, "group": "C", "broken20": 1, "display_symbol": "regn"}, {"label": "regn 2023-10-20 · 未死叉·距0轴上穿10周·DIF回落30%", "symbol": "regn", "event_date": "2023-10-20", "entry_date": "2023-10-20", "pnl_pct": 19.83499860894016, "exc20": -2.151436530792882, "group": "B", "broken20": 1, "display_symbol": "regn"}, {"label": "sbux 2021-08-13 · 死叉·距0轴上穿50周·DIF回落29%", "symbol": "sbux", "event_date": "2021-08-13", "entry_date": "2021-08-13", "pnl_pct": 0.6118060537954051, "exc20": -6.617189096510967, "group": "C", "broken20": 1, "display_symbol": "sbux"}, {"label": "cat 2005-03-24 · 死叉·距0轴上穿25周·DIF回落30%", "symbol": "cat", "event_date": "2005-03-24", "entry_date": "2005-03-24", "pnl_pct": 18.22045436395112, "exc20": 12.742675499732137, "group": "C", "broken20": 1, "display_symbol": "cat"}, {"label": "cat 2012-04-05 · 死叉·距0轴上穿13周·DIF回落27%", "symbol": "cat", "event_date": "2012-04-05", "entry_date": "2012-04-05", "pnl_pct": -16.50027670741344, "exc20": -18.255177545692668, "group": "A", "broken20": 1, "display_symbol": "cat"}], "columns": [{"key": "label", "label": "事件", "format": "text"}, {"key": "display_symbol", "label": "标的", "format": "text"}, {"key": "entry_date", "label": "开仓日", "format": "text"}, {"key": "exit_date", "label": "平仓日", "format": "text"}, {"key": "pnl_pct", "label": "盈亏 %", "format": "pct"}]}]}</script>
+  <script>
+  (function () {
+    'use strict';
+
+    const REPORT = JSON.parse(document.getElementById('report-data').textContent || '{}');
+    const ROOT = document.documentElement;
+
+    // Color scheme: can be overridden via report_data.ui.color_scheme
+    // ("eastern" | "western"). If not provided, derive from meta.market;
+    // when market is missing/unknown, default to eastern (涨红跌绿).
+    (function () {
+      var ui = REPORT.ui || {};
+      var meta = REPORT.meta || {};
+      var scheme = ui.color_scheme;
+      if (!scheme) {
+        var mk = String(meta.market || '').toLowerCase();
+        if (mk === 'china_a' || mk === 'a股' || mk === 'cn' || mk === 'cn-stock' ||
+            mk === 'hong_kong' || mk === 'hk' || mk === 'hk-stock') {
+          scheme = 'eastern';
+        } else if (mk === 'us_stock' || mk === 'us' || mk === 'usa' || mk === 'us-market' ||
+                   mk === 'america' || mk === 'american') {
+          scheme = 'western';
+        } else {
+          scheme = 'eastern';
+        }
+      }
+      if (scheme === 'eastern') ROOT.setAttribute('data-color-scheme', 'eastern');
+      else ROOT.setAttribute('data-color-scheme', 'western');
+    })();
+
+    // i18n bag from report_data.ui.i18n; fallbacks keep behavior backward-compatible
+    // for older payloads (default is Chinese — the skill is Chinese-first).
+    const I18N = (REPORT.ui && REPORT.ui.i18n) || {};
+    function t(key, fallback) {
+      return I18N[key] != null ? I18N[key] : fallback;
+    }
+
+    // ---------------- format helpers ----------------
+    function parseNumeric(value) {
+      if (value == null) return null;
+      if (typeof value === 'number') return Number.isFinite(value) ? value : null;
+      var text = String(value).trim();
+      if (!text) return null;
+      var negativeByParens = false;
+      if (/^\(.*\)$/.test(text)) {
+        negativeByParens = true;
+        text = text.slice(1, -1).trim();
+      }
+      text = text
+        .replace(/,/g, '')
+        .replace(/%/g, '')
+        .replace(/\s+/g, '')
+        .replace(/\u2212/g, '-');
+      if (!text) return null;
+      var num = Number(text);
+      if (!Number.isFinite(num)) return null;
+      return negativeByParens ? -Math.abs(num) : num;
+    }
+    function nf(value, digits) {
+      if (digits == null) digits = 2;
+      var num = parseNumeric(value);
+      if (num == null) return '--';
+      return num.toLocaleString('en-US', {
+        minimumFractionDigits: digits,
+        maximumFractionDigits: digits,
+      });
+    }
+    function pf(value, digits) {
+      if (digits == null) digits = 2;
+      var num = parseNumeric(value);
+      if (num == null) return '--';
+      return nf(num, digits) + '%';
+    }
+    function signed(value, digits, suffix) {
+      if (digits == null) digits = 2;
+      if (suffix == null) suffix = '';
+      const num = parseNumeric(value);
+      if (num == null) return '--';
+      return (num > 0 ? '+' : '') + nf(num, digits) + suffix;
+    }
+    function signClass(value) {
+      const num = parseNumeric(value);
+      if (num == null) return '';
+      return num >= 0 ? 'positive' : 'negative';
+    }
+    function escapeHtml(s) {
+      return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+      });
+    }
+    function renderMarkdownFallback(s) {
+      if (s == null) return '';
+      var text = escapeHtml(String(s));
+      text = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+      text = text.replace(/&lt;br\s*\/?&gt;/gi, '<br>');
+      text = text.replace(/\n/g, '<br>');
+      return text;
+    }
+    function renderMarkdown(s) {
+      if (s == null) return '';
+      var source = String(s);
+      if (window.marked && typeof window.marked.parse === 'function') {
+        try {
+          var rendered = window.marked.parse(source, {
+            gfm: true,
+            breaks: true,
+            headerIds: false,
+            mangle: false,
+          });
+          if (window.DOMPurify && typeof window.DOMPurify.sanitize === 'function') {
+            return window.DOMPurify.sanitize(rendered);
+          }
+          console.warn('DOMPurify unavailable, falling back to basic markdown renderer.');
+        } catch (e) {
+          console.warn('markdown render failed, falling back to basic renderer:', e);
+        }
+      }
+      return renderMarkdownFallback(source);
+    }
+    function axisLabel(point) {
+      const raw = point && (point.date != null ? point.date : (point.x != null ? point.x : point.label));
+      if (!raw) return '';
+      const text = String(raw);
+      if (/^\d{4}-\d{2}-\d{2}$/.test(text)) return text.slice(5);
+      if (/^\d{4}-\d{2}$/.test(text)) return text;
+      return text;
+    }
+    function fullLabel(point) {
+      const raw = point && (point.date != null ? point.date : (point.x != null ? point.x : point.label));
+      return raw ? String(raw) : '';
+    }
+
+    // ---------------- topbar ----------------
+    function renderTopbar(meta, ui) {
+      const left = document.getElementById('topbar-left');
+      const right = document.getElementById('topbar-right');
+      const menu = (ui && ui.topbar_menu) || [];
+      const windowStatus = ((ui && ui.window_status) || '').trim();
+
+      // Brand badge removed — strategy name and symbol are already shown
+      // prominently in the header section below the topbar.
+      let leftHtml = menu.map(function (item) {
+        return '<div class="menu-chip ' + (item.active ? 'active' : '') + '">' +
+          escapeHtml(item.label) +
+          (item.dot ? '<span class="dot ' + (item.dot === 'green' ? 'green' : '') + '"></span>' : '') +
+        '</div>';
+      }).join('');
+      left.innerHTML = leftHtml;
+
+      const themeBtn =
+        '<button class="icon-btn" id="theme-toggle" title="Toggle theme">' +
+          '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+            '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>' +
+          '</svg>' +
+        '</button>';
+      right.innerHTML =
+        (windowStatus ? '<div class="menu-chip">' + escapeHtml(windowStatus) + '</div>' : '') +
+        themeBtn;
+
+      document.getElementById('theme-toggle').addEventListener('click', function () {
+        const cur = ROOT.getAttribute('data-theme');
+        const next = cur === 'dark' ? 'light' : 'dark';
+        ROOT.setAttribute('data-theme', next);
+        try { localStorage.setItem('bt-theme', next); } catch (e) { /* ignore */ }
+      });
+    }
+
+    function renderHeader(meta, ui) {
+      const titleEl = document.getElementById('report-title');
+      const subtitleEl = document.getElementById('report-subtitle');
+      const dateEl = document.getElementById('report-date');
+
+      const strategy = escapeHtml((meta && meta.strategy_name) || 'Strategy');
+      const symbol = (meta && meta.symbol) || '';
+      titleEl.innerHTML = strategy + (symbol ? ' <span class="symbol-badge">' + escapeHtml(symbol) + '</span>' : '');
+
+      const subtitle = (ui && ui.subtitle) || t('subtitle_fallback', '回测看板');
+      subtitleEl.innerHTML = '<span class="live-pulse"></span>' + escapeHtml(subtitle);
+
+      const start = (meta && meta.start) || '--';
+      const end = (meta && meta.end) || '--';
+      dateEl.innerHTML =
+        '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+          '<rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>' +
+          '<line x1="16" y1="2" x2="16" y2="6"/>' +
+          '<line x1="8" y1="2" x2="8" y2="6"/>' +
+          '<line x1="3" y1="10" x2="21" y2="10"/>' +
+        '</svg>' +
+        escapeHtml(start) + '<span class="arrow">→</span>' + escapeHtml(end);
+    }
+
+    // ---------------- module render ----------------
+    function renderKpi(item) {
+      return (
+        '<div class="kpi-item">' +
+          '<div class="kpi-label">' + escapeHtml(item.label) + '</div>' +
+          '<div class="kpi-value ' + signClass(item.raw) + '">' + escapeHtml(item.value) + '</div>' +
+          (item.subvalue ? '<div class="kpi-sub ' + signClass(item.subraw) + '">' + escapeHtml(item.subvalue) + '</div>' : '') +
+        '</div>'
+      );
+    }
+
+    function formatMetricCell(metric) {
+      const main = metric && metric.main !== undefined ? metric.main : '--';
+      const secondary = metric && metric.secondary !== undefined ? metric.secondary : '';
+      const cls = signClass(metric && metric.raw);
+      return (
+        '<div class="metric-main ' + cls + '">' + escapeHtml(main) + '</div>' +
+        (secondary ? '<div class="metric-secondary ' + cls + '">' + escapeHtml(secondary) + '</div>' : '')
+      );
+    }
+
+    function renderModule(module, idx) {
+      const span =
+        module.width === 'half' ? 'span-6' :
+        module.width === 'third' ? 'span-4' :
+        module.width === 'two-third' ? 'span-8' : '';
+
+      const titleHtml = module.title
+        ? '<div class="module-header"><div><h3 class="module-title">' + escapeHtml(module.title) + '</h3>' +
+            (module.subtitle ? '<p class="module-subtitle">' + escapeHtml(module.subtitle) + '</p>' : '') +
+          '</div></div>'
+        : '';
+
+      if (module.type === 'stats_strip') {
+        const items = module.items || [];
+        return (
+          '<article class="module ' + span + '" data-module="' + idx + '">' +
+            titleHtml +
+            '<div class="module-body"><div class="kpi-strip">' +
+              items.map(renderKpi).join('') +
+            '</div></div>' +
+          '</article>'
+        );
+      }
+
+      if (module.type === 'overview_chart') {
+        const stats = module.stats || [];
+        const toggles = module.toggles || [];
+        const modes = module.modes || [];
+        // Marker legend: which action types actually appear in this module's markers?
+        // Only show legend entries for actions that are present, so a long-only
+        // strategy doesn't get cluttered with short/cover entries.
+        const legendActions = new Set();
+        (module.markers || []).forEach(function (m) {
+          const a = (m.action || '').toLowerCase();
+          if (a) legendActions.add(a);
+        });
+        // Inline SVG triangles that visually match the chart markers.
+        // entry actions point UP (apex on top), exit actions point DOWN.
+        function legendTri(direction, color) {
+          // 12x10 viewBox; up triangle apex at (6,1), down triangle apex at (6,9)
+          const points = direction === 'up'
+            ? '6,1 1,9 11,9'
+            : '6,9 1,1 11,1';
+          return '<svg width="12" height="10" viewBox="0 0 12 10">' +
+            '<polygon points="' + points + '" fill="' + color + '" />' +
+            '</svg>';
+        }
+        const LEGEND_DEFS = [
+          { action: 'buy',   dir: 'up',   color: 'var(--gain)', label: t('marker_buy',   '买入') },
+          { action: 'sell',  dir: 'down', color: 'var(--loss)', label: t('marker_sell',  '卖出') },
+          { action: 'short', dir: 'up',   color: 'var(--loss)', label: t('marker_short', '做空') },
+          { action: 'cover', dir: 'down', color: 'var(--gain)', label: t('marker_cover', '平空') },
+        ];
+        const legendHtml = LEGEND_DEFS
+          .filter(function (def) { return legendActions.has(def.action); })
+          .map(function (def) {
+            return '<span class="legend-item">' +
+              legendTri(def.dir, def.color) +
+              escapeHtml(def.label) +
+            '</span>';
+          })
+          .join('');
+        return (
+          '<article class="module tv-chart-card ' + span + '" data-module="' + idx + '">' +
+            '<div class="tv-chart-top"><div class="tv-chart-stats">' +
+              stats.map(renderKpi).join('') +
+            '</div></div>' +
+            '<div class="tv-chart-area" id="module-host-' + idx + '"></div>' +
+            '<div class="chart-controls">' +
+              '<div class="toggle-row">' +
+                toggles.map(function (tg) {
+                  const id = tg.id || (tg.label || '').toLowerCase().replace(/[^a-z0-9]+/g, '_');
+                  const swatch = tg.color || (id.indexOf('drawdown') >= 0 ? 'var(--loss)' : (id.indexOf('buy') >= 0 ? 'var(--accent)' : 'var(--gain)'));
+                  return '<span class="toggle-item ' + (tg.checked ? '' : 'muted') + '" data-toggle="' + id + '">' +
+                    '<span class="toggle-swatch" style="background:' + swatch + '"></span>' +
+                    escapeHtml(tg.label) +
+                  '</span>';
+                }).join('') +
+                (module.overlay_series || []).map(function (s, sIdx) {
+                  return '<span class="toggle-item" data-toggle="overlay_' + sIdx + '">' +
+                    '<span class="toggle-swatch" style="background:' + (s.stroke || '#ff9800') + '"></span>' +
+                    escapeHtml(s.name || 'Overlay ' + (sIdx + 1)) +
+                  '</span>';
+                }).join('') +
+                (legendHtml ? '<span class="legend-divider"></span>' + legendHtml : '') +
+              '</div>' +
+              '<div class="mode-switch">' +
+                modes.map(function (m) {
+                  const id = m.id || (m.label || '').toLowerCase();
+                  return '<span class="mode-chip ' + (m.active ? 'active' : '') + '" data-mode="' + id + '">' + escapeHtml(m.label) + '</span>';
+                }).join('') +
+              '</div>' +
+            '</div>' +
+          '</article>'
+        );
+      }
+
+      if (module.type === 'metric_table') {
+        const cols = module.columns || [];
+        const rows = module.rows || [];
+        return (
+          '<article class="module ' + span + '" data-module="' + idx + '">' +
+            titleHtml +
+            '<div class="module-body" style="padding:8px 0 0;">' +
+              '<div class="metric-table-wrap"><table class="metric-table"><thead><tr>' +
+                  cols.map(function (c) { return '<th>' + escapeHtml(c) + '</th>'; }).join('') +
+                '</tr></thead><tbody>' +
+                  rows.map(function (row) {
+                    return '<tr><td>' + escapeHtml(row.metric) + '</td>' +
+                      (row.values || []).map(function (v) { return '<td>' + formatMetricCell(v) + '</td>'; }).join('') +
+                    '</tr>';
+                  }).join('') +
+                '</tbody></table></div>' +
+            '</div>' +
+          '</article>'
+        );
+      }
+
+      if (module.type === 'trades_table') {
+        const rows = module.rows || [];
+        const longLabel = t('side_long', 'long');
+        const shortLabel = t('side_short', 'short');
+
+        // Custom columns: if module.columns is provided, use it.
+        // Otherwise fall back to the default 10-column layout.
+        // Each column: { key: "field_name", label: "显示名", format: "text"|"number"|"pct"|"sign"|"pill" }
+        var cols = module.columns || [
+          {key: 'symbol',      label: t('trades_col_symbol', '标的'),     format: 'text'},
+          {key: 'side',        label: t('trades_col_side', '方向'),       format: 'pill'},
+          {key: 'entry_date',  label: t('trades_col_entry_date', '开仓日'), format: 'text'},
+          {key: 'exit_date',   label: t('trades_col_exit_date', '平仓日'), format: 'text'},
+          {key: 'holding_bars',label: t('trades_col_holding', '持有 Bar'), format: 'text'},
+          {key: 'size',        label: t('trades_col_size', '数量'),       format: 'number'},
+          {key: 'entry_price', label: t('trades_col_entry_price', '开仓价'), format: 'number'},
+          {key: 'exit_price',  label: t('trades_col_exit_price', '平仓价'), format: 'number'},
+          {key: 'pnl',         label: t('trades_col_pnl', '盈亏'),       format: 'sign'},
+          {key: 'pnl_pct',     label: t('trades_col_pnl_pct', '盈亏 %'), format: 'pct'},
+        ];
+
+        function renderCell(tr, col) {
+          var val = tr[col.key];
+          var fmt = col.format || 'text';
+          if (val == null || val === '') return '<td>--</td>';
+          if (fmt === 'pill') {
+            var sideRaw = String(val);
+            var sideText = sideRaw === 'long' ? longLabel : sideRaw === 'short' ? shortLabel : sideRaw;
+            return '<td><span class="pill">' + escapeHtml(sideText) + '</span></td>';
+          }
+          if (fmt === 'number') return '<td class="num">' + escapeHtml(nf(val)) + '</td>';
+          if (fmt === 'pct') {
+            var pctCls = signClass(val);
+            return '<td class="num ' + pctCls + '">' + escapeHtml(pf(val)) + '</td>';
+          }
+          if (fmt === 'sign') {
+            var signCls = signClass(val);
+            return '<td class="num ' + signCls + '">' + escapeHtml(nf(val)) + '</td>';
+          }
+          return '<td>' + escapeHtml(String(val)) + '</td>';
+        }
+
+        // Sync 'num' class to <th> so right-alignment + tabular nums apply.
+        function thClass(col) {
+          var fmt = col.format || 'text';
+          return (fmt === 'number' || fmt === 'pct' || fmt === 'sign') ? 'num' : '';
+        }
+
+        const body = rows.length
+          ? rows.map(function (tr) {
+              return '<tr>' + cols.map(function (col) { return renderCell(tr, col); }).join('') + '</tr>';
+            }).join('')
+          : '<tr><td colspan="' + cols.length + '" class="empty">' + escapeHtml(t('empty_trades', '暂无已平仓交易')) + '</td></tr>';
+        return (
+          '<article class="module ' + span + '" data-module="' + idx + '">' +
+            titleHtml +
+            '<div class="trades-table-wrap"><table class="trades-table"><thead><tr>' +
+              cols.map(function (col) {
+                var c = thClass(col);
+                return '<th' + (c ? ' class="' + c + '"' : '') + '>' + escapeHtml(col.label) + '</th>';
+              }).join('') +
+            '</tr></thead><tbody>' + body + '</tbody></table></div>' +
+          '</article>'
+        );
+      }
+
+      if (module.type === 'line_chart') {
+        return (
+          '<article class="module ' + span + '" data-module="' + idx + '">' +
+            titleHtml +
+            '<div style="padding:8px 0 0;"><div id="module-host-' + idx + '"></div></div>' +
+          '</article>'
+        );
+      }
+
+      if (module.type === 'custom_html') {
+        // Host div only — actual innerHTML injection + <script> re-execution
+        // + mount_script invocation happens in mountCharts() after the
+        // element is in the DOM.
+        return (
+          '<article class="module ' + span + '" data-module="' + idx + '">' +
+            titleHtml +
+            '<div class="module-body custom-html-body" id="module-host-' + idx + '"></div>' +
+          '</article>'
+        );
+      }
+
+      return (
+        '<article class="module ' + span + '" data-module="' + idx + '">' +
+          titleHtml +
+          '<div class="module-body text-card">' + renderMarkdown(module.text || t('empty_content', '暂无内容')) + '</div>' +
+        '</article>'
+      );
+    }
+
+    // ---------------- chart engine: overview (equity + drawdown panes) ----------------
+    function buildOverviewChart(host, module, idx) {
+      const points = (module.points || []).filter(function (p) { return p && p.equity != null; });
+      const toggles = module.toggles || [];
+      const modes = module.modes || [];
+
+      const wrap = document.createElement('div');
+      wrap.className = 'chart-shell';
+
+      const tooltip = document.createElement('div');
+      tooltip.className = 'tooltip hidden';
+      wrap.appendChild(tooltip);
+
+      const svgNS = 'http://www.w3.org/2000/svg';
+      const svg = document.createElementNS(svgNS, 'svg');
+      wrap.appendChild(svg);
+
+      host.appendChild(wrap);
+
+      function initialToggleState(token, fallback) {
+        const found = toggles.find(function (tg) {
+          return String(tg.id || '').toLowerCase().indexOf(token) >= 0;
+        });
+        return found && typeof found.checked === 'boolean' ? found.checked : fallback;
+      }
+      function initialModeState() {
+        const active = modes.find(function (m) { return !!m.active; });
+        const id = String(active && active.id ? active.id : '').toLowerCase();
+        return id === 'absolute' ? 'absolute' : 'percentage';
+      }
+      let mode = initialModeState();
+      let showDrawdown = initialToggleState('drawdown', true);
+      let showTrades = initialToggleState('trade', true);
+      let firstRender = true;
+
+      // overlay series: constructed once, visibility state persists across renders
+      const overlaySeries = (module.overlay_series || []).map(function (s) {
+        var dateLookup = {};
+        (s.points || []).forEach(function (p) { dateLookup[p.date] = Number(p.value); });
+        return { name: s.name || '', stroke: s.stroke || '#ff9800', dateLookup: dateLookup, visible: true };
+      });
+
+      // marker layer: build date → equity-curve index lookup once,
+      // then on every render we map markers to pixel coords.
+      const rawMarkers = module.markers || [];
+      const dateIndex = {};
+      points.forEach(function (p, i) { if (p && p.date) dateIndex[p.date] = i; });
+      const markers = rawMarkers
+        .map(function (m) {
+          const i = dateIndex[m.date];
+          if (i == null) return null;
+          return Object.assign({}, m, { _idx: i });
+        })
+        .filter(function (m) { return m !== null; });
+
+      function compute() {
+        // Main equity line follows the display mode.
+        let eqVals;
+        if (mode === 'percentage') {
+          const base = Number(points[0].equity);
+          eqVals = points.map(function (p) {
+            return base ? (Number(p.equity) / base - 1) * 100 : 0;
+          });
+        } else {
+          eqVals = points.map(function (p) { return Number(p.equity); });
+        }
+        // Drawdown is always computed on raw equity using the standard MDD
+        // formula (peak-to-trough as % of peak). This keeps the number
+        // consistent with summary.json's max_drawdown_pct regardless of which
+        // display mode the main line is in.
+        let peak = -Infinity;
+        const ddVals = points.map(function (p) {
+          const eq = Number(p.equity);
+          peak = Math.max(peak, eq);
+          return peak === 0 ? 0 : (eq / peak - 1) * 100;
+        });
+        return { eqVals: eqVals, ddVals: ddVals };
+      }
+
+      function render() {
+        const W = wrap.clientWidth || 1200;
+        const H = wrap.clientHeight || 460;
+        const PAD_L = 16, PAD_R = 78;
+        const TOP = 22;
+        const X_AX_H = 36;
+        const SEP = 14;
+        const DD_RATIO = showDrawdown ? 0.22 : 0;
+        const availH = H - TOP - X_AX_H;
+        const DD_H = showDrawdown ? Math.max(60, Math.min(110, availH * DD_RATIO)) : 0;
+        const EQ_H = availH - DD_H - (showDrawdown ? SEP : 0);
+        const eqTop = TOP;
+        const eqBot = eqTop + EQ_H;
+        const ddTop = eqBot + SEP;
+        const ddBot = ddTop + DD_H;
+        const xAxisY = (showDrawdown ? ddBot : eqBot) + 6;
+        const INNER_W = W - PAD_L - PAD_R;
+
+        svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+        svg.setAttribute('width', W);
+        svg.setAttribute('height', H);
+        svg.innerHTML = '';
+
+        if (!points.length) {
+          svg.innerHTML = '<text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#787b86" font-size="14">' + escapeHtml(t('empty_data', '暂无数据')) + '</text>';
+          return;
+        }
+
+        const computed = compute();
+        const eqVals = computed.eqVals;
+        const ddVals = computed.ddVals;
+
+        // compute overlay values for current mode (visibility state lives in outer scope)
+        overlaySeries.forEach(function (s) {
+          s.vals = points.map(function (p) {
+            var v = s.dateLookup[p.date];
+            return v != null ? v : null;
+          });
+          if (mode === 'percentage') {
+            var first = null;
+            for (var k = 0; k < s.vals.length; k++) { if (s.vals[k] != null) { first = s.vals[k]; break; } }
+            if (first) s.vals = s.vals.map(function (v) { return v != null ? (v / first - 1) * 100 : null; });
+          }
+        });
+
+        let eqMin = Math.min.apply(null, eqVals);
+        let eqMax = Math.max.apply(null, eqVals);
+        // include overlay values in y-axis range
+        overlaySeries.forEach(function (s) {
+          s.vals.forEach(function (v) {
+            if (v != null) { eqMin = Math.min(eqMin, v); eqMax = Math.max(eqMax, v); }
+          });
+        });
+        if (eqMin === eqMax) { eqMin -= 1; eqMax += 1; }
+        const ePad = (eqMax - eqMin) * 0.10;
+        eqMin -= ePad * 0.6;
+        eqMax += ePad * 0.4;
+
+        let ddMin = Math.min.apply(null, ddVals);
+        ddMin = Math.min(ddMin, 0);
+        if (ddMin === 0) ddMin = -1;
+        const ddMax = 0;
+
+        const N = points.length;
+        const xPx = function (i) {
+          if (N === 1) return PAD_L + INNER_W / 2;
+          return PAD_L + (i / (N - 1)) * INNER_W;
+        };
+        const eyPx = function (v) {
+          return eqTop + (1 - (v - eqMin) / (eqMax - eqMin)) * EQ_H;
+        };
+        const dyPx = function (v) {
+          if (DD_H === 0) return ddTop;
+          return ddTop + (1 - (v - ddMin) / (ddMax - ddMin)) * DD_H;
+        };
+
+        const cs = getComputedStyle(ROOT);
+        const gainColor = cs.getPropertyValue('--gain').trim() || '#26a69a';
+        const lossColor = cs.getPropertyValue('--loss').trim() || '#ef5350';
+        const isUp = eqVals[N - 1] >= eqVals[0];
+        const eqColor = isUp ? gainColor : lossColor;
+        const gridColor = cs.getPropertyValue('--grid').trim() || 'rgba(0,0,0,0.04)';
+        const mutedColor = cs.getPropertyValue('--muted').trim() || '#6a6d78';
+        const strongMuted = cs.getPropertyValue('--text').trim() || '#131722';
+        const surfaceColor = cs.getPropertyValue('--surface-2').trim() || '#f3f5f9';
+        const borderStrong = cs.getPropertyValue('--border-strong').trim() || '#d6dae3';
+        const bgColor = cs.getPropertyValue('--bg').trim() || '#ffffff';
+
+        const meta = REPORT.meta || {};
+
+        // ---- equity grid + y labels
+        const eqGridSteps = 5;
+        for (let i = 0; i <= eqGridSteps; i++) {
+          const y = eqTop + (i / eqGridSteps) * EQ_H;
+          const line = document.createElementNS(svgNS, 'line');
+          line.setAttribute('x1', PAD_L);
+          line.setAttribute('y1', y);
+          line.setAttribute('x2', PAD_L + INNER_W);
+          line.setAttribute('y2', y);
+          line.setAttribute('stroke', gridColor);
+          line.setAttribute('stroke-width', '1');
+          svg.appendChild(line);
+
+          const val = eqMax - (i / eqGridSteps) * (eqMax - eqMin);
+          const label = document.createElementNS(svgNS, 'text');
+          label.setAttribute('x', W - 10);
+          label.setAttribute('y', y + 4);
+          label.setAttribute('text-anchor', 'end');
+          label.setAttribute('fill', mutedColor);
+          label.setAttribute('font-size', '11');
+          label.textContent = nf(val, 2) + (mode === 'percentage' ? '%' : '');
+          svg.appendChild(label);
+        }
+
+        // ---- equity area + line
+        const eqLinePts = eqVals.map(function (v, i) { return [xPx(i), eyPx(v)]; });
+        const gradId = 'eq-grad-' + idx;
+        const defs = document.createElementNS(svgNS, 'defs');
+        const grad = document.createElementNS(svgNS, 'linearGradient');
+        grad.setAttribute('id', gradId);
+        grad.setAttribute('x1', '0');
+        grad.setAttribute('y1', '0');
+        grad.setAttribute('x2', '0');
+        grad.setAttribute('y2', '1');
+        const stop1 = document.createElementNS(svgNS, 'stop');
+        stop1.setAttribute('offset', '0%');
+        stop1.setAttribute('stop-color', eqColor);
+        stop1.setAttribute('stop-opacity', '0.34');
+        const stop2 = document.createElementNS(svgNS, 'stop');
+        stop2.setAttribute('offset', '100%');
+        stop2.setAttribute('stop-color', eqColor);
+        stop2.setAttribute('stop-opacity', '0');
+        grad.appendChild(stop1);
+        grad.appendChild(stop2);
+        defs.appendChild(grad);
+        svg.appendChild(defs);
+
+        const areaD =
+          'M ' + eqLinePts[0][0] + ',' + eqBot + ' ' +
+          eqLinePts.map(function (pt) { return 'L ' + pt[0] + ',' + pt[1]; }).join(' ') +
+          ' L ' + eqLinePts[N - 1][0] + ',' + eqBot + ' Z';
+        const areaPath = document.createElementNS(svgNS, 'path');
+        areaPath.setAttribute('d', areaD);
+        areaPath.setAttribute('fill', 'url(#' + gradId + ')');
+        areaPath.setAttribute('class', 'area-path');
+        svg.appendChild(areaPath);
+
+        const linePoly = document.createElementNS(svgNS, 'polyline');
+        linePoly.setAttribute('points', eqLinePts.map(function (pt) { return pt[0] + ',' + pt[1]; }).join(' '));
+        linePoly.setAttribute('fill', 'none');
+        linePoly.setAttribute('stroke', eqColor);
+        linePoly.setAttribute('stroke-width', '1.8');
+        linePoly.setAttribute('stroke-linecap', 'round');
+        linePoly.setAttribute('stroke-linejoin', 'round');
+        linePoly.setAttribute('class', 'main-line');
+        svg.appendChild(linePoly);
+
+        // ---- overlay series (additional lines on the same chart)
+        var overlayPolylines = [];
+        overlaySeries.forEach(function (s, sIdx) {
+          var pts = [];
+          s.vals.forEach(function (v, i) {
+            if (v != null) pts.push(xPx(i) + ',' + eyPx(v));
+          });
+          if (pts.length < 2) return;
+          var poly = document.createElementNS(svgNS, 'polyline');
+          poly.setAttribute('points', pts.join(' '));
+          poly.setAttribute('fill', 'none');
+          poly.setAttribute('stroke', s.stroke);
+          poly.setAttribute('stroke-width', '1.4');
+          poly.setAttribute('stroke-linecap', 'round');
+          poly.setAttribute('stroke-linejoin', 'round');
+          poly.setAttribute('stroke-dasharray', '6,3');
+          poly.setAttribute('class', 'overlay-line overlay-' + sIdx);
+          poly.style.display = s.visible ? '' : 'none';
+          svg.appendChild(poly);
+          overlayPolylines.push(poly);
+        });
+
+        // ---- trade markers / event markers on the equity line
+        let markerGroup = null;
+        if (showTrades && markers.length) {
+          markerGroup = document.createElementNS(svgNS, 'g');
+          markerGroup.setAttribute('class', 'markers');
+          markerGroup.style.pointerEvents = 'none';
+          // Strategy backtests use entry/exit triangles. Event studies use one
+          // diamond marker per event row so the chart answers “what event
+          // happened here?” rather than duplicating entry/exit executions.
+          const SIZE = 5.5;
+          const OFFSET = 9;
+          const labeledCount = markers.filter(function (m) {
+            var a = (m.action || '').toLowerCase();
+            return a === 'buy' || a === 'short' || a === 'event';
+          }).length;
+          const DATE_LABEL_LANES = 2;
+          const EVENT_LABEL_LANES = 2;
+          function estimateLabelWidth(text, isEventLabel) {
+            var chars = Array.from(String(text || '')).length;
+            return Math.max(isEventLabel ? 44 : 30, chars * (isEventLabel ? 8.2 : 6.8));
+          }
+          function assignLabelLane(laneEnds, leftEdge, rightEdge) {
+            for (var lane = 0; lane < laneEnds.length; lane++) {
+              if (leftEdge > laneEnds[lane]) {
+                laneEnds[lane] = rightEdge;
+                return lane;
+              }
+            }
+            return null;
+          }
+          const labeledMarkersSorted = markers
+            .filter(function (m) {
+              var a = (m.action || '').toLowerCase();
+              return a === 'buy' || a === 'short' || a === 'event';
+            })
+            .slice()
+            .sort(function (a, b) { return a._idx - b._idx; });
+          const dateLaneEnds = Array(DATE_LABEL_LANES).fill(-Infinity);
+          const eventLaneEnds = Array(EVENT_LABEL_LANES).fill(-Infinity);
+          labeledMarkersSorted.forEach(function (m) {
+            var cx = eqLinePts[m._idx][0];
+            if (labeledCount <= 30 && m.date) {
+              var dateText = String(m.date).slice(5);
+              var dateWidth = estimateLabelWidth(dateText, false);
+              m._inlineDateText = dateText;
+              m._inlineDateLane = assignLabelLane(
+                dateLaneEnds,
+                cx - dateWidth / 2 - 8,
+                cx + dateWidth / 2 + 8
+              );
+            } else {
+              m._inlineDateLane = null;
+            }
+            if (labeledCount <= 20 && m.label) {
+              var labelText = String(m.label);
+              if (labelText.length > 12) labelText = labelText.slice(0, 12) + '…';
+              var eventWidth = estimateLabelWidth(labelText, true);
+              m._inlineEventText = labelText;
+              m._inlineEventLane = assignLabelLane(
+                eventLaneEnds,
+                cx - eventWidth / 2 - 10,
+                cx + eventWidth / 2 + 10
+              );
+            } else {
+              m._inlineEventLane = null;
+            }
+          });
+          markers.forEach(function (m) {
+            const i = m._idx;
+            if (i < 0 || i >= eqLinePts.length) return;
+            const cx = eqLinePts[i][0];
+            const cy = eqLinePts[i][1];
+            const action = (m.action || '').toLowerCase();
+            const isEvent = action === 'event';
+            const isBullish = action === 'buy' || action === 'cover';
+            const isEntry = action === 'buy' || action === 'short';
+            const outcome = m.pnl != null ? Number(m.pnl) : (m.pnl_pct != null ? Number(m.pnl_pct) : null);
+            const accentColor = cs.getPropertyValue('--accent').trim() || '#2962ff';
+            const color = isEvent
+              ? (Number.isFinite(outcome) ? (outcome >= 0 ? gainColor : lossColor) : accentColor)
+              : (isBullish ? gainColor : lossColor);
+            const markerEl = document.createElementNS(svgNS, 'polygon');
+            if (isEvent) {
+              const diamondHalf = SIZE + 0.8;
+              markerEl.setAttribute('points',
+                cx + ',' + (cy - diamondHalf) + ' ' +
+                (cx + diamondHalf) + ',' + cy + ' ' +
+                cx + ',' + (cy + diamondHalf) + ' ' +
+                (cx - diamondHalf) + ',' + cy);
+            } else {
+              // entry markers below the curve point UP at the line; exit markers
+              // above the curve point DOWN at the line.
+              const apexY  = isEntry ? cy + OFFSET : cy - OFFSET;
+              const flareY = isEntry ? cy + OFFSET + SIZE * 1.7 : cy - OFFSET - SIZE * 1.7;
+              markerEl.setAttribute('points',
+                cx + ',' + apexY + ' ' +
+                (cx - SIZE) + ',' + flareY + ' ' +
+                (cx + SIZE) + ',' + flareY);
+            }
+            markerEl.setAttribute('fill', color);
+            markerEl.setAttribute('stroke', bgColor);
+            markerEl.setAttribute('stroke-width', isEvent ? '1.5' : '1.2');
+            markerEl.setAttribute('stroke-linejoin', 'round');
+            markerEl.setAttribute('class', 'marker-tri');
+            markerEl.style.pointerEvents = 'auto';
+            markerEl.style.cursor = 'pointer';
+
+            // store metadata so the hover handler can render a rich tooltip
+            markerEl._marker = m;
+            markerEl._cx = cx;
+            markerEl._cy = cy;
+            markerEl.addEventListener('pointerenter', function () {
+              const labels = {
+                buy:   t('marker_buy',   '买入'),
+                sell:  t('marker_sell',  '卖出'),
+                short: t('marker_short', '做空'),
+                cover: t('marker_cover', '平空'),
+                event: t('marker_event', '事件'),
+              };
+              const actionLabel = labels[action] || action;
+              let rows =
+                '<div class="tooltip-date">' + escapeHtml(m.date) + '</div>' +
+                '<div class="tooltip-row"><span class="key" style="--swatch:' + color + '">' + escapeHtml(actionLabel) + '</span>' +
+                '<span class="val" style="color:' + color + '">' + (isEvent ? '◆' : (isBullish ? '▲' : '▼')) + '</span></div>';
+              if (m.label) {
+                rows += '<div class="tooltip-row"><span class="key" style="--swatch:' + mutedColor + '">' + escapeHtml(String(m.label)) + '</span></div>';
+              }
+              if (m.symbol) {
+                rows += '<div class="tooltip-row"><span class="key" style="--swatch:' + mutedColor + '">' + escapeHtml(t('trades_col_symbol', '标的')) + '</span><span class="val">' + escapeHtml(String(m.symbol)) + '</span></div>';
+              }
+              if (m.entry_date) {
+                rows += '<div class="tooltip-row"><span class="key" style="--swatch:' + mutedColor + '">' + escapeHtml(t('trades_col_entry_date', '开仓日')) + '</span><span class="val">' + escapeHtml(String(m.entry_date)) + '</span></div>';
+              }
+              if (m.exit_date) {
+                rows += '<div class="tooltip-row"><span class="key" style="--swatch:' + mutedColor + '">' + escapeHtml(t('trades_col_exit_date', '平仓日')) + '</span><span class="val">' + escapeHtml(String(m.exit_date)) + '</span></div>';
+              }
+              if (!isEvent && m.price != null) {
+                rows += '<div class="tooltip-row"><span class="key" style="--swatch:' + mutedColor + '">Price</span><span class="val">' + nf(m.price, 2) + '</span></div>';
+              }
+              if (isEvent && m.entry_price != null) {
+                rows += '<div class="tooltip-row"><span class="key" style="--swatch:' + mutedColor + '">' + escapeHtml(t('trades_col_entry_price', '开仓价')) + '</span><span class="val">' + nf(m.entry_price, 2) + '</span></div>';
+              }
+              if (isEvent && m.exit_price != null) {
+                rows += '<div class="tooltip-row"><span class="key" style="--swatch:' + mutedColor + '">' + escapeHtml(t('trades_col_exit_price', '平仓价')) + '</span><span class="val">' + nf(m.exit_price, 2) + '</span></div>';
+              }
+              if (m.size != null) {
+                rows += '<div class="tooltip-row"><span class="key" style="--swatch:' + mutedColor + '">Size</span><span class="val">' + nf(m.size, 0) + '</span></div>';
+              }
+              if (m.pnl != null || m.pnl_pct != null) {
+                const pnlBase = m.pnl != null ? Number(m.pnl) : Number(m.pnl_pct);
+                const pnlCls = pnlBase >= 0 ? 'positive' : 'negative';
+                const pnlText = m.pnl != null
+                  ? signed(m.pnl, 2) + (m.pnl_pct != null ? ' (' + signed(m.pnl_pct, 2, '%') + ')' : '')
+                  : signed(m.pnl_pct, 2, '%');
+                rows += '<div class="tooltip-row"><span class="key" style="--swatch:' + (pnlBase >= 0 ? gainColor : lossColor) + '">' + escapeHtml(t('marker_pnl', '盈亏')) + '</span><span class="val ' + pnlCls + '">' + pnlText + '</span></div>';
+              }
+              tooltip.classList.remove('hidden');
+              tooltip.innerHTML = rows;
+              const shellRect = wrap.getBoundingClientRect();
+              const ttRect = tooltip.getBoundingClientRect();
+              const isLeft = cx > (W / 2);
+              tooltip.style.left = (isLeft ? 18 : Math.max(18, shellRect.width - ttRect.width - 18)) + 'px';
+              tooltip.style.top = '18px';
+            });
+            markerEl.addEventListener('pointerleave', function () {
+              tooltip.classList.add('hidden');
+            });
+            markerGroup.appendChild(markerEl);
+
+            // ---- inline labels for entry/event markers ----
+            if ((isEntry || isEvent) && m._inlineDateLane !== null && m._inlineDateText) {
+              var labelY = eqTop + 18 + m._inlineDateLane * 12;
+              var dateLbl = document.createElementNS(svgNS, 'text');
+              dateLbl.setAttribute('x', cx);
+              dateLbl.setAttribute('y', labelY);
+              dateLbl.setAttribute('text-anchor', 'middle');
+              dateLbl.setAttribute('font-size', '10');
+              dateLbl.setAttribute('font-weight', '500');
+              dateLbl.setAttribute('fill', strongMuted);
+              dateLbl.setAttribute('stroke', bgColor);
+              dateLbl.setAttribute('stroke-width', '3');
+              dateLbl.setAttribute('stroke-linejoin', 'round');
+              dateLbl.setAttribute('paint-order', 'stroke');
+              dateLbl.style.pointerEvents = 'none';
+              dateLbl.textContent = m._inlineDateText;
+              markerGroup.appendChild(dateLbl);
+
+              // ---- event label (only when ≤ 20 entry events) ----
+              // Truncate at 12 chars, show full text in hover tooltip.
+              if (m._inlineEventLane !== null && m._inlineEventText) {
+                var evtY = eqTop + 46 + m._inlineEventLane * 12;
+                var evtLbl = document.createElementNS(svgNS, 'text');
+                evtLbl.setAttribute('x', cx);
+                evtLbl.setAttribute('y', evtY);
+                evtLbl.setAttribute('text-anchor', 'middle');
+                evtLbl.setAttribute('font-size', '10');
+                evtLbl.setAttribute('font-weight', '500');
+                evtLbl.setAttribute('fill', strongMuted);
+                evtLbl.setAttribute('stroke', bgColor);
+                evtLbl.setAttribute('stroke-width', '3');
+                evtLbl.setAttribute('stroke-linejoin', 'round');
+                evtLbl.setAttribute('paint-order', 'stroke');
+                evtLbl.style.pointerEvents = 'none';
+                evtLbl.textContent = m._inlineEventText;
+                markerGroup.appendChild(evtLbl);
+              }
+            }
+          });
+          svg.appendChild(markerGroup);
+        }
+
+        // ---- drawdown pane
+        if (showDrawdown) {
+          // dd grid
+          for (let i = 0; i <= 2; i++) {
+            const y = ddTop + (i / 2) * DD_H;
+            const line = document.createElementNS(svgNS, 'line');
+            line.setAttribute('x1', PAD_L);
+            line.setAttribute('y1', y);
+            line.setAttribute('x2', PAD_L + INNER_W);
+            line.setAttribute('y2', y);
+            line.setAttribute('stroke', gridColor);
+            line.setAttribute('stroke-width', '1');
+            svg.appendChild(line);
+            const val = ddMax - (i / 2) * (ddMax - ddMin);
+            const label = document.createElementNS(svgNS, 'text');
+            label.setAttribute('x', W - 10);
+            label.setAttribute('y', y + 4);
+            label.setAttribute('text-anchor', 'end');
+            label.setAttribute('fill', mutedColor);
+            label.setAttribute('font-size', '10');
+            label.textContent = nf(val, 1) + '%';
+            svg.appendChild(label);
+          }
+          // dd label
+          const ddLabel = document.createElementNS(svgNS, 'text');
+          ddLabel.setAttribute('x', PAD_L + 8);
+          ddLabel.setAttribute('y', ddTop + 14);
+          ddLabel.setAttribute('fill', mutedColor);
+          ddLabel.setAttribute('font-size', '10');
+          ddLabel.setAttribute('font-weight', '700');
+          ddLabel.setAttribute('letter-spacing', '0.08em');
+          ddLabel.textContent = t('drawdown_pane', 'DRAWDOWN');
+          svg.appendChild(ddLabel);
+
+          // dd area
+          const ddZeroY = dyPx(0);
+          const ddLinePts = ddVals.map(function (v, i) { return [xPx(i), dyPx(v)]; });
+          const ddGradId = 'dd-grad-' + idx;
+          const ddGrad = document.createElementNS(svgNS, 'linearGradient');
+          ddGrad.setAttribute('id', ddGradId);
+          ddGrad.setAttribute('x1', '0');
+          ddGrad.setAttribute('y1', '0');
+          ddGrad.setAttribute('x2', '0');
+          ddGrad.setAttribute('y2', '1');
+          const ds1 = document.createElementNS(svgNS, 'stop');
+          ds1.setAttribute('offset', '0%');
+          ds1.setAttribute('stop-color', lossColor);
+          ds1.setAttribute('stop-opacity', '0.04');
+          const ds2 = document.createElementNS(svgNS, 'stop');
+          ds2.setAttribute('offset', '100%');
+          ds2.setAttribute('stop-color', lossColor);
+          ds2.setAttribute('stop-opacity', '0.36');
+          ddGrad.appendChild(ds1);
+          ddGrad.appendChild(ds2);
+          defs.appendChild(ddGrad);
+
+          const ddAreaD =
+            'M ' + ddLinePts[0][0] + ',' + ddZeroY + ' ' +
+            ddLinePts.map(function (pt) { return 'L ' + pt[0] + ',' + pt[1]; }).join(' ') +
+            ' L ' + ddLinePts[N - 1][0] + ',' + ddZeroY + ' Z';
+          const ddArea = document.createElementNS(svgNS, 'path');
+          ddArea.setAttribute('d', ddAreaD);
+          ddArea.setAttribute('fill', 'url(#' + ddGradId + ')');
+          ddArea.setAttribute('class', 'dd-area');
+          svg.appendChild(ddArea);
+
+          const ddLine = document.createElementNS(svgNS, 'polyline');
+          ddLine.setAttribute('points', ddLinePts.map(function (pt) { return pt[0] + ',' + pt[1]; }).join(' '));
+          ddLine.setAttribute('fill', 'none');
+          ddLine.setAttribute('stroke', lossColor);
+          ddLine.setAttribute('stroke-width', '1.2');
+          ddLine.setAttribute('stroke-linecap', 'round');
+          ddLine.setAttribute('class', 'dd-line');
+          svg.appendChild(ddLine);
+        }
+
+        // ---- x axis ticks (labels only)
+        const tickCount = Math.max(4, Math.min(10, Math.round(W / 140)));
+        for (let i = 0; i < tickCount; i++) {
+          const idx2 = Math.round((N - 1) * (i / Math.max(1, tickCount - 1)));
+          const x = xPx(idx2);
+          const lab = axisLabel(points[idx2]);
+          const t = document.createElementNS(svgNS, 'text');
+          t.setAttribute('x', x);
+          t.setAttribute('y', xAxisY + 16);
+          t.setAttribute('text-anchor', 'middle');
+          t.setAttribute('fill', mutedColor);
+          t.setAttribute('font-size', '11');
+          t.textContent = lab;
+          svg.appendChild(t);
+        }
+
+        // ---- crosshair group
+        const ch = document.createElementNS(svgNS, 'g');
+        ch.setAttribute('id', 'crosshair-' + idx);
+        ch.style.display = 'none';
+        ch.style.pointerEvents = 'none';
+
+        const chV = document.createElementNS(svgNS, 'line');
+        chV.setAttribute('y1', eqTop);
+        chV.setAttribute('y2', showDrawdown ? ddBot : eqBot);
+        chV.setAttribute('stroke', cs.getPropertyValue('--crosshair').trim() || 'rgba(160,167,184,0.5)');
+        chV.setAttribute('stroke-width', '1');
+        chV.setAttribute('stroke-dasharray', '3 3');
+        chV.setAttribute('class', 'ch-v');
+        ch.appendChild(chV);
+
+        const chHEq = document.createElementNS(svgNS, 'line');
+        chHEq.setAttribute('x1', PAD_L);
+        chHEq.setAttribute('x2', PAD_L + INNER_W);
+        chHEq.setAttribute('stroke', cs.getPropertyValue('--crosshair').trim() || 'rgba(160,167,184,0.5)');
+        chHEq.setAttribute('stroke-width', '1');
+        chHEq.setAttribute('stroke-dasharray', '3 3');
+        chHEq.setAttribute('class', 'ch-h-eq');
+        ch.appendChild(chHEq);
+
+        const chDot = document.createElementNS(svgNS, 'circle');
+        chDot.setAttribute('r', '4.5');
+        chDot.setAttribute('fill', bgColor);
+        chDot.setAttribute('stroke', eqColor);
+        chDot.setAttribute('stroke-width', '2');
+        chDot.setAttribute('class', 'ch-dot');
+        ch.appendChild(chDot);
+
+        const chYbg = document.createElementNS(svgNS, 'rect');
+        chYbg.setAttribute('x', PAD_L + INNER_W + 2);
+        chYbg.setAttribute('width', W - PAD_L - INNER_W - 6);
+        chYbg.setAttribute('height', '18');
+        chYbg.setAttribute('rx', '3');
+        chYbg.setAttribute('fill', eqColor);
+        chYbg.setAttribute('class', 'ch-yval-bg');
+        ch.appendChild(chYbg);
+
+        const chYtxt = document.createElementNS(svgNS, 'text');
+        chYtxt.setAttribute('x', W - 10);
+        chYtxt.setAttribute('text-anchor', 'end');
+        chYtxt.setAttribute('fill', '#fff');
+        chYtxt.setAttribute('font-size', '11');
+        chYtxt.setAttribute('font-weight', '700');
+        chYtxt.setAttribute('dominant-baseline', 'middle');
+        chYtxt.setAttribute('class', 'ch-yval');
+        ch.appendChild(chYtxt);
+
+        const chXbg = document.createElementNS(svgNS, 'rect');
+        chXbg.setAttribute('width', '90');
+        chXbg.setAttribute('height', '20');
+        chXbg.setAttribute('rx', '3');
+        chXbg.setAttribute('fill', surfaceColor);
+        chXbg.setAttribute('stroke', borderStrong);
+        chXbg.setAttribute('y', xAxisY + 4);
+        chXbg.setAttribute('class', 'ch-xval-bg');
+        ch.appendChild(chXbg);
+
+        const chXtxt = document.createElementNS(svgNS, 'text');
+        chXtxt.setAttribute('y', xAxisY + 18);
+        chXtxt.setAttribute('text-anchor', 'middle');
+        chXtxt.setAttribute('fill', strongMuted);
+        chXtxt.setAttribute('font-size', '11');
+        chXtxt.setAttribute('font-weight', '600');
+        chXtxt.setAttribute('class', 'ch-xval');
+        ch.appendChild(chXtxt);
+
+        svg.appendChild(ch);
+
+        // ---- transparent overlay
+        const overlay = document.createElementNS(svgNS, 'rect');
+        overlay.setAttribute('x', PAD_L);
+        overlay.setAttribute('y', eqTop);
+        overlay.setAttribute('width', INNER_W);
+        overlay.setAttribute('height', (showDrawdown ? ddBot : eqBot) - eqTop);
+        overlay.setAttribute('fill', 'transparent');
+        overlay.style.cursor = 'crosshair';
+        svg.appendChild(overlay);
+
+        // Re-append markerGroup AFTER overlay so triangles are on top and can
+        // receive pointer events. Otherwise overlay (fill:transparent) intercepts
+        // them and the marker tooltip never fires. (Re-appending a node already
+        // in the tree just moves it to the end — no duplication.)
+        if (markerGroup) svg.appendChild(markerGroup);
+
+        // ---- animations on first render
+        if (firstRender) {
+          firstRender = false;
+          try {
+            const len = linePoly.getTotalLength();
+            linePoly.style.strokeDasharray = len;
+            linePoly.style.strokeDashoffset = len;
+            linePoly.style.transition = 'stroke-dashoffset 1.6s cubic-bezier(0.25, 0.1, 0.25, 1)';
+            requestAnimationFrame(function () { linePoly.style.strokeDashoffset = '0'; });
+          } catch (e) { /* ignore */ }
+          areaPath.style.opacity = '0';
+          areaPath.style.transition = 'opacity 0.9s ease 0.35s';
+          requestAnimationFrame(function () { areaPath.style.opacity = '1'; });
+          const ddArea = svg.querySelector('.dd-area');
+          if (ddArea) {
+            ddArea.style.opacity = '0';
+            ddArea.style.transition = 'opacity 0.8s ease 0.55s';
+            requestAnimationFrame(function () { ddArea.style.opacity = '1'; });
+          }
+        }
+
+        // ---- interaction
+        function onMove(evt) {
+          const rect = svg.getBoundingClientRect();
+          const x = evt.clientX - rect.left;
+          if (x < PAD_L || x > PAD_L + INNER_W) {
+            ch.style.display = 'none';
+            tooltip.classList.add('hidden');
+            return;
+          }
+          const ratio = (x - PAD_L) / INNER_W;
+          const i = Math.max(0, Math.min(N - 1, Math.round(ratio * (N - 1))));
+          const point = points[i];
+          const xCoord = xPx(i);
+          const eqV = eqVals[i];
+          const ddV = ddVals[i];
+          const eqYCoord = eyPx(eqV);
+
+          ch.style.display = '';
+          chV.setAttribute('x1', xCoord);
+          chV.setAttribute('x2', xCoord);
+          chHEq.setAttribute('y1', eqYCoord);
+          chHEq.setAttribute('y2', eqYCoord);
+          chDot.setAttribute('cx', xCoord);
+          chDot.setAttribute('cy', eqYCoord);
+          chYbg.setAttribute('y', eqYCoord - 9);
+          chYtxt.setAttribute('y', eqYCoord);
+          chYtxt.textContent = nf(eqV, 2) + (mode === 'percentage' ? '%' : '');
+          chXbg.setAttribute('x', Math.max(PAD_L, Math.min(PAD_L + INNER_W - 90, xCoord - 45)));
+          chXtxt.setAttribute('x', Math.max(PAD_L + 45, Math.min(PAD_L + INNER_W - 45, xCoord)));
+          chXtxt.textContent = fullLabel(point);
+
+          const baseEq = Number(points[0].equity);
+          const ret = baseEq ? ((Number(point.equity) / baseEq - 1) * 100) : 0;
+
+          tooltip.classList.remove('hidden');
+          var ttHtml = '<div class="tooltip-date">' + escapeHtml(fullLabel(point)) + '</div>';
+          if (!module.hide_value_row) {
+            ttHtml += '<div class="tooltip-row"><span class="key" style="--swatch:' + eqColor + '">' +
+              escapeHtml(module.value_label || t('tooltip_equity', '权益')) +
+              '</span><span class="val">' + nf(Number(point.equity), 2) + '</span></div>';
+          }
+          ttHtml += '<div class="tooltip-row"><span class="key" style="--swatch:' + eqColor + '">' +
+            escapeHtml(module.return_label || t('tooltip_return', '收益')) +
+            '</span><span class="val ' + (ret >= 0 ? 'positive' : 'negative') + '">' +
+            signed(ret, 2, '%') + '</span></div>';
+          if (!module.hide_drawdown_tooltip) {
+            ttHtml += '<div class="tooltip-row"><span class="key" style="--swatch:' + lossColor + '">' +
+              escapeHtml(t('tooltip_drawdown', '回撤')) +
+              '</span><span class="val negative">' + nf(ddV, 2) + '%</span></div>';
+          }
+          // overlay values in tooltip
+          overlaySeries.forEach(function (s) {
+            if (!s.visible) return;
+            var v = s.vals[i];
+            if (v == null) return;
+            ttHtml += '<div class="tooltip-row"><span class="key" style="--swatch:' + s.stroke + '">' + escapeHtml(s.name) + '</span><span class="val">' + nf(v, 2) + (mode === 'percentage' ? '%' : '') + '</span></div>';
+          });
+          tooltip.innerHTML = ttHtml;
+
+          const shellRect = wrap.getBoundingClientRect();
+          const ttRect = tooltip.getBoundingClientRect();
+          const localX = evt.clientX - shellRect.left;
+          const isLeft = localX > shellRect.width / 2;
+          tooltip.style.left = (isLeft ? 18 : Math.max(18, shellRect.width - ttRect.width - 18)) + 'px';
+          tooltip.style.top = '18px';
+        }
+        function onLeave() {
+          ch.style.display = 'none';
+          tooltip.classList.add('hidden');
+        }
+        overlay.addEventListener('pointermove', onMove);
+        overlay.addEventListener('pointerleave', onLeave);
+      }
+
+      render();
+
+      // resize
+      if (window.ResizeObserver) {
+        const ro = new ResizeObserver(function () { render(); });
+        ro.observe(wrap);
+      } else {
+        window.addEventListener('resize', render);
+      }
+
+      return {
+        setMode: function (m) { mode = m; firstRender = false; render(); },
+        toggleDrawdown: function () { showDrawdown = !showDrawdown; firstRender = false; render(); return showDrawdown; },
+        toggleTrades: function () { showTrades = !showTrades; firstRender = false; render(); return showTrades; },
+        toggleOverlay: function (sIdx) {
+          if (overlaySeries[sIdx]) {
+            overlaySeries[sIdx].visible = !overlaySeries[sIdx].visible;
+            firstRender = false;
+            render();
+            return overlaySeries[sIdx].visible;
+          }
+        },
+        rerender: render,
+      };
+    }
+
+    // ---------------- chart engine: multi-line ----------------
+    function buildMultiLineChart(host, module, idx) {
+      const series = module.series || [];
+
+      const wrap = document.createElement('div');
+      wrap.className = 'chart-shell';
+      wrap.style.height = '460px';
+
+      const tooltip = document.createElement('div');
+      tooltip.className = 'tooltip hidden';
+      wrap.appendChild(tooltip);
+
+      const svgNS = 'http://www.w3.org/2000/svg';
+      const svg = document.createElementNS(svgNS, 'svg');
+      wrap.appendChild(svg);
+      host.appendChild(wrap);
+
+      const colors = ['#26a69a', '#2962ff', '#ef5350', '#b57eff', '#ff9800', '#f59e0b'];
+
+      let firstRender = true;
+
+      function render() {
+        const W = wrap.clientWidth || 1200;
+        const H = wrap.clientHeight || 460;
+        svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+        svg.setAttribute('width', W);
+        svg.setAttribute('height', H);
+        svg.innerHTML = '';
+
+        if (!series.length) {
+          svg.innerHTML = '<text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#787b86" font-size="14">' + escapeHtml(t('empty_data', '暂无数据')) + '</text>';
+          return;
+        }
+
+        const PAD_L = 16, PAD_R = 78, TOP = 22, BOT = 56;
+        const INNER_W = W - PAD_L - PAD_R;
+        const INNER_H = H - TOP - BOT;
+
+        const allValues = [];
+        series.forEach(function (s) {
+          (s.points || []).forEach(function (p) {
+            const v = Number(p.value);
+            if (Number.isFinite(v)) allValues.push(v);
+          });
+        });
+        if (!allValues.length) return;
+
+        let minY = Math.min.apply(null, allValues);
+        let maxY = Math.max.apply(null, allValues);
+        if (minY === maxY) { minY -= 1; maxY += 1; }
+        const padY = (maxY - minY) * 0.10;
+        minY -= padY; maxY += padY;
+
+        const refSeries = series.reduce(function (a, b) {
+          return (b.points || []).length > (a.points || []).length ? b : a;
+        }, series[0]);
+        const refPts = refSeries.points || [];
+        const N = refPts.length;
+
+        const xPx = function (i) {
+          if (N <= 1) return PAD_L + INNER_W / 2;
+          return PAD_L + (i / (N - 1)) * INNER_W;
+        };
+        const yPx = function (v) {
+          return TOP + (1 - (v - minY) / (maxY - minY)) * INNER_H;
+        };
+
+        const cs = getComputedStyle(ROOT);
+        const gridColor = cs.getPropertyValue('--grid').trim() || 'rgba(255,255,255,0.04)';
+        const mutedColor = cs.getPropertyValue('--muted').trim() || '#787b86';
+        const crosshairColor = cs.getPropertyValue('--crosshair').trim() || 'rgba(160,167,184,0.5)';
+        const bgColor = cs.getPropertyValue('--bg').trim() || '#ffffff';
+
+        // grid (5 steps 对齐 overview_chart)
+        const gridSteps = 5;
+        for (let i = 0; i <= gridSteps; i++) {
+          const y = TOP + (i / gridSteps) * INNER_H;
+          const line = document.createElementNS(svgNS, 'line');
+          line.setAttribute('x1', PAD_L);
+          line.setAttribute('y1', y);
+          line.setAttribute('x2', PAD_L + INNER_W);
+          line.setAttribute('y2', y);
+          line.setAttribute('stroke', gridColor);
+          line.setAttribute('stroke-width', '1');
+          svg.appendChild(line);
+
+          const val = maxY - (i / gridSteps) * (maxY - minY);
+          const lab = document.createElementNS(svgNS, 'text');
+          lab.setAttribute('x', W - 10);
+          lab.setAttribute('y', y + 4);
+          lab.setAttribute('text-anchor', 'end');
+          lab.setAttribute('fill', mutedColor);
+          lab.setAttribute('font-size', '11');
+          lab.textContent = nf(val, 2);
+          svg.appendChild(lab);
+        }
+
+        // gradient defs (每条线一个淡色渐变，多线叠加用低透明度保持清爽)
+        const defs = document.createElementNS(svgNS, 'defs');
+        series.forEach(function (s, sIdx) {
+          const color = colors[sIdx % colors.length];
+          const grad = document.createElementNS(svgNS, 'linearGradient');
+          grad.setAttribute('id', 'mlc-grad-' + idx + '-' + sIdx);
+          grad.setAttribute('x1', '0'); grad.setAttribute('y1', '0');
+          grad.setAttribute('x2', '0'); grad.setAttribute('y2', '1');
+          const stop1 = document.createElementNS(svgNS, 'stop');
+          stop1.setAttribute('offset', '0%');
+          stop1.setAttribute('stop-color', color);
+          stop1.setAttribute('stop-opacity', '0.14');
+          const stop2 = document.createElementNS(svgNS, 'stop');
+          stop2.setAttribute('offset', '100%');
+          stop2.setAttribute('stop-color', color);
+          stop2.setAttribute('stop-opacity', '0');
+          grad.appendChild(stop1);
+          grad.appendChild(stop2);
+          defs.appendChild(grad);
+        });
+        svg.appendChild(defs);
+
+        // 前填充(forward-fill)：停牌期间 value 为 null/NaN 时，用上一个有效
+        // 值画平线（停牌不改变净值的实际表现），而不是让线断开或掉到 0。
+        // 开头还没有有效值的点直接跳过（没法往前填）。
+        // seriesFilled[sIdx][i] = 该 series 第 i 个点的前填充值(null 表示还没有)
+        //
+        // ⚠️ 必须显式判断 null/undefined/空串，不能直接 Number() —— JS 陷阱：
+        //    Number(null) === 0（不是 NaN），Number.isFinite(0) === true，
+        //    会把停牌天当成"0 净值"画到图底，出现矩形 dip。
+        const seriesFilled = series.map(function (s) {
+          let lastValid = null;
+          return (s.points || []).map(function (p) {
+            const raw = p ? p.value : null;
+            if (raw === null || raw === undefined || raw === '') return lastValid;
+            const v = Number(raw);
+            if (Number.isFinite(v)) { lastValid = v; return v; }
+            return lastValid;
+          });
+        });
+
+        // series（先面积再折线，后画的在上）
+        const seriesEls = [];
+        series.forEach(function (s, sIdx) {
+          const filled = seriesFilled[sIdx];
+          const pts = [];
+          filled.forEach(function (v, i) {
+            if (v !== null) pts.push([xPx(i), yPx(v)]);
+          });
+          if (!pts.length) return;
+          const color = colors[sIdx % colors.length];
+
+          // area fill with gradient
+          const areaD =
+            'M ' + pts[0][0] + ',' + (TOP + INNER_H) + ' ' +
+            pts.map(function (pt) { return 'L ' + pt[0] + ',' + pt[1]; }).join(' ') +
+            ' L ' + pts[pts.length - 1][0] + ',' + (TOP + INNER_H) + ' Z';
+          const areaPath = document.createElementNS(svgNS, 'path');
+          areaPath.setAttribute('d', areaD);
+          areaPath.setAttribute('fill', 'url(#mlc-grad-' + idx + '-' + sIdx + ')');
+          svg.appendChild(areaPath);
+
+          const poly = document.createElementNS(svgNS, 'polyline');
+          poly.setAttribute('points', pts.map(function (pt) { return pt[0] + ',' + pt[1]; }).join(' '));
+          poly.setAttribute('fill', 'none');
+          poly.setAttribute('stroke', color);
+          poly.setAttribute('stroke-width', '1.8');
+          poly.setAttribute('stroke-linecap', 'round');
+          poly.setAttribute('stroke-linejoin', 'round');
+          poly.setAttribute('class', 'multi-line');
+          svg.appendChild(poly);
+          seriesEls.push(poly);
+        });
+
+        // x axis ticks
+        const tickCount = Math.max(4, Math.min(10, Math.round(W / 140)));
+        for (let i = 0; i < tickCount; i++) {
+          const idx2 = Math.round((N - 1) * (i / Math.max(1, tickCount - 1)));
+          const point = refPts[idx2];
+          const x = xPx(idx2);
+          const t = document.createElementNS(svgNS, 'text');
+          t.setAttribute('x', x);
+          t.setAttribute('y', TOP + INNER_H + 22);
+          t.setAttribute('text-anchor', 'middle');
+          t.setAttribute('fill', mutedColor);
+          t.setAttribute('font-size', '11');
+          t.textContent = axisLabel(point);
+          svg.appendChild(t);
+        }
+
+        // legend
+        let legendX = PAD_L;
+        const legendY = H - 18;
+        series.forEach(function (s, sIdx) {
+          const color = colors[sIdx % colors.length];
+          const sw = document.createElementNS(svgNS, 'rect');
+          sw.setAttribute('x', legendX);
+          sw.setAttribute('y', legendY - 4);
+          sw.setAttribute('width', '14');
+          sw.setAttribute('height', '3');
+          sw.setAttribute('rx', '1.5');
+          sw.setAttribute('fill', color);
+          svg.appendChild(sw);
+          const label = document.createElementNS(svgNS, 'text');
+          label.setAttribute('x', legendX + 22);
+          label.setAttribute('y', legendY + 1);
+          label.setAttribute('fill', mutedColor);
+          label.setAttribute('font-size', '12');
+          label.textContent = s.name || ('Series ' + (sIdx + 1));
+          svg.appendChild(label);
+          legendX += 22 + (s.name || '').length * 7 + 18;
+        });
+
+        // crosshair: 垂直虚线 + 每条线交点圆点 + 右侧值 badge
+        const ch = document.createElementNS(svgNS, 'g');
+        ch.style.display = 'none';
+        ch.style.pointerEvents = 'none';
+        const chV = document.createElementNS(svgNS, 'line');
+        chV.setAttribute('y1', TOP);
+        chV.setAttribute('y2', TOP + INNER_H);
+        chV.setAttribute('stroke', crosshairColor);
+        chV.setAttribute('stroke-width', '1');
+        chV.setAttribute('stroke-dasharray', '3 3');
+        ch.appendChild(chV);
+
+        // 每条 series 一个 dot（圆点）+ badge（右侧值胶囊）
+        const chDots = [];
+        const chBadges = [];
+        series.forEach(function (s, sIdx) {
+          const color = colors[sIdx % colors.length];
+          const dot = document.createElementNS(svgNS, 'circle');
+          dot.setAttribute('r', '4');
+          dot.setAttribute('fill', color);
+          dot.setAttribute('stroke', bgColor);
+          dot.setAttribute('stroke-width', '2');
+          ch.appendChild(dot);
+          chDots.push(dot);
+
+          const bg = document.createElementNS(svgNS, 'rect');
+          bg.setAttribute('x', PAD_L + INNER_W + 2);
+          bg.setAttribute('width', W - PAD_L - INNER_W - 6);
+          bg.setAttribute('height', '16');
+          bg.setAttribute('rx', '3');
+          bg.setAttribute('fill', color);
+          ch.appendChild(bg);
+
+          const txt = document.createElementNS(svgNS, 'text');
+          txt.setAttribute('x', W - 10);
+          txt.setAttribute('text-anchor', 'end');
+          txt.setAttribute('fill', '#fff');
+          txt.setAttribute('font-size', '10');
+          txt.setAttribute('font-weight', '700');
+          txt.setAttribute('dominant-baseline', 'middle');
+          ch.appendChild(txt);
+          chBadges.push({ bg: bg, txt: txt });
+        });
+        svg.appendChild(ch);
+
+        const overlay = document.createElementNS(svgNS, 'rect');
+        overlay.setAttribute('x', PAD_L);
+        overlay.setAttribute('y', TOP);
+        overlay.setAttribute('width', INNER_W);
+        overlay.setAttribute('height', INNER_H);
+        overlay.setAttribute('fill', 'transparent');
+        overlay.style.cursor = 'crosshair';
+        svg.appendChild(overlay);
+
+        if (firstRender) {
+          firstRender = false;
+          seriesEls.forEach(function (path, i) {
+            try {
+              const len = path.getTotalLength();
+              path.style.strokeDasharray = len;
+              path.style.strokeDashoffset = len;
+              path.style.transition = 'stroke-dashoffset 1.4s cubic-bezier(0.25, 0.1, 0.25, 1) ' + (i * 0.18) + 's';
+              requestAnimationFrame(function () { path.style.strokeDashoffset = '0'; });
+            } catch (e) { /* ignore */ }
+          });
+        }
+
+        overlay.addEventListener('pointermove', function (evt) {
+          const rect = svg.getBoundingClientRect();
+          const x = evt.clientX - rect.left;
+          if (x < PAD_L || x > PAD_L + INNER_W) {
+            ch.style.display = 'none';
+            tooltip.classList.add('hidden');
+            return;
+          }
+          const ratio = (x - PAD_L) / INNER_W;
+          const i = Math.max(0, Math.min(N - 1, Math.round(ratio * (N - 1))));
+          const xCoord = xPx(i);
+
+          ch.style.display = '';
+          chV.setAttribute('x1', xCoord);
+          chV.setAttribute('x2', xCoord);
+
+          // 更新每条线的圆点 + 右侧 badge，排序避免重叠
+          // 用前填充后的 seriesFilled 取值，停牌日也能显示最后一个有效值
+          const badgeEntries = [];
+          series.forEach(function (s, sIdx) {
+            const v = (seriesFilled[sIdx] || [])[i];
+            const dot = chDots[sIdx];
+            const badge = chBadges[sIdx];
+            if (v == null) {
+              if (dot) dot.style.display = 'none';
+              if (badge) { badge.bg.style.display = 'none'; badge.txt.style.display = 'none'; }
+              return;
+            }
+            const yCoord = yPx(v);
+            if (dot) {
+              dot.style.display = '';
+              dot.setAttribute('cx', xCoord);
+              dot.setAttribute('cy', yCoord);
+            }
+            badgeEntries.push({ sIdx: sIdx, y: yCoord, text: nf(v, 2) });
+          });
+          // y 轴从上往下排，各 badge 间最小间距 18px 防重叠；不超出图区底部
+          badgeEntries.sort(function (a, b) { return a.y - b.y; });
+          const yMax = TOP + INNER_H - 8;  // 底部留 8px 给 badge 一半高
+          let lastY = -Infinity;
+          badgeEntries.forEach(function (e) {
+            const badge = chBadges[e.sIdx];
+            if (!badge) return;
+            const y = Math.min(Math.max(lastY + 18, e.y), yMax);
+            lastY = y;
+            badge.bg.style.display = '';
+            badge.txt.style.display = '';
+            badge.bg.setAttribute('y', y - 8);
+            badge.txt.setAttribute('y', y);
+            badge.txt.textContent = e.text;
+          });
+
+          const point = refPts[i];
+          let rows = '';
+          series.forEach(function (s, sIdx) {
+            const p = (s.points || [])[i];
+            if (!p) return;
+            const v = Number(p.value);
+            const color = colors[sIdx % colors.length];
+            rows += '<div class="tooltip-row"><span class="key" style="--swatch:' + color + '">' + escapeHtml(s.name || ('S' + (sIdx + 1))) + '</span><span class="val">' + nf(v, 2) + '</span></div>';
+          });
+          tooltip.classList.remove('hidden');
+          tooltip.innerHTML = '<div class="tooltip-date">' + escapeHtml(fullLabel(point)) + '</div>' + rows;
+
+          const shellRect = wrap.getBoundingClientRect();
+          const ttRect = tooltip.getBoundingClientRect();
+          const localX = evt.clientX - shellRect.left;
+          const isLeft = localX > shellRect.width / 2;
+          tooltip.style.left = (isLeft ? 18 : Math.max(18, shellRect.width - ttRect.width - 18)) + 'px';
+          tooltip.style.top = '18px';
+        });
+        overlay.addEventListener('pointerleave', function () {
+          ch.style.display = 'none';
+          tooltip.classList.add('hidden');
+        });
+      }
+
+      render();
+      if (window.ResizeObserver) {
+        const ro = new ResizeObserver(function () { render(); });
+        ro.observe(wrap);
+      } else {
+        window.addEventListener('resize', render);
+      }
+    }
+
+    // ---------------- mount charts + interactivity ----------------
+    function mountCharts(modules) {
+      modules.forEach(function (module, idx) {
+        if (module.type === 'overview_chart') {
+          const host = document.getElementById('module-host-' + idx);
+          if (!host) return;
+          const chart = buildOverviewChart(host, module, idx);
+
+          const moduleEl = document.querySelector('[data-module="' + idx + '"]');
+          if (!moduleEl) return;
+
+          // toggles
+          moduleEl.querySelectorAll('.toggle-item').forEach(function (el) {
+            el.addEventListener('click', function () {
+              const id = (el.getAttribute('data-toggle') || '').toLowerCase();
+              if (id.indexOf('overlay_') === 0) {
+                var sIdx = parseInt(id.replace('overlay_', ''), 10);
+                var visible = chart.toggleOverlay(sIdx);
+                el.classList.toggle('muted', !visible);
+              } else if (id.indexOf('drawdown') >= 0) {
+                const visible = chart.toggleDrawdown();
+                el.classList.toggle('muted', !visible);
+              } else if (id.indexOf('trade') >= 0) {
+                const visible = chart.toggleTrades();
+                el.classList.toggle('muted', !visible);
+              } else {
+                el.classList.toggle('muted');
+              }
+            });
+          });
+
+          // mode switch
+          const modeEls = moduleEl.querySelectorAll('.mode-chip');
+          modeEls.forEach(function (el) {
+            el.addEventListener('click', function () {
+              modeEls.forEach(function (m) { m.classList.remove('active'); });
+              el.classList.add('active');
+              const id = (el.getAttribute('data-mode') || '').toLowerCase();
+              chart.setMode(id === 'percentage' ? 'percentage' : 'absolute');
+            });
+          });
+        } else if (module.type === 'line_chart') {
+          const host = document.getElementById('module-host-' + idx);
+          if (host) buildMultiLineChart(host, module, idx);
+        } else if (module.type === 'custom_html') {
+          const host = document.getElementById('module-host-' + idx);
+          if (!host) return;
+          try {
+            host.innerHTML = module.html || '';
+            // innerHTML does NOT execute injected script tags — recreate each
+            // one so it runs. Supports both inline code and external src=.
+            host.querySelectorAll('script').forEach(function (oldScript) {
+              const newScript = document.createElement('script');
+              for (let i = 0; i < oldScript.attributes.length; i++) {
+                const a = oldScript.attributes[i];
+                newScript.setAttribute(a.name, a.value);
+              }
+              newScript.textContent = oldScript.textContent;
+              oldScript.parentNode.replaceChild(newScript, oldScript);
+            });
+            // Optional init callback — host DOM element and module dict are
+            // passed in so the script can mount echarts/d3/whatever against
+            // the right container.
+            if (module.mount_script) {
+              try {
+                new Function('host', 'module', module.mount_script)(host, module);
+              } catch (e) {
+                const err = document.createElement('pre');
+                err.className = 'custom-html-error';
+                err.textContent = 'mount_script error: ' + (e && e.message ? e.message : String(e));
+                host.appendChild(err);
+              }
+            }
+          } catch (e) {
+            console.error('custom_html render error:', e);
+          }
+        }
+      });
+    }
+
+    // ---------------- tabs ----------------
+    function buildPanels(modules, tabs) {
+      const groups = {};
+      tabs.forEach(function (tab) { groups[tab.id] = []; });
+      modules.forEach(function (module, idx) {
+        const tab = module.tab || tabs[0].id;
+        if (!groups[tab]) groups[tab] = [];
+        groups[tab].push(renderModule(module, idx));
+      });
+      return groups;
+    }
+
+    function renderTabs(tabs, activeTab, panelsByTab) {
+      const tabsEl = document.getElementById('tabs');
+      const panelsEl = document.getElementById('tab-panels');
+
+      // Hide the tab bar entirely when there's only one tab — single-page mode.
+      if (tabs.length <= 1) {
+        tabsEl.style.display = 'none';
+      }
+
+      tabsEl.innerHTML = tabs.map(function (tab) {
+        return '<button class="tab ' + (tab.id === activeTab ? 'active' : '') + '" data-tab="' + escapeHtml(tab.id) + '">' + escapeHtml(tab.label) + '</button>';
+      }).join('') + '<span class="tab-indicator"></span>';
+
+      panelsEl.innerHTML = tabs.map(function (tab) {
+        return '<section class="tab-panel ' + (tab.id === activeTab ? 'active' : '') + '" data-tab-panel="' + escapeHtml(tab.id) + '">' +
+          '<div class="module-grid">' + (panelsByTab[tab.id] || []).join('') + '</div>' +
+        '</section>';
+      }).join('');
+
+      function updateIndicator() {
+        const indicator = tabsEl.querySelector('.tab-indicator');
+        const active = tabsEl.querySelector('.tab.active');
+        if (!active || !indicator) return;
+        const r = active.getBoundingClientRect();
+        const pr = tabsEl.getBoundingClientRect();
+        indicator.style.width = r.width + 'px';
+        indicator.style.transform = 'translateX(' + (r.left - pr.left) + 'px)';
+      }
+
+      tabsEl.querySelectorAll('.tab').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          const next = btn.getAttribute('data-tab');
+          tabsEl.querySelectorAll('.tab').forEach(function (el) { el.classList.toggle('active', el === btn); });
+          panelsEl.querySelectorAll('.tab-panel').forEach(function (panel) {
+            panel.classList.toggle('active', panel.getAttribute('data-tab-panel') === next);
+          });
+          updateIndicator();
+        });
+      });
+
+      requestAnimationFrame(updateIndicator);
+      window.addEventListener('resize', updateIndicator);
+    }
+
+    // ---------------- bootstrap ----------------
+    const meta = REPORT.meta || {};
+    const ui = REPORT.ui || {};
+    const tabs = (ui.tabs && ui.tabs.length) ? ui.tabs : [{ id: 'overview', label: 'Overview' }];
+    const activeTab = ui.active_tab || tabs[0].id;
+    const modules = REPORT.modules || [];
+
+    renderTopbar(meta, ui);
+    renderHeader(meta, ui);
+
+    const panelsByTab = buildPanels(modules, tabs);
+    renderTabs(tabs, activeTab, panelsByTab);
+    mountCharts(modules);
+  })();
+  </script>
+</body>
+</html>
