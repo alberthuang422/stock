@@ -78,23 +78,26 @@ def extreme_grid(p):
       <div class="muted">2021-01 ~ 2026-08，|日收益| ≥ 3%</div></div>"""
 
 # ---------------- 图表数据（JS 注入） ----------------
+# 注意：JSON 中 rolling60/monthly/yearly 的 corr 为百分数（×100，与项目惯例一致），
+# 注入 ECharts 折线图时必须 ÷100 还原为 0~1 小数（历史坑：32/37 号曾整线溢出画布）。
+# zscore / 归一化价格不需要 ÷100。
 # 60日滚动相关：三组合对齐到各自时间轴，全部输出，前端只画 2020 之后
 def build_roll(p):
-    pts = [(d["date"], d["corr"]) for d in p["rolling60"] if d["corr"] is not None]
+    pts = [(d["date"], d["corr"] / 100) for d in p["rolling60"] if d["corr"] is not None]
     return {"date": [x[0] for x in pts], "corr": [x[1] for x in pts]}
 
 # 年度相关（三序列）
 years_all = sorted({y["year"] for p in PAIRS for y in p["yearly"]})
 y_series = {}
 for tag in ["XLK", "XPH", "XLV"]:
-    m = {y["year"]: y["corr"] for y in PA[tag]["yearly"]}
+    m = {y["year"]: y["corr"] / 100 for y in PA[tag]["yearly"]}
     y_series[tag] = [m.get(y) for y in years_all]
 
 # 月度相关（近 36 个月，三组合）
 def build_monthly(p, limit=36):
     m = p["monthly"]
     m = m[-limit:]
-    return {"month": [x["month"] for x in m], "corr": [x["corr"] for x in m]}
+    return {"month": [x["month"] for x in m], "corr": [x["corr"] / 100 for x in m]}
 
 # 归一化价格（分界前后）——用近 3 年的价格做 100 基准更直观
 def build_norm_recent(p, anchor="2023-06-01"):
@@ -357,7 +360,7 @@ echarts.init(document.getElementById('chart_roll_comp')).setOption({
   legend: { data: Object.values(NAME), top: 0 },
   grid: { left: 55, right: 20, top: 40, bottom: 40 },
   xAxis: Object.assign({ type: 'category', data: D.roll.XLK.date, boundaryGap: false }, axisStyle),
-  yAxis: Object.assign({ type: 'value', name: '相关性', min: -0.6, max: 0.8 }, axisStyle),
+  yAxis: Object.assign({ type: 'value', name: '相关性', min: -0.7, max: 1.0 }, axisStyle),
   series: ['XLK','XPH','XLV'].map(t => ({
     name: NAME[t], type: 'line', data: D.roll[t].corr, showSymbol: false,
     lineStyle: { width: 1.6, type: LS[t], color: C[t] }, itemStyle: { color: C[t] },
@@ -392,7 +395,7 @@ echarts.init(document.getElementById('chart_year')).setOption({
   legend: { data: Object.values(NAME), top: 0 },
   grid: { left: 55, right: 20, top: 40, bottom: 40 },
   xAxis: Object.assign({ type: 'category', data: D.years.map(String) }, axisStyle),
-  yAxis: Object.assign({ type: 'value', name: '年相关', min: -0.6, max: 0.8 }, axisStyle),
+  yAxis: Object.assign({ type: 'value', name: '年相关', min: -0.6, max: 1.0 }, axisStyle),
   series: ['XLK','XPH','XLV'].map(t => ({
     name: NAME[t], type: 'line', data: D.yearSeries[t], showSymbol: true, symbolSize: 5,
     connectNulls: false, lineStyle: { width: 1.8, type: LS[t], color: C[t] }, itemStyle: { color: C[t] }
