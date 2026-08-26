@@ -1,0 +1,16 @@
+{
+  "meta": {
+    "strategy_name": "中期选举前标普板块波动率放大（板块对比）",
+    "report_kind": "event_study",
+    "pnl_pct_definition": "板块×事件：选举前10交易日波动放大%",
+    "generated_at": "2026-08-27T02:41:57.017909"
+  },
+  "summary": {
+    "total_trades": 57,
+    "avg_return_pct": 24.17,
+    "median_return_pct": 22.24,
+    "best_trade_pct": 158.13,
+    "worst_trade_pct": -49.87,
+    "win_rate_pct": 71.9
+  }
+}
