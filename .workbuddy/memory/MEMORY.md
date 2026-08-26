@@ -11,6 +11,7 @@
 - 期权数据（富途 futu MCP 唯一来源）：expiration_date 拿到期日 → option_chain 拿该日全部合约（无 OI）→ **OI/量/IV/希腊字母逐合约 quote_stock_quote（code_list≤400，option_ex_data.open_interest）**；返回值过大自动落盘 .workbuddy/projects/.../tool-results/*.txt 用 python 解析。**quote_financials_statements 只传 symbol 可用，加 financial_type/statement_type 必校验失败**。
 
 ## 回测/方法要点
+- **图表单位陷阱（08-26 修复，历史坑）**：分析脚本把相关序列 ×100 存百分数（rolling60/monthly/yearly 的 `corr` 字段），**build 报告注入 ECharts 时必须 ÷100 还原为 0~1 小数**，否则整条折线超出画布（32/37 号报告中招；23/26 号有 `/100` 正确）。zscore / 价格归一化不用除。**预防**：交付前跑 `scripts/_scan_corr_units.py` 全量扫 yAxis 范围 vs 数据值域，命中即修。
 - **T+N 口径（08-25 明确）：T+5/T+10/T+20 等，数字一律指交易日数，非日历日期+N**。即 T+5=事件后第 5 个交易日、T+10=第 10 个交易日……fwdN 即 N 个交易日未来收益，用交易日对齐（跳过周末/假日），绝不用自然日或日期相减。
 - 水下金叉→3日内上穿EMA10&20→站稳→买点=(金叉前10日盘整高+确认日EMA20)/2→30日回踩成交；hold5 T+5 胜率 52.7%→84.8%（确认+回踩后），T+20 反超（72.7%）→ 回踩买应持 20 天。
 - 事件研究流程：池子→adj_close→pct_change→fwdN→mask→对照→**超额=基准 fwdN（非价格）merge 相减**→stats(n,mean,med,win%,std,p25/75,t,二项近似)。独立性最易高估（聚类/拥挤日）、显著性一律视作上限（skill quant-report-review）。

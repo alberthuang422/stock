@@ -1,4 +1,4 @@
-# 工作交接文档（2026-08-25 全天）
+# 工作交接文档（2026-08-26 全天）
 
 > 本文件是每日收尾交接文档，汇总当日工作产出、关键结论、git 状态与遗留待办，供后续会话快速恢复上下文。逐日明细见 `.workbuddy/memory/YYYY-MM-DD.md`，长期要点见 `.workbuddy/memory/MEMORY.md`，报告检索入口为 `README.md`（6 大分类索引）。
 
@@ -6,52 +6,53 @@
 
 | # | 主题 | 核心结论（一句话） |
 |---|---|---|
-| README | 报告索引新建 | 62 份 HTML 建立 6 大分类目录 + README 索引（51 条链接校验无死链）；**新约定：每出新报告必须同步更新 README 对应分类（标题+链接+一句话结论）** |
-| 17重做 | KO RSI 超买（数据更至 8/21） | 超买≠必回调结论维持；新增"窗口路径"维度：全样本 T+20 runup +3.46% vs peakdd −3.42%/maxdd −5.25%——"先冲高 3.5% 再回吐大半"；本轮牛市回吐最浅，Deep RSI≥75 负期望 |
-| 31 | 蓝筹区间下沿支撑 × 周线EMA20压制 | 死叉显著放大尾部风险（C 破位率 71.4% vs A 62.8%）；**评审修正：压制成本=破位率非胜率**（随机日对照 57.1%，A/B 有 ~+0.5pp alpha）、B 组优势系牛市环境假象、浅死叉=下跌中继/深死叉=超跌反弹（深档 T60 反超 +4.20pp） |
-| 32 | KO × XLK/XPH/XLV 相关性 | **20 年首次三线分裂**：KO×XLK 分界后转负 −0.397（防御切换）、×XPH 脱钩至 0.026（制药独立景气 +51.8%）、×XLV 稳 0.4；2026 年度 KO×XLK −40 比 2000 年更深 |
-| 33 | 周线MACD收敛 × 支撑位 | **强否定：收敛无增量 alpha**（CVG T+20 1.79%/59.8% vs NEG 1.59%/62.4%，t=0.49）；支撑位本身 ~+0.5pp 微弱正偏；收敛长度无单调性（4 根最优、≥6 衰减）；周线数据落盘 data/（47 只 1962–2026） |
-| 34 | 道指 9 板块代表股 RSI 超买横向 | 超买无看空 edge 可复制，但**最强的普适规律=窗口路径 9/9 全中**（runup +3.25~+8.91%、peakdd −3.26~−5.20%）；回吐率防御股最高（VZ 1.03/KO 1.00）成长最低（AAPL 0.58） |
-| 35 | CSCO×PANW/CRWD 相关性 | PANW×CRWD 高度抱团且逐月增强（静态 0.84、r60 末值 0.89）——AI 安全单一仓位；CSCO×网安全面脱钩（0.23/0.18）；CSCO 极端日全是财报反应日，网安零跟随；CSCO 提供真实跨链条分散 |
-| — | 同花顺 Financial-API MCP | 4 个托管 HTTP MCP 端点接入（A股 21+4+2+28 工具），仅覆盖 A 股；美股研究线仍靠富途 MCP + CDP |
-| — | Agent Reach 安装 | 隔离 venv v1.5.0（自有 ~/.agent-reach/config.yaml），P2 安全；Twitter 已配 Cookie，**search 404（上游接口失效）→ 用户定案：X 搜索固定走 Chrome CDP，feed 通道保留** |
-| — | 全股票批量支撑位（自动化 22:00） | **3550 行支撑位 / 100 只覆盖**（跳过 ibkr）；data/support_levels/ 三层输出全部校验通过；S1 状态 59 near / 35 above / 6 below，强度 A/B/C=82/12/7% |
-| — | 每日收尾交接 + GitHub 提交 | 本 automation：8/25 全天汇总入库并推送（详见第四节） |
+| VIX研究 | VIX 低位 × SPY 事件研究（SPY 口径） | SPY ETF 1995 起 7964 交易日；VIX<15 共 178 段**中位仅持续 3 天**占全期 30.1%（自我强化：已 10 天再维持 ≥10 天概率 65.3%）；到 VIX 首破 20 中位 57 交易日；短持有（T+5/10）低位日略弱，**T+120 低位日显著更强**（<15 +0.80pp t=3.9；<12 +1.47pp t=6.2）→ 风险在低波动结束途中而非低波动本身 |
+| 36 | 周线 0 轴上方高位死叉 × 回踩 EMA20(1~3%) | **反直觉：支撑未被削弱、破位率也未抬升**——A 组破位率 57.1% 反为三组最低（B 72.7% / C 63.9%），T+20 与随机基线打平；**10~16 周「首次回调」窗口是全部分档最弱段**（+2.63% vs 16-24 周 +7.07%/77%、24-40 周 +6.65%/75%）；DIF 回落 ≥25% 是主要样本杀手（n 37→14 且无收益提升）；A 组破位(n=7) fwd20 −9.95% vs 未破位 +19.59%，破位组 fwd60 仍收回 +8.1%（承接报告31深死叉逻辑） |
+| GE | GE 周线数据刷新 + MACD/EMA 现状 | `GE, 1W.csv` 1914 行 1990-2026-08-25（adj_close 复权，与旧 `ge, W.csv` 1962 无复权版并存）；8 月中旬单周 −5.43%；**周线 MACD 刚现高位死叉**（本周 DIF 13.94 < DEA 14.93）但仍在 0 轴上方；EMA10 353.5 > EMA20 340.6 多头未破坏，价格 348.37 已跌破 EMA10 仍在 EMA20 上方 |
+| 37 | KO vs XLV × 道琼斯相关性 | **XLV 相关 ≈ 2×KO**（Pearson 0.443 vs 0.232）；2026-02 分界后 **KO×道指 0.267→0.005 完全脱钩**（Fisher z=2.97，KO 2026 以来 +31.8% vs 道指 +10.3%，独立行情），XLV×道指 0.474→0.231 仍显著正相关；归因=板块 ETF β 贴大盘 vs 个股公司噪音稀释 |
+| 修复 | 37/32 折线图单位错配（用户报 bug） | 根因：分析脚本 corr ×100 存百分数、build 注入 ECharts 未 ÷100 → 整线溢出画布（32/37 中招；23/26 正常）；全量扫描命中 2 份，build 补 `corr/100` + y 轴按极值校准；**已立铁律**（见第二节），交付前必跑 `scripts/_scan_corr_units.py` |
+| 38 | CSCO vs 纳指/道指相关性 | **CSCO×纳指 27 年高相关 0.728/β0.98 但 2026-02 后断崖脱钩至 0.406**（z=5.9，R² 54%→16%）；×道指仅 0.365 弱联动（道指科技权重低，CSCO 从未是"道指股"）；2026 全部 ≥5% 大波动（02-12 −12.3%/05-14 +13.4%/08-13 −8.4%）均在财报日、指数零跟随；2026 相对纳指 +29.7pp/道指 +33.7pp 历史级超额 → 个股 alpha 期 = 与大盘相关最低期（同 37 KO 脱钩逻辑） |
+| LLY | LLY 8/26 大跌归因调研（推特） | −3.49% 系 **GLP-1 减肥药链整体走弱非个股利空**（NVO −3.45%/MRNA −7.19%/HIMS −5.13%/XBI 回吐）；无降级/FDA 负面/管线失败；背景= Pepsi 停员工 GLP-1 覆盖（8/25-26）+ Reuters 约 14% 雇主 2027 放弃覆盖 → 支付端承压；LLY 起诉 FDA 将 retatrutide 归为生物制品（延专利）；8/24 冲 52 周新高 1247 后技术回调 |
+| fintech | 2020-21 fintech 大行情与腰斩复盘（专家会话） | PYPL PE 峰 79.2x→11.8x、UPST 395x→58.8x、Block P/S 10.7x→2.0x、AFRM 20.5x→6.8x；上行=疫情数字化+零利率+财政刺激（TGA/支票/PPP）+零售交易潮；下行=2022 加息+风投断血（CB Insights 融资 −46%）+监管+盈利不达；2026 AFRM/Block 已修复、ARKF 横盘 |
+| — | 每日收尾交接 + GitHub 提交 | 本 automation：8/26 全天汇总入库并推送（详见第四节） |
 
-## 二、重要方法论决策 / 新增约定（8/25）
+## 二、重要方法论决策 / 新增约定（8/26）
 
-1. **窗口路径计算改用显式前看窗口 T+1..T+N**——`shift(-1)+rolling(N)` 会回看污染（混入事件日前数值）；high/low 按 adj_close/close 复权因子折算（17 重做、34 号复用）。
-2. **事件研究"胜率"必须看相对随机日/环境调整后的增量**（31 评审）：绝对胜率 62.8% 是蓝筹+事件日相对随机日的正常提升，压制组的真实代价是破位率与尾部。
-3. **IHE 数据缺失 → 以 XPH（SPDR 标普制药）代理**（同属美大型制药板块，成分高度重叠），须在报告中注明代理关系（32 号）。
-4. **执行环境新约定**：Agent Reach 上游工具在自身 venv Scripts 目录，调用需加 PATH；**主联网流程（搜索/网页）仍一律走 Chrome CDP**。
-5. **执行环境能力边界**：同花顺 MCP 仅 A 股（无港股/美股/分钟K/宏观/研报）；f-string 嵌 JS 用 @@PLACEH@@+.replace()（35 号踩坑）已于 08-24 前定稿，本次复验。
+1. **图表单位陷阱（铁律，历史坑第三次爆发）**：分析脚本把相关序列 ×100 存百分数（rolling60/monthly/yearly 的 `corr` 字段），**build 报告注入 ECharts 时必须 ÷100 还原为 0~1 小数**，否则整条折线超出画布（32/37 号报告中招；23/26 号有 `/100` 正确）。zscore / 价格归一化不用除。**预防**：交付前跑 `scripts/_scan_corr_units.py` 全量扫 yAxis 范围 vs 数据值域，命中即修。
+2. **事件研究显著性必须互斥对照**：不能拿「事件=基线子集 vs 全集」做检验（t 虚高到 31 的坑），低位日 vs 非低位日互斥组 + Welch t（VIX 研究）。
+3. **ECharts CDN 异步加载**：custom_html 初始化脚本必须加 echarts 就绪轮询，否则无头渲染下 canvas=0 且无报错（VIX dashboard 自检踩坑）。
+4. **极小样本警示**：n 11~14 时统计功效极低，t 值仅作方向参考、显著性一律视作上限（报告36 A/B 组）；ex-post 参数扫描需固化 sensitivity 段 + dashboard「参数敏感性」图。
+5. **Yahoo 周线未完成周拆分 bar**：周线最后一个 bar 是本周进行中数据，做 MACD/EMA 现状须以最后完整周（GE = 2026-08-17 周，收 348.37）为准，本周实时 bar（08-25 收 349.54）仅参考。
 
 ## 三、当日产出清单（reports/ 编号目录）
 
-- `17_KO超买/`（重做版，窗口路径维度）
-- `31_蓝筹区间下沿支撑_周线EMA20压制回测/`（含 `交接文档_评审结论.md`——31 评审二轮：死叉深度两极分化/环境分层，**遗留：建议补★超额口径轴+环境分层表到正式报告，未执行**）
-- `32_ko_科技医药相关性/`、`33_周线MACD收敛支撑位回测/`、`34_道指板块超买横向/`、`35_网安vs网络设备/`
-- 数据：`data/support_levels/`（levels_summary.csv 3550 行 + touches/{ticker}.csv + README.md）；`data/<sym>/<sym>,W.csv`（47 只周线落盘）
-- 脚本：`scripts/ko_sector_corr.py`、`compute_support_levels_all.py`、`screen_bluechip_universe.py`、`support_range_backtest.py`、`build_support_range_dashboard.py`、`macd_converge_support_backtest.py`、`gen_weekly_bluechips.py`、`djia_ob_cross.py`、`csco_panw_crwd_corr.py(+extra)`、`html_to_notion_blocks.py`、`notion_create_page.py`（Notion 报告同步工具，08-25 01:0x）
-- 结果：`results/ko_sector_corr.json`、`djia_ob_cross.json`、`csco_panw_crwd_{corr,extra}.json` + `rollcorr.csv`
+- `vix_low_spy_dashboard/`（VIX 低位 SPY 事件研究）+ `36_高位死叉回踩EMA20支撑/` + `37_ko_xlv_dji相关性/` + `38_思科纳指道指相关性/`
+- 数据：`data/ge/GE, 1W.csv`（1914 行，1990-2026-08-25 复权）；`data/spy/SPY, 1D.csv` / `data/vix/VIX, 1D.csv` 尾部增量至 08-25/08-26（前缀数值与旧版完全一致）
+- 脚本：`vix_low_spy.py`、`build_vix_low_spy_dashboard.py`、`macd_deadcross_ema20_backtest.py`、`build_macd_deadcross_dashboard.py`、`ko_xlv_dji_corr.py`、`build_ko_xlv_dji_report.py`、`csco_index_corr.py`、`build_csco_index_report.py`、`fetch_ge_weekly.cjs`、`ge_weekly_indicator_status.py`、`fetch_vix_spy_update.cjs`、`_scan_corr_units.py`；自检 `test_render_vix_spy.cjs` / `test_render_ko_dji.cjs` / `test_render_csco_index.cjs`
+- 结果：`results/vix_low_spy.json`、`vix_low_spy_events.csv`（2395 事件日）、`macd_deadcross_stats.json`（含 sensitivity 段）、`ko_xlv_dji_corr.json`、`csco_index_corr.json`
+- 有用工具：westock-data kline 解析 markdown 表格存 CSV 流程可复制（`data/dji/dji, 1D.csv`，指数无 adj_close 仅 close）
 
-## 四、git 状态与本次提交（2026-08-26 00:0x，automation）
+## 四、git 状态与本次提交（2026-08-27 00:0x，automation）
 
-**前情**：8/25 白天已按主题提交报告 17重做/31/32/33/34/35 + README + 日志（`ff15d72`~`5bc023e`，共 54 个提交未推送）。远端 main 停 `ff15d72`。
+**前情**：8/26 白天已按主题提交 5 个（`196aaf3` VIX低位SPY → `9ee1ac8` 报告38，含报告36/37/单位修复），提交信息规范。远端 main 同步情况以 `git ls-remote` 验证。
 
-本次 automation 补交 8/25 晚间/遗留未跟踪产出 + 更新交接文档，按主题分 commit（详见第五节各 commit）。
+本次 automation 补交 8/26 晚间未跟踪产出 + 交接文档/日志，按主题分 commit：
+1. GE 周线数据 + 拉数/指标脚本（`data/ge/GE, 1W.csv` + `fetch_ge_weekly.cjs` + `ge_weekly_indicator_status.py`）
+2. SPY/VIX 主数据尾部增量 + 增量拉数脚本（pandas 重写全文件，但前缀数值逐行校验 **0 处不一致**，仅尾部新增 VIX+4 至 08-26 / SPY+3 至 08-25）
+3. 交接文档 + 项目日志（LLY 调研/报告38 追加）+ MEMORY 单位陷阱铁律 + 本 automation 执行历史
 
-**有意未入库**：`scripts/fetch_djia_week_0821.py`（8/21 遗留、无当日产出）；`.workbuddy/tmp/`（临时工具脚本，从未跟踪）。
+**有意未入库**：`data/tmp_vix_spy_update/`（拉数临时输出，数据已被主 CSV 吸收，目录名带 tmp 留作未跟踪）；`scripts/fetch_djia_week_0821.py`（8/21 遗留、无当日产出，历史惯例）。
 
-**push**：原远端 `ff15d72` → 推送全部 54+ 本地提交 → 以 `git ls-remote origin main` 验证新 HEAD 与本地一致。
+**push**：以 `git ls-remote origin main` 验证远端 → 推送本次 + 全部积压本地提交 → 再验证远端新 HEAD 与本地一致。
 
-## 五、重要过程 / 踩坑（8/25）
+## 五、重要过程 / 踩坑（8/26）
 
-- **报告目录编号冲突两次**（32 与 KO×科技重合、35 与 31 重合）：必须 `ls reports/` 核对编号后再定；未跟踪目录 mv 后旧目录在 git 不留痕，add 需用新路径、build/test 脚本 OUTD 路径与 docstring 要逐个同步。
-- 事件研究 memory 要点：事件聚集（同日 ≥3 股系统性大跌）→ t 值一律视为上限（31 评审）；深死叉=深熊超跌反弹（T60 +7.08%），浅死叉=下跌中继（T20 −0.02%）。
-- playground/CDP：先用 taskkill 清残留、LOCALAPPDATA 路径、headless=new、用完关 Chrome(9222)+cdp-proxy（8/25 CSCO 数据经 CDP 拉 PANW/CRWD 刷新至 08-24）。
-- 富途/财务核实：CSCO 极端日 02-12/05-14/08-13 全为财报反应日（盘后 earnings_price_history 核实），网安零跟随。
-- 支撑位批量计算关键实现：进带判据 = K 线与带相交（low≤hi 且 high≥lo）；聚类合并 = 新元素下沿 ≤ 簇中心上沿（数学保证带不重叠）；repair=轮末 10 交易日内收盘回 band_lo 计入。
+- **单位错配修复链条**：现象（用户报图异常）→ 扫描 `_scan_corr_units.py` 全量命中 32/37 → build 脚本 `corr/100` + y 轴极值校准 → `test_render_*.cjs`（playwright-core + 本机 Chrome）实际渲染验证三图 canvas 正常、overflow 为空、0 报错。
+- **事件研究显著性初版坑**：VIX 研究初版拿「事件=基线子集 vs 全集」检验，t 虚高到 31——必须互斥对照组（低位日 vs 非低位日）。
+- **周线数据注意**：Yahoo 周线末尾带未完成周 bar（GE 本周 08-24/08-25）；指标现状以最后完整周为准。
+- **推特事件归因**："最新"时间线滚动加载受限，需多关键词并行 + 同链板块对照（NVO/XBI/HIMS/MRNA）判断板块 vs 个股（LLY 案例）。
+- **报告38 日志追加时漏标题行**（内容行 65 起直接进入正文）——已补齐语义，后续追加日志注意保留 `## 报告N：` 标题格式。
+- 高权限自我约束践行：全程仅 add/commit/push，未做任何删除/clean/reset，全部改动可 git 回滚（本次 3 个 commit 均只含新增文件或已入库文件覆盖）。
 
 ## 六、用户规则（长期，详见 ~/.workbuddy/MEMORY.md）
 
@@ -62,9 +63,12 @@
 
 ## 七、遗留待办 / 下次继续
 
-- **31 号正式报告建议补更（未执行）**：★超额口径轴 + 环境分层表（评审已出结论，报告正文未更新）；31 评审交接文档见报告目录内。
+- **31 号正式报告补更（仍未执行）**：★超额口径轴 + 环境分层表（评审已出结论，报告正文未更新）；31 评审交接文档见报告目录内。
+- **GE 周线高位死叉跟踪**：周一/二 DIF 已死叉 DEA 但 0 轴上方 + EMA 多头未破坏——是否跌破 EMA20（≈340.6 / 现值 348.37）是关键观察位，可作下次盘面确认点。
+- **VIX 低位状态**：VIX<15 已持续多日（8/26 收 15.69 逼近阈值），低位自我强化规律可作波动监控参考。
 - 支撑位 S1 状态追踪（59 near / 35 above / 6 below）——可作每日盘前观察清单；`compute_support_levels_all.py` 幂等可重跑。
 - 生物医药跟踪点：HARMONi-3 终局（2026H2）、OMB 名单（2026-12）、工具弹性主升段预期 2026Q4-2027；XBI 2025-09 以来 +78.4% 链传导验证。
+- **LLY 跟踪点**：retatrutide"生物制品"归类诉讼（涉专利延至 13 年）、Pepsi/雇主 GLP-1 覆盖动向（支付端压力是否扩散）；Zepbound 55+ 医保成本真实世界研究（被指未计药价）。
 - Agent Reach 待配：xueqiu/OpenCLI/github auth/xiaoyuzhou Groq/exa 验证；X 搜索走 Chrome CDP 定案。
 - KO：Q3（10 月）+ Fairlife 勒索软件事件；SBUX：等 FY26Q4 验证利润率，回调 $97-100 观察位。
 - 未核实项留档：NVO 美国专利年份（2031 vs 2033 来源打架）——建议以 FDA Orange Book + 10-K 为准。
