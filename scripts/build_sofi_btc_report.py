@@ -22,11 +22,23 @@ def cls(v):
     if v is None: return "na"
     return "up" if v > 0 else "dn"
 
+def p_fmt(p):
+    if p is None: return "—"
+    if p < 0.001: return "<0.001"
+    return f"{p:.3f}"
+
+def sig_cell(q):
+    """三档显著性: sig=显著(verm) / edge=边缘(orange) / no=—(grey)"""
+    lvl = q.get("sig_level", "sig" if q.get("sig") else "no")
+    if lvl == "sig":
+        return f"<td class='sig'>显著</td>"
+    if lvl == "edge":
+        return f"<td style='color:#E69F00;font-weight:600'>边缘</td>"
+    return "<td class='na'>—</td>"
+
 def q_rows(pair):
     out = []
     for q in pair["quarters"]:
-        sig_txt = "显著" if q["sig"] else "—"
-        sig_cls = "sig" if q["sig"] else "na"
         r = f"{q['r']:.3f}" if q["r"] is not None else "—"
         sp = f"{q['spearman']:.3f}" if q["spearman"] is not None else "—"
         b = f"{q['beta']:.2f}" if q["beta"] is not None else "—"
@@ -34,7 +46,7 @@ def q_rows(pair):
         out.append(
             f"<tr><td><b>{q['label']}</b><div class='tsub'>{q['start'][5:]} ~ {q['end'][5:]} · n={q['n']}</div></td>"
             f"<td class='{cls(q['r'])}'>{r}</td><td>{sp}</td>"
-            f"<td>{q['sig_band']:.3f}</td><td class='{sig_cls}'>{sig_txt}</td>"
+            f"<td>{q['sig_band']:.3f}</td>{sig_cell(q)}<td>{p_fmt(q.get('p'))}</td>"
             f"<td>{b}</td><td>{r2}</td>"
             f"<td class='{cls(q['ret_ek'])}'>{q['ret_ek']:+.1f}%</td>"
             f"<td class='{cls(q['ret_btc'])}'>{q['ret_btc']:+.1f}%</td></tr>")
@@ -43,15 +55,13 @@ def q_rows(pair):
 def year_rows(pair):
     out = []
     for y in pair["yearly"]:
-        sig_txt = "显著" if y["sig"] else "—"
-        sig_cls = "sig" if y["sig"] else "na"
         r = f"{y['r']:.3f}" if y["r"] is not None else "—"
         b = f"{y['beta']:.2f}" if y["beta"] is not None else "—"
         r2 = f"{y['r2']*100:.0f}%" if y["r2"] is not None else "—"
         out.append(
             f"<tr><td><b>{y['label']}</b><div class='tsub'>n={y['n']}</div></td>"
             f"<td class='{cls(y['r'])}'>{r}</td>"
-            f"<td>{y['sig_band']:.3f}</td><td class='{sig_cls}'>{sig_txt}</td>"
+            f"<td>{y['sig_band']:.3f}</td>{sig_cell(y)}<td>{p_fmt(y.get('p'))}</td>"
             f"<td>{b}</td><td>{r2}</td>"
             f"<td class='{cls(y['ret_ek'])}'>{y['ret_ek']:+.1f}%</td>"
             f"<td class='{cls(y['ret_btc'])}'>{y['ret_btc']:+.1f}%</td></tr>")
@@ -59,12 +69,14 @@ def year_rows(pair):
 
 def full_row(pair):
     f = pair["full"]
-    sig_txt = "显著" if abs(f["r"]) > 1.96 / (pair["window"]["n"] - 2) ** 0.5 else "—"
-    sig_cls = "sig" if sig_txt == "显著" else "na"
+    n = pair["window"]["n"]
+    lvl = "no"
+    if f.get("p") is not None:
+        lvl = "sig" if f["p"] < 0.01 else ("edge" if f["p"] < 0.05 else "no")
     return (
-        f"<tr><td><b>全期</b><div class='tsub'>{pair['window']['start']} ~ {pair['window']['end']} · n={pair['window']['n']}</div></td>"
+        f"<tr><td><b>全期</b><div class='tsub'>{pair['window']['start']} ~ {pair['window']['end']} · n={n}</div></td>"
         f"<td class='{cls(f['r'])}'>{f['r']:.3f}</td><td>{f['spearman']:.3f}</td>"
-        f"<td>{1.96/(pair['window']['n']-2)**0.5:.3f}</td><td class='{sig_cls}'>{sig_txt}</td>"
+        f"<td>{1.96/(n-2)**0.5:.3f}</td>{sig_cell({'sig_level': lvl})}<td>{p_fmt(f.get('p'))}</td>"
         f"<td>{f['beta']:.2f}</td><td>{f['r2']*100:.0f}%</td>"
         f"<td class='{cls(f['ret_ek'])}'>{f['ret_ek']:+.1f}%</td>"
         f"<td class='{cls(f['ret_btc'])}'>{f['ret_btc']:+.1f}%</td></tr>")
@@ -82,9 +94,9 @@ JS = {
                "band": round(1.96 / (60 - 2) ** 0.5, 4)},
     "q": {"labels": q_lab,
           "sofi_r": [q["r"] for q in SOFI["quarters"]],
-          "sofi_sig": [q["sig"] for q in SOFI["quarters"]],
+          "sofi_lvl": [q.get("sig_level", "no") for q in SOFI["quarters"]],
           "xyz_r": [q["r"] for q in XYZ["quarters"]],
-          "xyz_sig": [q["sig"] for q in XYZ["quarters"]]},
+          "xyz_lvl": [q.get("sig_level", "no") for q in XYZ["quarters"]]},
     "last20": {"sofi": SOFI["last20"], "xyz": XYZ["last20"]},
     "btc_days": {"sofi": SOFI["btc_days"], "xyz": XYZ["btc_days"]},
     "meta": META,
@@ -202,21 +214,21 @@ HTML = """<!DOCTYPE html>
   <!-- SOFI 季度表 -->
   <div class="card">
     <h2>SOFI × BTC 季度分阶段总表 <span class="tag">R 与 β 同列</span></h2>
-    <div class="paramnote"><b>参数图例：</b>① <b>r (Pearson)</b>=日收益线性相关，−1~1，越接近 1 同涨同跌越强；② <b>Spearman ρ</b>=按收益大小排名后的秩相关，抗极端值，衡量单调联动；③ <b>显著带 ±</b>=±1.96/√(n−2)，|r| 超过此带即「显著」（统计上区别于 0）；④ <b>β</b>=敏感度，BTC 日收益每涨 1% 标的平均跟涨百分之几；⑤ <b>R²</b>=BTC 能解释标的日波动的比例（0~100%，越大联动越强）；⑥ <b>SOFI 涨 / BTC 涨</b>=该区间首尾复权收盘价累计涨跌幅。</div>
+    <div class="paramnote"><b>参数图例：</b>① <b>r (Pearson)</b>=日收益线性相关，−1~1，越接近 1 同涨同跌越强；② <b>Spearman ρ</b>=按收益大小排名后的秩相关，抗极端值，衡量单调联动；③ <b>显著带 ±</b>=±1.96/√(n−2)，|r| 超过此带即「统计上区别于 0」；④ <b>显著性</b>按 p 值分三档——<b>显著</b> p&lt;0.01、<b>边缘</b> 0.01≤p&lt;0.05（可信度打折）、<b>—</b> p≥0.05；⑤ <b>p 值</b>=r 的 t 检验双尾 p（r≠0 的显著性概率，越小越可信）；⑥ <b>β</b>=敏感度，BTC 日收益每涨 1% 标的平均跟涨百分之几；⑦ <b>R²</b>=BTC 能解释标的日波动的比例（0~100%）；⑧ <b>SOFI 涨 / BTC 涨</b>=该区间首尾复权收盘价累计涨跌幅。</div>
     <table>
-      <tr><th>季度</th><th>r (Pearson)</th><th>Spearman ρ</th><th>显著带 ±</th><th>显著性</th><th>β (SOFI~BTC)</th><th>R²</th><th>SOFI 涨</th><th>BTC 涨</th></tr>
+      <tr><th>季度</th><th>r (Pearson)</th><th>Spearman ρ</th><th>显著带 ±</th><th>显著性</th><th>p 值</th><th>β (SOFI~BTC)</th><th>R²</th><th>SOFI 涨</th><th>BTC 涨</th></tr>
       __SOFI_FULL_ROW__
       __SOFI_Q_ROWS__
     </table>
-    <div class="note">显著带 = ±1.96/√(n−2)（n≈60 → ±0.26）；「显著」= |r| 超过显著带。2026Q3 为 07-01 ~ 08-26（40 个交易日）。<b>关键观察：SOFI 的季度涨跌与 r 高低无单调关系——2024Q1（r=0.41）SOFI 大跌 24% 而 BTC 大涨 57%；2024Q3（r=0.41）SOFI 涨 22% 而 BTC 几乎没动</b>。2026Q3 BTC +31.6% 时 SOFI 仅 +2.2%。</div>
+    <div class="note">显著带 = ±1.96/√(n−2)（n≈60 → ±0.26，n=40 → ±0.32）；显著性按 p 值三档：<b>显著</b>（p&lt;0.01）/ <b>边缘</b>（0.01~0.05，可信度打折）/ —（p≥0.05）。2026Q3 为 07-01 ~ 08-26（40 个交易日），r=0.333 仅超出显著带 0.015、p=0.036，属<b>边缘显著</b>——样本太少（n=40）导致过线很勉强。2023Q1（p=0.036）与 2025Q3（p=0.025）同属边缘档。<b>关键观察：SOFI 的季度涨跌与 r 高低无单调关系——2024Q1（r=0.41）SOFI 大跌 24% 而 BTC 大涨 57%；2024Q3（r=0.41）SOFI 涨 22% 而 BTC 几乎没动</b>。2026Q3 BTC +31.6% 时 SOFI 仅 +2.2%。</div>
   </div>
 
   <!-- XYZ 季度表 -->
   <div class="card">
     <h2>XYZ × BTC 季度分阶段总表 <span class="tag">对照组</span></h2>
-    <div class="paramnote"><b>参数图例：</b>同 SOFI 表——① r=日收益线性相关（−1~1）；② Spearman ρ=秩相关；③ 显著带 ±=±1.96/√(n−2)，|r| 超带即显著；④ β=BTC 涨 1% 时 XYZ 平均跟涨 %；⑤ R²=BTC 对 XYZ 日波动的解释比例；⑥ XYZ 涨 / BTC 涨=区间累计涨跌幅。</div>
+    <div class="paramnote"><b>参数图例：</b>同 SOFI 表——① r=日收益线性相关（−1~1）；② Spearman ρ=秩相关；③ 显著带 ±=±1.96/√(n−2)，|r| 超带即区别于 0；④ 显著性三档（显著 p&lt;0.01 / 边缘 0.01~0.05 / — p≥0.05）；⑤ p 值=r 的 t 检验双尾 p；⑥ β=BTC 涨 1% 时 XYZ 平均跟涨 %；⑦ R²=BTC 对 XYZ 日波动的解释比例；⑧ XYZ 涨 / BTC 涨=区间累计涨跌幅。</div>
     <table>
-      <tr><th>季度</th><th>r (Pearson)</th><th>Spearman ρ</th><th>显著带 ±</th><th>显著性</th><th>β (XYZ~BTC)</th><th>R²</th><th>XYZ 涨</th><th>BTC 涨</th></tr>
+      <tr><th>季度</th><th>r (Pearson)</th><th>Spearman ρ</th><th>显著带 ±</th><th>显著性</th><th>p 值</th><th>β (XYZ~BTC)</th><th>R²</th><th>XYZ 涨</th><th>BTC 涨</th></tr>
       __XYZ_FULL_ROW__
       __XYZ_Q_ROWS__
     </table>
@@ -250,13 +262,13 @@ HTML = """<!DOCTYPE html>
   <!-- 分年度 -->
   <div class="card">
     <h2>分年度汇总 <span class="tag">自然年 Pearson</span></h2>
-    <div class="paramnote"><b>参数图例：</b>r / 显著带 ± / β / R² 含义同季度表（按自然年整段计算）；「涨」=该自然年首尾累计涨跌幅（2026 年为截至 08-26 的年内表现）。</div>
+    <div class="paramnote"><b>参数图例：</b>r / 显著带 ± / p 值 / β / R² 含义同季度表（按自然年整段计算）；「涨」=该自然年首尾累计涨跌幅（2026 年为截至 08-26 的年内表现）。</div>
     <table>
-      <tr><th>年份</th><th>r (SOFI×BTC)</th><th>显著带 ±</th><th>显著性</th><th>β</th><th>R²</th><th>SOFI 涨</th><th>BTC 涨</th></tr>
+      <tr><th>年份</th><th>r (SOFI×BTC)</th><th>显著带 ±</th><th>显著性</th><th>p 值</th><th>β</th><th>R²</th><th>SOFI 涨</th><th>BTC 涨</th></tr>
       __SOFI_Y_ROWS__
     </table>
     <table>
-      <tr><th>年份</th><th>r (XYZ×BTC)</th><th>显著带 ±</th><th>显著性</th><th>β</th><th>R²</th><th>XYZ 涨</th><th>BTC 涨</th></tr>
+      <tr><th>年份</th><th>r (XYZ×BTC)</th><th>显著带 ±</th><th>显著性</th><th>p 值</th><th>β</th><th>R²</th><th>XYZ 涨</th><th>BTC 涨</th></tr>
       __XYZ_Y_ROWS__
     </table>
     <div class="note">分年度视角：SOFI×BTC 相关从 2023 年的 0.12（几乎无联动）逐年抬升到 2024 年 0.37、2025 年 0.37、2026 年以来 0.41——<b>联动增强是渐进趋势而非某一事件突变</b>；XYZ×BTC 则 2023~2026 稳定在 0.13~0.35。2026 年（截至 08-26）SOFI −31.4% 而 BTC −12.2%，即便相关性处于历史高位，涨跌方向也由自身决定；2025 年 BTC −9.6% 而 SOFI +85.3%，更是反向样本。</div>
@@ -319,9 +331,15 @@ echarts.init(document.getElementById('chart_roll')).setOption({
   ]
 });
 
-// 3) 季度 r 柱状图（显著实色 / 不显著浅色）
-const sofiBarColor = p => p.dataIndex === -1 ? C.sofi : (D.q.sofi_sig[p.dataIndex] ? C.sofi : '#c9d2de');
-const xyzBarColor = p => D.q.xyz_sig[p.dataIndex] ? C.xyz : '#e8d9b0';
+// 3) 季度 r 柱状图（三档显著性配色: 显著=实色 / 边缘=半透明 / 不显著=浅灰）
+const barCol = (base, lvl) => lvl === 'sig' ? base : (lvl === 'edge' ? base + '80' : '#c9d2de');
+const barFmt = (lvl, v) => {
+  if (lvl === 'sig') return v.toFixed(2) + ' *';
+  if (lvl === 'edge') return v.toFixed(2) + ' ~';
+  return v.toFixed(2);
+};
+const sofiCol = p => barCol(C.sofi, D.q.sofi_lvl[p.dataIndex]);
+const xyzCol = p => barCol(C.xyz, D.q.xyz_lvl[p.dataIndex]);
 echarts.init(document.getElementById('chart_q')).setOption({
   tooltip: tooltipAxis,
   legend: { data: ['SOFI×BTC', 'XYZ×BTC'], top: 0 },
@@ -330,9 +348,9 @@ echarts.init(document.getElementById('chart_q')).setOption({
   yAxis: Object.assign({ type: 'value', name: '季度 r', min: -0.2, max: 0.8 }, axisStyle),
   series: [
     { name: 'SOFI×BTC', type: 'bar', data: D.q.sofi_r, barGap: '20%',
-      itemStyle: { color: sofiBarColor }, label: { show: true, position: 'top', fontSize: 10, formatter: p => D.q.sofi_sig[p.dataIndex] ? p.value.toFixed(2) + ' *' : p.value.toFixed(2) } },
+      itemStyle: { color: sofiCol }, label: { show: true, position: 'top', fontSize: 10, formatter: p => barFmt(D.q.sofi_lvl[p.dataIndex], p.value) } },
     { name: 'XYZ×BTC', type: 'bar', data: D.q.xyz_r, barGap: '20%',
-      itemStyle: { color: xyzBarColor }, label: { show: true, position: 'top', fontSize: 10, formatter: p => D.q.xyz_sig[p.dataIndex] ? p.value.toFixed(2) + ' *' : p.value.toFixed(2) } }
+      itemStyle: { color: xyzCol }, label: { show: true, position: 'top', fontSize: 10, formatter: p => barFmt(D.q.xyz_lvl[p.dataIndex], p.value) } }
   ]
 });
 </script>

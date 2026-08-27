@@ -68,6 +68,20 @@ def seg_stats(df, label):
     r, s, _ = pearson_spearman(df["ret_ek"].values, df["ret_b"].values)
     b, r2 = beta_r2(df["ret_b"].values, df["ret_ek"].values)
     band = 1.96 / np.sqrt(n - 2) if n > 3 else None
+    # p 值（t 检验 r≠0）与三档显著性: sig(p<0.01) / edge(0.01<=p<0.05) / no(p>=0.05)
+    from scipy.stats import t as tdist
+    p_val = None
+    if r is not None and n > 3:
+        tv = r * np.sqrt((n - 2) / (1 - r ** 2))
+        p_val = float(2 * (1 - tdist.cdf(abs(tv), df=n - 2)))
+    if p_val is None:
+        level = "no"
+    elif p_val < 0.01:
+        level = "sig"
+    elif p_val < 0.05:
+        level = "edge"
+    else:
+        level = "no"
     ret_ek = (df["px_ek"].iloc[-1] / df["px_ek"].iloc[0] - 1) * 100
     ret_b = (df["btc_close"].iloc[-1] / df["btc_close"].iloc[0] - 1) * 100
     return {
@@ -77,7 +91,9 @@ def seg_stats(df, label):
         "beta": round(b, 4) if b is not None else None,
         "r2": round(r2, 4) if r2 is not None else None,
         "sig_band": round(band, 4) if band is not None else None,
-        "sig": bool(band is not None and r is not None and abs(r) > band),
+        "p": round(p_val, 4) if p_val is not None else None,
+        "sig_level": level,
+        "sig": level != "no",
         "ret_ek": round(float(ret_ek), 2), "ret_btc": round(float(ret_b), 2),
         "start": str(df["date"].iloc[0].date()), "end": str(df["date"].iloc[-1].date()),
     }
@@ -90,14 +106,21 @@ def build_pair(df_ek, btc, name):
     print(f"[{name}] 窗口 {m['date'].iloc[0].date()} ~ {m['date'].iloc[-1].date()}  n={len(m)}")
 
     # 全期
+    from scipy.stats import t as tdist
     full_r, full_s, _ = pearson_spearman(m["ret_ek"].values, m["ret_b"].values)
     full_b, full_r2 = beta_r2(m["ret_b"].values, m["ret_ek"].values)
     full_ret_ek = (m["px_ek"].iloc[-1] / m["px_ek"].iloc[0] - 1) * 100
     full_ret_b = (m["btc_close"].iloc[-1] / m["btc_close"].iloc[0] - 1) * 100
+    fn = len(m)
+    full_p = None
+    if full_r is not None and fn > 3:
+        tv = full_r * np.sqrt((fn - 2) / (1 - full_r ** 2))
+        full_p = float(2 * (1 - tdist.cdf(abs(tv), df=fn - 2)))
     full = {
         "r": round(full_r, 4), "spearman": round(full_s, 4),
         "beta": round(full_b, 4) if full_b is not None else None,
         "r2": round(full_r2, 4) if full_r2 is not None else None,
+        "p": round(full_p, 4) if full_p is not None else None,
         "ret_ek": round(float(full_ret_ek), 2), "ret_btc": round(float(full_ret_b), 2),
     }
 
@@ -138,10 +161,15 @@ def build_pair(df_ek, btc, name):
     w20 = m.tail(20)
     r20 = float(w20["ret_ek"].corr(w20["ret_b"]))
     b20, r2_20 = beta_r2(w20["ret_b"].values, w20["ret_ek"].values)
+    p20 = None
+    if len(w20) > 3:
+        tv = r20 * np.sqrt((len(w20) - 2) / (1 - r20 ** 2))
+        p20 = float(2 * (1 - tdist.cdf(abs(tv), df=len(w20) - 2)))
     last20 = {
         "start": str(w20["date"].iloc[0].date()), "end": str(w20["date"].iloc[-1].date()), "n": int(len(w20)),
         "r": round(r20, 4), "beta": round(b20, 4) if b20 is not None else None,
         "r2": round(r2_20, 4) if r2_20 is not None else None,
+        "p": round(p20, 4) if p20 is not None else None,
         "ret_ek": round(float((w20["px_ek"].iloc[-1] / w20["px_ek"].iloc[0] - 1) * 100), 2),
         "ret_btc": round(float((w20["btc_close"].iloc[-1] / w20["btc_close"].iloc[0] - 1) * 100), 2),
         "sig_band": round(1.96 / np.sqrt(len(w20) - 2), 4),
