@@ -70,14 +70,15 @@ mcd["stage"] = mcd["date"].map(stage_of)
 
 ev = mcd[mcd["cross"]].copy()
 
-# cd10 去重
-g = ev.sort_values("date").reset_index(drop=True)
-keep, last = [], -10 ** 9
-for i in range(len(g)):
-    if i - last >= 10:
-        keep.append(i)
-        last = i
-ev_cd10 = g.iloc[keep]
+# cd10 去重：事件日相隔 ≥10 个交易日（mcd 为 range 位置索引，行号即交易日序号）
+cross_idx = mcd.index[mcd["cross"]].tolist()
+keep_idx = []
+last_row = -10 ** 9
+for ri in cross_idx:
+    if ri - last_row >= 10:
+        keep_idx.append(ri)
+        last_row = ri
+ev_cd10 = mcd.loc[keep_idx].copy()
 
 
 def stats(s):
