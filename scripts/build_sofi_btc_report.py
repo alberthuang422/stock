@@ -130,6 +130,9 @@ HTML = """<!DOCTYPE html>
   th:first-child, td:first-child { text-align: left; }
   .tsub { font-size: 11px; color: var(--grey); font-weight: 400; }
   .note { font-size: 12.5px; color: var(--sub); margin-top: 10px; }
+  .paramnote { font-size: 12px; color: var(--sub); background: #fbfcfe; border: 1px dashed var(--line);
+               border-radius: 8px; padding: 8px 12px; margin: 10px 0 4px; line-height: 1.75; }
+  .paramnote b { color: var(--ink); }
   .chart { width: 100%; height: 340px; }
   .chart-sm { width: 100%; height: 300px; }
   .concl { border-left: 4px solid var(--blue); background: #f4f8ff; padding: 12px 16px;
@@ -199,6 +202,7 @@ HTML = """<!DOCTYPE html>
   <!-- SOFI 季度表 -->
   <div class="card">
     <h2>SOFI × BTC 季度分阶段总表 <span class="tag">R 与 β 同列</span></h2>
+    <div class="paramnote"><b>参数图例：</b>① <b>r (Pearson)</b>=日收益线性相关，−1~1，越接近 1 同涨同跌越强；② <b>Spearman ρ</b>=按收益大小排名后的秩相关，抗极端值，衡量单调联动；③ <b>显著带 ±</b>=±1.96/√(n−2)，|r| 超过此带即「显著」（统计上区别于 0）；④ <b>β</b>=敏感度，BTC 日收益每涨 1% 标的平均跟涨百分之几；⑤ <b>R²</b>=BTC 能解释标的日波动的比例（0~100%，越大联动越强）；⑥ <b>SOFI 涨 / BTC 涨</b>=该区间首尾复权收盘价累计涨跌幅。</div>
     <table>
       <tr><th>季度</th><th>r (Pearson)</th><th>Spearman ρ</th><th>显著带 ±</th><th>显著性</th><th>β (SOFI~BTC)</th><th>R²</th><th>SOFI 涨</th><th>BTC 涨</th></tr>
       __SOFI_FULL_ROW__
@@ -210,6 +214,7 @@ HTML = """<!DOCTYPE html>
   <!-- XYZ 季度表 -->
   <div class="card">
     <h2>XYZ × BTC 季度分阶段总表 <span class="tag">对照组</span></h2>
+    <div class="paramnote"><b>参数图例：</b>同 SOFI 表——① r=日收益线性相关（−1~1）；② Spearman ρ=秩相关；③ 显著带 ±=±1.96/√(n−2)，|r| 超带即显著；④ β=BTC 涨 1% 时 XYZ 平均跟涨 %；⑤ R²=BTC 对 XYZ 日波动的解释比例；⑥ XYZ 涨 / BTC 涨=区间累计涨跌幅。</div>
     <table>
       <tr><th>季度</th><th>r (Pearson)</th><th>Spearman ρ</th><th>显著带 ±</th><th>显著性</th><th>β (XYZ~BTC)</th><th>R²</th><th>XYZ 涨</th><th>BTC 涨</th></tr>
       __XYZ_FULL_ROW__
@@ -245,6 +250,7 @@ HTML = """<!DOCTYPE html>
   <!-- 分年度 -->
   <div class="card">
     <h2>分年度汇总 <span class="tag">自然年 Pearson</span></h2>
+    <div class="paramnote"><b>参数图例：</b>r / 显著带 ± / β / R² 含义同季度表（按自然年整段计算）；「涨」=该自然年首尾累计涨跌幅（2026 年为截至 08-26 的年内表现）。</div>
     <table>
       <tr><th>年份</th><th>r (SOFI×BTC)</th><th>显著带 ±</th><th>显著性</th><th>β</th><th>R²</th><th>SOFI 涨</th><th>BTC 涨</th></tr>
       __SOFI_Y_ROWS__

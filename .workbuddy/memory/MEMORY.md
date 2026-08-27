@@ -9,7 +9,8 @@
 > 用途：相关性/回测/对照基准的候选池。后续任务直接读取该文件即可，勿重复粘贴清单。
 
 ## 数据与拉数
-- Yahoo 日线唯一可靠途径：本机 Chrome CDP 原生 WebSocket（Chrome `run_in_background=true`，端口 `localhost:9222`，拉数脚本 `dangerouslyDisableSandbox=true`）。模板 scripts/fetch_banks_cdp.cjs（建 tab→navigate→sleep→Runtime.evaluate→close；新版 Chrome PUT /json/new 忽略 url，须建 tab 后 navigate）。用完必须关闭 Chrome(9222 进程树)+cdp-proxy。
+- **币安 BTCUSDT 日线：data/btcusdt/BTCUSDT, 1D.csv（用户提供，2020 起，含 RSI/MACD 列，close 列用）**。**7×24 资产（加密/外汇）收益相关铁律：ret 必须在原始全序列先算再 merge**——merge+filter 后重算 pct_change 会把周五→周一当相邻交易日污染收益（50 号实证：同窗口 r 0.405 vs 0.463）；美股序列（只有交易日）无此问题。币安 UTC 日 K vs 美股美东交易日，日期字符串对齐有数小时窗口差，日线可接受。
+- Yahoo 日线唯一可靠途径：本机 Chrome CDP 原生 WebSocket（Chrome `run_in_background=true`，端口 `localhost:9222`，拉数脚本 `dangerouslyDisableSandbox=true`）。模板 scripts/fetch_banks_cdp.cjs（建 tab→navigate→sleep→Runtime.evaluate→close；新版 Chrome PUT /json/new 忽略 url，须建 tab 后 navigate）。用完必须关闭 Chrome(9222 进程树)+cdp-proxy。**macOS 启动：`"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --remote-debugging-port=9222 --user-data-dir="/tmp/chrome-cdp-xxx" --no-sandbox --disable-gpu`，必须用 run_in_background=true 常驻（shell `&` 会在回合结束被杀）；沙箱报错加 --no-sandbox。**
 - FRED 直连：`https://fred.stlouisfed.org/graph/fredgraph.csv?id=DGS2`，缺失转 NaN dropna。
 - venv：`C:\Users\Administrator\.workbuddy\binaries\python\envs\default\Scripts\python.exe`；node：`C:\Users\Administrator\.workbuddy\binaries\node\versions\22.22.2\node.exe`，npm 装到 `...\node\workspace\node_modules\`（需自建目录）。
 - 期权数据（富途 futu MCP 唯一来源）：expiration_date 拿到期日 → option_chain 拿该日全部合约（无 OI）→ **OI/量/IV/希腊字母逐合约 quote_stock_quote（code_list≤400，option_ex_data.open_interest）**；返回值过大自动落盘 .workbuddy/projects/.../tool-results/*.txt 用 python 解析。**quote_financials_statements 只传 symbol 可用，加 financial_type/statement_type 必校验失败**。
@@ -28,11 +29,13 @@
 - 严格口径：不要股息/容差缓冲；**红涨绿跌 + 色弱安全（Okabe-Ito，叠符号/线型）**；报告浅底深字研报风+ECharts；对照默认窗口 2025-09 起、超额分四档；报告目录中文名「编号_中文名」；财报问题先确认财报期。
 - **相关性分析口径（08-23 设定，已修正）**：以 **60 日滚动为主口径**（历史一致）。13 日曾试点但被实证否定——单点 SE=0.32（±0.62）、极端日扭曲（2026-04"回弹 0.76"在 120 日口径仅 0.42，噪音假象）、lag1 自相关 0.94+；结论一律以 60/120 日为准，13/30 日仅辅助。
 - **R 与 β 必须同列（08-27 设定）**：相关性报告**同时展示相关系数 R 与 β**，禁止只出其一。分析层 beta 已全覆盖全部 *corr*.py；问题在展示层——部分 build 脚本表格只列 R 漏 β，需补。
+- **报告表格附「参数图例」（08-28 设定）**：相关性/统计类报告**每个表格必须带参数说明**（用户会忘记含义）：r(Pearson)=日收益线性相关−1~1、Spearman ρ=秩相关抗极端值、显著带 ±1.96/√(n−2)=|r|超带即显著、β=BTC/基准涨1%标的平均跟涨%、R²=解释波动比例、涨跌幅=区间首尾累计。首个表格放完整图例，后续表简注"同前表"。
 - **显著带口径（08-27 设定）**：滚动相关加显著带 ±1.96/√(n−2)（60 日≈±0.26），区分真联动 vs 噪音；24 号分界后 0.28-0.35 仅勉强跨线（可信度打折，报告表述注意）。
 - **Dashboard 布局（08-25 设定）**：超长事件清单（数百~上千条）**另起独立选项卡「事件明细」收录**，主 tab 只留结论/图表/对照表，不放明细表（构建脚本里把 trades_table 模块 tab 改为独立 tab 并追加）。
 - Token 优化：build 脚本只 print `written: path size`；报告 JSON 瘦身（画廊只注入代表事件）；分析脚本只打汇总；拉数→分析→报告拆三段。
 
 ## 关键结论（2026-08）
+- **SOFI/XYZ×BTC（50 号，08-28）**：全期（2023 起 n=915）SOFI×BTC r=0.303/XYZ×BTC r=0.284、β 0.33~0.43、R²<10%——弱-中相关；**近波（7-29 低点反弹 +23%）非 BTC 驱动**：近 20 交易日逐日 r=0.21 不显著（±0.46）、β=0.32、R²=4%，总涨幅同步是巧合；2026Q3 BTC +31.6% vs SOFI +2.2%/XYZ +7.7% 掉队（XYZ 近 20 日 +0.6% 证伪）；季度 r 2023 年 0.02~0.27 → 2026 年 0.33~0.56 渐进抬升；背离样本：2024Q1 SOFI −24% vs BTC +57%、2025 全年 BTC −9.6% vs SOFI +85.3%。**分阶段口径：用户指定按日历季度（不用 2602 单一分界）。**
 - **景气度 21 号（中国+10 强景气下沿）→ 美股口径 +9 结构性景气上沿 → 三年 2024+8/2025-1/2026+9 V型 → 五年 2022 -4/2023 -1/2024 +8/2025 -1/2026 +9 深V；口径辨析：16 项清单=大药企销售盈利驱动 ≠ XBI 小biotech（融资→并购→临床），XBI×并购金额相关 0.494，2024 方向分歧=脱钩实证**。22 号小biotech 专用 16 项：2022 -14/2023 +4/2024 +4/2025 +8/2026 +11，与 21 号 2023/2025 方向相反。
 - **药明**：日相关 vs 5 大药企 0.01-0.04、vs IBB/XBI 0.10-0.12 → 全球研发外包景气代理，≠美大药企销售代理；药明强≠大药企强。
 - **IBB/GILD/AMGN/VRTX**：IBB×GILD 0.576；AMGN 利好脱钩、VRTX β0.93 贴板块弱弹性、GILD 利空脱钩；引擎=NTRA/ILMN/RVMD+中小市值；ALNY 最大反向（−46.4pp）。
