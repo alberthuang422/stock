@@ -87,22 +87,38 @@ for stg in ["疫情前", "疫情~2022", "本轮牛市"]:
     rows3.append(f"<tr><td class='nowrap'><b>{stg}</b></td>{cells}</tr>")
 
 # ---------- 表4 最近5次（三窗口 最大/最终/ER） ----------
-def wrow(e):
-    def g(v):
-        if v is None:
-            return "<td class='na'>—</td>"
-        cls = "up" if v > 0 else "dn"
-        return f"<td class='{cls} nowrap'>{v:+.2f}%</td>"
+def _g(v):
+    if v is None:
+        return "<td class='na'>—</td>"
+    cls = "up" if v > 0 else "dn"
+    return f"<td class='{cls} nowrap'>{v:+.2f}%</td>"
 
-    def g2(v):
-        if v is None:
-            return "<td class='na'>—</td>"
-        return f"<td class='nowrap'>{v:.2f}</td>"
-    cells = ""
+
+def _g2(v):
+    if v is None:
+        return "<td class='na'>—</td>"
+    return f"<td class='nowrap'>{v:.2f}</td>"
+
+
+def wrow(e):
+    cells = "".join(_g(e.get(f"maxg{NN}")) + _g(e.get(f"fwd{NN}")) + _g2(e.get(f"er{NN}")) for NN in WINS)
+    return f"<tr><td class='nowrap'>{e['date']}</td><td class='nowrap'>{e['band']}</td><td>{e['rsi']}</td>{cells}</tr>"
+
+
+def all_whead():
+    th = "<tr><th rowspan='2'>日期</th><th rowspan='2'>档位</th><th rowspan='2'>RSI</th>"
     for NN in WINS:
-        cells += f"{g(e.get(f'maxg{NN}'))}{g(e.get(f'fwd{NN}'))}{g2(e.get(f'er{NN}'))}"
-    return (f"<tr><td class='nowrap'>{e['date']}</td><td class='nowrap'>{e['band']}</td><td>{e['rsi']}</td>"
-            f"{cells}</tr>")
+        th += f"<th colspan='3' class='grph'>{NN}日窗口<br>最大 / 最终 / ER</th>"
+    th += "<th rowspan='2' class='grph'>超额<br>T+20</th></tr><tr>"
+    for _ in WINS:
+        th += "<th>最大</th><th>最终</th><th>ER</th>"
+    th += "</tr>"
+    return th
+
+
+def all_wrow(e):
+    cells = "".join(_g(e.get(f"maxg{NN}")) + _g(e.get(f"fwd{NN}")) + _g2(e.get(f"er{NN}")) for NN in WINS)
+    return f"<tr><td class='nowrap'>{e['date']}</td><td class='nowrap'>{e['band']}</td><td>{e['rsi']}</td>{cells}{_g(e.get('ex'))}</tr>"
 
 
 def whead():
@@ -117,6 +133,8 @@ def whead():
 
 
 recent_html = "".join(wrow(e) for e in D["recent"])
+all_events_html = "".join(all_wrow(e) for e in sorted(D["events"], key=lambda x: x["date"], reverse=True))
+all_head_html = all_whead()
 
 # ---------- 表5 年份分布 ----------
 chart_year = D["year_dist"]
@@ -166,10 +184,22 @@ __ECHARTS__
   .verdict.gr{border-left-color:var(--teal);background:#eef6f2;}
   .verdict.amber{border-left-color:var(--amber);background:#fdf6ec;}
   .src{color:var(--sub);font-size:11.5px;margin-top:8px;}
+  .tabbar{display:flex;gap:4px;margin-bottom:16px;border-bottom:1px solid var(--line);}
+  .tabbar button{background:transparent;border:none;border-bottom:3px solid transparent;padding:9px 18px;font-size:13.5px;color:var(--sub);cursor:pointer;}
+  .tabbar button:hover{color:var(--ink);}
+  .tabbar button.on{color:var(--ink);border-bottom-color:var(--verm);font-weight:600;}
+  .pane{display:none;}
+  .pane.on{display:block;}
+  tr.grprow td{background:#eef3fa;color:#4b5563;font-weight:700;text-align:center;font-size:11px;padding:4px;}
 </style>
 </head>
 <body>
 <div class="wrap">
+<div class="tabbar">
+  <button class="on" onclick="showTab('pane_main',this)">报告正文</button>
+  <button onclick="showTab('pane_events',this)">事件明细（__N_TOTAL__）</button>
+</div>
+<div class="pane on" id="pane_main">
 
 <div class="card">
   <h1>MCD · RSI 区间跌落买入（越跌越买阶梯式）</h1>
@@ -256,9 +286,29 @@ __ECHARTS__
 </div>
 
 </div>
+
+<div class="pane" id="pane_events">
+<div class="card">
+  <h2>事件明细（全部 __N_TOTAL__ 次买入，日期倒序）</h2>
+  <div class="scroll"><table>
+    <thead>__ALL_HEAD__</thead>
+    <tbody>__ALL_ROWS__</tbody>
+  </table></div>
+  <p class="src">三档区间跌落买入全部事件：每行一次买入（当日收盘），三组列为 T+5 / T+10 / T+20 窗口的 最大涨幅 / 最终收益 / 效率比率 ER，末列为相对 SPY 的 T+20 超额（pp）。</p>
+</div>
+</div>
+
+</div>
 <script>
 var CHART = __DATA_JSON__;
 var C = {blue:"#0072B2", orange:"#E69F00", sky:"#56B4E9", purple:"#9467bd", verm:"#D55E00", teal:"#009E73", sub:"#6b7280", ink:"#1f2329"};
+function showTab(id, btn){
+  document.querySelectorAll(".pane").forEach(function(p){p.classList.remove("on");});
+  document.querySelectorAll(".tabbar button").forEach(function(b){b.classList.remove("on");});
+  document.getElementById(id).classList.add("on");
+  btn.classList.add("on");
+  setTimeout(function(){window.dispatchEvent(new Event("resize"));},60);
+}
 (function(){
   var ch = echarts.init(document.getElementById("ch_band"));
   var b = CHART.band;
@@ -322,6 +372,9 @@ HTML = HTML.replace("__ROWS2__", "".join(rows2))
 HTML = HTML.replace("__ROWS3__", "".join(rows3))
 HTML = HTML.replace("__RECENT_HEAD__", whead())
 HTML = HTML.replace("__RECENT_ROWS__", recent_html)
+HTML = HTML.replace("__N_TOTAL__", str(D["n_total"]))
+HTML = HTML.replace("__ALL_HEAD__", all_head_html)
+HTML = HTML.replace("__ALL_ROWS__", all_events_html)
 HTML = HTML.replace("__DATA_JSON__", json.dumps(CHART, ensure_ascii=False, allow_nan=False))
 
 out = os.path.join(OUTD, "index.html")
