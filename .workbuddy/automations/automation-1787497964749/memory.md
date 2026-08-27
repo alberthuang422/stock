@@ -28,3 +28,12 @@
 - 有意未入库：`data/tmp_vix_spy_update/`（拉数临时输出，数据已被主 CSV 吸收）；`scripts/fetch_djia_week_0821.py`（8/21 遗留、无当日产出）。
 - 安全说明：仅 add/commit/push，无删除/clean/reset；工作区最终仅剩上述 2 个有意保留的未跟踪项。
 - 备查：自动化日志 ~/.workbuddy/automation-logs/2026-08-27_github提交.log。
+
+## 2026-08-28 00:0x（第五次执行）
+- 任务：总结 8/27 全天工作、更新交接文档、git 提交并 push。
+- 前情：8/27 白天已按主题提交 8 个（5dc10ee 日志+README → 009ee00 报告44）；远端 main 停 5dc10ee（积压 2 提交）。
+- 执行：读取 8/27 日志 → 覆盖更新 overview.md（8/27 全天：报告42/38/39/40/41/43/44/45 + 周线网络源重做 + 成交量批量补充 + 富途选股器 + 板块ER原型）→ README 加 43/45 索引 + 头部日期 → 按主题 5 个 commit：①ddb9dc2 报告43+IHE数据 ②3019599 板块ER原型+45号方案交接 ③ba6d66b volume批量补充 ④60e18e4 报告45成品 ⑤交接文档+日志+README → push 10 个提交成功（5dc10ee..HEAD），ls-remote 验证远端一致。
+- 特殊处理：执行中发现并行会话已生成报告45（00:14-00:16），单独成提交并入收尾；`results/*.log` 运行日志不入库。
+- 有意未入库：`results/_scan_step2.log`、`results/supplement_volume.log`（运行日志）；`scripts/fetch_djia_week_0821.py`（8/21 遗留惯例）。
+- 安全说明：仅 add/commit/push，无删除/clean/reset；data CSV 全部 diff 抽查为尾部追加或 dji 修复重写，无数据丢失；工作区最终仅剩上述 3 个有意保留的未跟踪项。
+- 备查：自动化日志 ~/.workbuddy/automation-logs/2026-08-28_github提交.log。
