@@ -4,11 +4,16 @@
 > 逐日明细见 .workbuddy/memory/YYYY-MM-DD.md，脚本 scripts/，报告 reports/（中文目录名）
 > **报告检索：README.md 是唯一入口（6 大分类索引），每出新报告必须同步更新 README 对应分类（标题+链接+一句话结论）**
 
+## 优质蓝筹股池（用户自定义标的池 · 2026-08-27）
+> 用户定义的高质量蓝筹股清单（共 73 只），完整清单见数据文件：**`data/blue_chips.csv`**（列：ticker, sector）。
+> 用途：相关性/回测/对照基准的候选池。后续任务直接读取该文件即可，勿重复粘贴清单。
+
 ## 数据与拉数
 - Yahoo 日线唯一可靠途径：本机 Chrome CDP 原生 WebSocket（Chrome `run_in_background=true`，端口 `localhost:9222`，拉数脚本 `dangerouslyDisableSandbox=true`）。模板 scripts/fetch_banks_cdp.cjs（建 tab→navigate→sleep→Runtime.evaluate→close；新版 Chrome PUT /json/new 忽略 url，须建 tab 后 navigate）。用完必须关闭 Chrome(9222 进程树)+cdp-proxy。
 - FRED 直连：`https://fred.stlouisfed.org/graph/fredgraph.csv?id=DGS2`，缺失转 NaN dropna。
 - venv：`C:\Users\Administrator\.workbuddy\binaries\python\envs\default\Scripts\python.exe`；node：`C:\Users\Administrator\.workbuddy\binaries\node\versions\22.22.2\node.exe`，npm 装到 `...\node\workspace\node_modules\`（需自建目录）。
 - 期权数据（富途 futu MCP 唯一来源）：expiration_date 拿到期日 → option_chain 拿该日全部合约（无 OI）→ **OI/量/IV/希腊字母逐合约 quote_stock_quote（code_list≤400，option_ex_data.open_interest）**；返回值过大自动落盘 .workbuddy/projects/.../tool-results/*.txt 用 python 解析。**quote_financials_statements 只传 symbol 可用，加 financial_type/statement_type 必校验失败**。
+- **富途选股器 quote_stock_screen（08-27 实证，MCP 关键限制）**：①技术指标**筛选**类（indicator_positional_query / indicator_pattern_query）后端一律返回 `invalid parameter`（连 MACD_DIF>0 都报），即"用 RSI/MACD/均线当筛选门槛"走不通。②但技术指标**取回**（retrieve_queries 里 indicator_property，name=52=RSI动态、period=11=日线、indicator_params=[14]）正常。③缩放口径：市值 ×1e3（value/1000=美元）、PE/PB ×1e5、股息率 ×1e3、**RSI ×1e3**（MSFT 67951=67.95）。④可行方案=质量字段(市值/PE/股息)服务端筛 + RSI 取回后客户端分档。⑤返回过大自动落盘 `.workbuddy/projects/.../tool-results/*.txt`，用 python 读（results 结构是 `data.items[].results[]`，每项含 `basic_property_result/simple_property_result/indicator_property_result` 嵌套，取 `.value`）。枚举对照：Indicator 51=RSI_12/52=RSI动态；Period 11=日线；Position 1=OVER/2=BELOW/3=CROSS_UP/4=CROSS_DOWN；simple_field MARKET=1(US=2)；SimpleProperty 2301=市值/2303=PE_TTM/2304=PB/2305=股息率。
 
 ## 回测/方法要点
 - **图表单位陷阱（08-26 修复，历史坑）**：分析脚本把相关序列 ×100 存百分数（rolling60/monthly/yearly 的 `corr` 字段），**build 报告注入 ECharts 时必须 ÷100 还原为 0~1 小数**，否则整条折线超出画布（32/37 号报告中招；23/26 号有 `/100` 正确）。zscore / 价格归一化不用除。**预防**：交付前跑 `scripts/_scan_corr_units.py` 全量扫 yAxis 范围 vs 数据值域，命中即修。
