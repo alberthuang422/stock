@@ -94,15 +94,17 @@ for i in range(1, n - 20):
             if w is None or ws is None:
                 ok = False
                 break
-            for k, v in w.items():
-                feats[f"{k}{NN}"] = v
-            for k, v in ws.items():
-                feats[f"s{k}{NN}"] = v
+            # 统一存百分数（×100），ER 存小数；与 48 号 JSON 口径一致
+            feats[f"maxg{NN}"] = w["maxg"] * 100
+            feats[f"fwd{NN}"] = w["fwd"] * 100
+            feats[f"er{NN}"] = w["er"]
+            feats[f"smaxg{NN}"] = ws["maxg"] * 100
+            feats[f"sfwd{NN}"] = ws["fwd"] * 100
         if ok:
             feats["date"] = dates[i]
             feats["rsi"] = round(rsi[i], 1)
             feats["band"] = BAND_NAME[b]
-            feats["ex"] = round(100 * (feats["fwd20"] - feats["sfwd20"]), 2)
+            feats["ex"] = round(feats["fwd20"] - feats["sfwd20"], 2)
             ev.append(feats)
 
 
@@ -115,11 +117,11 @@ def cd10_filter(ev):
     return sorted(keep, key=lambda x: x["i"])
 
 
-def agg(rows, key, scale=100):
+def agg(rows, key):
     xs = [r[key] for r in rows if r[key] is not None]
     if not xs:
         return None
-    return {"n": len(xs), "mean": round(st.mean(xs) * scale, 2), "median": round(st.median(xs) * scale, 2)}
+    return {"n": len(xs), "mean": round(st.mean(xs), 2), "median": round(st.median(xs), 2)}
 
 
 def stat_block(rows):
@@ -127,7 +129,7 @@ def stat_block(rows):
     for NN in WINS:
         out[f"maxg{NN}"] = agg(rows, f"maxg{NN}")
         out[f"fwd{NN}"] = agg(rows, f"fwd{NN}")
-        out[f"er{NN}"] = agg(rows, f"er{NN}", scale=1)
+        out[f"er{NN}"] = agg(rows, f"er{NN}")
         out[f"win{NN}"] = (round(100 * sum(1 for r in rows if r[f"fwd{NN}"] is not None and r[f"fwd{NN}"] > 0) / max(1, sum(1 for r in rows if r[f"fwd{NN}"] is not None)), 1)
                            if any(r[f"fwd{NN}"] is not None for r in rows) else None)
     ex = [r["ex"] for r in rows]
@@ -147,11 +149,12 @@ for i in range(1, n - 20):
     w = wfeat(px, 20, i)
     ws = wfeat(sp, 20, i)
     if w and ws:
-        base_ev.append({"maxg": w["maxg"], "fwd": w["fwd"], "er": w["er"], "smaxg": ws["maxg"], "sfwd": ws["fwd"]})
-base = {"maxg": agg(base_ev, "maxg"), "fwd": agg(base_ev, "fwd"), "er": agg(base_ev, "er", scale=1),
+        base_ev.append({"maxg": w["maxg"] * 100, "fwd": w["fwd"] * 100, "er": w["er"],
+                        "smaxg": ws["maxg"] * 100, "sfwd": ws["fwd"] * 100})
+base = {"maxg": agg(base_ev, "maxg"), "fwd": agg(base_ev, "fwd"), "er": agg(base_ev, "er"),
         "smaxg": agg(base_ev, "smaxg"), "sfwd": agg(base_ev, "sfwd"),
-        "ex": {"n": len(base_ev), "mean": round(st.mean([100 * (r["fwd"] - r["sfwd"]) for r in base_ev]), 2),
-               "median": round(st.median([100 * (r["fwd"] - r["sfwd"]) for r in base_ev]), 2)}}
+        "ex": {"n": len(base_ev), "mean": round(st.mean([r["fwd"] - r["sfwd"] for r in base_ev]), 2),
+               "median": round(st.median([r["fwd"] - r["sfwd"] for r in base_ev]), 2)}}
 
 # ---------- 阶段 × 档 ----------
 stage_band = {}
