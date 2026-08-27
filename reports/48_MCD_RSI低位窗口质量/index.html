@@ -70,6 +70,8 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
   td.up{color:var(--verm);font-weight:600;white-space:nowrap;}
   td.dn{color:var(--teal);font-weight:600;white-space:nowrap;}
   td.na{color:#c3c8cf;white-space:nowrap;}
+  td.grp{background:#eef3fa;color:#4b5563;font-weight:700;text-align:center;font-size:11px;border-left:1px solid #dbe4ef;border-right:1px solid #dbe4ef;padding:5px 4px;}
+  th.grph{text-align:center;border-left:1px solid #dbe4ef;border-right:1px solid #dbe4ef;background:#eaf1fa;color:#374151;font-weight:700;font-size:11.5px;}
   tr.baserow td{background:#fbf7ee;}
   .scroll{overflow-x:auto;}
   .chart{width:100%;height:420px;}
@@ -156,10 +158,12 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
 <div class="card">
   <h2>四、最近 5 次独立信号（cd10）</h2>
   <div class="scroll"><table>
-    <thead><tr><th>日期</th><th>RSI</th><th>MCD<br>maxG</th><th>SPY<br>maxG</th><th>MCD<br>ER</th><th>SPY<br>ER</th><th>MCD<br>T20</th><th>SPY<br>T20</th><th>超额</th></tr></thead>
-    <tbody><tr><td class='nowrap'>2026-07-15</td><td>37.8</td><td class='up nowrap'>+4.3</td><td class='up nowrap'>+2.4</td><td class='nowrap'>0.19</td><td class='nowrap'>0.18</td><td class='up nowrap'>+4.1</td><td class='up nowrap'>+2.3</td><td class='up nowrap'>+1.7</td></tr><tr><td class='nowrap'>2026-06-22</td><td>35.9</td><td class='up nowrap'>+4.5</td><td class='up nowrap'>+1.4</td><td class='nowrap'>0.08</td><td class='nowrap'>0.04</td><td class='dn nowrap'>-2.3</td><td class='up nowrap'>+0.5</td><td class='dn nowrap'>-2.8</td></tr><tr><td class='nowrap'>2026-06-03</td><td>37.1</td><td class='up nowrap'>+5.4</td><td class='up nowrap'>+0.4</td><td class='nowrap'>0.10</td><td class='nowrap'>0.06</td><td class='up nowrap'>+2.7</td><td class='dn nowrap'>-1.0</td><td class='up nowrap'>+3.7</td></tr><tr><td class='nowrap'>2026-05-19</td><td>38.5</td><td class='up nowrap'>+3.2</td><td class='up nowrap'>+3.5</td><td class='nowrap'>0.10</td><td class='nowrap'>0.06</td><td class='up nowrap'>+1.8</td><td class='up nowrap'>+1.0</td><td class='up nowrap'>+0.8</td></tr><tr><td class='nowrap'>2026-04-21</td><td>38.7</td><td class='up nowrap'>+0.2</td><td class='up nowrap'>+6.3</td><td class='nowrap'>0.37</td><td class='nowrap'>0.36</td><td class='dn nowrap'>-7.0</td><td class='up nowrap'>+4.2</td><td class='dn nowrap'>-11.2</td></tr></tbody>
+    <thead><tr><th rowspan='2'>日期</th><th rowspan='2'>RSI</th><th colspan='3' class='grph'>5日窗口<br>最大 / 最终 / ER</th><th colspan='3' class='grph'>10日窗口<br>最大 / 最终 / ER</th><th colspan='3' class='grph'>20日窗口<br>最大 / 最终 / ER</th></tr><tr><th>最大</th><th>最终</th><th>ER</th><th>最大</th><th>最终</th><th>ER</th><th>最大</th><th>最终</th><th>ER</th></tr></thead>
+    <tbody><tr><td class='nowrap'>2026-07-15</td><td>37.8</td><td class='up nowrap'>+3.21%</td><td class='dn nowrap'>-0.52%</td><td class='nowrap'>0.08</td><td class='up nowrap'>+3.21%</td><td class='up nowrap'>+2.48%</td><td class='nowrap'>0.21</td><td class='up nowrap'>+4.27%</td><td class='up nowrap'>+4.06%</td><td class='nowrap'>0.19</td></tr><tr><td class='nowrap'>2026-06-22</td><td>35.9</td><td class='up nowrap'>+1.40%</td><td class='dn nowrap'>-1.08%</td><td class='nowrap'>0.14</td><td class='up nowrap'>+4.48%</td><td class='up nowrap'>+4.48%</td><td class='nowrap'>0.30</td><td class='up nowrap'>+4.48%</td><td class='dn nowrap'>-2.29%</td><td class='nowrap'>0.08</td></tr><tr><td class='nowrap'>2026-06-03</td><td>37.1</td><td class='up nowrap'>+3.38%</td><td class='up nowrap'>+3.38%</td><td class='nowrap'>0.64</td><td class='up nowrap'>+5.36%</td><td class='up nowrap'>+3.85%</td><td class='nowrap'>0.44</td><td class='up nowrap'>+5.36%</td><td class='up nowrap'>+2.69%</td><td class='nowrap'>0.10</td></tr><tr><td class='nowrap'>2026-05-19</td><td>38.5</td><td class='up nowrap'>+1.20%</td><td class='up nowrap'>+0.04%</td><td class='nowrap'>0.01</td><td class='up nowrap'>+1.20%</td><td class='dn nowrap'>-2.01%</td><td class='nowrap'>0.24</td><td class='up nowrap'>+3.23%</td><td class='up nowrap'>+1.76%</td><td class='nowrap'>0.10</td></tr><tr><td class='nowrap'>2026-04-21</td><td>38.7</td><td class='up nowrap'>+0.23%</td><td class='dn nowrap'>-3.13%</td><td class='nowrap'>0.50</td><td class='up nowrap'>+0.23%</td><td class='dn nowrap'>-5.52%</td><td class='nowrap'>0.47</td><td class='up nowrap'>+0.23%</td><td class='dn nowrap'>-6.97%</td><td class='nowrap'>0.37</td></tr></tbody>
   </table></div>
-  <div class="src">2026 年 5 个信号：MCD maxG +0.2%~+5.4%、ER 0.08~0.37，整体低 ER 震荡——2026-06-22（ER 0.08）超额 −2.8pp，2026-04-21（maxG 0.23%）超额 −11.2pp，印证"低质反弹"；2026-06-03 例外（ER 0.1 但超额 +3.7pp）。</div>
+  <div class="src">2026 年 5 个信号：每行为一次下穿40买入，三组列为 T+5 / T+10 / T+20 窗口内的 最大涨幅 / 最终收益 / 效率比率 ER。
+    例：2026-07-15（RSI 37.8）持有 20 日最终 +4.06%，但路径 ER 仅 0.19——先跌后涨、非单边；
+    2026-06-03（RSI 37.1）T+5 最终 +3.38%、ER 0.64 为最流畅的一次；2026-04-21（RSI 38.7）三窗口最终全负、最大涨幅仅 +0.23%，是"假反弹"典型。</div>
 </div>
 
 <div class="card">

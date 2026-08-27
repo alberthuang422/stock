@@ -90,6 +90,13 @@ def window_feats(px_arr, N=20):
 m_maxg, m_er, m_fwd = window_feats(px, N)
 s_maxg, s_er, s_fwd = window_feats(spy_px, N)
 
+WINS = (5, 10, 20)
+for NN in WINS:
+    g_, e_, f_ = window_feats(px, NN)
+    df[f"m_maxg{NN}"] = g_ * 100
+    df[f"m_er{NN}"] = e_
+    df[f"m_fwd{NN}"] = f_ * 100
+
 df["m_maxg"] = m_maxg * 100
 df["m_er"] = m_er
 df["s_maxg"] = s_maxg * 100
@@ -166,8 +173,12 @@ res = {
     "stage_cd10": stage_cd10,
     "events_cd10": [
         {**{"date": str(r["date"].date()), "rsi": round(float(r["rsi"]), 1), "bucket": r["bucket"]},
+         **{"px": (round(float(r["px"]), 2) if pd.notna(r["px"]) else None)},
+         **{f"m_maxg{NN}": (round(float(r[f"m_maxg{NN}"]), 2) if pd.notna(r[f"m_maxg{NN}"]) else None) for NN in WINS},
+         **{f"m_er{NN}": (round(float(r[f"m_er{NN}"]), 2) if pd.notna(r[f"m_er{NN}"]) else None) for NN in WINS},
+         **{f"m_fwd{NN}": (round(float(r[f"m_fwd{NN}"]), 2) if pd.notna(r[f"m_fwd{NN}"]) else None) for NN in WINS},
          **{k: (round(float(r[k]), 2) if pd.notna(r[k]) else None) for k in
-            ["px", "m_maxg", "s_maxg", "m_er", "s_er", "m_fwd", "s_fwd", "ex"]}}
+            ["s_maxg", "s_er", "m_fwd", "s_fwd", "ex"]}}
         for _, r in ev_cd10.sort_values("date", ascending=False).iterrows()
     ],
 }

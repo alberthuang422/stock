@@ -91,23 +91,51 @@ def erow(e):
         if v is None: return "<td class='na'>—</td>"
         return f"<td class='nowrap'>{v:.2f}</td>"
     return (f"<tr><td class='nowrap'>{e['date']}</td><td>{e['rsi']}</td>"
-            f"{f(e['m_maxg'])}{f(e['s_maxg'])}{g2(e['m_er'])}{g2(e['s_er'])}"
-            f"{f(e['m_fwd'])}{f(e['s_fwd'])}{f(e['ex'])}</tr>")
+            f"{f(e['m_maxg20'])}{f(e['s_maxg'])}{g2(e['m_er20'])}{g2(e['s_er'])}"
+            f"{f(e['m_fwd20'])}{f(e['s_fwd'])}{f(e['ex'])}</tr>")
 
 worst_html = "".join(erow(e) for e in worst)
 best_html = "".join(erow(e) for e in best)
 
-# ---------- 近 5 事件 ----------
+# ---------- 近 5 事件（新格式：三窗口 最大/最终/ER） ----------
 recent = D["events_cd10"][:5] if len(D["events_cd10"]) > 5 else D["events_cd10"]
-recent_html = "".join(erow(e) for e in recent)
+WINS = (5, 10, 20)
+
+def wrow(e):
+    """一行 = 日期 + RSI + T+5/T+10/T+20 各三列（最大涨幅/最终收益/ER）"""
+    def g(v):
+        if v is None: return "<td class='na'>—</td>"
+        cls = "up" if v > 0 else "dn"
+        return f"<td class='{cls} nowrap'>{v:+.2f}%</td>"
+    def g2(v):
+        if v is None: return "<td class='na'>—</td>"
+        return f"<td class='nowrap'>{v:.2f}</td>"
+    cells = ""
+    for NN in WINS:
+        cells += (f"{g(e.get(f'm_maxg{NN}'))}{g(e.get(f'm_fwd{NN}'))}{g2(e.get(f'm_er{NN}'))}")
+    return (f"<tr><td class='nowrap'>{e['date']}</td><td>{e['rsi']}</td>"
+            f"{cells}</tr>")
+
+def whead():
+    th = "<tr><th rowspan='2'>日期</th><th rowspan='2'>RSI</th>"
+    for NN in WINS:
+        th += (f"<th colspan='3' class='grph'>{NN}日窗口<br>最大 / 最终 / ER</th>")
+    th += "</tr><tr>"
+    for NN in WINS:
+        th += "<th>最大</th><th>最终</th><th>ER</th>"
+    th += "</tr>"
+    return th
+
+recent_html = "".join(wrow(e) for e in recent)
+recent_head_html = whead()
 
 # ---------- 图表数据 ----------
 CHART = {
     "bucket": bk_chart,
     "base_m": base["m_maxg"]["mean"], "base_s": base["s_maxg"]["mean"],
     "base_er_m": base["m_er"]["mean"], "base_er_s": base["s_er"]["mean"],
-    "scatter": [{"ex": e["ex"], "er": e["m_er"], "date": e["date"], "rsi": e["rsi"]}
-                for e in D["events_cd10"] if e["ex"] is not None and e["m_er"] is not None],
+    "scatter": [{"ex": e["ex"], "er": e["m_er20"], "date": e["date"], "rsi": e["rsi"]}
+                for e in D["events_cd10"] if e["ex"] is not None and e["m_er20"] is not None],
 }
 
 def clean(o):
@@ -148,6 +176,8 @@ __ECHARTS__
   td.up{color:var(--verm);font-weight:600;white-space:nowrap;}
   td.dn{color:var(--teal);font-weight:600;white-space:nowrap;}
   td.na{color:#c3c8cf;white-space:nowrap;}
+  td.grp{background:#eef3fa;color:#4b5563;font-weight:700;text-align:center;font-size:11px;border-left:1px solid #dbe4ef;border-right:1px solid #dbe4ef;padding:5px 4px;}
+  th.grph{text-align:center;border-left:1px solid #dbe4ef;border-right:1px solid #dbe4ef;background:#eaf1fa;color:#374151;font-weight:700;font-size:11.5px;}
   tr.baserow td{background:#fbf7ee;}
   .scroll{overflow-x:auto;}
   .chart{width:100%;height:420px;}
@@ -234,10 +264,12 @@ __ECHARTS__
 <div class="card">
   <h2>四、最近 5 次独立信号（cd10）</h2>
   <div class="scroll"><table>
-    <thead><tr><th>日期</th><th>RSI</th><th>MCD<br>maxG</th><th>SPY<br>maxG</th><th>MCD<br>ER</th><th>SPY<br>ER</th><th>MCD<br>T20</th><th>SPY<br>T20</th><th>超额</th></tr></thead>
+    <thead>__RECENT_HEAD__</thead>
     <tbody>__RECENT_ROWS__</tbody>
   </table></div>
-  <div class="src">2026 年 5 个信号：MCD maxG +0.2%~+5.4%、ER 0.08~0.37，整体低 ER 震荡——2026-06-22（ER 0.08）超额 −2.8pp，2026-04-21（maxG 0.23%）超额 −11.2pp，印证"低质反弹"；2026-06-03 例外（ER 0.1 但超额 +3.7pp）。</div>
+  <div class="src">2026 年 5 个信号：每行为一次下穿40买入，三组列为 T+5 / T+10 / T+20 窗口内的 最大涨幅 / 最终收益 / 效率比率 ER。
+    例：2026-07-15（RSI 37.8）持有 20 日最终 +4.06%，但路径 ER 仅 0.19——先跌后涨、非单边；
+    2026-06-03（RSI 37.1）T+5 最终 +3.38%、ER 0.64 为最流畅的一次；2026-04-21（RSI 38.7）三窗口最终全负、最大涨幅仅 +0.23%，是"假反弹"典型。</div>
 </div>
 
 <div class="card">
@@ -301,6 +333,7 @@ HTML = HTML.replace("__ECHARTS__", echarts)
 HTML = HTML.replace("__BK_ROWS__", bk_rows_html)
 HTML = HTML.replace("__WORST_ROWS__", worst_html)
 HTML = HTML.replace("__BEST_ROWS__", best_html)
+HTML = HTML.replace("__RECENT_HEAD__", recent_head_html)
 HTML = HTML.replace("__RECENT_ROWS__", recent_html)
 HTML = HTML.replace("__DATA_JSON__", json.dumps(CHART, ensure_ascii=False, allow_nan=False))
 
