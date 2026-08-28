@@ -37,3 +37,18 @@
 - 有意未入库：`results/_scan_step2.log`、`results/supplement_volume.log`（运行日志）；`scripts/fetch_djia_week_0821.py`（8/21 遗留惯例）。
 - 安全说明：仅 add/commit/push，无删除/clean/reset；data CSV 全部 diff 抽查为尾部追加或 dji 修复重写，无数据丢失；工作区最终仅剩上述 3 个有意保留的未跟踪项。
 - 备查：自动化日志 ~/.workbuddy/automation-logs/2026-08-28_github提交.log。
+
+## 2026-08-29 00:1x（第六次执行）
+- 任务：总结 8/28 全天工作、更新交接文档、git 提交并 push。
+- 前情：8/28 白天已按主题提交 7 个（b6e4e58 参数图例 → 0751df0 52号再修正，报告 49/50/51/52/53 + 50-纳指重做）；其中 50 号（SOFI/BTC）已由用户当日授权单独 push（4233167）。远端 main 停 5020794（积压 7 提交）。
+- 执行：读 8/28 日志（含 23:56 JH 讲话汇总）→ 覆盖更新 overview.md（8/28 全天：报告49-53 + 50-纳指 cd10 去重 bug 修正重做 + MCD×SBUX/X6股分析 + CSCO/VST/APO + JH 讲话；方法论新增 7×24 资产收益全序列先算铁律/显著性三档+p 值/参数图例/单位统一/做空口语歧义/危险定性须量化）→ 按主题 6 个 commit：①7d4981b RSI窗口中间产物 ②71000a6 CSCO/VST/APO ③5e840f4 CDP工具 ④4e2d300 FRED迁移收尾（删旧 dgs2/dgs10）⑤d78ac2a 交接文档+日志+automation memory ⑥3c1a434 并行会话 8/29 日志（JH×持仓六股）→ push 11 个提交（5020794..3c1a434）成功，ls-remote 验证远端 3c1a434=本地一致。
+- 数据安全：工作区 6 个已跟踪数据文件显示删除——dgs2/dgs10 属并行会话有意迁移（us_treasury 新文件已入库、新旧数值逐行一致、列名差异 observation_date/value、DGS2 更新至 08-26）；**dgs30/dfii10/t10yie/wti 无迁移去向且 dgs30 仍被 analyze_ipp_drop.py 引用 → git restore 恢复防丢**。
+- 有意未入库：`data/fred_test_dgs2.csv`（并行会话临时测试）、`results/_scan_step2.log`/`supplement_volume.log`（运行日志）、`scripts/fetch_djia_week_0821.py`（8/21 遗留惯例）。
+- 安全说明：全程仅 add/commit/push + git restore（恢复误删数据，属保数据非破坏），无 clean/reset/rm；工作区最终仅剩上述 4 个有意保留的未跟踪项。
+- 备查：自动化日志 ~/.workbuddy/automation-logs/2026-08-29_github提交.log。
+
+## 2026-08-29 02:0x（同日补交）
+- 用户"再提交一次"：工作区唯一新产出 = 并行会话 8/29 日志再次增量（KO +0.79%/SBUX +0.88% JH 讲话场景补充，00:24-00:25）。
+- 执行：单 commit `af8e698`（KO/SBUX 补充分析日志）→ push 成功（cbb0a8a..af8e698），ls-remote 验证远端一致。
+- 未入库：`data/fred_test_dgs2.csv`、`results/_scan_step2.log`、`results/supplement_volume.log`（延续惯例）。
+- 备查：自动化日志 ~/.workbuddy/automation-logs/2026-08-29_github提交.log。
