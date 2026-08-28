@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOFI / AFRM / UPST 财报交易日涨跌相关性</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<style>
+  :root { --ink:#1f2733; --sub:#5b6675; --line:#e3e8ef; --bg:#f7f9fc; --card:#fff;
+          --blue:#0072B2; --orange:#E69F00; --sky:#56B4E9; --green:#009E73; --purple:#CC79A7;
+          --red:#C0392B; --verm:#D55E00; --grey:#8c97a6; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--ink); font-family: -apple-system, "PingFang SC",
+         "Microsoft YaHei", "Helvetica Neue", sans-serif; line-height: 1.65; padding: 24px 16px 60px; }
+  .wrap { max-width: 1100px; margin: 0 auto; }
+  h1 { font-size: 26px; letter-spacing: .5px; margin-bottom: 4px; }
+  .subtitle { color: var(--sub); font-size: 13px; margin-bottom: 22px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+          padding: 20px 22px; margin-bottom: 18px; box-shadow: 0 1px 3px rgba(20,30,50,.05); }
+  .card h2 { font-size: 17px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .card h2::before { content: ""; width: 4px; height: 16px; background: var(--blue); border-radius: 2px; }
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 4px; }
+  .kv { background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; }
+  .kv .k { font-size: 12px; color: var(--sub); }
+  .kv .v { font-size: 20px; font-weight: 700; margin-top: 2px; }
+  .kv .v small { font-size: 12px; font-weight: 400; color: var(--sub); }
+  .kv .muted { font-size: 13px; color: var(--sub); margin-top: 4px; font-weight: 400; }
+  .up { color: var(--red); } .dn { color: var(--green); } .na { color: var(--grey); }
+  .sig { color: var(--verm); font-weight: 600; }
+  .tag { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 20px;
+         background: #eef3fb; color: var(--blue); margin-left: 6px; vertical-align: 2px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 6px; }
+  th, td { padding: 8px 10px; text-align: right; border-bottom: 1px solid var(--line); }
+  th { background: #f1f4f9; font-weight: 600; }
+  th:first-child, td:first-child { text-align: left; }
+  .tsub { font-size: 11px; color: var(--grey); font-weight: 400; }
+  .note { font-size: 12.5px; color: var(--sub); margin-top: 10px; }
+  .paramnote { font-size: 12px; color: var(--sub); background: #fbfcfe; border: 1px dashed var(--line);
+               border-radius: 8px; padding: 8px 12px; margin: 10px 0 4px; line-height: 1.75; }
+  .paramnote b { color: var(--ink); }
+  .chart { width: 100%; height: 340px; }
+  .chart-sm { width: 100%; height: 300px; }
+  .concl { border-left: 4px solid var(--blue); background: #f4f8ff; padding: 12px 16px;
+           border-radius: 0 8px 8px 0; font-size: 14px; margin-top: 10px; }
+  ul.tl { list-style: none; }
+  ul.tl li { padding: 8px 0 8px 18px; border-left: 2px solid var(--line); margin-left: 6px; position: relative; }
+  ul.tl li::before { content: ""; position: absolute; left: -5px; top: 14px; width: 8px; height: 8px;
+                     border-radius: 50%; background: var(--blue); }
+  ul.tl li b { color: var(--blue); }
+  .legend-dot { display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:5px; }
+  .disclaimer { font-size: 12px; color: var(--sub); margin-top: 16px; border-top: 1px dashed var(--line);
+                padding-top: 12px; }
+  .src { font-size: 11.5px; color: var(--sub); margin-top: 8px; }
+  .pill { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+  .pill.sofi { background: #e7f0fa; color: #1e5e93; }
+  .pill.afrm { background: #fdf1dd; color: #b5761c; }
+  .pill.upst { background: #f3e8f5; color: #7d3c98; }
+  @media (max-width: 720px) { .grid3 { grid-template-columns: 1fr 1fr; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>SOFI / AFRM / UPST · 财报交易日涨跌相关性</h1>
+  <div class="subtitle">金融科技三剑客「谁发财报，当天相互联动怎样变化」· 事件研究（T0=财报发布后首个交易日）· 共同面板 2021-06-01 ~ 2026-08-26 · 62 个财报事件 / 58 个事件日 · 数据截至 2026-08-26</div>
+
+  <!-- 核心结论 -->
+  <div class="card">
+    <h2>核心结论</h2>
+    <div class="grid3">
+      <div class="kv"><div class="k">财报日相关（三对均值）</div>
+        <div class="v">0.36 <small>vs 非财报日 0.63</small></div>
+        <div class="muted">财报日联动 <b>显著更弱</b>（Fisher z 检验 3 对全部显著）</div></div>
+      <div class="kv"><div class="k">财报日 |波动| 放大（自身）</div>
+        <div class="v">1.8× ~ 2.6×</div>
+        <div class="muted">UPST 放大最猛（2.55×），财报自身冲击主导当日</div></div>
+      <div class="kv"><div class="k">三票同向概率</div>
+        <div class="v"><span class="sig">51.7%</span> <small>vs 非财报日 64.2%</small></div>
+        <div class="muted">财报日连方向一致性都变差——个股事件打破板块联动</div></div>
+    </div>
+    <div class="concl">
+      ① <b>财报日显著「脱钩」</b>：三对组合在财报交易日的日收益相关 0.26~0.44，环比非财报日 0.62~0.64 明显更低；T+0 是三对组合 11 日窗口（T−5~T+5）中相关性<b>最低点</b>（"凹陷"），AFRM×UPST 从平时 0.64 → 财报日 0.26。<br>
+      ② <b>谁发财报，当天主角是它自己</b>：发报票当日 |波动| 放大 1.8~2.6 倍（UPST 中位 |5.6%| 最烈），而其余两票平均跟涨跌 <b>不为 0 且方向逐票分化</b>（如 UPST 发布日 AFRM 平均 −2.7%）；三票同向概率从非财报日的 64% 降到 52%——财报个体冲击把"联动的三兄弟"拆成了"各说各话"。<br>
+      ③ <b>×UPST 的传染最不对称</b>：SOFI 发财报日，UPST 同向率 76%、平均 −4.4%（SOFI 财报常与 UPST 同步承压）；但 UPST 发财报日，AFRM 相关仅 0.18、β≈0——UPST 暴涨暴跌基本不传染。AFRM 发报日 UPST 平均 +3.3%（AFRM 财报好时 UPST 常被带动）。<br>
+      ④ <b>年度衰减趋势清晰</b>：事件日三对相关 2021（0.87~0.97，上市初抱团）→ 2022（0.56~0.66）→ 2023-2025（多数 0~0.36 甚至转负）→ 2026（0~0.52，AFRM×UPST≈0）。<b>财报日联动从"高度同步"走向"基本独立"</b>——三家公司商业模式与投资者结构分化是主因（UPST 高度依赖融资利差、AFRM 消费信贷、SOFI 银行+科技）。<br>
+      ⑤ <b>双发日不是联动催化剂</b>：4 个双发日（2021-11-10 SOFI+AFRM、2023-05-10 UPST+AFRM、2024-05-08 AFRM+UPST、2024-11-08 UPST+AFRM）里 3 个是两张票各自爆点（UPST 2023-05-10 +34.6%、2024-11-08 +46.0%；AFRM 2024-05-08 −9.5%），第三票（SOFI）在 2024-11-08 大涨 +9.3%——虽无单日统计意义，但说明财报消息冲击是"一对多广播"，方向完全取决于各自超预期，无稳定传染模式。<br>
+      ⑥ <b>操作含义</b>：财报窗口别把这三只当一回事——某只出财报当天，另外两只<b>没有稳定的统计联动可依赖</b>（方向 52% 随机、相关显著低于平时），押"财报联动交易"缺乏历史依据；真正可参考的是发报票自身波动放大倍数（UPST 最狠 2.6×）。
+    </div>
+    <div class="src">数据：三家日线来自 Yahoo Finance（close，美东交易日，复权口径 adj_close 校正）；财报交易日清单来自富途双接口（earnings_price_move × earnings_price_history 并集），AFRM FY2022Q4（2022-08-25 盘后 / 交易日 2022-08-26）由 SEC 8-K / Business Wire 官方稿核实补入。共同面板 2021-06-01 起（SOFI 上市首日后）。AFRM 2026-08-27 盘后财报因面板缺 08-28 数据不纳入。事件日=财报发布后首个完整交易日；同日双发按单一观测日计（58 个事件日）。</div>
+  </div>
+
+  <!-- 事件日 vs 非事件日 -->
+  <div class="card">
+    <h2>财报日 vs 非财报日：相关性系统性下降 <span class="tag">T0=财报发布后首个交易日</span></h2>
+    <div class="paramnote"><b>参数图例：</b>① <b>r (Pearson)</b>=两票日收益线性相关（−1~1，越接近 1 越同涨同跌）；② <b>Spearman ρ</b>=秩相关，抗极端值（财报日常见 20%+ 极端日，ρ 比 r 更稳）；③ <b>显著性</b>三档：<b>显著</b> p&lt;0.01 / <b>边缘</b> 0.01≤p&lt;0.05 / — p≥0.05；④ <b>p 值</b>=r 的 t 检验双尾 p；⑤ <b>β</b>=前一票涨 1% 时后一票平均跟涨 %（敏感度）；⑥ <b>R²</b>=前一票波动解释后一票比例；⑦ <b>diff z</b>=Fisher z 两样本相关差异检验：z<0 说明事件日相关显著低于非事件日。</div>
+    <table>
+      <tr><th>配对</th><th>财报日 r</th><th>财报日 ρ</th><th>显著</th><th>p</th><th>β</th><th>R²</th><th>非财报日 r</th><th>非财报日 β</th><th>差异检验 (z)</th></tr>
+      <tr><td><b>SOFI×AFRM</b></td><td class='up'>0.381</td><td>0.417</td><td class='sig'>显著</td><td>0.001</td><td>0.54</td><td>14%</td><td class='up'>0.633</td><td>0.90</td><td class='sig'>z=-2.52 (p=0.012)</td></tr>
+<tr><td><b>SOFI×UPST</b></td><td class='up'>0.416</td><td>0.538</td><td class='sig'>显著</td><td>&lt;0.001</td><td>0.86</td><td>17%</td><td class='up'>0.619</td><td>0.87</td><td class='sig'>z=-2.03 (p=0.042)</td></tr>
+<tr><td><b>AFRM×UPST</b></td><td class='up'>0.294</td><td>0.450</td><td style='color:#E69F00;font-weight:600'>边缘</td><td>&lt;0.001</td><td>0.43</td><td>9%</td><td class='up'>0.643</td><td>0.64</td><td class='sig'>z=-3.34 (p=&lt;0.001)</td></tr>
+    </table>
+    <div class="note"><b>三对组合财报日相关全部显著低于非财报日</b>（Fisher z：−2.03 ~ −3.34，p=0.001~0.042）。财报日相关 0.26~0.44 仍未归零（同受板块/利率环境影响），但相比平日 0.62~0.64 的"高联动常态"明显松绑。财报日 Spearman ρ 相对 r 的降幅较小（如 AFRM×UPST r 0.26 → ρ 0.45），说明极端日扰动把线性相关压低，而"方向大致一致"仍保留一部分——但方向一致性也只有 52%（见下）。</div>
+    <div class="grid3">
+      <div class='kv'><div class='k'>SOFI 财报日 vs 非财报日 |波动|</div><div class='v'>5.5% <small>vs 3.0%</small></div><div class='muted'>放大 <b>1.8×</b> · 中位数 3.5% vs 2.5%</div></div><div class='kv'><div class='k'>AFRM 财报日 vs 非财报日 |波动|</div><div class='v'>7.5% <small>vs 4.0%</small></div><div class='muted'>放大 <b>1.9×</b> · 中位数 3.7% vs 3.0%</div></div><div class='kv'><div class='k'>UPST 财报日 vs 非财报日 |波动|</div><div class='v'>10.6% <small>vs 4.2%</small></div><div class='muted'>放大 <b>2.6×</b> · 中位数 5.6% vs 3.2%</div></div>
+    </div>
+    <div class="note"><span class="legend-dot" style="background:#0072B2"></span>自身波动放大倍数：SOFI 1.8× / AFRM 1.9× / UPST 2.6×——UPST 财报日自身平均 |波幅| 高达 10.6%（中位 5.6%），远超 SOFI 5.5%。</div>
+  </div>
+
+  <!-- 窗口相关曲线 -->
+  <div class="card">
+    <h2>事件窗口 T−5 ~ T+5 相关性曲线：T+0 是"凹陷点" <span class="tag">pooled 事件对齐</span></h2>
+    <div id="chart_win" class="chart"></div>
+    <div class="note">实线=财报事件对齐窗口逐日三对相关；虚线=随机抽样非财报日同口径基线。三对组合的<b>事件日(T+0)相关均为窗口最低</b>（SOFI×AFRM 0.38 vs 基线 0.70、AFRM×UPST 0.26 vs 0.70），且明显低于 T−1（0.48~0.68）与 T+1（0.40~0.55）。财报发布把当天联动打断，次日即部分恢复。AFRM×UPST 的凹陷最深（−0.44），SOFI×AFRM 最浅（−0.32）——UPST 相关的那两对破坏更大。</div>
+  </div>
+
+  <!-- 按发报票分组 -->
+  <div class="card">
+    <h2>按「谁发财报」分组：传染方向完全不对称 <span class="tag">T0 当日</span></h2>
+    <div class="paramnote"><b>参数图例：</b>① <b>胜率</b>=发报票当日上涨概率；② <b>发报票均值/|均值|</b>=当日收益均值 / 绝对波幅均值；③ <b>跟随票同向率</b>=与发报票同涨跌的比例；④ <b>跟随票均值</b>=跟随票当日平均收益（%）；⑤ <b>r</b>=跟随票×发报票当日相关。</div>
+    <table>
+      <tr><th>发报票</th><th>当日胜率</th><th>发报票均值</th><th>发报票 |均值|</th>
+          <th>跟随1</th><th>跟随1均值</th><th>跟随1中位</th><th>跟随1 |均值|</th><th>r</th>
+          <th>跟随2</th><th>跟随2均值</th><th>跟随2中位</th><th>跟随2 |均值|</th><th>r</th></tr>
+      <tr><td><b>SOFI</b><div class='tsub'>21 个事件日</div></td><td>52%</td><td class='up'>+0.59%</td><td>9.4%</td><td><b>AFRM</b><div class='tsub'>同向率 57% · β 0.32</div></td><td class='dn'>-0.21%</td><td class='up'>+0.51%</td><td>4.3%</td><td class='up'>0.596</td><td><b>UPST</b><div class='tsub'>同向率 76% · β 0.65</div></td><td class='dn'>-4.36%</td><td class='dn'>-3.00%</td><td>7.8%</td><td class='up'>0.569</td></tr>
+<tr><td><b>AFRM</b><div class='tsub'>20 个事件日</div></td><td>45%</td><td class='up'>+1.17%</td><td>13.6%</td><td><b>SOFI</b><div class='tsub'>同向率 65% · β 0.13</div></td><td class='up'>+0.07%</td><td class='up'>+0.24%</td><td>3.6%</td><td class='up'>0.464</td><td><b>UPST</b><div class='tsub'>同向率 70% · β 0.22</div></td><td class='up'>+3.34%</td><td class='dn'>-0.39%</td><td>9.2%</td><td class='up'>0.241</td></tr>
+<tr><td><b>UPST</b><div class='tsub'>21 个事件日</div></td><td>29%</td><td class='dn'>-0.07%</td><td>17.6%</td><td><b>SOFI</b><div class='tsub'>同向率 67% · β 0.09</div></td><td class='up'>+0.10%</td><td class='dn'>-0.37%</td><td>3.2%</td><td class='up'>0.454</td><td><b>AFRM</b><div class='tsub'>同向率 57% · β 0.06</div></td><td class='dn'>-2.67%</td><td class='dn'>-1.49%</td><td>4.8%</td><td class='up'>0.184</td></tr>
+    </table>
+    <div class="note">读法：<b>SOFI 发报日</b>（n=21）UPST 同向率 76%、平均 −4.4%——SOFI 财报常与 UPST 同步走弱（两者贷超/信贷预期联动）；<b>AFRM 发报日</b>（n=20）UPST 平均 +3.3%——AFRM 财报好时 UPST 常被带动（同为消费信贷景气代理）；<b>UPST 发报日</b>（n=21）AFRM 相关仅 0.18、跟涨跌均值 ≈0——UPST 的暴涨暴跌（四次 |30%|+ 极端日）完全不传染给其他两家，因为市场把 UPST 事件读作「UPST 独有」而非「板块信号」。</div>
+    <table style="margin-top:14px">
+      <tr><th>分组</th><th colspan="3">发报日当天配对相关（若该票在配对内）</th></tr>
+      <tr><td><b>SOFI 发报日</b><div class='tsub'>21 个事件日</div></td><td><b>SOFI×AFRM</b><div class='tsub'>r=0.596 · p=0.004</div></td><td><b>SOFI×UPST</b><div class='tsub'>r=0.569 · p=0.007</div></td></tr>
+<tr><td><b>AFRM 发报日</b><div class='tsub'>20 个事件日</div></td><td><b>SOFI×AFRM</b><div class='tsub'>r=0.464 · p=0.039</div></td><td><b>AFRM×UPST</b><div class='tsub'>r=0.241 · p=0.305</div></td></tr>
+<tr><td><b>UPST 发报日</b><div class='tsub'>21 个事件日</div></td><td><b>SOFI×UPST</b><div class='tsub'>r=0.454 · p=0.039</div></td><td><b>AFRM×UPST</b><div class='tsub'>r=0.184 · p=0.424</div></td></tr>
+    </table>
+  </div>
+
+  <!-- 年度 -->
+  <div class="card">
+    <h2>分年度演化：财报日联动逐年"脱钩" <span class="tag">事件日口径</span></h2>
+    <div id="chart_year" class="chart-sm"></div>
+    <div class="paramnote"><b>参数图例：</b><b>均值</b>=该年所有财报日的当日平均涨跌（%）；<b>|均值|</b>=平均绝对波幅（%）；<b>r</b>=该年事件日两票相关。</div>
+    <table>
+      <tr><th>年份</th><th>SOFI 均值</th><th>AFRM 均值</th><th>UPST 均值</th><th>SOFI |均值|</th><th>AFRM |均值|</th><th>UPST |均值|</th>
+          <th>SOFI×AFRM</th><th>SOFI×UPST</th><th>AFRM×UPST</th></tr>
+      <tr><td><b>2021</b><div class='tsub'>5 日</div></td><td class='dn'>-1.04%</td><td class='dn'>-3.14%</td><td class='dn'>-3.19%</td><td>3.1%</td><td>5.2%</td><td>7.0%</td><td class='up'>0.871</td><td class='up'>0.975</td><td class='up'>0.946</td></tr>
+<tr><td><b>2022</b><div class='tsub'>12 日</div></td><td class='dn'>-0.20%</td><td class='dn'>-5.32%</td><td class='dn'>-6.42%</td><td>7.1%</td><td>12.1%</td><td>12.7%</td><td class='up'>0.624</td><td class='up'>0.661</td><td class='up'>0.559</td></tr>
+<tr><td><b>2023</b><div class='tsub'>11 日</div></td><td class='up'>+1.51%</td><td class='up'>+3.83%</td><td class='dn'>-1.54%</td><td>6.5%</td><td>8.9%</td><td>14.2%</td><td class='up'>0.200</td><td class='up'>0.360</td><td class='up'>0.290</td></tr>
+<tr><td><b>2024</b><div class='tsub'>10 日</div></td><td class='up'>+2.48%</td><td class='up'>+2.00%</td><td class='up'>+6.52%</td><td>6.2%</td><td>7.1%</td><td>12.8%</td><td class='up'>0.277</td><td class='up'>0.213</td><td class='dn'>-0.113</td></tr>
+<tr><td><b>2025</b><div class='tsub'>12 日</div></td><td class='up'>+0.69%</td><td class='up'>+2.70%</td><td class='dn'>-0.66%</td><td>2.9%</td><td>5.9%</td><td>7.7%</td><td class='up'>0.100</td><td class='dn'>-0.048</td><td class='up'>0.026</td></tr>
+<tr><td><b>2026</b><div class='tsub'>8 日</div></td><td class='dn'>-3.59%</td><td class='dn'>-2.78%</td><td class='dn'>-3.77%</td><td>5.8%</td><td>3.0%</td><td>6.4%</td><td class='dn'>-0.407</td><td class='up'>0.520</td><td class='dn'>-0.003</td></tr>
+<tr><td><b>2021–2023</b><div class='tsub'>28 日</div></td><td colspan='6' class='na'>—</td><td class='up'>0.477</td><td class='up'>0.538</td><td class='up'>0.468</td></tr>
+<tr><td><b>2024–2026</b><div class='tsub'>30 日</div></td><td colspan='6' class='na'>—</td><td class='up'>0.224</td><td class='up'>0.258</td><td class='dn'>-0.013</td></tr>
+    </table>
+    <div class="note">2021 年上市初期财报日相关高达 0.87~0.97（"金融科技新贵"整体抱团），2022 年（加息+信贷恐慌）0.56~0.66，此后逐年断裂：2023~2025 多数配对 0~0.36 且 2025 年两对转负，2026 年 AFRM×UPST ≈0。<b>三家公司从"同一叙事"走向"各自基本面"</b>——UPST 仍是三票中波动最大、财报日最独立的一个。</div>
+  </div>
+
+  <!-- 双发日 -->
+  <div class="card">
+    <h2>四次「双发日」：各自爆点，无稳定传染 <span class="tag">同日两家发报</span></h2>
+    <div class="paramnote"><b>参数图例：</b>当日三票收盘涨跌（%）；<b>粗体</b>标记当日发报票。</div>
+    <table>
+      <tr><th>日期</th><th>发报票</th><th>SOFI</th><th>AFRM</th><th>UPST</th></tr>
+      <tr><td><b>2021-11-10</b></td><td>SOFI+AFRM</td><td class='dn'>-7.8%</td><td class='dn'>-15.4%</td><td class='dn'>-18.2%</td></tr>
+<tr><td><b>2023-05-10</b></td><td>UPST+AFRM</td><td class='up'>+1.3%</td><td class='dn'>-0.4%</td><td class='up'>+34.6%</td></tr>
+<tr><td><b>2024-05-08</b></td><td>AFRM+UPST</td><td class='dn'>-0.1%</td><td class='dn'>-9.5%</td><td class='dn'>-5.6%</td></tr>
+<tr><td><b>2024-11-08</b></td><td>UPST+AFRM</td><td class='up'>+9.3%</td><td class='dn'>-4.7%</td><td class='up'>+46.0%</td></tr>
+    </table>
+    <div class="note">4 次双发日里，发报票各自爆点（+34.6% / +46.0% / −9.5% / −15.4%）方向取决于各自超预期，无"双发必同向"规律；第三票 3/4 次跟随发报票方向（2024-11-08 SOFI +9.3% 同步 UPST +46%），但样本仅 4 次无统计意义。核心信息：<b>财报冲击是一对多的独立广播，板块内部不存在可交易的联动模式。</b></div>
+  </div>
+
+  <div class="disclaimer">本报告为统计描述性分析，不构成投资建议。财报日事件研究样本 58 个事件日，年度分档 n=5~12，双发日 n=4，统计功效有限，结论应视为「倾向」而非「定论」。子样本配对相关未校正多重检验。数据来源：Yahoo Finance 日线、富途行情接口（财报日）、SEC/Business Wire（AFRM FY22Q4 补入核实）。</div>
+</div>
+
+<script>
+const JS = {"win": {"SOFI~AFRM": {"x": [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5], "y": [0.665, 0.6382, 0.5406, 0.5897, 0.5954, 0.3805, 0.5481, 0.5583, 0.7064, 0.7525, 0.6238]}, "SOFI~UPST": {"x": [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5], "y": [0.7551, 0.6576, 0.7288, 0.6089, 0.482, 0.437, 0.4015, 0.4137, 0.2366, 0.6428, 0.589]}, "AFRM~UPST": {"x": [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5], "y": [0.8142, 0.7832, 0.6392, 0.5193, 0.6772, 0.2648, 0.4135, 0.6589, 0.5494, 0.5797, 0.6967]}}, "wbase": {"SOFI~AFRM": {"x": [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5], "y": [0.5886, 0.6278, 0.66, 0.5974, 0.5387, 0.6998, 0.6729, 0.6707, 0.5511, 0.6307, 0.5834]}, "SOFI~UPST": {"x": [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5], "y": [0.6936, 0.5929, 0.6672, 0.5634, 0.5387, 0.7015, 0.5873, 0.4592, 0.5728, 0.6662, 0.5896]}, "AFRM~UPST": {"x": [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5], "y": [0.6685, 0.6038, 0.5923, 0.5988, 0.5094, 0.697, 0.6622, 0.4838, 0.6033, 0.4279, 0.5724]}}, "offs": ["-5", "-4", "-3", "-2", "-1", "0", "1", "2", "3", "4", "5"], "event_counts": {"SOFI": 21, "AFRM": 20, "UPST": 21}, "dual": {"2021-11-10": {"tks": ["SOFI", "AFRM"], "rets": {"SOFI": -7.769, "AFRM": -15.375, "UPST": -18.208}}, "2023-05-10": {"tks": ["UPST", "AFRM"], "rets": {"SOFI": 1.294, "AFRM": -0.407, "UPST": 34.634}}, "2024-05-08": {"tks": ["AFRM", "UPST"], "rets": {"SOFI": -0.142, "AFRM": -9.513, "UPST": -5.558}}, "2024-11-08": {"tks": ["UPST", "AFRM"], "rets": {"SOFI": 9.328, "AFRM": -4.735, "UPST": 46.025}}}, "events_by_tk": {"SOFI": ["2021-08-12", "2021-11-10", "2022-03-01", "2022-05-10", "2022-08-03", "2022-11-01", "2023-01-30", "2023-05-01", "2023-07-31", "2023-10-30", "2024-01-29", "2024-04-29", "2024-07-30", "2024-10-29", "2025-01-27", "2025-04-29", "2025-07-29", "2025-10-28", "2026-01-30", "2026-04-29", "2026-07-29"], "AFRM": ["2021-09-09", "2021-11-10", "2022-02-10", "2022-05-12", "2022-08-26", "2022-11-08", "2023-02-09", "2023-05-10", "2023-08-25", "2023-11-09", "2024-02-09", "2024-05-08", "2024-08-29", "2024-11-08", "2025-02-07", "2025-05-09", "2025-08-29", "2025-11-07", "2026-02-06", "2026-05-08"], "UPST": ["2021-08-10", "2021-11-09", "2022-02-15", "2022-05-09", "2022-08-09", "2022-11-09", "2023-02-15", "2023-05-10", "2023-08-09", "2023-11-08", "2024-02-14", "2024-05-08", "2024-08-07", "2024-11-08", "2025-02-12", "2025-05-07", "2025-08-06", "2025-11-05", "2026-02-11", "2026-05-06", "2026-08-05"]}, "year_order": ["2021", "2022", "2023", "2024", "2025", "2026"], "by_year": {"2021": {"n": 5, "pair": {"SOFI~AFRM": 0.8709, "SOFI~UPST": 0.9748, "AFRM~UPST": 0.9458}}, "2022": {"n": 12, "pair": {"SOFI~AFRM": 0.6241, "SOFI~UPST": 0.6611, "AFRM~UPST": 0.5595}}, "2023": {"n": 11, "pair": {"SOFI~AFRM": 0.2002, "SOFI~UPST": 0.3596, "AFRM~UPST": 0.2904}}, "2024": {"n": 10, "pair": {"SOFI~AFRM": 0.2769, "SOFI~UPST": 0.2133, "AFRM~UPST": -0.1133}}, "2025": {"n": 12, "pair": {"SOFI~AFRM": 0.0997, "SOFI~UPST": -0.0478, "AFRM~UPST": 0.0258}}, "2026": {"n": 8, "pair": {"SOFI~AFRM": -0.4066, "SOFI~UPST": 0.5199, "AFRM~UPST": -0.0028}}}};
+const COL = { blue:"#0072B2", orange:"#E69F00", sky:"#56B4E9", green:"#009E73", purple:"#CC79A7", red:"#C0392B", grey:"#8c97a6" };
+const PAIRS = ["SOFI~AFRM","SOFI~UPST","AFRM~UPST"];
+const PAIR_CN = {"SOFI~AFRM":"SOFI×AFRM","SOFI~UPST":"SOFI×UPST","AFRM~UPST":"AFRM×UPST"};
+const PAIR_COL = {"SOFI~AFRM":COL.blue,"SOFI~UPST":COL.orange,"AFRM~UPST":COL.purple};
+
+// 窗口相关曲线
+(function(){
+  const el = document.getElementById("chart_win");
+  const s = echarts.init(el);
+  const series = [];
+  PAIRS.forEach(p=>{
+    series.push({ name: PAIR_CN[p], type:"line", data: JS.win[p].y, smooth:true, symbolSize:6,
+      lineStyle:{width:2.5, color:PAIR_COL[p]}, itemStyle:{color:PAIR_COL[p]} });
+    series.push({ name: PAIR_CN[p]+"（基线）", type:"line", data: JS.wbase[p].y, smooth:true, symbol:"none",
+      lineStyle:{width:1.5, type:"dashed", color:PAIR_COL[p], opacity:0.45} });
+  });
+  s.setOption({
+    grid:{left:50,right:30,top:40,bottom:40}, tooltip:{trigger:"axis"},
+    legend:{data:["SOFI×AFRM","SOFI×UPST","AFRM×UPST"], top:0},
+    xAxis:{type:"category", data:JS.offs.map(o=>o>0?"T+"+o:o===0?"T+0（财报日）":"T"+o), axisLabel:{fontSize:11}},
+    yAxis:{type:"value", min:-0.1, max:1, name:"r", axisLabel:{formatter:v=>v.toFixed(1)},
+      splitLine:{lineStyle:{color:"#eef1f6"}}},
+    series
+  });
+  window.addEventListener("resize", ()=>s.resize());
+})();
+
+// 年度相关柱状（三对）
+(function(){
+  const el = document.getElementById("chart_year");
+  const s = echarts.init(el);
+  const years = JS.year_order;
+  const series = PAIRS.map(p=>({
+    name: PAIR_CN[p], type:"bar", barGap:"15%",
+    itemStyle:{color:PAIR_COL[p]},
+    data: years.map(y=>{ const v = JS.by_year[y] && JS.by_year[y].pair[p]; return v==null?null:+v.toFixed(3); })
+  }));
+  s.setOption({
+    grid:{left:50,right:20,top:40,bottom:40}, tooltip:{trigger:"axis", valueFormatter:v=>v==null?"—":v},
+    legend:{data:PAIRS.map(p=>PAIR_CN[p]), top:0},
+    xAxis:{type:"category", data:years, axisLabel:{fontSize:12}},
+    yAxis:{type:"value", min:-0.3, max:1, name:"r（年报关日相关）", axisLabel:{formatter:v=>v.toFixed(1)},
+      splitLine:{lineStyle:{color:"#eef1f6"}}},
+    series
+  });
+  window.addEventListener("resize", ()=>s.resize());
+})();
+</script>
+</body>
+</html>
