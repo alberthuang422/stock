@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>纳指震荡下的持仓体检 — 2026-08-28</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<style>
+  :root {
+    --bg: #f5f6f8;
+    --card: #ffffff;
+    --ink: #1f2733;
+    --sub: #6b7686;
+    --line: #e5e8ee;
+    --red: #d64541;
+    --green: #1e8e5a;
+    --blue: #2f6fed;
+    --amber: #c98a12;
+    --violet: #7a5cd6;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", sans-serif;
+    line-height: 1.65;
+    padding: 24px 16px 60px;
+  }
+  .wrap { max-width: 1060px; margin: 0 auto; }
+  header.top {
+    background: linear-gradient(135deg, #16325c, #234a8f);
+    color: #fff;
+    border-radius: 14px;
+    padding: 26px 30px;
+    margin-bottom: 22px;
+  }
+  header.top h1 { font-size: 22px; letter-spacing: .5px; }
+  header.top .meta { margin-top: 8px; font-size: 12.5px; color: #b8c6dd; }
+  header.top .meta b { color: #e8eef8; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .grid.full { grid-template-columns: 1fr; }
+  @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 20px 22px;
+    box-shadow: 0 1px 4px rgba(20,32,60,.05);
+  }
+  .card h2 {
+    font-size: 16px;
+    margin-bottom: 14px;
+    padding-left: 10px;
+    border-left: 4px solid var(--blue);
+  }
+  .card h2 .tag { font-size: 11px; color: var(--sub); font-weight: 400; margin-left: 8px; }
+  .src { font-size: 11px; color: var(--sub); margin-top: 8px; }
+  .chart { width: 100%; height: 320px; }
+  .chart.sm { height: 250px; }
+  .tl {
+    background: linear-gradient(135deg, #eaf1fc, #f4f8ff);
+    border: 1px solid #c9dbf5;
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 22px;
+  }
+  .tl h2 { font-size: 16px; margin-bottom: 12px; color: #16325c; }
+  .tl ol { padding-left: 20px; }
+  .tl li { margin-bottom: 8px; font-size: 13.5px; }
+  .tl li b { color: #16325c; }
+  .tl li .up { color: var(--red); font-weight: 700; }
+  .tl li .down { color: var(--green); font-weight: 700; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+    margin-top: 6px;
+  }
+  th, td {
+    border: 1px solid var(--line);
+    padding: 7px 8px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th { background: #f0f3f8; font-weight: 600; white-space: nowrap; }
+  td.num { font-variant-numeric: tabular-nums; }
+  .up { color: var(--red); }
+  .down { color: var(--green); }
+  .pill {
+    display: inline-block;
+    padding: 1px 8px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .pill.long { background: #e8f3ee; color: var(--green); }
+  .pill.short { background: #fdeaea; color: var(--red); }
+  .pill.risk { background: #fdf3e3; color: var(--amber); }
+  .pill.win { background: #e9f0fd; color: var(--blue); }
+  .stock {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    background: #fbfcfe;
+  }
+  .stock .head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 6px; }
+  .stock .head .name { font-weight: 700; font-size: 14.5px; }
+  .stock .head .px { font-size: 13px; color: var(--sub); }
+  .stock .score {
+    margin-left: auto;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 2px 10px;
+    border-radius: 6px;
+  }
+  .stock p { font-size: 12.8px; color: #3a4553; margin: 4px 0; }
+  .stock .k { color: var(--sub); font-size: 11.5px; }
+  .flow {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 8px;
+  }
+  .flow .box {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 12px 14px;
+    background: #fbfcfe;
+    font-size: 12.8px;
+  }
+  .flow .box .t { font-weight: 700; margin-bottom: 4px; }
+  .flow .arrow { text-align: center; color: var(--sub); font-size: 16px; line-height: 1; }
+  .flow .box.good { border-left: 4px solid var(--green); }
+  .flow .box.bad { border-left: 4px solid var(--red); }
+  .flow .box.mix { border-left: 4px solid var(--amber); }
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  @media (max-width: 760px) { .grid3 { grid-template-columns: 1fr; } }
+  .kv { text-align: center; padding: 12px 8px; border: 1px solid var(--line); border-radius: 10px; background: #fbfcfe; }
+  .kv .n { font-size: 20px; font-weight: 800; }
+  .kv .l { font-size: 11.5px; color: var(--sub); margin-top: 4px; }
+  .warn {
+    background: #fdf3e3;
+    border: 1px solid #f0d9ae;
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 13px;
+    margin: 8px 0;
+  }
+  .disc {
+    background: #f3f4f6;
+    border-radius: 10px;
+    padding: 14px 18px;
+    font-size: 11.5px;
+    color: #5a6575;
+    margin-top: 22px;
+  }
+  .ok { color: var(--green); font-weight: 700; }
+  .bad { color: var(--red); font-weight: 700; }
+  .mid { color: var(--amber); font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <h1>纳指震荡 + 收益率曲线陡峭化 下的持仓体检</h1>
+  <div class="meta">
+    数据时点：2026-08-27 美股收盘（8/28 美股尚未开盘）&nbsp;|&nbsp;多仓：麦当劳 MCD · 思科 CSCO · 阿波罗 APO · 艾伯维 ABBV · 吉利德 GILD&nbsp;|&nbsp;空仓：Block XYZ · 星巴克 SBUX
+    <br>数据来源：腾讯自选股 westock（行情/财务）、NeoData、公司财报（MCD/CSCO/APO/ABBV/GILD 2026Q2，XYZ 2026Q2，SBUX FY26Q3）、美国财政部 / 新华财经（美债）
+  </div>
+</header>
+
+<div class="tl">
+  <h2>TL;DR — 先看结论</h2>
+  <ol>
+    <li><b>宏观定性</b>：你假设的"长债利率升、短债横盘"当前真实成立且更偏极端——<span class="up">10Y 4.67%、30Y 5.19%</span>（30Y 处于近年高位），<span class="down">2Y 4.23% 横盘</span>，10Y-2Y 利差 +44bp 曲线陡峭化；同时伴随通胀黏性（PCE 3.7%）与美联储新主席沃什的鹰派预期，市场在计价"年内加息"而非降息。</li>
+    <li><b>组合定性</b>：5 多 2 空，多仓偏"防御 + 利率受益"（MCD/ABBV/GILD 防御、APO 利率受益），空仓偏"高估值成长/消费"（XYZ/SBUX）。<b>方向与"纳指震荡 + 曲线陡峭化"环境大体匹配</b>，是一个偏防御结构。</li>
+    <li><b>组合最大亮点</b>：APO 是长债利率上行的直接受益者（年金/保险利差、Spread Related Earnings 创新高），在 5 只多仓里宏观顺风最强；ABBV、GILD 医药防御 + 业绩兑现，是稳定器；MCD 估值低但基本面平淡。</li>
+    <li><b>组合最大裂缝</b>：CSCO 是唯一高贝塔成长暴露（PE 33.7×、AI 叙事、财报后单日 -8.4%），与你做空"高估值被利率压缩"的空头逻辑<span class="bad">方向自相矛盾</span>——若长债利率上行压制高估值成长，CSCO 同样在被压缩的名单里。</li>
+    <li><b>空头技术位（修正：压力位做空）</b>：只看 52 周位置是粗糙的。实际关键压力位：<b>XYZ = 86.05</b>（8 年跨度 24 次触碰的 A 级阻力，8/27 盘中冲 86.92 后收 84.85，首次冲击未站稳）、<b>SBUX = 110</b>（7/30 财报高点 110.51 + 52 周高 109.88，8/18 第二次测试 109.23 未破）。在这两处做空有明确技术依据；但两者均为缩量上冲、站上全部均线的强势结构，<b>硬止损必须预设</b>：XYZ 收盘站稳 87、SBUX 收盘站稳 110.6 即压力位失效，空头无条件离场。</li>
+    <li><b>组合新增矛盾（宏观）</b>："非必需消费承压"判断验证后成立（8 月密歇根信心 51.0、7 月零售 -0.6% 创 2025-05 以来最大跌幅、XLY 年内 -3.3% 为标普最弱板块之一）。但<b>MCD 在 GICS 中与 SBUX 同属可选消费板块</b>——若这是无意识的同板块多空，则消费压力兑现时 MCD 同样承压。不过用户已将 MCD 明确定位为<b>超卖抄底博反弹的位置交易</b>（非价值持有），此时它与 SBUX/XYZ 统一为"支撑/压力位开单"的均值回归框架——框架自洽，但 MCD 这一腿吃的是"自身超卖反弹"，不享受"消费板块"alpha，两者要分开评估。</li>
+    <li><b>空头逆风（关键警示，不变）</b>：XYZ、SBUX 基本面正在改善（XYZ 调整后 EPS +65%，SBUX 同店连续 4 季正增长）。<b>做空逻辑对 ≠ 立刻赚</b>——宏观压力是慢变量、财报是快验证，空头赚的是"预期差收敛"的钱，需要 9 月非农/CPI 或下一季财报 miss 催化，否则可能先扛浮亏。</li>
+  </ol>
+</div>
+
+<div class="grid">
+  <div class="card">
+    <h2>美债收益率曲线：陡峭化 <span class="tag">宏观前提</span></h2>
+    <div id="yieldChart" class="chart sm"></div>
+    <div class="src">来源：美国财政部参考曲线 / 新华财经，2026-08-27 收盘；8 月值取 8/27 收盘。</div>
+    <table style="margin-top:10px">
+      <tr><th>期限</th><th class="num">当前</th><th class="num">年内走势</th><th>解读</th></tr>
+      <tr><td>2Y</td><td class="num">4.23%</td><td class="num">横盘于 4.2~4.3%</td><td>政策预期锚定，短端平稳</td></tr>
+      <tr><td>10Y</td><td class="num">4.67%</td><td class="num">2月 4.16% → 8月 4.67%</td><td>台阶式抬升，逼近 4.7%</td></tr>
+      <tr><td>30Y</td><td class="num">5.19%</td><td class="num">维持 5.1~5.3% 高位</td><td>财政/期限溢价高企</td></tr>
+      <tr><td>10Y-2Y</td><td class="num">+44bp</td><td class="num">正斜率扩大</td><td>曲线陡峭化</td></tr>
+    </table>
+    <div class="warn">驱动：PCE 同比 3.7% 黏性、初请 20.3 万就业韧性、施密德"利率或仍具宽松性"鹰派表态、7Y 标售 4.512% 创 2024-12 以来新高、40 万亿美元债务 + 财政压力、油价强（美油 83.5 美元）。8/28 晚沃什杰克逊霍尔讲话是短期焦点。</div>
+  </div>
+
+  <div class="card">
+    <h2>纳斯达克：高位震荡 <span class="tag">市场状态</span></h2>
+    <div id="ndxChart" class="chart"></div>
+    <div class="src">来源：westock K 线，2026-07-17 至 08-27 收盘，纳指综合指数。</div>
+    <div class="grid3" style="margin-top:10px">
+      <div class="kv"><div class="n">26,541</div><div class="l">8/27 收盘（+1.57%）</div></div>
+      <div class="kv"><div class="n">-2.4%</div><div class="l">距 52 周高点 27,190</div></div>
+      <div class="kv"><div class="n">34×</div><div class="l">纳指100 PE-TTM（76.97% 分位）</div></div>
+    </div>
+    <table style="margin-top:10px">
+      <tr><th>区间</th><th class="num">关键位</th><th>含义</th></tr>
+      <tr><td>震荡箱体</td><td class="num">25,000 ~ 26,900</td><td>中枢约 26,000，8 月中旬冲高 26,875 未能突破</td></tr>
+      <tr><td>上方压力</td><td class="num">26,900 / 27,000</td><td>突破才看 27,000~28,000，上行受限</td></tr>
+      <tr><td>下方支撑</td><td class="num">26,000 / 25,500</td><td>跌破 26,000 转弱</td></tr>
+    </table>
+    <p style="font-size:12.5px;color:#3a4553;margin-top:8px">短均线粘合（MA5 26,197 / MA10 26,305 / MA20 26,338）、布林收窄、方向待选；科技股相对标普走弱（标普 8 月创历史新高而纳指低于 6 月高点），资金阶段性轮向资源/小盘。纳指100 估值处 2011 年以来 77% 分位，对利率敏感——这正是"长债利率上行压制估值"的传导落点。</p>
+  </div>
+</div>
+
+<div class="card" style="margin-top:18px">
+  <h2>持仓快照 <span class="tag">2026-08-27 收盘，来源：westock</span></h2>
+  <table>
+    <tr>
+      <th>方向</th><th>标的</th><th class="num">现价$</th><th class="num">PE(TTM)</th><th class="num">股息率</th><th class="num">YTD</th><th class="num">近60日</th><th class="num">52周位置</th><th>风格标签</th>
+    </tr>
+    <tr><td><span class="pill long">多</span></td><td><b>MCD</b> 麦当劳</td><td class="num">260.06</td><td class="num">21.1</td><td class="num">2.86%</td><td class="num down">-13.9%</td><td class="num down">-5.9%</td><td class="num">距低点 0.1%</td><td>防御消费 / 低估值 / 弱势</td></tr>
+    <tr><td><span class="pill long">多</span></td><td><b>CSCO</b> 思科</td><td class="num">112.15</td><td class="num">33.7</td><td class="num">1.49%</td><td class="num up">+47.7%</td><td class="num down">-12.1%</td><td class="num">距高点 -13.7%</td><td>科技成长 / AI 硬件 / 高贝塔</td></tr>
+    <tr><td><span class="pill long">多</span></td><td><b>APO</b> 阿波罗</td><td class="num">133.44</td><td class="num">47.5</td><td class="num">1.61%</td><td class="num down">-6.7%</td><td class="num up">+4.1%</td><td class="num">区间 120~135</td><td>另类资管 / 利率受益</td></tr>
+    <tr><td><span class="pill long">多</span></td><td><b>ABBV</b> 艾伯维</td><td class="num">258.15</td><td class="num">72.9*</td><td class="num">2.65%</td><td class="num up">+15.7%</td><td class="num up">+20.7%</td><td class="num">逼近新高</td><td>医药防御 / 强势</td></tr>
+    <tr><td><span class="pill long">多</span></td><td><b>GILD</b> 吉利德</td><td class="num">148.86</td><td class="num">亏损**</td><td class="num">2.18%</td><td class="num up">+22.8%</td><td class="num up">+17.5%</td><td class="num">逼近新高</td><td>生物医药 / 防御+成长</td></tr>
+    <tr><td><span class="pill short">空</span></td><td><b>XYZ</b> Block</td><td class="num">84.85</td><td class="num">151.5</td><td class="num">0</td><td class="num up">+30.4%</td><td class="num up">+14.4%</td><td class="num">创 52 周新高</td><td>金融科技 / 高估值 / 强动能</td></tr>
+    <tr><td><span class="pill short">空</span></td><td><b>SBUX</b> 星巴克</td><td class="num">107.26</td><td class="num">62.0</td><td class="num">2.31%</td><td class="num up">+29.7%</td><td class="num up">+13.0%</td><td class="num">距高点 -2.4%</td><td>消费复苏 / 高估值 / 强动能</td></tr>
+  </table>
+  <p class="src">*ABBV PE 72.9× 受 2025 年低基数季度扭曲（2026Q2 净利 +288%），实际估值低于表观；**GILD 因 2026Q2 一次性收购 IPR&D 费用 112 亿美元致 GAAP 亏损，主业（HIV +12%、PrEP 单季破 10 亿美元）现金流强劲，已上调全年指引。空仓标的涨幅为股价涨幅，空头收益方向相反。</p>
+  <div id="ytdChart" class="chart"></div>
+  <div class="src">多空标的 YTD 涨跌幅对比（红色为股价上涨，绿色为下跌；空仓需反向理解）。</div>
+</div>
+
+<div class="card" style="margin-top:18px">
+  <h2>技术结构：支撑 / 压力位 <span class="tag">本地 swing 分形+聚类算法 + 均线</span></h2>
+  <table>
+    <tr>
+      <th>标的</th><th class="num">现价(8/27)</th><th>上方压力位</th><th>下方支撑位</th><th>均线结构</th><th>形态判断</th>
+    </tr>
+    <tr><td><span class="pill short">空</span> <b>XYZ</b></td><td class="num">84.85</td>
+      <td><b>86.05</b>（24 触碰·A 级·8/27 盘中冲 86.92 未站稳）→ 90.33</td>
+      <td>80.80（50 触碰·A 级）/ MA20 81.25 / MA50 79.15</td>
+      <td>站上全部均线</td><td><span class="mid">缩量冲前高压，7 连阳首次遇阻</span></td></tr>
+    <tr><td><span class="pill short">空</span> <b>SBUX</b></td><td class="num">107.26</td>
+      <td><b>110</b>（7/30 财报高点 110.51 + 52 周高 109.88，8/18 测试 109.23 未破）</td>
+      <td>106.2（MA20）/ 104.75（MA50）/ 102.87（38 触碰·A 级）</td>
+      <td>站上全部均线</td><td><span class="mid">103~110 箱体中上部</span></td></tr>
+    <tr><td><span class="pill long">多</span> <b>MCD</b></td><td class="num">260.06</td>
+      <td>266.5（S1，已跌破）→ 271.6（MA50）</td>
+      <td>240.98（S4）</td>
+      <td><b>跌破全部均线（空头排列）</b></td><td><span class="mid">RSI 36.7 超卖区，支撑位博弈反弹（基本面逆风）</span></td></tr>
+    <tr><td><span class="pill long">多</span> <b>CSCO</b></td><td class="num">112.15</td>
+      <td>115.6（MA20/50 粘合）</td>
+      <td>109.2（MA100）/ 107.5（近 20 日低）</td>
+      <td>MA20/50 压制</td><td><span class="mid">109~116 箱体下半，财报后修复中</span></td></tr>
+    <tr><td><span class="pill long">多</span> <b>APO</b></td><td class="num">133.44</td>
+      <td>133.9（S1）→ 144.3（近 60 日高）</td>
+      <td>126~127（MA50/100/200 粘合）</td>
+      <td>站上 MA20</td><td><span class="ok">127~144 箱体，反弹至中上部</span></td></tr>
+    <tr><td><span class="pill long">多</span> <b>ABBV</b></td><td class="num">258.15</td>
+      <td>267.5（52 周高）</td>
+      <td>247.1（S1）/ 253.8（MA20）</td>
+      <td>站上全部均线</td><td><span class="ok">强势逼近前高</span></td></tr>
+    <tr><td><span class="pill long">多</span> <b>GILD</b></td><td class="num">148.86</td>
+      <td>149.6（近 60 日高）→ 155.4（52 周高）</td>
+      <td>138.7（S1）/ 138.4（MA20）</td>
+      <td>站上全部均线</td><td><span class="ok">强势逼近前高</span></td></tr>
+  </table>
+  <p class="src">压力/支撑位口径：本地 data/support_levels（swing 分形 + 水平聚类，带上下沿 ±2%、A/B/C 强度分级）+ 收盘价均线。本地日线至 8/26，8/27 用 westock 行情补充。空头焦点（XYZ 86.05 / SBUX 110）为高置信阻力区；多仓焦点（MCD 空头排列、ABBV/GILD 贴近前高）为持仓最需盯防的位置。</p>
+</div>
+
+<div class="card" style="margin-top:18px">
+  <h2>宏观传导链：曲线陡峭化 → 你的持仓</h2>
+  <div class="flow">
+    <div class="box"><div class="t">前提变量：长债利率↑（10Y 4.67%、30Y 5.19%）+ 短端横盘（2Y 4.23%）→ 曲线陡峭化（10Y-2Y +44bp）</div>来源：美国财政部 / 新华财经，2026-08-27。本质是"通胀黏性 + 财政供给 + 货币政策偏鹰"的再定价，短端因政策按兵不动而横盘。</div>
+    <div class="arrow">▼</div>
+    <div class="box bad"><div class="t">传导 1 · 折现率↑ → 高估值成长股估值压缩 → <span class="pill short">空仓受益</span></div>
+      PE 越高的资产对折现率越敏感：XYZ（表观 151× / 调整后前瞻 21×）、SBUX（62× / 前瞻 42×）首当其冲；<b>多仓里的 CSCO（33.7×，AI 估值叙事）同样在此名单内</b>——这是组合内部的多空矛盾点。</div>
+    <div class="box good"><div class="t">传导 2 · 保险/年金利差↑ → <span class="pill long">APO 受益（多仓核心顺风）</span></div>
+      曲线陡峭 + 短端横盘 = 保险公司"负债成本锁死、资产端再投资收益率抬升"。APO 旗下 Athene 年金业务 Spread Related Earnings 8.77 亿美元创新高、AUM 突破 1.047 万亿美元（+25%），管理费收入创纪录。长债利率上行对该股是净利好。</div>
+    <div class="box good"><div class="t">传导 3 · 股息率相对无风险利率的价值回归 → <span class="pill long">防御多仓抗跌</span></div>
+      10Y 4.67% 之下，MCD（股息率 2.86%）、ABBV（2.65%）、GILD（2.18%）的防御配置属性凸显；医药板块与利率相关性低，纳指震荡时是天然的资金避风港。</div>
+    <div class="box mix"><div class="t">传导 4 · 油价↑ + 通胀黏性 → 消费成本压力 <span class="pill risk">MCD / SBUX 双向挤压</span></div>
+      美油 83.5 美元 + PCE 3.7%：对做空的 SBUX 构成成本端顺风（利空空头），但对多仓 MCD 同样是成本压力——两头受损方向不同，需要靠需求端（客流）对冲。</div>
+    <div class="box good"><div class="t">传导 5 · 短端横盘 → 融资成本稳定 → 资管/信贷中性偏正</div>
+      2Y 4.23% 不涨，意味着 APO 的债务滚动成本稳定、XYZ 的消费信贷资金成本可控，短端横盘本身不构成空头理由。</div>
+  </div>
+</div>
+
+<div class="card" style="margin-top:18px">
+  <h2>非必需消费（可选消费）宏观压力验证 <span class="tag">回应：宏观面</span></h2>
+  <div class="warn"><b>判断成立</b>：你的"非必需消费面临宏观压力"观点有完整数据链支撑。SBUX 在 GICS 分类中属于可选消费（非防御），做空它的宏观逻辑成立；但 MCD 同样属于该板块——这是组合内同板块多空矛盾的关键点。</div>
+  <table>
+    <tr><th>指标</th><th class="num">最新读数</th><th>信号</th></tr>
+    <tr><td>密歇根消费者信心（8 月初值）</td><td class="num">51.0（7 月 55.2）</td><td class="bad">环比 -7.6%、同比 -12.4%，预期分项大降</td></tr>
+    <tr><td>世界大型企业联合会信心（8 月）</td><td class="num">89.4（7 月 90.2）</td><td class="bad">连续第二个月走低，预期指数 68.2 创年内最低</td></tr>
+    <tr><td>7 月零售销售（环比）</td><td class="num">-0.6%</td><td class="bad">2025 年 5 月以来最大单月跌幅</td></tr>
+    <tr><td>零售控制组（计入 GDP 口径）</td><td class="num">-0.4%</td><td class="bad">2025 年初以来最大跌幅，三季 GDP 有下修压力</td></tr>
+    <tr><td>分项：汽车 / 线上 / 电子家电</td><td class="num">-1.8% / -2.2% / -0.5%</td><td class="bad">大额耐用品全线走弱，高利率直接压制</td></tr>
+    <tr><td>分项：餐饮 / 酒吧</td><td class="num">+0.5%</td><td class="ok">唯一增长的服务类（对 SBUX 是反证）</td></tr>
+    <tr><td>个人储蓄率</td><td class="num">四年低点</td><td class="bad">超额储蓄耗尽，自由支配支出弹性收缩</td></tr>
+    <tr><td>XLY 可选消费 ETF（YTD）</td><td class="num">-3.3%</td><td class="bad">标普 500 最弱板块之一，全年跑输大盘</td></tr>
+  </table>
+  <p class="src">来源：密歇根大学 / 世界大型企业联合会消费者信心调查（2026-08 发布）、美国商务部零售数据（2026-07）、XLY 行情（westock，2026-08-27）。</p>
+  <p style="font-size:12.8px;color:#3a4553;margin-top:8px">
+    <b>板块内的分化（"K 型"而非普跌）</b>：折扣零售（TJX/罗斯）强、高端正餐（Darden 同店 +4.6%）强、低价快餐（达美乐同店仅 +0.1%、盈利 7 季 5 miss）弱——消费者"挑剔但未停摆"，向性价比与体验迁移。<b>星巴克（$5-6/杯）处于中间带</b>，比达美乐好、比高端正餐弱，其同店 +7.9% 由交易量驱动即是"体验型消费仍有韧性"的实证。这解释了为何宏观逆风下 SBUX 股价仍强——<b>宏观压力尚未转化为该公司财报层面的数据恶化</b>，空头需要等待这一转化（催化点：9 月非农/CPI、零售连续走弱、下一季财报同店增速回落）。</p>
+</div>
+
+<div class="card" style="margin-top:18px">
+  <h2>逐只点评 <span class="tag">基本面 × 技术面 × 宏观匹配</span></h2>
+
+  <div class="stock">
+    <div class="head"><span class="pill long">多</span><span class="name">MCD 麦当劳</span><span class="px">$260.06 · PE 21.1 · 股息 2.86%</span><span class="score" style="background:#fdeaea;color:#c0392b">弱</span></div>
+    <p><b>基本面</b>：2026Q2 EPS 3.38 超预期但营收 70.99 亿略低预期；美国同店仅 +0.8%（上年 +2.5%），7 月转轻微负增长；低收入客群（年收入 &lt;$4 万）支出 -2.4% 损失约 3.1 亿美元；汉堡王美国同店 +8.5% 抢份额；价值菜单执行失误致客流缺口约 2/3。盈利质量好（净利率 33%+），但基本面在走弱，非"错杀"。</p>
+    <p><b>技术面</b>：YTD -13.9%，8/27 放量（成交 +40%）创 52 周新低 259.85，跌破全部均线空头排列。<b>当前 RSI14 = 36.7（35-40 档）</b>。8/27 逆大盘（纳指 +1.57%）大跌 2.57%，主因 Argus 下调目标价 320→310（延续 8/4 财报后多家投行下调）+ Trian 搁置 Wendy's 私有化拖累汉堡板块（约 1%）+ 消费担忧——<b>基本面驱动下跌，不是纯技术超卖</b>。</p>
+    <p><b>策略定位（用户框架）</b>：RSI 超卖抄底博 4% 反弹。对照本项目 47/48/49 号 MCD RSI 回测：35-40 档 fwd20 中位 +1.28%、maxG 中位 +3.8%——<b>4% 目标略超该档中位</b>；30-35 档才是甜点档（fwd +2.17%、胜率 64.5%、maxG +4.5%），若继续跌入该档再买胜率更高。两个硬纪律：① 反弹到价必须止盈（48 号：MCD 平均回吐 3.4pp，死拿 20 天 fwd 只剩约 1%，4% 是 maxG 策略不是持有策略）；② 收盘跌破 259.85（52 周低点）离场——下方支撑真空，最近硬支撑在 240.98（S4，相距 7.3%）。</p>
+    <p class="k">定位：位置交易仓（支撑位做多博反弹），与空仓 SBUX/XYZ 压力位做空同属均值回归框架，框架自洽；但当前是"接飞刀"形态——基本面逆风 + 放量破位 + 支撑真空，上方 4% 目标 vs 下方 7.3% 真空（盈亏比约 1:1.8），仓位宜轻、到价止盈与破位止损缺一不可。</p>
+  </div>
+
+  <div class="stock">
+    <div class="head"><span class="pill long">多</span><span class="name">CSCO 思科</span><span class="px">$112.15 · PE 33.7 / 远期约 22 · 股息 1.49%</span><span class="score" style="background:#fdf3e3;color:#c98a12">分歧</span></div>
+    <p><b>基本面</b>：FY26Q4 营收 172.5 亿（+18%）、非GAAP EPS 1.22 超预期，全年 AI 基础设施订单 93 亿美元（4.5 倍）；但 FY27 AI 营收指引仅 75 亿，订单转化效率遭质疑；毛利率 66.3%（-210bp）并指引继续下滑。业绩全超预期，8/13 财报次日仍跌 8.4%。</p>
+    <p><b>技术面</b>：YTD +47.7% 但距高点 -13.7%，财报后跳空下跌进入消化期。</p>
+    <p><b>宏观匹配</b><span class="bad">：逆风</span>。它是组合里唯一的高贝塔成长暴露：纳指震荡时贝塔最大，长债利率上行时 33.7× 估值最先承压。<b>与你做空 XYZ/SBUX 的"高估值被利率压缩"逻辑直接矛盾</b>。</p>
+    <p class="k">定位：组合矛盾点。若空头逻辑成立（利率压估值），CSCO 同样该被减；若看好 AI 基建，则空头方向需要重新审视。两条逻辑只能留一条。</p>
+  </div>
+
+  <div class="stock">
+    <div class="head"><span class="pill long">多</span><span class="name">APO 阿波罗全球管理</span><span class="px">$133.44 · PE 47.5 · 股息 1.61%</span><span class="score" style="background:#e8f3ee;color:#1e8e5a">强（宏观顺风）</span></div>
+    <p><b>基本面</b>：2026Q2 AUM 1.047 万亿美元（+25%）、FRE 创纪录 7.85 亿（+25%）、Spread Related Earnings 8.77 亿；调整后 EPS 2.11 略低于预期的 2.16，属 minor miss。分红上调至 0.5625 美元/季。</p>
+    <p><b>技术面</b>：YTD -6.7%（年内落后），但近 20 日 +11.4%，7 月底从 120 附近反弹至 133，处于 120~135 箱体上沿。</p>
+    <p><b>宏观匹配</b><span class="ok">：直接受益</span>。曲线陡峭化 + 短端横盘是保险公司利差的理想组合；APO 是 5 只多仓里"宏观顺风最干净"的一只。</p>
+    <p class="k">定位：进攻核心仓。利率上行环境下的首选；风险在调整后 EPS 已 miss 一次 + 零售年金（ADS）赎回压力，若利率急升引发风险资产波动，另类资产估值短期受压。</p>
+  </div>
+
+  <div class="stock">
+    <div class="head"><span class="pill long">多</span><span class="name">ABBV 艾伯维</span><span class="px">$258.15 · PE 72.9* · 股息 2.65%</span><span class="score" style="background:#e8f3ee;color:#1e8e5a">强</span></div>
+    <p><b>基本面</b>：2026Q2 营收 169.9 亿（+10%）、净利率 21.2%、毛利率 74.7%；净利 +288% 有低基数成分。表观 PE 72.9× 被 2025 年低基数扭曲，实际估值低于表观。杠杆较高（长期借款 624.8 亿美元）。</p>
+    <p><b>技术面</b>：YTD +15.7%、近 60 日 +20.7%，逼近 52 周高点 267.47，强势。</p>
+    <p><b>宏观匹配</b><span class="ok">：防御占优</span>。医药与利率相关性低、免疫于"长债利率压制成长估值"的传导，是纳指震荡时最好的避风港之一。</p>
+    <p class="k">定位：稳定器 + 趋势仓。已积累较大涨幅（近 60 日 +20.7%），追高风险存在，但逻辑未破；主要风险是表观估值高 + 高杠杆，若医药板块整体回调回撤会放大。</p>
+  </div>
+
+  <div class="stock">
+    <div class="head"><span class="pill long">多</span><span class="name">GILD 吉利德</span><span class="px">$148.86 · PE 亏损* · 股息 2.18%</span><span class="score" style="background:#e8f3ee;color:#1e8e5a">强</span></div>
+    <p><b>基本面</b>：2026Q2 总营收 78 亿（+10%）、HIV +12%、PrEP 单季首破 10 亿美元、Trodelvy +26%；因收购 Arcellx/Tubulis/Ouro 一次性 IPR&D 费用 112 亿美元 + 减值 17.5 亿致 GAAP 亏损 105 亿，但主业经营现金流 35.7 亿、上调全年指引至 301~304 亿美元。</p>
+    <p><b>技术面</b>：YTD +22.8%、近 20 日 +13.4%，逼近 52 周高点 155.39，市场认可主业、未因账面亏损抛售。</p>
+    <p><b>宏观匹配</b><span class="ok">：防御占优</span>。生物医药与利率相关性低；账面亏损是一次性、现金流真实强劲，市场已正确理解。</p>
+    <p class="k">定位：稳定器 + 成长仓。风险在于并购整合执行 + HIV 竞争格局，但当前业绩兑现度高。</p>
+  </div>
+
+  <div class="stock">
+    <div class="head"><span class="pill short">空</span><span class="name">XYZ Block（原 SQ）</span><span class="px">$84.85 · PE 151.5 / 调整后前瞻约 21 · 无股息</span><span class="score" style="background:#fdeaea;color:#c0392b">逆风空头</span></div>
+    <p><b>基本面</b>：2026Q2 营收 66.2 亿（+9.3%）、毛利润 31.3 亿（+25%）、调整后营业利润率 27% 创纪录、调整后 EPS 1.02（+65%）并上调全年指引（毛利润 125.1 亿、调整后 EPS 4.02）；但 GAAP 净利仅 8,852 万（比特币重估损失 + 法律拨备），利润质量口径分歧大。8/27 创 52 周新高 86.92。</p>
+    <p><b>技术面</b>：YTD +30.4%，站上全部主要均线、MACD 金叉；<b>上方压力位 86.05</b>（8 年跨度 24 次触碰的 A 级阻力，最近一次 8/5），8/27 盘中冲 86.92 创 52 周新高后收 84.85——首次冲击未站稳。做空点位 84-86 有依据，但属缩量（量比 0.84）强势冲击，<b>硬止损：收盘站稳 87 离场</b>。</p>
+    <p><b>宏观匹配</b><span class="mid">：空头逻辑半成立</span>。表观 PE 高 + GAAP 利润质量差 + 消费信贷敞口（若就业转弱坏账上升）是有效空头论据；但短端横盘使其资金成本可控，调整后 21× 前瞻并不贵。<b>做空创新高 + 基本面改善的标的，震荡市中轧空风险大</b>。</p>
+    <p class="k">定位：需催化剂的高风险空头。空头成立需要：财报 miss、消费信贷质量恶化、或利率急升压制金融科技估值。三者当前均未兑现。</p>
+  </div>
+
+  <div class="stock">
+    <div class="head"><span class="pill short">空</span><span class="name">SBUX 星巴克</span><span class="px">$107.26 · PE 62 / 前瞻约 42 · 股息 2.31%</span><span class="score" style="background:#fdeaea;color:#c0392b">逆风空头</span></div>
+    <p><b>基本面</b>：FY26Q3 全球同店 +7.9%（交易量 +4.2%）连续第 4 季正增长、调整后 EPS 0.85（+70%）大超预期、营业利润率 +430bp、上调 FY26 指引至 2.55~2.65；中国业务已出表（保留 40% 股权）。"Back to Starbucks" 战略在兑现。</p>
+    <p><b>技术面</b>：YTD +29.7%，接近 52 周高点 109.88；<b>上方压力位 110</b>（7/30 财报高点 110.51，8/18 第二次测试未破）。当前 107.26 处于 103~110 箱体中上部，在 108-110 贴近前高做空技术依据成立，硬止损放 110.6 上方。</p>
+    <p><b>宏观匹配</b><span class="ok">：空头顺风（修正归类）</span>。<b>SBUX 属于 GICS 可选消费，非防御</b>——8 月消费者信心 51.0、7 月零售 -0.6%、储蓄率四年低点，板块宏观压力明确，XLY 年内 -3.3% 为标普最弱板块之一，这些对空头都是顺风。但注意反证：7 月零售中餐饮/酒吧 +0.5% 是唯一增长项，SBUX 同店由交易量驱动——<b>宏观压力尚未转化为该公司财报恶化</b>。42× 前瞻 PE + 可选消费逆风是有效的做空结构，但需催化兑现（下一季同店增速回落 / 零售连续走弱）。</p>
+    <p class="k">定位：估值 + 宏观双逻辑空头（成立但需耐心）。与多仓 MCD 同属可选消费，构成板块内多空对冲；压力位做空点位（108-110）与技术结构自洽，止损纪律是唯一铁律。</p>
+  </div>
+</div>
+
+<div class="card" style="margin-top:18px">
+  <h2>组合结构性问题与操作框架 <span class="tag">条件化决策</span></h2>
+  <div class="warn">
+    <b>1. 多空逻辑冲突（最需正视）</b>：空仓逻辑是"长债利率上行 → 高估值成长被压缩"；但多仓 CSCO 正是 33.7× 的高估值成长。若空头判断正确，CSCO 也该被压缩；若你看好 CSCO 的 AI 叙事，则空头方向就该弱化。<b>建议二选一，明确 CSCO 到底是"AI 仓位"还是"估值敏感成长"。</b>
+  </div>
+  <div class="warn">
+    <b>2. 空头逆风集中</b>：XYZ、SBUX 都接近/创 52 周新高、基本面都在改善。当前环境（通胀黏性、利率高企）确实压制高估值，但空头需要等催化（财报 miss、消费数据走弱、利率急升破位）。震荡市中做空强动能股，建议控制空头仓位、设好止损，避免被轧空。
+  </div>
+  <div class="warn">
+    <b>3. 行业集中度</b>：多仓 5 只中 2 只医药（ABBV/GILD），医药板块整体回调时多仓受伤；但医药与利率低相关、是纳指震荡的对冲，属于"可接受的集中"。
+  </div>
+  <div class="warn">
+    <b>4. 同板块多空对冲（MCD vs SBUX）</b>：MCD 与 SBUX 同属 GICS 可选消费/餐饮。若这是有意的板块内相对价值交易（多低估值 MCD 21×、空高估值 SBUX 42×），逻辑自洽、本质是"赌估值差收敛"；但需盯紧两点——① MCD 技术面空头排列，相对价值尚未兑现；② 消费板块系统性下行时，低估值股同样跟跌，对冲效果≠零。若这只是"一个觉得便宜、一个觉得贵"的无意识组合，则在"非必需消费承压"环境下两端同向受损，MCD 毫无对冲意义。
+  </div>
+  <div class="warn">
+    <b>5. MCD 加仓纪律（回应：ER 低 + 仓位小 → 越跌越买？）</b>：你的"ER 低 = 震荡市 → 越跌越买"直觉方向对了一半，但数据不支持连续加仓。48 号回测：<b>低 ER（&lt;0.15）事件曾解套率最高 93%（震荡确实会摆回买入价），但时点解套率最低 57%、fwd 中位 +0.5% 全组最低</b>——震荡市给机会来回摆，却不保证最终方向。49 号更直接：<b>"连续加仓稀释收益"</b>——无间隔（越跌越买）时 30-35 档 fwd +2.17% 但超额为负；cd10 间隔（每 10 个交易日才允许加一档）后 30-35 档成为唯一正超额（+0.71%、胜率 74.2%）。<b>结论：间隔分档加仓 &gt; 越跌越买</b>。仓位小本身是风控，可放宽止损（破 259.85 从"割肉"降级为"停止加仓、重新评估"的信号）；但"越跌越买"会让仓位从小变大，等于用小仓位的理由构建大仓位的风险，必须有总仓位上限。
+  </div>
+  <table>
+    <tr><th>情景</th><th>触发条件</th><th>对组合的含义</th><th>优先动作</th></tr>
+    <tr><td>纳指震荡延续</td><td>维持 25,000~26,900 箱体</td><td>组合整体抗跌：防御多仓 + 高估值空头均顺风</td><td>持有，等催化剂兑现</td></tr>
+    <tr><td>长债利率急升</td><td>10Y 突破 4.8% / 30Y 站上 5.3%</td><td>高估值空头盈利概率↑，CSCO 承压</td><td>空头持有/加码；CSCO 减仓或对冲</td></tr>
+    <tr><td>纳指破位下行</td><td>跌破 26,000 → 看 25,500</td><td>空仓受益加速；多仓里 CSCO 最受伤，MCD 也跟跌</td><td>多仓优先减 CSCO，保留防御 + APO</td></tr>
+    <tr><td>政策意外转鸽</td><td>沃什鸽派 / 降息预期重燃</td><td>空仓（XYZ/SBUX）风险骤升，CSCO/APO 受益</td><td><b>空头止损优先</b>，多仓可持有</td></tr>
+    <tr><td>纳指放量突破</td><td>站稳 26,900 以上</td><td>风险偏好回升，空头轧空风险放大</td><td>减空 / 平空，多仓弹性（CSCO/APO）受益</td></tr>
+  </table>
+  <p class="src">注：以上为情景推演框架，非交易指令；触发条件与动作需结合个人仓位、成本与风险承受度自行确认。</p>
+</div>
+
+<div class="card" style="margin-top:18px">
+  <h2>后续观察清单</h2>
+  <table>
+    <tr><th>时点</th><th>事件</th><th>关注点</th><th>对组合的意义</th></tr>
+    <tr><td>8/28 晚（美东）</td><td>沃什杰克逊霍尔主旨演讲</td><td>是否明确政策框架 / 对长端利率的表态</td><td>决定空头 vs APO/CSCO 的短期天平</td></tr>
+    <tr><td>9 月初</td><td>8 月非农、CPI</td><td>通胀是否延续黏性、就业是否转弱</td><td>决定"长债利率上行"是持续还是见顶</td></tr>
+    <tr><td>9 月中</td><td>FOMC 议息</td><td>是否真的加息（互换市场计价概率超 80%）</td><td>加息确认 = 空头顺风 + 防御多仓抗跌</td></tr>
+    <tr><td>10 月底</td><td>XYZ / SBUX 财报</td><td>XYZ 调整后利润是否延续、SBUX 同店是否回落</td><td>空头逻辑的验证点</td></tr>
+    <tr><td>持续</td><td>油价 / 霍尔木兹地缘</td><td>美油 83.5 美元是否继续上行</td><td>通胀 + 消费成本双重压力</td></tr>
+  </table>
+</div>
+
+<div class="disc">
+  <b>免责声明</b>：以上内容基于公开数据和量化分析，仅供参考，不构成投资建议。市场有风险，投资需谨慎。任何投资决策应结合个人风险承受能力、资金状况和投资目标独立判断，必要时咨询持牌专业机构。过往表现不预示未来收益。<br><br>
+  数据来源与时效：行情/财务数据来自腾讯自选股（westock）与 NeoData，截至 2026-08-27 美股收盘；美债收益率来自美国财政部参考曲线与新华财经（2026-08-27）；公司业绩来自各公司财报（MCD/CSCO/APO/ABBV/GILD 2026Q2、XYZ 2026Q2、SBUX FY26Q3）。纳指 100 估值分位引自东吴证券研报（截至 2026-06-30，需核实原文）。部分媒体/研报数据为二手来源，需核实原文。
+</div>
+
+</div>
+
+<script>
+var yieldChart = echarts.init(document.getElementById('yieldChart'));
+yieldChart.setOption({
+  tooltip: { trigger: 'axis' },
+  legend: { data: ['当前 (8/27)', '年内起点 (2月)'] },
+  grid: { left: 48, right: 20, top: 40, bottom: 30 },
+  xAxis: { type: 'category', data: ['2Y', '10Y', '30Y'] },
+  yAxis: { type: 'value', name: '收益率 %', min: 3.8 },
+  series: [
+    { name: '当前 (8/27)', type: 'line', data: [4.23, 4.67, 5.19], lineStyle: { width: 3 }, symbolSize: 8,
+      label: { show: true, position: 'top', formatter: '{c}%' } },
+    { name: '年内起点 (2月)', type: 'line', data: [4.10, 4.16, 4.90], lineStyle: { type: 'dashed' }, symbolSize: 6 }
+  ]
+});
+
+var ndxChart = echarts.init(document.getElementById('ndxChart'));
+var ndxDates = ['07-17','07-20','07-21','07-22','07-23','07-24','07-27','07-28','07-29','07-30','07-31','08-03','08-04','08-05','08-06','08-07','08-10','08-11','08-12','08-13','08-14','08-17','08-18','08-19','08-20','08-21','08-24','08-25','08-26','08-27'];
+var ndxOhlc = [
+  [25412.26,25520.24,25703.01,25250.63],[25720.87,25508.07,25815.60,25501.10],[25772.55,25837.21,25880.34,25672.83],[25693.72,25690.90,25841.31,25681.32],[25245.54,25137.69,25358.28,24954.77],[25107.38,24975.82,25222.14,24918.09],[25236.19,24932.08,25261.91,24774.87],[24825.07,24876.91,24984.50,24581.01],[24863.48,24442.94,25054.53,24425.34],[24852.05,25122.18,25171.44,24813.84],[25340.71,25373.85,25460.86,25004.33],[25452.66,25913.90,25967.44,25420.35],[26088.04,26584.99,26679.91,26088.04],[26698.02,26363.44,26739.00,26348.51],[26268.84,26348.35,26499.42,26208.43],[26534.66,26690.62,26712.62,26478.01],[26680.44,26605.36,26724.63,26548.26],[26672.17,26445.45,26679.26,26372.31],[26680.47,26588.49,26688.24,26531.93],[26631.34,26803.03,26875.52,26612.85],[26851.15,26729.16,26862.17,26661.95],[26784.65,26644.91,26798.40,26626.37],[26346.88,26289.71,26422.50,26266.68],[26393.89,26331.09,26456.78,26185.13],[26211.52,26067.17,26263.47,26023.12],[26198.83,26180.45,26269.85,26049.30],[26065.32,25980.19,26109.96,25910.82],[26148.71,26151.30,26225.83,26034.35],[26099.58,26130.20,26189.81,26021.63],[26356.98,26541.35,26553.90,26273.87]
+];
+ndxChart.setOption({
+  tooltip: { trigger: 'axis', axisPointer: { type: 'cross' } },
+  legend: { data: ['纳指日K'] },
+  grid: { left: 56, right: 20, top: 40, bottom: 30 },
+  xAxis: { type: 'category', data: ndxDates },
+  yAxis: { type: 'value', scale: true, name: '点位' },
+  dataZoom: [{ type: 'inside', start: 0, end: 100 }],
+  series: [{ name: '纳指日K', type: 'candlestick', data: ndxOhlc,
+    itemStyle: { color: '#d64541', color0: '#1e8e5a', borderColor: '#d64541', borderColor0: '#1e8e5a' } }]
+});
+
+var ytdChart = echarts.init(document.getElementById('ytdChart'));
+var ytdNames = ['MCD','CSCO','APO','ABBV','GILD','XYZ(空)','SBUX(空)'];
+var ytdVals = [-13.9, 47.7, -6.7, 15.7, 22.8, 30.4, 29.7];
+var ytdColors = ytdVals.map(function (v) { return v >= 0 ? '#d64541' : '#1e8e5a'; });
+ytdChart.setOption({
+  tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' }, formatter: '{b}: {c}%' },
+  grid: { left: 50, right: 20, top: 30, bottom: 30 },
+  xAxis: { type: 'category', data: ytdNames },
+  yAxis: { type: 'value', name: 'YTD %' },
+  series: [{ type: 'bar', data: ytdVals.map(function (v, i) {
+    return { value: v, itemStyle: { color: ytdColors[i] } };
+  }), barWidth: 38,
+    label: { show: true, position: 'top', formatter: '{c}%' } }]
+});
+
+window.addEventListener('resize', function () {
+  yieldChart.resize();
+  ndxChart.resize();
+  ytdChart.resize();
+});
+</script>
+</body>
+</html>
