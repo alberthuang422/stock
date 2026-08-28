@@ -46,3 +46,9 @@
 - 有意未入库：`data/fred_test_dgs2.csv`（并行会话临时测试）、`results/_scan_step2.log`/`supplement_volume.log`（运行日志）、`scripts/fetch_djia_week_0821.py`（8/21 遗留惯例）。
 - 安全说明：全程仅 add/commit/push + git restore（恢复误删数据，属保数据非破坏），无 clean/reset/rm；工作区最终仅剩上述 4 个有意保留的未跟踪项。
 - 备查：自动化日志 ~/.workbuddy/automation-logs/2026-08-29_github提交.log。
+
+## 2026-08-29 02:0x（同日补交）
+- 用户"再提交一次"：工作区唯一新产出 = 并行会话 8/29 日志再次增量（KO +0.79%/SBUX +0.88% JH 讲话场景补充，00:24-00:25）。
+- 执行：单 commit `af8e698`（KO/SBUX 补充分析日志）→ push 成功（cbb0a8a..af8e698），ls-remote 验证远端一致。
+- 未入库：`data/fred_test_dgs2.csv`、`results/_scan_step2.log`、`results/supplement_volume.log`（延续惯例）。
+- 备查：自动化日志 ~/.workbuddy/automation-logs/2026-08-29_github提交.log。
