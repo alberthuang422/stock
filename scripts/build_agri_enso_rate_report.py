@@ -334,10 +334,10 @@ for t in TICKERS:
     bar_grp.append({"t": t, "u": ex("up"), "d": ex("dn")})
 
 # ---------- 表格 ----------
-COLS_1 = [("标的", "t"), ("子行业", "sub"), ("El Niño 月均收益", "el"),
-          ("La Niña 月均收益", "la"), ("中性月均收益", "neu"), ("月均差(LA−EL)", "diff")]
+COLS_1 = [("标的", "t"), ("子行业", "sub"), ("厄尔尼诺月均收益", "el"),
+          ("拉尼娜月均收益", "la"), ("中性月均收益", "neu"), ("月均差(LA−EL)", "diff")]
 t1 = mk_table(COLS_1, rows1,
-              note="月度收益=当月 adj_close 月末复权收益的算术均值（%）；n=该 ENSO 状态覆盖的月份数。sig=双侧 p<0.01、edge=p<0.05（t 检验 vs 0）。La Niña 期化肥股（CF/MOS/NTR/CTVA）月均收益系统性高于中性与 El Niño 期；El Niño 期无一致规律，全部 p>0.5。")
+              note="月度收益=当月 adj_close 月末复权收益的算术均值（%）；n=该 ENSO 状态覆盖的月份数。sig=双侧 p<0.01、edge=p<0.05（t 检验 vs 0）。拉尼娜期化肥股（CF/MOS/NTR/CTVA）月均收益系统性高于中性与厄尔尼诺期；厄尔尼诺期无一致规律，全部 p>0.5。")
 
 COLS_EV = [("标的", "t"), ("n(事件数)", "n"), ("均值超额 pp", "mean"),
            ("中位超额 pp", "med"), ("胜率", "win")]
@@ -348,7 +348,7 @@ t2c = mk_table(COLS_EV, ev_rows("ev_avg24"))
 COLS_3 = [("标的", "t"), ("子行业", "sub"), ("n(事件数)", "n"), ("均值超额 pp", "mean"),
           ("中位超额 pp", "med"), ("胜率", "win")]
 t3 = mk_table(COLS_3, rows3,
-              note="超额=个股 12 个月复利累计收益 − SPY 同期（pp）。La Niña 期化肥链（CF/MOS/NTR）与粮商（BG/ADM）、农机（DE）普遍跑赢；肉类（TSN）跑输。CF 8 次事件 8/8 全胜。样本=1995-2022 年 11 次 La Niña 中数据可得者。")
+              note="超额=个股 12 个月复利累计收益 − SPY 同期（pp）。拉尼娜期化肥链（CF/MOS/NTR）与粮商（BG/ADM）、农机（DE）普遍跑赢；肉类（TSN）跑输。CF 8 次事件 8/8 全胜。样本=1995-2022 年 11 次 拉尼娜中数据可得者。")
 
 COLS_4 = [("标的", "t"), ("子行业", "sub"), ("n(月)", "n"), ("β₁₀ (%/bp)", "b10"),
           ("p", "p10"), ("显著性", "sig"), ("βSPY", "bs"), ("R²", "r2")]
@@ -418,6 +418,13 @@ th{{background:#f0f1f3;font-weight:600;white-space:nowrap}}
 #det_tbl{{font-size:12.5px}}
 #det_tbl thead th{{position:sticky;top:0;background:#f0f1f3;z-index:1}}
 .fmore{{text-align:left;color:var(--muted);font-style:italic}}
+.glossary{{background:#f0f7ff;border:1px solid #c8def5;border-radius:10px;padding:14px 18px;margin:18px 0}}
+.glossary b{{color:#185FA5}}
+.glossary td:first-child{{white-space:nowrap;font-weight:600}}
+.glossary th{{background:#e3effc}}
+.term{{border-bottom:1px dashed #7aa5d9;cursor:help;transition:background .15s}}
+.term:hover{{background:#e8f1fc;color:#185FA5}}
+.termtip{{display:none;position:fixed;z-index:9999;max-width:280px;background:#123248;color:#eef6ff;border-radius:8px;padding:8px 12px;font-size:12.5px;line-height:1.6;box-shadow:0 4px 14px rgba(0,0,0,.25);pointer-events:none}}
 </style>
 </head>
 <body><div class="wrap">
@@ -428,35 +435,56 @@ th{{background:#f0f1f3;font-weight:600;white-space:nowrap}}
 <div class="exec">
 <b>一页结论</b>
 <ul>
-<li><b>厄尔尼诺（El Niño）本身不是有效的农业股交易信号</b>：22 次事件（1951-2023）下，农业股月度收益与中性期无统计显著差异（全部 p&gt;0.5）；事件窗口仅农机 DE 在 onset 后 T+6 温和正超额（+7.7pp，胜率 70%），且 T+24 稳健（中位数 +29.4pp，胜率 80%）；DAR 油脂加工 T+6 +12.7pp（60%）但中位数不稳。</li>
-<li><b>真正的 ENSO 信号在反面——La Niña 期化肥链显著走强</b>：La Niña 月均收益 CF +5.8%/月 vs 中性 +1.6%、MOS +3.1%、NTR +3.0%；事件 onset 后 T+12 累计超额 CF +67.5pp（8 次事件 8/8 全胜）、MOS +35.1pp（73%）、BG +19.7pp（75%）、DE +13.0pp（73%）。机制＝La Niña 常伴南美大豆/玉米干旱减产→农产品价格与种植利润支撑→化肥量价齐升；肉类 TSN（−7.3pp）反向（饲料成本）。</li>
+<li><b>厄尔尼诺（厄尔尼诺）本身不是有效的农业股交易信号</b>：22 次事件（1951-2023）下，农业股月度收益与中性期无统计显著差异（全部 p&gt;0.5）；事件窗口仅农机 DE 在 onset 后 T+6 温和正超额（+7.7pp，胜率 70%），且 T+24 稳健（中位数 +29.4pp，胜率 80%）；DAR 油脂加工 T+6 +12.7pp（60%）但中位数不稳。</li>
+<li><b>真正的 ENSO 信号在反面——拉尼娜期化肥链显著走强</b>：拉尼娜月均收益 CF +5.8%/月 vs 中性 +1.6%、MOS +3.1%、NTR +3.0%；事件 onset 后 T+12 累计超额 CF +67.5pp（8 次事件 8/8 全胜）、MOS +35.1pp（73%）、BG +19.7pp（75%）、DE +13.0pp（73%）。机制＝拉尼娜常伴南美大豆/玉米干旱减产→农产品价格与种植利润支撑→化肥量价齐升；肉类 TSN（−7.3pp）反向（饲料成本）。</li>
 <li><b>农业股对利率上行并不悲观，方向与直觉相反</b>：全期月频回归中 MOS（β₁₀=+0.075，p=0.001）、CF（+0.073，p=0.009）显著为正，DAR（+0.064，p=0.049）、AGCO（+0.048，p=0.019）边缘为正——US10Y 上行月化肥/农机反而跑赢；控制 CPI 后系数几乎不变（非通胀代理）；近 10 年 MOS β₁₀=+0.169、CF +0.142（均 p&lt;0.001），敏感度增强。</li>
 <li><b>但这是"增长型"利率上行的属性，非"紧缩型"</b>：DAR 长短端方向相反（US10Y +0.164 显著 / US2Y −0.131 显著）＝曲线平坦化交易的受益者；粮商（ADM/BG）、肉类（TSN/HRL）、农业 REIT（FPI）对利率真正中性；DE 亦不显著（业绩由全球农机周期主导）。</li>
-<li><b>操作含义</b>：担心利率上行不必系统性回避农业股（化肥/农机甚至是顺风）；若做天气交易，盯 La Niña 而非 El Niño，化肥（CF/MOS/NTR）首选、农机（DE）次之，持仓周期宜 12 个月+。样本警示：CF/NTR/CTVA 事件数少（n=2~8）、CF 的 T+24 均值被 2006 化肥超级牛市单事件拉高，置信度打折。</li>
-<li><b>强厄尔尼诺专项（≥+1.5°C，9 次）</b>：强度分级后出现"<b>越强越弱</b>"——弱 El Niño 事件后农业股多数正超额（CF +75.8pp、DAR +65.6pp、DE +13.8pp），<b>强 El Niño（含 1982/1997/2014 三次超强 ≥+2.0°C）后几乎所有标的 T+12 转负</b>（MOS −30.7pp、DAR −33.7pp、ADM −21.0pp；仅 DE/HRL/TSN 相对抗跌）；12 只中 10 只"峰值 ONI × 超额"斜率为负。强 El Niño 的全球天气紊乱+农产品价格过山车对农业链整体逆风，<b>与 La Niña 化肥强正构成不对称镜像</b>——交易上应反向对待（强 El Niño 期减持化肥/粮商/油脂，弱 El Niño 可做多 DE/DAR）。</li>
+<li><b>操作含义</b>：担心利率上行不必系统性回避农业股（化肥/农机甚至是顺风）；若做天气交易，盯拉尼娜而非厄尔尼诺，化肥（CF/MOS/NTR）首选、农机（DE）次之，持仓周期宜 12 个月+。样本警示：CF/NTR/CTVA 事件数少（n=2~8）、CF 的 T+24 均值被 2006 化肥超级牛市单事件拉高，置信度打折。</li>
+<li><b>强厄尔尼诺专项（≥+1.5°C，9 次）</b>：强度分级后出现"<b>越强越弱</b>"——弱厄尔尼诺事件后农业股多数正超额（CF +75.8pp、DAR +65.6pp、DE +13.8pp），<b>强厄尔尼诺（含 1982/1997/2014 三次超强 ≥+2.0°C）后几乎所有标的 T+12 转负</b>（MOS −30.7pp、DAR −33.7pp、ADM −21.0pp；仅 DE/HRL/TSN 相对抗跌）；12 只中 10 只"峰值 ONI × 超额"斜率为负。强厄尔尼诺的全球天气紊乱+农产品价格过山车对农业链整体逆风，<b>与拉尼娜化肥强正构成不对称镜像</b>——交易上应反向对待（强厄尔尼诺期减持化肥/粮商/油脂，弱厄尔尼诺可做多 DE/DAR）。</li>
 </ul>
+</div>
+
+<div class="glossary">
+<b>📖 大白话术语速查（看到不懂的词先查这里）</b>
+<table>
+<tr><th>报告里的写法</th><th>大白话</th></tr>
+<tr><td>El Niño / 厄尔尼诺</td><td>太平洋海温异常偏暖的气候现象，常导致南美/东南亚天气反常</td></tr>
+<tr><td>La Niña / 拉尼娜</td><td>与埃尔尼诺相反——太平洋海温偏冷，常导致南美大豆/玉米干旱</td></tr>
+<tr><td>ENSO</td><td>上面两种现象的总称（厄尔尼诺+拉尼娜的合称）</td></tr>
+<tr><td>ONI / 峰值 ONI</td><td>衡量上述现象强弱的"温度计"（°C）；≥+0.5 算出现、≥+1.5 强、≥+2.0 超强</td></tr>
+<tr><td>超额（pp）</td><td>这只股票相比大盘（SPY）多赚/少赚多少（百分点）——剔除大盘普涨普跌后的"真实表现"</td></tr>
+<tr><td>β₁₀（贝塔，对 10 年期利率）</td><td>10 年期国债利率每涨 1 个点，该股月收益平均多涨/少跌多少%。&gt;0＝利率涨它反而跑赢（如化肥股）</td></tr>
+<tr><td>US10Y / US2Y（长短期利率）</td><td>美国 10 年期/2 年期国债利率——长端=经济与通胀预期，短端=货币政策</td></tr>
+<tr><td>DAR 长短端方向相反</td><td>DAR 对长端利率（US10Y）同向、对短端（US2Y）反向——即"收益率曲线走平"时它受益</td></tr>
+<tr><td>T+6 / T+12 / T+24</td><td>事件发生后第 6/12/24 个月（交易日口径）的累计表现</td></tr>
+<tr><td>见顶 T+ / 回撤起始 T+</td><td>窗口内最高点发生在第几个月；从哪个月开始明显回落（跌破峰值−5pp）</td></tr>
+<tr><td>胜率</td><td>历史上多少比例的事件里该股跑赢大盘（超额定正）</td></tr>
+<tr><td>均值 / 中位数</td><td>平均表现 / 排中间那次的成绩（中位数更抗"暴发户"干扰，如 2006 年化肥疯牛）</td></tr>
+<tr><td>p 值 / 显著性（sig/edge/no）</td><td>这个结论"假的可能性"——p&lt;0.01 很可信(sig)、&lt;0.05 一般可信(edge)、≥0.05 就当作没把握(no)</td></tr>
+<tr><td>斜率（pp/°C）</td><td>厄尔尼诺强度每强 1°C，该股超额多变化多少个百分点（负＝越强越差）</td></tr>
+</table>
 </div>
 
 <h2>一、厄尔尼诺量化回测</h2>
 
 <h3>1.1 数据与方法</h3>
 <div class="card">
-<p><b>ENSO 定义（NOAA ONI）</b>：3 个月滑动 SST 异常指数，按季中点落月。El Niño = ONI ≥ +0.5°C 连续 ≥5 个月；La Niña = ≤ −0.5°C 连续 ≥5 个月；其余为中性。1950-2026 识别 El Niño 22 次 / La Niña 11 次（1990 年后）。</p>
+<p><b>ENSO 定义（NOAA ONI）</b>：3 个月滑动 SST 异常指数，按季中点落月。厄尔尼诺 = ONI ≥ +0.5°C 连续 ≥5 个月；拉尼娜 = ≤ −0.5°C 连续 ≥5 个月；其余为中性。1950-2026 识别 厄尔尼诺 22 次 / 拉尼娜 11 次（1990 年后）。</p>
 <p><b>样本</b>：15 只农业标的 + SPY 基准，1990-2026 日线（后上市缩短：NTR 2018、CTVA 2019、FPI 2014、DBA 2007、MOO 2007）。<b>方法</b>：①单月收益按 ENSO 状态分组对比（t 检验，sig=双侧 p&lt;0.01 / edge=p&lt;0.05 / no=p≥0.05）；②事件研究＝sonset 月份起 T+6/T+12/T+24 复利累计收益 − SPY 同期＝超额（pp）。</p>
-<p>月度状态分布：El Niño 23.4%（215 个月）、La Niña 24.1%（221 个月）、中性 48.8%（448 个月）。</p>
+<p>月度状态分布：厄尔尼诺 23.4%（215 个月）、拉尼娜 24.1%（221 个月）、中性 48.8%（448 个月）。</p>
 </div>
 
 <div class="chart" id="c1"></div>
-<div class="legend">ONI 指数（°C）月度序列（1980 起）｜ 橙色底纹 = El Niño 段（ONI≥+0.5）｜ 数据：NOAA ｜ 2023-24 为最近一次强事件（峰值 +1.99°C）</div>
+<div class="legend">ONI 指数（°C）月度序列（1980 起）｜ 橙色底纹 = 厄尔尼诺段（ONI≥+0.5）｜ 数据：NOAA ｜ 2023-24 为最近一次强事件（峰值 +1.99°C）</div>
 
 <h3>1.2 月度收益按 ENSO 状态分组：月频无显著差异</h3>
 {t1}
 
 <div class="card">
-<p><b>解读</b>：ENSO 作为"月度状态标签"对农业股收益没有统计可辨识的区分力——El Niño 组 vs 中性组差异全不显著（p 普遍 >0.8）。唯一结构性模式：<b>La Niña 月化肥股（CF/MOS/NTR/CTVA）与粮商（BG）月均收益系统性高于中性</b>，且与 El Niño 月之差明显（CF +5.8 vs +0.3、MOS +3.1 vs −0.2）。市场并未把官方 ENSO 状态定价进农业股（信息已被预期），弱信号需靠 La Niña 的供应冲击窗口捕捉。</p>
+<p><b>解读</b>：ENSO 作为"月度状态标签"对农业股收益没有统计可辨识的区分力——厄尔尼诺组 vs 中性组差异全不显著（p 普遍 >0.8）。唯一结构性模式：<b>拉尼娜月化肥股（CF/MOS/NTR/CTVA）与粮商（BG）月均收益系统性高于中性</b>，且与厄尔尼诺月之差明显（CF +5.8 vs +0.3、MOS +3.1 vs −0.2）。市场并未把官方 ENSO 状态定价进农业股（信息已被预期），弱信号需靠 拉尼娜的供应冲击窗口捕捉。</p>
 </div>
 
-<h3>1.3 El Niño 事件窗口：onset 后累计超额（vs SPY）</h3>
+<h3>1.3 厄尔尼诺事件窗口：onset 后累计超额（vs SPY）</h3>
 <h4>T+6（onset 后 6 个月）</h4>
 {t2}
 <h4>T+12</h4>
@@ -464,19 +492,19 @@ th{{background:#f0f1f3;font-weight:600;white-space:nowrap}}
 <h4>T+24</h4>
 {t2c}
 <div class="warn">
-<b>⚠ 阅读警示</b>：CF 的 T+24 均值 +126.9pp 由 2006-09 单次事件驱动（onset 后 24 个月 +863pp，恰逢 2006-08 起化肥超级牛市），中位数仅 −9.5pp——均值≠代表性。DAR T+6/T+12 均值为正但中位数偏负、胜率 40-60%，不稳健。<b>El Niño 下最可靠的窗口信号是 DE（农机）：T+6 胜率 70%、T+24 胜率 80% 且中位数 +29.4pp</b>，逻辑＝北美种植面积扩张→设备需求，但幅度温和。
+<b>⚠ 阅读警示</b>：CF 的 T+24 均值 +126.9pp 由 2006-09 单次事件驱动（onset 后 24 个月 +863pp，恰逢 2006-08 起化肥超级牛市），中位数仅 −9.5pp——均值≠代表性。DAR T+6/T+12 均值为正但中位数偏负、胜率 40-60%，不稳健。<b>厄尔尼诺下最可靠的窗口信号是 DE（农机）：T+6 胜率 70%、T+24 胜率 80% 且中位数 +29.4pp</b>，逻辑＝北美种植面积扩张→设备需求，但幅度温和。
 </div>
 
-<h3>1.4 La Niña 事件窗口：化肥链的系统性正向信号（重点）</h3>
+<h3>1.4 拉尼娜事件窗口：化肥链的系统性正向信号（重点）</h3>
 {t3}
 <div class="card">
-<p><b>机理（基本面）</b>：La Niña 典型天气＝南美（阿根廷/巴西南部）干旱、美国南部冬麦区干燥、东南亚偏湿。传导：南美大豆/玉米减产预期 → 全球谷物价格获支撑 → 美国农户种植利润与出口优势改善 → <b>化肥投入意愿不减反增（量价齐升）</b>。历史窗口验证此链条：CF（北美最大氮肥）8/8 事件 T+12 全胜、MOS（磷钾肥）73% 胜率、BG/ADM（粮商，受益价差与贸易流）75%/64%。反例：TSN（27%）——饲料成本抬升挤压肉类加工毛利。</p>
-<p><b>子行业排序（La Niña T+12 超额）</b>：<span class="badge b-hi">化肥 CF / MOS / NTR</span><span class="badge b-mid">粮商 BG / ADM</span><span class="badge b-mid">农机 DE</span><span class="badge b-mid">油脂 DAR</span><span class="badge b-lo">肉类 TSN</span></p>
+<p><b>机理（基本面）</b>：拉尼娜典型天气＝南美（阿根廷/巴西南部）干旱、美国南部冬麦区干燥、东南亚偏湿。传导：南美大豆/玉米减产预期 → 全球谷物价格获支撑 → 美国农户种植利润与出口优势改善 → <b>化肥投入意愿不减反增（量价齐升）</b>。历史窗口验证此链条：CF（北美最大氮肥）8/8 事件 T+12 全胜、MOS（磷钾肥）73% 胜率、BG/ADM（粮商，受益价差与贸易流）75%/64%。反例：TSN（27%）——饲料成本抬升挤压肉类加工毛利。</p>
+<p><b>子行业排序（拉尼娜 T+12 超额）</b>：<span class="badge b-hi">化肥 CF / MOS / NTR</span><span class="badge b-mid">粮商 BG / ADM</span><span class="badge b-mid">农机 DE</span><span class="badge b-mid">油脂 DAR</span><span class="badge b-lo">肉类 TSN</span></p>
 </div>
 
 <h3>1.5 强厄尔尼诺专项：三档强度 × 窗口内最大超额 / 最终超额 / 见顶时机 / 回撤起始</h3>
 <div class="card">
-<p><b>分级</b>：22 次 El Niño 按事件峰值 ONI 分三档——<b>弱（&lt;+1.5°C）13 次</b>、<b>强（+1.5~&lt;+2.0°C）6 次</b>、<b>超强（≥+2.0°C）3 次（1982/1997/2014）</b>。路径口径：onset 后逐月复利累计收益 − SPY 同期＝超额（pp），遍历 24 个月。</p>
+<p><b>分级</b>：22 次 厄尔尼诺按事件峰值 ONI 分三档——<b>弱（&lt;+1.5°C）13 次</b>、<b>强（+1.5~&lt;+2.0°C）6 次</b>、<b>超强（≥+2.0°C）3 次（1982/1997/2014）</b>。路径口径：onset 后逐月复利累计收益 − SPY 同期＝超额（pp），遍历 24 个月。</p>
 <p><b>核心发现（补充 run-up 路径验证）</b>：强度越高，<b>窗口内最大超额越低、见顶越早、回撤越深</b>——弱档中位最大超额 +26.5pp、期末 +4.7pp；强档 +14.6pp / −23.4pp；超强档 +10.9pp / −40.7pp。见顶时机从弱档平均 T+13.6 提前到超强档 T+6.7。即<b>"越强越弱"并非全程阴跌：强/超强事件窗口内仍有冲高（中位 +11~15pp），但多在 onset 后 7-14 个月崩落转负</b>——交易含义＝快钱窗口在 onset 后约 6 个月内，之后转防守。</p>
 <p><b>四指标定义</b>：<b>最大超额</b>=T+24 窗口内最大累计超额（run-up 峰值，pp）；<b>最终超额</b>=T+24 期末累计超额（pp，附 T+12 期末）；<b>见顶 T+</b>=最大超额发生在 onset 后第几个月（1=onset 月）；<b>回撤起始 T+</b>=见顶后首个跌破「峰值−5pp」的月份（≤24；未跌破记"未跌破"）。</p>
 </div>
@@ -488,7 +516,7 @@ th{{background:#f0f1f3;font-weight:600;white-space:nowrap}}
           note="中位最大超额=窗口内峰值的中位数（pp）；中位最终超额=T+24 期末中位数；平均回撤=peak−期末；'冲高后转负'=窗口内最大超额>0 且期末<0 的样本占比；'全程阴跌'=窗口内从未转正的样本占比。三档单调：强度↑→最大超额↓、期末↓、见顶提前、回撤加深。")}
 
 <div class="chart" id="c7"></div>
-<div class="legend">三档 El Niño 事件：T+24 窗口内中位最大超额（蓝）vs 中位最终超额（橙，pp）＋ 平均见顶 T+N（紫点，右轴）｜ 强度越高→峰值越低、期末越负、见顶越早。</div>
+<div class="legend">三档 厄尔尼诺事件：T+24 窗口内中位最大超额（蓝）vs 中位最终超额（橙，pp）＋ 平均见顶 T+N（紫点，右轴）｜ 强度越高→峰值越低、期末越负、见顶越早。</div>
 
 <h4>事件 × 标的 四指标明细（可筛选）</h4>
 <div class="filterbar">
@@ -518,7 +546,7 @@ th{{background:#f0f1f3;font-weight:600;white-space:nowrap}}
 <div class="note">corr 均为 12 次事件（含强弱）线性相关；斜率=ONI 每 +1°C 的 T+12 超额变化（pp）。FMC −34.6pp/°C、DAR −60.9pp/°C、CF −56.3pp/°C 等为强负，但 p 全部 &gt;0.28（n 小，方向性结论）。</div>
 
 <div class="chart" id="c6"></div>
-<div class="legend">强（≥+1.5°C，橙）vs 弱（&lt;+1.5°C，蓝）El Niño 事件 onset 后 T+12 平均超额（pp）｜ 弱事件多为正、强事件几乎全负 → 强度与超额反向。</div>
+<div class="legend">强（≥+1.5°C，橙）vs 弱（&lt;+1.5°C，蓝）厄尔尼诺事件 onset 后 T+12 平均超额（pp）｜ 弱事件多为正、强事件几乎全负 → 强度与超额反向。</div>
 
 <h2>二、利率敏感性量化</h2>
 
@@ -563,21 +591,21 @@ th{{background:#f0f1f3;font-weight:600;white-space:nowrap}}
 <h2>三、基本面分析（子行业定性）</h2>
 <table>
 <tr><th>子行业</th><th>标的</th><th>利润驱动</th><th>厄尔尼诺暴露</th><th>利率暴露</th></tr>
-<tr><td>农机制造（资本品）</td><td>DE / AGCO</td><td>全球农机替换周期、美国种植面积、经销商库存融资利率</td><td>El Niño 温和正（DE T+6/T+24 胜率高）；La Niña 正（DE T+12 +13pp）</td><td>低-温和正（AGCO +0.089；DE 不显著但融资成本敏感）</td></tr>
-<tr><td>化肥（商品）</td><td>MOS / CF / NTR</td><td>钾磷氮价格周期、天然气成本（CF 氮肥）、供需缺口</td><td>El Niño 中性；<b>La Niña 强正（CF T+12 8/8 全胜、MOS 73%）</b></td><td><b>显著正</b>（MOS +0.075、CF +0.073）→利率上行顺风</td></tr>
+<tr><td>农机制造（资本品）</td><td>DE / AGCO</td><td>全球农机替换周期、美国种植面积、经销商库存融资利率</td><td>厄尔尼诺温和正（DE T+6/T+24 胜率高）；拉尼娜正（DE T+12 +13pp）</td><td>低-温和正（AGCO +0.089；DE 不显著但融资成本敏感）</td></tr>
+<tr><td>化肥（商品）</td><td>MOS / CF / NTR</td><td>钾磷氮价格周期、天然气成本（CF 氮肥）、供需缺口</td><td>厄尔尼诺中性；<b>拉尼娜强正（CF T+12 8/8 全胜、MOS 73%）</b></td><td><b>显著正</b>（MOS +0.075、CF +0.073）→利率上行顺风</td></tr>
 <tr><td>种子/植保</td><td>CTVA / FMC</td><td>种植面积、抗性种子渗透率、植保价格</td><td>样本短（2019 起），信号弱</td><td>不显著</td></tr>
-<tr><td>粮商（贸易）</td><td>ADM / BG</td><td>谷物-压榨价差、贸易流、乙醇（ADM）</td><td>La Niña 正（BG T+12 75%）；El Niño 偏弱</td><td>中性（β₁₀≈0）</td></tr>
-<tr><td>油脂/副产品加工</td><td>DAR</td><td>油脂价差、再生柴油 RIN、副产品</td><td>El Niño T+6 正但中位数不稳</td><td>长短端相反（平坦化受益者）</td></tr>
+<tr><td>粮商（贸易）</td><td>ADM / BG</td><td>谷物-压榨价差、贸易流、乙醇（ADM）</td><td>拉尼娜正（BG T+12 75%）；厄尔尼诺偏弱</td><td>中性（β₁₀≈0）</td></tr>
+<tr><td>油脂/副产品加工</td><td>DAR</td><td>油脂价差、再生柴油 RIN、副产品</td><td>厄尔尼诺 T+6 正但中位数不稳</td><td>长短端相反（平坦化受益者）</td></tr>
 <tr><td>农业 REIT</td><td>FPI</td><td>农田租金、土地增值、债务成本</td><td>样本短，信号弱</td><td>理论负（久期属性），样本系数不显著</td></tr>
-<tr><td>肉类加工（防御）</td><td>TSN / HRL</td><td>饲料成本、肉类消费、利润率</td><td>La Niña 负（TSN −7.3pp，饲料成本压制）</td><td>中性（防御属性）</td></tr>
+<tr><td>肉类加工（防御）</td><td>TSN / HRL</td><td>饲料成本、肉类消费、利润率</td><td>拉尼娜负（TSN −7.3pp，饲料成本压制）</td><td>中性（防御属性）</td></tr>
 </table>
 <div class="note">基本面判断基于各子行业商业模式与历史业绩结构，不含个股盈利预测。</div>
 
 <h2>四、风险与局限</h2>
 <div class="warn">
 <ul>
-<li><b>事件样本小</b>：La Niña 窗口 CF n=8、NTR/CTVA n=2；El Niño T+24 部分标的仅 2-6 个事件。事件研究统计功效有限，显著性一律视为上限（同既往事件研究口径）。</li>
-<li><b>重叠/串扰</b>：1991-92、2014-16 等 El Niño 期间叠加海湾战争、中国去库存、商品超级周期等宏观冲击，超额非纯 ENSO 效应。</li>
+<li><b>事件样本小</b>：拉尼娜窗口 CF n=8、NTR/CTVA n=2；厄尔尼诺 T+24 部分标的仅 2-6 个事件。事件研究统计功效有限，显著性一律视为上限（同既往事件研究口径）。</li>
+<li><b>重叠/串扰</b>：1991-92、2014-16 等 厄尔尼诺期间叠加海湾战争、中国去库存、商品超级周期等宏观冲击，超额非纯 ENSO 效应。</li>
 <li><b>利率回归共线性</b>：β₁₀ 控制 CPI 后稳健，但无法完全剥离"增长预期"（PMI/信用利差）代理的共线；结论定性为"利率上行顺风"而非因果。</li>
 <li><b>数据边界</b>：Yahoo 复权收盘价（CDP 抓取）、FRED/NOAA 官方原值；历史结论不保证未来。</li>
 <li><b>个股异质</b>：CF 2006 化肥超级牛市为极端值来源；NTR/CTVA 上市晚，样本最短。</li>
@@ -585,7 +613,7 @@ th{{background:#f0f1f3;font-weight:600;white-space:nowrap}}
 </ul>
 </div>
 
-<h2>附录 A：El Niño 事件清单（22 次）</h2>
+<h2>附录 A：厄尔尼诺事件清单（22 次）</h2>
 <div class="collapse">
 <table><tr><th>起始日</th><th>结束日</th><th>峰值ONI</th><th>持续月数</th></tr>
 {ev_html_rows}
@@ -594,7 +622,7 @@ th{{background:#f0f1f3;font-weight:600;white-space:nowrap}}
 
 <div class="foot">
 报告 57 · 生成于 2026-08-29 · 数据：NOAA ONI（1950-2026）/ FRED DGS10,DGS2,CPIAUCSL（1962-2026）/ Yahoo 日线至 08-27 / 富途快照 08-28<br>
-参数图例：β₁₀=个股月收益对 US10Y 月变动的敏感度（%/bp）；超额=累计收益−SPY 同期（pp）；胜率=正超额事件占比；El Niño/La Niña 按 ONI≥+0.5/≤−0.5 连续≥5 月；强 El Niño=事件峰值 ONI ≥+1.5°C（超强 ≥+2.0°C）；sig=双侧 p&lt;0.01、edge=p&lt;0.05、no=p≥0.05。
+参数图例：β₁₀=个股月收益对 US10Y 月变动的敏感度（%/bp）；超额=累计收益−SPY 同期（pp）；胜率=正超额事件占比；厄尔尼诺/拉尼娜按 ONI≥+0.5/≤−0.5 连续≥5 月；强厄尔尼诺=事件峰值 ONI ≥+1.5°C（超强 ≥+2.0°C）；sig=双侧 p&lt;0.01、edge=p&lt;0.05、no=p≥0.05。
 </div>
 
 </div>
@@ -661,24 +689,24 @@ echarts.init(el).setOption({{
 }});
 }})();
 
-// 图4 强 vs 弱 El Niño T+12 超额
+// 图4 强 vs 弱厄尔尼诺 T+12 超额
 (function(){{
 const el=document.getElementById('c6');
 const data = STRWEAK.filter(x=>x.s!=null||x.w!=null);
 echarts.init(el).setOption({{
   grid:{{left:52,right:16,top:34,bottom:64}},
   tooltip:{{trigger:'axis'}},
-  legend:{{data:['强 El Niño (≥+1.5°C)','弱 El Niño (<+1.5°C)'],textStyle:{{color:MUT,fontSize:11}}}},
+  legend:{{data:['强厄尔尼诺 (≥+1.5°C)','弱厄尔尼诺 (<+1.5°C)'],textStyle:{{color:MUT,fontSize:11}}}},
   xAxis:{{type:'category',data:data.map(x=>x.t),axisLabel:{{rotate:35,fontSize:11}},axisTick:{{show:false}}}},
   yAxis:{{type:'value',name:'T+12 平均超额 pp',splitLine:{{lineStyle:{{color:'#eee'}}}}}},
   series:[
-    {{name:'强 El Niño (≥+1.5°C)',type:'bar',data:data.map(x=>x.s!=null?+(x.s.toFixed(1)):null),itemStyle:{{color:OKC}},barWidth:'30%'}},
-    {{name:'弱 El Niño (<+1.5°C)',type:'bar',data:data.map(x=>x.w!=null?+(x.w.toFixed(1)):null),itemStyle:{{color:OKB}},barWidth:'30%'}}
+    {{name:'强厄尔尼诺 (≥+1.5°C)',type:'bar',data:data.map(x=>x.s!=null?+(x.s.toFixed(1)):null),itemStyle:{{color:OKC}},barWidth:'30%'}},
+    {{name:'弱厄尔尼诺 (<+1.5°C)',type:'bar',data:data.map(x=>x.w!=null?+(x.w.toFixed(1)):null),itemStyle:{{color:OKB}},barWidth:'30%'}}
   ]
 }});
 }})();
 
-// 图5 三档 El Niño：中位最大超额 vs 中位最终超额 + 平均见顶 T+N
+// 图5 三档 厄尔尼诺：中位最大超额 vs 中位最终超额 + 平均见顶 T+N
 (function(){{
 const el=document.getElementById('c7');
 const d = TIER7;
@@ -730,6 +758,103 @@ render();
 </script>
 </body>
 </html>"""
+
+# ================= 术语悬停浮窗标注 =================
+# 术语词典：key=报告中的写法（须唯一、可被原文精确匹配），val=悬停解释
+TERMS = [
+    ("厄尔尼诺", "太平洋海温异常偏暖的气候现象，常导致南美/东南亚天气反常，农产品产量承压"),
+    ("拉尼娜", "与厄尔尼诺相反——太平洋海温偏冷，常导致南美大豆/玉米干旱减产，化肥需求与粮价获支撑"),
+    ("ONI", "NOAA 衡量厄尔尼诺/拉尼娜强弱的温度计（°C）：≥+0.5 算出现、≥+1.5 强、≥+2.0 超强"),
+    ("峰值 ONI", "一次气候事件期间 ONI 达到的最高值，用于给事件分强度档"),
+    ("超额", "该股相比大盘（SPY）多赚/少赚的百分点——剔除大盘普涨普跌后的真实表现"),
+    ("超额（pp）", "该股相比大盘多赚/少赚的百分点，pp=百分点"),
+    ("β₁₀", "10 年期国债利率每变动 1 个点，该股月收益平均跟随变动多少%——贝塔值"),
+    ("US10Y", "美国 10 年期国债利率——长端，反映经济与通胀预期"),
+    ("US2Y", "美国 2 年期国债利率——短端，反映货币政策（加息/降息预期）"),
+    ("长短端", "长期利率（10Y）与短期利率（2Y）两个期限端，方向相反说明受曲线形态影响"),
+    ("T+6", "事件发生后第 6 个月的累计表现（T+12/T+24 同理）"),
+    ("T+12", "事件发生后第 12 个月的累计表现"),
+    ("T+24", "事件发生后第 24 个月的累计表现"),
+    ("胜率", "历史上多少比例的事件里该股跑赢大盘（超额为正）"),
+    ("均值", "一组数字的平均值（把所有数加起来除以个数）"),
+    ("中位数", "一组数字按大小排中间那个——比均值更抗极端值干扰"),
+    ("中位", "中位数的简称——排中间那个值，比均值更抗极端值干扰"),
+    ("显著性", "结论可信度的统计表述——越显著越不可能是碰巧"),
+    ("sig", "统计上很可信（p<0.01 的缩写）"),
+    ("edge", "统计上一般可信（p<0.05 的缩写，还没到很可信）"),
+    ("斜率", "相关强度每变化 1 个单位，该股超额的变化率"),
+]
+# 生成悬停解释词典（长词优先）
+TERM_DICT = {k: v for k, v in sorted(TERMS, key=lambda x: -len(x[0]))}
+# 已标注/不应标注的上下文（避免误标）
+_EXCLUDE_TAGS = {"term", "td", "th", "tr", "option", "script", "style"}
+_EXCLUDE_CLASS = {"termtip", "glossary"}
+
+import re as _re
+
+# 长词优先的正则（一次匹配，避免 tip 文本被二次标注造成嵌套）
+_TERM_PAT = _re.compile("|".join(_re.escape(k) for k in TERM_DICT.keys()))
+# script / style 块（跳过，不标注其内部字符串）。带捕获组 → re.split 时块内容保留在奇数位
+_BLOCK_RE = _re.compile(r"(<script[\s\S]*?</script>)|(<style[\s\S]*?</style>)", _re.S)
+# 速查表（glossary）区块（跳过，其中已是解释，无需再悬停）。精确闭合到表格结束
+_GLOSS_RE = _re.compile(r'<div class="glossary">[\s\S]*?</table>\s*</div>', _re.S)
+# HTML 标签与文本分片（避免把标签属性里的词误标，如 class='sig'）
+_TAG_SPLIT_RE = _re.compile(r"<[^>]+>")
+
+def _annotate_text(text):
+    """只对纯文本做术语标注（单次匹配，不嵌套、不碰标签）。"""
+    def _repl(m):
+        term = m.group(0)
+        tip = TERM_DICT[term].replace("'", "&#39;")
+        return f"<span class='term' data-tip='{tip}'>{term}</span>"
+    return _TERM_PAT.sub(_repl, text)
+
+def _annotate_block(text):
+    """对一段含标签的 HTML 正文做术语标注：按标签/文本分片，仅标注文本节点。"""
+    if not text:
+        return ""
+    parts = _TAG_SPLIT_RE.split(text)
+    tags = _TAG_SPLIT_RE.findall(text)
+    out = []
+    for i, p in enumerate(parts):
+        out.append(_annotate_text(p))
+        if i < len(tags):
+            out.append(tags[i])
+    return "".join(out)
+
+def annotate_terms(html_str):
+    """把正文中的专业术语替换为带悬停浮窗的 span；跳过 <script>/<style>/速查表 内部。"""
+    # 先抽走速查表，再按 script/style 分块标注，最后放回
+    m = _GLOSS_RE.search(html_str)
+    gloss = m.group(0) if m else ""
+    rest = _GLOSS_RE.sub("@@GLOSS@@", html_str, count=1)
+    parts = _BLOCK_RE.split(rest)
+    # 偶数位=正文（标注），奇数位=<script>/<style> 块原文（保留；多个捕获组可能插入 None）
+    joined = "".join(_annotate_block(p) if (i % 2 == 0 and p) else (p or "") for i, p in enumerate(parts))
+    return joined.replace("@@GLOSS@@", gloss)
+
+html = annotate_terms(html)
+# 注入浮窗引擎 JS（放 </body> 前）
+tip_engine = """<div class="termtip" id="termtip"></div>
+<script>
+(function(){
+  const tip=document.getElementById('termtip');
+  let cur=null;
+  document.addEventListener('mouseover',e=>{
+    const t=e.target.closest('.term');
+    if(!t||t===cur)return; cur=t;
+    tip.textContent=t.dataset.tip||'';
+    tip.style.display='block';
+    const r=t.getBoundingClientRect();
+    tip.style.left=Math.min(r.left,window.innerWidth-300)+'px';
+    tip.style.top=r.bottom+6+'px';
+  });
+  document.addEventListener('mouseout',e=>{
+    if(e.target.closest('.term')){cur=null;tip.style.display='none';}
+  });
+})();
+</script>"""
+html = html.replace("</body>", tip_engine + "</body>")
 
 out_path = os.path.join(OUT_DIR, "index.html")
 with open(out_path, "w", encoding="utf-8") as f:

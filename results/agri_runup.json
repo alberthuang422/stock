@@ -7,7 +7,7 @@
  "tier_summary": [
   {
    "tier": "weak",
-   "tier_cn": "弱 El Niño (<+1.5°C)",
+   "tier_cn": "弱厄尔尼诺(<+1.5°C)",
    "n_ev": 13,
    "n_ev_data": 6,
    "n_samples": 65,
@@ -23,7 +23,7 @@
   },
   {
    "tier": "strong",
-   "tier_cn": "强 El Niño (1.5~2.0)",
+   "tier_cn": "强厄尔尼诺(1.5~2.0°)",
    "n_ev": 6,
    "n_ev_data": 2,
    "n_samples": 27,
@@ -39,7 +39,7 @@
   },
   {
    "tier": "vstrong",
-   "tier_cn": "超强 El Niño (≥2.0°C)",
+   "tier_cn": "超强厄尔尼诺(≥2.0°C)",
    "n_ev": 3,
    "n_ev_data": 2,
    "n_samples": 21,

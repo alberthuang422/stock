@@ -222,8 +222,8 @@ for t in TICKERS:
 
 # ---------- 7. 分档汇总（跨标的 × 事件样本） ----------
 tier_summary = []
-for tr, tr_cn in (("weak", "弱 El Niño (<+1.5°C)"), ("strong", "强 El Niño (1.5~2.0)"),
-                  ("vstrong", "超强 El Niño (≥2.0°C)")):
+for tr, tr_cn in (("weak", "弱厄尔尼诺(<+1.5°C)"), ("strong", "强厄尔尼诺(1.5~2.0°)"),
+                  ("vstrong", "超强厄尔尼诺(≥2.0°C)")):
     rows = []
     for r in ev_records:
         if r["tier"] != tr:
