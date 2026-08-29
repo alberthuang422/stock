@@ -127,6 +127,14 @@ def main():
         c = ret[tk].rolling(CORR_WINDOW).corr(ret["CL"])
         corr[f"{tk}/CL"] = c.values
 
+    # 归一化价格（2025-12 首有效日=100，供走势图）
+    norm = pd.DataFrame(index=panel["date"])
+    for tk in ["CF", "DAR", "CL", "XLE"]:
+        s = panel[tk]
+        fv = s[base].dropna().iloc[0] if s[base].notna().any() else np.nan
+        norm[tk] = (s / fv * 100).values if not np.isnan(fv) else s.values
+    norm_price = {k: [None if pd.isna(v) else round(float(v), 2) for v in norm[k].values] for k in norm.columns}
+
     # 5. 创新高同步（判定三：XLE/CL 创新高 → CF/DAR 是否同步创新高）
     NH_WINDOW = 60
     newhi = {}
@@ -206,6 +214,7 @@ def main():
         },
         "span_chg_pct": span_chg,
         "new_high": new_high_summary,
+        "norm_price": norm_price,
         "panel_dates": [str(d.date()) for d in panel["date"]],
         "ratio": {k: [None if pd.isna(v) else round(float(v), 2) for v in ratio[k].values] for k in ratio.columns},
         "beta": {k: [None if pd.isna(v) else round(float(v), 3) for v in beta[k].values] for k in beta.columns},
