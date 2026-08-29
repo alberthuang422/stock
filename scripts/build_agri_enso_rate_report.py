@@ -411,6 +411,13 @@ th{{background:#f0f1f3;font-weight:600;white-space:nowrap}}
 .warn{{background:#fdf2f2;border:1px solid #f0c8c8;border-radius:8px;padding:12px 16px;font-size:13px;margin-top:10px}}
 .foot{{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}}
 .collapse{{max-height:420px;overflow-y:auto;border:1px solid var(--line);border-radius:8px}}
+.filterbar{{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin:10px 0;font-size:13px;display:flex;flex-wrap:wrap;gap:16px;align-items:center}}
+.filterbar label{{display:inline-flex;align-items:center;gap:6px;color:#444}}
+.filterbar select{{padding:5px 10px;border:1px solid var(--line);border-radius:6px;background:#fff;font-size:13px;cursor:pointer}}
+.filterbar .fcount{{color:var(--muted);font-size:12px}}
+#det_tbl{{font-size:12.5px}}
+#det_tbl thead th{{position:sticky;top:0;background:#f0f1f3;z-index:1}}
+.fmore{{text-align:left;color:var(--muted);font-style:italic}}
 </style>
 </head>
 <body><div class="wrap">
@@ -483,12 +490,20 @@ th{{background:#f0f1f3;font-weight:600;white-space:nowrap}}
 <div class="chart" id="c7"></div>
 <div class="legend">三档 El Niño 事件：T+24 窗口内中位最大超额（蓝）vs 中位最终超额（橙，pp）＋ 平均见顶 T+N（紫点，右轴）｜ 强度越高→峰值越低、期末越负、见顶越早。</div>
 
-<h4>事件 × 标的 四指标明细（所有有数据事件，按档排序）</h4>
-<div class="collapse">
-{mk_table([("事件", "ev"), ("档", "tr"), ("峰值ONI", "oni"), ("标的", "t"), ("子行业", "sub"),
-           ("最大超额pp", "mx"), ("见顶T+", "pt"), ("回撤起始T+", "ds"), ("T+12期末pp", "end12"), ("T+24期末pp", "end")], det_rows,
-          note="td<sub>12/24</sub>期末=对应窗口复利累计超额；'未跌破'=窗口内未跌破峰值−5pp（回撤未实质发生）。行按超强→强→弱分档排序，同档按事件时间。")}
+<h4>事件 × 标的 四指标明细（可筛选）</h4>
+<div class="filterbar">
+  <label>强度档：<select id="f_tier"><option value="all">全部档位</option></select></label>
+  <label>股票：<select id="f_tkr"><option value="all">全部标的</option></select></label>
+  <label>显示 <select id="f_rows"><option value="20">20</option><option value="50">50</option><option value="100">100</option><option value="all" selected>全部</option></select> 行</label>
+  <span class="fcount" id="f_count"></span>
 </div>
+<div class="collapse" style="max-height:none;max-height:560px">
+<table id="det_tbl">
+<thead><tr><th>事件</th><th>档</th><th>峰值ONI</th><th>标的</th><th>子行业</th><th>最大超额pp</th><th>见顶T+</th><th>回撤起始T+</th><th>T+12期末pp</th><th>T+24期末pp</th></tr></thead>
+<tbody></tbody>
+</table>
+</div>
+<div class="note">td<sub>12/24</sub>期末=对应窗口复利累计超额；'未跌破'=窗口内未跌破峰值−5pp（回撤未实质发生）。支持按强度档与股票双筛选，实时过滤，再按显示行数截断。强度档与股票下拉选项由数据自动生成。</div>
 
 <h4>标的 × 强度档（强 vs 超强，平均口径）</h4>
 {mk_table([("标的", "t"), ("子行业", "sub"),
@@ -589,6 +604,7 @@ const BETA = {json.dumps(bar_beta)};
 const GRP = {json.dumps(bar_grp)};
 const STRWEAK = {json.dumps(bar_strweak)};
 const TIER7 = {json.dumps(c7_tier)};
+const DET = {json.dumps(det_rows)};
 const OKB='#0072B2', OKR='#D55E00', OKG='#009E73', OKC='#E69F00', OKP='#CC79A7', MUT='#888';
 
 // 图1 ONI
@@ -681,6 +697,35 @@ echarts.init(el).setOption({{
     {{name:'平均见顶 T+N (右)',type:'line',yAxisIndex:1,data:d.map(x=>x.pt),itemStyle:{{color:OKP}},lineStyle:{{width:2,color:OKP}},symbolSize:8}}
   ]
 }});
+}})();
+
+// 四指标明细表：强度 × 股票 双筛选
+(function(){{
+const ALL='all';
+const trSel=document.getElementById('f_tier'), tkSel=document.getElementById('f_tkr'),
+      rwSel=document.getElementById('f_rows'), cnt=document.getElementById('f_count'),
+      tbody=document.querySelector('#det_tbl tbody');
+const tiers=[...new Set(DET.map(x=>x.tr))].sort((a,b)=>a.indexOf('超')>=0?(b.indexOf('超')>=0?a.localeCompare(b):-1):(b.indexOf('超')>=0?1:a.localeCompare(b)));
+const tkrs=[...new Set(DET.map(x=>x.t))];
+tiers.forEach(v=>{{const o=document.createElement('option');o.value=v;o.textContent=v;trSel.appendChild(o);}});
+tkrs.forEach(v=>{{const o=document.createElement('option');o.value=v;o.textContent=v;tkSel.appendChild(o);}});
+const num=v=>v==='-'||v==='未跌破'?null:parseFloat(v.replace('+','').replace('T+',''));
+const clsOf=v=>{{if(v==='-'||v==='未跌破'||v==null)return'';const n=typeof v==='number'?v:parseFloat(v);return n>=0?'up':'down';}};
+function render(){{
+  const tr=trSel.value, tk=tkSel.value, rw=rwSel.value;
+  let rows=DET;
+  if(tr!==ALL)rows=rows.filter(r=>r.tr===tr);
+  if(tk!==ALL)rows=rows.filter(r=>r.t===tk);
+  cnt.textContent='共 '+rows.length+' 行';
+  const shown=(rw===ALL||rows.length<=parseInt(rw))?rows:rows.slice(0,parseInt(rw));
+  tbody.innerHTML=shown.map(r=>`<tr>
+    <td>${{r.ev}}</td><td>${{r.tr}}</td><td>${{r.oni}}</td><td>${{r.t}}</td><td>${{r.sub}}</td>
+    <td class='${{clsOf(r.mx)}}'>${{r.mx}}</td><td>${{r.pt}}</td><td>${{r.ds}}</td>
+    <td class='${{clsOf(r.end12)}}'>${{r.end12}}</td><td class='${{clsOf(r.end)}}'>${{r.end}}</td></tr>`).join('')
+    + (rows.length>shown.length?`<tr><td colspan='10' class='fmore'>仅显示前 ${{shown.length}} 行，调整"显示行数"查看全部</td></tr>`:'');
+}}
+[trSel,tkSel,rwSel].forEach(el=>el.addEventListener('change',render));
+render();
 }})();
 </script>
 </body>
