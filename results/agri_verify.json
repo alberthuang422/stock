@@ -1,0 +1,147 @@
+{
+ "infl_ctrl": {
+  "MOS": {
+   "n": 401,
+   "beta10_raw": 0.0748,
+   "beta10_raw_p": 0.0005,
+   "beta10_ctrl": 0.0747,
+   "beta10_ctrl_p": 0.0006,
+   "beta_cpi": 0.0143,
+   "beta_cpi_p": 0.9686,
+   "r2_raw": 0.1714,
+   "r2_ctrl": 0.1714
+  },
+  "CF": {
+   "n": 250,
+   "beta10_raw": 0.0721,
+   "beta10_raw_p": 0.0095,
+   "beta10_ctrl": 0.0702,
+   "beta10_ctrl_p": 0.0124,
+   "beta_cpi": 0.1916,
+   "beta_cpi_p": 0.6038,
+   "r2_raw": 0.1496,
+   "r2_ctrl": 0.1506
+  },
+  "DAR": {
+   "n": 381,
+   "beta10_raw": 0.0642,
+   "beta10_raw_p": 0.0499,
+   "beta10_ctrl": 0.0645,
+   "beta10_ctrl_p": 0.0503,
+   "beta_cpi": -0.0432,
+   "beta_cpi_p": 0.9357,
+   "r2_raw": 0.0785,
+   "r2_ctrl": 0.0785
+  },
+  "AGCO": {
+   "n": 401,
+   "beta10_raw": 0.048,
+   "beta10_raw_p": 0.0188,
+   "beta10_ctrl": 0.0485,
+   "beta10_ctrl_p": 0.0182,
+   "beta_cpi": -0.0925,
+   "beta_cpi_p": 0.7883,
+   "r2_raw": 0.2037,
+   "r2_ctrl": 0.2038
+  },
+  "NTR": {
+   "n": 101,
+   "beta10_raw": 0.0515,
+   "beta10_raw_p": 0.0955,
+   "beta10_ctrl": 0.0484,
+   "beta10_ctrl_p": 0.1258,
+   "beta_cpi": 0.1802,
+   "beta_cpi_p": 0.6315,
+   "r2_raw": 0.2098,
+   "r2_ctrl": 0.2117
+  },
+  "DE": {
+   "n": 401,
+   "beta10_raw": 0.0166,
+   "beta10_raw_p": 0.2105,
+   "beta10_ctrl": 0.0175,
+   "beta10_ctrl_p": 0.1911,
+   "beta_cpi": -0.1547,
+   "beta_cpi_p": 0.4893,
+   "r2_raw": 0.2981,
+   "r2_ctrl": 0.299
+  },
+  "ADM": {
+   "n": 401,
+   "beta10_raw": -0.0042,
+   "beta10_raw_p": 0.7691,
+   "beta10_ctrl": -0.005,
+   "beta10_ctrl_p": 0.7245,
+   "beta_cpi": 0.1646,
+   "beta_cpi_p": 0.4916,
+   "r2_raw": 0.1029,
+   "r2_ctrl": 0.104
+  },
+  "BG": {
+   "n": 298,
+   "beta10_raw": -0.002,
+   "beta10_raw_p": 0.9125,
+   "beta10_ctrl": -0.0003,
+   "beta10_ctrl_p": 0.9848,
+   "beta_cpi": -0.1927,
+   "beta_cpi_p": 0.4682,
+   "r2_raw": 0.1607,
+   "r2_ctrl": 0.1622
+  },
+  "FMC": {
+   "n": 401,
+   "beta10_raw": 0.0164,
+   "beta10_raw_p": 0.2631,
+   "beta10_ctrl": 0.0166,
+   "beta10_ctrl_p": 0.2607,
+   "beta_cpi": -0.0324,
+   "beta_cpi_p": 0.8958,
+   "r2_raw": 0.2323,
+   "r2_ctrl": 0.2323
+  }
+ },
+ "recent10": {
+  "MOS": {
+   "n": 128,
+   "beta10": 0.1693,
+   "p": 0.0,
+   "beta_spy": 1.446
+  },
+  "CF": {
+   "n": 128,
+   "beta10": 0.1417,
+   "p": 0.0001,
+   "beta_spy": 0.93
+  },
+  "DAR": {
+   "n": 128,
+   "beta10": 0.0457,
+   "p": 0.203,
+   "beta_spy": 1.203
+  },
+  "AGCO": {
+   "n": 128,
+   "beta10": 0.0597,
+   "p": 0.0242,
+   "beta_spy": 1.207
+  },
+  "NTR": {
+   "n": 103,
+   "beta10": 0.0518,
+   "p": 0.0923,
+   "beta_spy": 0.832
+  },
+  "CTVA": {
+   "n": 87,
+   "beta10": 0.0403,
+   "p": 0.1497,
+   "beta_spy": 0.734
+  }
+ },
+ "rate_cpi_month": {
+  "n": 773,
+  "corr": 0.0858,
+  "hi_cpi_d10_mean_bp": 1.7,
+  "lo_cpi_d10_mean_bp": -0.7
+ }
+}
