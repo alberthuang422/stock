@@ -52,3 +52,11 @@
 - 执行：单 commit `af8e698`（KO/SBUX 补充分析日志）→ push 成功（cbb0a8a..af8e698），ls-remote 验证远端一致。
 - 未入库：`data/fred_test_dgs2.csv`、`results/_scan_step2.log`、`results/supplement_volume.log`（延续惯例）。
 - 备查：自动化日志 ~/.workbuddy/automation-logs/2026-08-29_github提交.log。
+
+## 2026-08-30 00:1x（第七次执行）
+- 任务：总结 8/29 全天工作、更新交接文档、git 提交并 push（用户明确要求"提交到 github 即可"）。
+- 前情：8/29 白天已按主题提交 8 个（eb0d515 57号 → 39eba89 57号交接文档+术语悬浮）；本地领先远端 8 个提交，全部未 push。
+- 执行：读 8/29 日志 → **MEMORY.md 压缩清理**（59 行重写，系统提示超限截断；合并重复条目、删过时细节，保留铁律/偏好/结论/索引）→ 覆盖更新 overview.md（8/29 全天：JH讲话×六股/黄金BTC证伪/54宏观利率/55背景常设/56 CCL/57农业ENSO五大发现/四巨头FCF/月差vs裂解/资管分化/RB1!口径/地缘溢价监测）→ 按主题 4 个 commit：①922fe57 57号2015-16+2026抢跑日志+CL增量 ②fe41679 农业股地缘溢价监测（并行会话 00:10 新产出）③a8dd357 非农核对脚本 ④a0d46e4 交接文档+MEMORY+automation memory → push 12 个提交（98ebde0..a0d46e4）成功，ls-remote 验证远端 a0d46e4=本地一致。
+- 安全说明：全程仅 add/commit/push，无删除/clean/reset/restore；`reports/57.../厄尔尼诺x农业股.html`（重做前旧备份，与 index.html 100% 相同）按"不做删除"原则保留为未跟踪未入库，已写入交接文档待用户确认。
+- 有意未入库：`results/_scan_step2.log`、`results/supplement_volume.log`（运行日志惯例）；重复文件 厄尔尼诺x农业股.html（见上）。
+- 备查：自动化日志 ~/.workbuddy/automation-logs/2026-08-30_github提交.log。
