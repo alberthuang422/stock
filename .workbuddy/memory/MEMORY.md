@@ -24,7 +24,9 @@
 - 历史点位用 adj_close 复权口径；回报统计一律百分数（×100）；json.dump 前 clean() 转 None、numpy 转 int；ECharts markArea 二维数组；f-string 嵌 JS 用 @@PLACEH@@+.replace()。
 
 ## 用户偏好（长期规则）
-- **Git 提交（08-22/08-23）**：格式 `yyyy-mm-dd  msg: （≤50字）`；按主题分开 commit，不混无关内容；**只本地 commit，不 push**；用 `git -c user.name="Makemoney" -c user.email="alberthuang422@gmail.com"`。
+- **Git 提交（08-22/08-23，08-29 更新）**：格式 `yyyy-mm-dd  msg: （≤50字）`；按主题分开 commit，不混无关内容；**默认只本地 commit，用户明确要求时才 push**（08-29 19:55 首次 push）；用 `git -c user.name="Makemoney" -c user.email="alberthuang422@gmail.com"`。
+- **GitHub 推送必须走 SSH 443（08-29 实证）**：22 端口直连超时（沙箱内外皆如此），`ssh.github.com:443` 可用。已在 `~/.ssh/config` 加 `Host github.com / HostName ssh.github.com / Port 443 / User git`，之后 `git push` 直接可用；push 命令仍需 `dangerouslyDisableSandbox=true`（沙箱内网络受限）。
+- **README 登记前先落地文件（08-29 教训）**：曾把未写出的 `reports/55_宏观背景/20260829_利率上行板块全景.md` 登记进 README，造成死链（已补全）。登记索引项时先 `ls` 校验文件存在。
 - **交付不附图（08-23）**：报告不再附渲染截图（SSR 测试保留仅验证）；删除历史全部 results/*.png；test_render_*.cjs 已去掉截图逻辑。
 - **交付不打开浏览器预览（08-29 设定）**：报告/网页类交付完成后**不再调用 present_files 打开预览**，用户自己打开查看；渲染验证仅用 CDP 无头检查（图表 canvas 数 + 无 pageerror），验证完即关闭 Chrome。
 - 严格口径：不要股息/容差缓冲；**红涨绿跌 + 色弱安全（Okabe-Ito，叠符号/线型）**；报告浅底深字研报风+ECharts；对照默认窗口 2025-09 起、超额分四档；报告目录中文名「编号_中文名」；财报问题先确认财报期。
