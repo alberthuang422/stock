@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 """
-强 El Niño 窗口内路径分析：run-up（最大累计超额）vs 期末超额
-回答：强事件期末转负，是"冲高后剧烈回撤"还是"全程阴跌"？
-- 对 4 次有数据的事件（1997/2009/2014/2023），逐月累计超额路径
-- peak = 窗口内最大累计超额（pp）；trough = 最小；end = 期末；dd = peak - end
-- 口径沿用 57 号：累计收益 = 逐月复利，超额 = 标的累计 - SPY 累计
-输出 results/agri_runup.json
+El Niño 全事件分档 + 窗口内路径四指标分析（重做版，覆盖 22 次 El Niño 全部有数据部分）
+指标（对每事件×标的，T+24 逐月累计超额路径 vs SPY）：
+  1. max_excess : 窗口内最大累计超额（pp）—— run-up 峰值
+  2. end_excess : 最终累计超额（pp，T+24，另附 T+12 期末值便于与旧口径衔接）
+  3. peak_t     : 最大超额发生的 T+N（onset 后第 N 个月，1=onset 月）
+  4. dd_start_t : 回撤起始 T+N —— 见顶后首个累计超额 < 峰值−5pp 的月份；全程未跌破=null（未显著回撤）
+分档：弱 El Niño（峰值 ONI < +1.5）/ 强（+1.5 ≤ peak < +2.0）/ 超强（≥ +2.0）
+输出 results/agri_runup.json（含事件级汇总、标的级汇总、三档汇总、全明细 events_detail 带 path）
 """
 import json
 import os
@@ -23,7 +25,10 @@ SUB = {"DE": "农机", "AGCO": "农机", "MOS": "化肥", "CF": "化肥", "NTR":
        "DAR": "油脂加工", "FPI": "农业REIT", "TSN": "肉类", "HRL": "肉类",
        "MOO": "农业ETF", "DBA": "商品ETF"}
 
-# ---------- 1. ONI 解析（复用 57 号/强 El 专项） ----------
+DD_TOL = 5.0      # 回撤起始判定容差（pp）：见顶后跌破 峰值−5pp 即算开始回撤
+WINDOW = 24       # 路径窗口（T+24）
+
+# ---------- 1. ONI 解析 ----------
 seas_to_mon = {"DJF": 1, "JFM": 2, "FMA": 3, "MAM": 4, "AMJ": 5, "MJJ": 6,
                "JJA": 7, "JAS": 8, "ASO": 9, "SON": 10, "OND": 11, "NDJ": 12}
 oni_rows = []
@@ -71,7 +76,13 @@ def el_events():
     return evs
 
 events = el_events()
-strong_evs = [e for e in events if e["peak"] >= 1.5]
+
+def tier(peak):
+    if peak >= 2.0:
+        return "vstrong"
+    if peak >= 1.5:
+        return "strong"
+    return "weak"
 
 def ym_to_label(ym):
     return f"{int(ym) // 100}-{int(ym) % 100:02d}"
@@ -91,7 +102,7 @@ def monthly_df(ticker):
 mrets = {t: monthly_df(t) for t in TICKERS}
 mrets["SPY"] = monthly_df("SPY")
 
-# ---------- 3. 窗口内逐月累计超额路径 ----------
+# ---------- 3. 逐月累计收益路径（onset 起 WINDOW 个月） ----------
 def window_path(ticker, onset_ym, months):
     df = mrets[ticker]
     cy = int(onset_ym)
@@ -113,167 +124,153 @@ def window_path(ticker, onset_ym, months):
         path.append((acc - 1) * 100)
     return path
 
-def runup_stats(ticker, onset_ym, months):
+def path_metrics(ticker, onset_ym, months):
+    """返回窗口内路径四指标字典（含 T+12 期末供衔接）。"""
     pt = window_path(ticker, onset_ym, months)
     ps = window_path("SPY", onset_ym, months)
     if pt is None or ps is None:
         return None
     n = min(len(pt), len(ps))
+    if n < max(2, months - 2):
+        return None
     ex = [pt[i] - ps[i] for i in range(n)]
     peak = max(ex)
+    pidx = int(np.argmax(ex))
+    peak_t = pidx + 1
+    # 回撤起始：见顶后首个 < 峰值−5pp 的月份
+    dd_start_t = None
+    for k in range(pidx + 1, n):
+        if ex[k] < peak - DD_TOL:
+            dd_start_t = k + 1
+            break
+    # T+12 期末值（若窗口覆盖）
+    end12 = None
+    if n >= 12:
+        end12 = ex[11]
     return {"n_m": n,
-            "peak": round(peak, 1),
-            "peak_m": int(np.argmax(ex)) + 1,
-            "trough": round(min(ex), 1),
-            "end": round(ex[-1], 1),
-            "dd": round(peak - ex[-1], 1),  # peak 到期末的回撤幅度（pp）
-            "path": [round(x, 1) for x in ex]}  # 逐月累计超额路径（pp）
+            "max_excess": round(peak, 1),
+            "peak_t": peak_t,
+            "dd_start_t": dd_start_t,
+            "end_excess": round(ex[-1], 1),
+            "end_excess12": round(end12, 1) if end12 is not None else None,
+            "dd": round(peak - ex[-1], 1),
+            "path": [round(x, 1) for x in ex]}
 
-# ---------- 4. 汇总 ----------
-W = 12  # T+12 主口径
+# ---------- 4. 逐事件计算 ----------
 ev_records = []
-for e in strong_evs:
+for e in events:
     rec = {"onset": ym_to_label(e["onset"]), "end": ym_to_label(e["end"]),
-           "peak": round(e["peak"], 2), "len": e["len"], "tickers": {}}
+           "oni_peak": round(e["peak"], 2), "len_m": e["len"],
+           "tier": tier(e["peak"]), "tickers": {}}
     for t in TICKERS:
-        st = runup_stats(t, e["onset"], W)
+        st = path_metrics(t, e["onset"], WINDOW)
         if st:
             rec["tickers"][t] = st
     ev_records.append(rec)
 
-# 事件级汇总（仅对有数据的标的）
+# ---------- 5. 事件级汇总（有数据标的） ----------
 ev_summary = []
 for r in ev_records:
     ts = r["tickers"]
     if not ts:
-        ev_summary.append({"onset": r["onset"], "n": 0})
+        ev_summary.append({"onset": r["onset"], "oni_peak": r["oni_peak"], "tier": r["tier"], "n": 0})
         continue
     vals = list(ts.values())
     n = len(vals)
     ev_summary.append({
-        "onset": r["onset"], "peak": r["peak"], "n": n,
-        "n_peak_pos": int(sum(1 for v in vals if v["peak"] > 0)),
-        "n_end_pos": int(sum(1 for v in vals if v["end"] > 0)),
-        "avg_peak": round(float(np.mean([v["peak"] for v in vals])), 1),
-        "avg_end": round(float(np.mean([v["end"] for v in vals])), 1),
+        "onset": r["onset"], "oni_peak": r["oni_peak"], "tier": r["tier"], "n": n,
+        "avg_max": round(float(np.mean([v["max_excess"] for v in vals])), 1),
+        "avg_end": round(float(np.mean([v["end_excess"] for v in vals])), 1),
         "avg_dd": round(float(np.mean([v["dd"] for v in vals])), 1),
-        "n_updown": int(sum(1 for v in vals if v["peak"] > 0 and v["end"] < 0)),  # 冲高后转负
-        "n_alldown": int(sum(1 for v in vals if v["peak"] <= 0)),  # 全程未正
+        "avg_peak_t": round(float(np.mean([v["peak_t"] for v in vals])), 1),
+        "n_updown": int(sum(1 for v in vals if v["max_excess"] > 0 and v["end_excess"] < 0)),
+        "n_alldown": int(sum(1 for v in vals if v["max_excess"] <= 0)),
     })
 
-# 标的级汇总（跨有数据强事件）
-by_ticker = {}
+# ---------- 6. 标的级汇总（按档合并） ----------
+by_ticker_tier = {}
 for t in TICKERS:
+    by_ticker_tier[t] = {}
+    for tr in ("weak", "strong", "vstrong", "all"):
+        rows = []
+        for r in ev_records:
+            if tr != "all" and r["tier"] != tr:
+                continue
+            if t in r["tickers"]:
+                rows.append({**r["tickers"][t], "onset": r["onset"], "oni_peak": r["oni_peak"], "tier": r["tier"]})
+        if not rows:
+            by_ticker_tier[t][tr] = None
+            continue
+        by_ticker_tier[t][tr] = {
+            "sub": SUB[t], "n": len(rows),
+            "avg_max": round(float(np.mean([x["max_excess"] for x in rows])), 1),
+            "avg_end": round(float(np.mean([x["end_excess"] for x in rows])), 1),
+            "avg_end12": round(float(np.mean([x["end_excess12"] for x in rows if x.get("end_excess12") is not None])), 1)
+            if any(x.get("end_excess12") is not None for x in rows) else None,
+            "avg_dd": round(float(np.mean([x["dd"] for x in rows])), 1),
+            "avg_peak_t": round(float(np.mean([x["peak_t"] for x in rows])), 1),
+            "avg_dd_start": round(float(np.mean([x["dd_start_t"] for x in rows if x.get("dd_start_t") is not None])), 1)
+            if any(x.get("dd_start_t") is not None for x in rows) else None,
+            "n_dd_trig": int(sum(1 for x in rows if x.get("dd_start_t") is not None)),
+            "n_updown": int(sum(1 for x in rows if x["max_excess"] > 0 and x["end_excess"] < 0)),
+            "n_alldown": int(sum(1 for x in rows if x["max_excess"] <= 0)),
+            "cases": [{"onset": x["onset"], "oni_peak": x["oni_peak"], "tier": x["tier"],
+                       "max": x["max_excess"], "peak_t": x["peak_t"],
+                       "dd_start": x["dd_start_t"], "end": x["end_excess"], "end12": x["end_excess12"]}
+                      for x in rows],
+        }
+
+# ---------- 7. 分档汇总（跨标的 × 事件样本） ----------
+tier_summary = []
+for tr, tr_cn in (("weak", "弱 El Niño (<+1.5°C)"), ("strong", "强 El Niño (1.5~2.0)"),
+                  ("vstrong", "超强 El Niño (≥2.0°C)")):
     rows = []
     for r in ev_records:
-        if t in r["tickers"]:
-            rows.append(r["tickers"][t])
-    if not rows:
-        continue
-    by_ticker[t] = {
-        "sub": SUB[t], "n": len(rows),
-        "avg_peak": round(float(np.mean([x["peak"] for x in rows])), 1),
-        "avg_end": round(float(np.mean([x["end"] for x in rows])), 1),
-        "avg_dd": round(float(np.mean([x["dd"] for x in rows])), 1),
-        "n_updown": int(sum(1 for x in rows if x["peak"] > 0 and x["end"] < 0)),
-        "n_alldown": int(sum(1 for x in rows if x["peak"] <= 0)),
-        "cases": [{"onset": r["onset"], "peak": x["peak"], "peak_m": x["peak_m"],
-                   "end": x["end"], "dd": x["dd"]} for r in ev_records if t in r["tickers"]
-                  for x in [r["tickers"][t]]],
-    }
+        if r["tier"] != tr:
+            continue
+        rows += list(r["tickers"].values())
+    tier_summary.append({
+        "tier": tr, "tier_cn": tr_cn,
+        "n_ev": sum(1 for r in ev_records if r["tier"] == tr),
+        "n_ev_data": len(set(x["onset"] for r in ev_records if r["tier"] == tr and r["tickers"] for x in [r])),
+        "n_samples": len(rows),
+        "avg_max": round(float(np.mean([x["max_excess"] for x in rows])), 1) if rows else None,
+        "med_max": round(float(np.median([x["max_excess"] for x in rows])), 1) if rows else None,
+        "avg_end": round(float(np.mean([x["end_excess"] for x in rows])), 1) if rows else None,
+        "med_end": round(float(np.median([x["end_excess"] for x in rows])), 1) if rows else None,
+        "avg_dd": round(float(np.mean([x["dd"] for x in rows])), 1) if rows else None,
+        "avg_peak_t": round(float(np.mean([x["peak_t"] for x in rows])), 1) if rows else None,
+        "avg_dd_start": round(float(np.mean([x["dd_start_t"] for x in rows if x.get("dd_start_t") is not None])), 1)
+        if rows and any(x.get("dd_start_t") is not None for x in rows) else None,
+        "n_updown_pct": round(float(np.mean([x["max_excess"] > 0 and x["end_excess"] < 0 for x in rows])) * 100, 0) if rows else None,
+        "n_alldown_pct": round(float(np.mean([x["max_excess"] <= 0 for x in rows])) * 100, 0) if rows else None,
+    })
 
+# ---------- 8. 输出 ----------
 out = {
-    "meta": {"window_months": W,
-             "note": "excess path = ticker 累计收益 - SPY 累计收益（pp，逐月复利）; peak=窗口最大累计超额, end=期末, dd=peak-end, peak_m=峰值所在月(1=onset月)"},
+    "meta": {"window_months": WINDOW, "dd_tol_pp": DD_TOL,
+             "note": "超额路径 = 标的逐月复利累计收益 − SPY 同期（pp）；max_excess=T+24 窗口内最大累计超额；peak_t=见顶月(1=onset月)；dd_start_t=见顶后首个跌破 峰值−5pp 的月份(未跌破=null)；end_excess=T+24 期末；end_excess12=T+12 期末"},
+    "tier_summary": tier_summary,
     "event_summary": ev_summary,
-    "by_ticker": by_ticker,
+    "by_ticker_tier": by_ticker_tier,
     "events_detail": ev_records,
 }
 os.makedirs(os.path.dirname(OUT), exist_ok=True)
 with open(OUT, "w", encoding="utf-8") as f:
     json.dump(out, f, ensure_ascii=False, indent=1)
 print("written:", OUT, os.path.getsize(OUT), "bytes")
-
-# ---------- 5. HTML 可视化（可选：python build_html 生成） ----------
-def build_html():
-    # 4 次有数据事件 × 代表标的超额路径折线（Okabe-Ito 色弱安全）
-    import html as H
-    pal = ["#0072B2", "#D55E00", "#009E73", "#CC79A7", "#E69F00", "#56B4E9",
-           "#F0E442", "#000000", "#999999"]
-    events = [r for r in ev_records if r["tickers"]]
-    lines = []
-    for idx, ev in enumerate(events):
-        # 每事件选 6 个代表标的（化肥/农化/农机/粮商/油脂/肉类 + 指数）
-        picks = [t for t in ["CF", "MOS", "FMC", "DE", "ADM", "DAR", "TSN", "HRL"]
-                 if t in ev["tickers"]][:6]
-        ser = []
-        for t in picks:
-            st = ev["tickers"][t]
-            ser.append({"name": t, "data": st["path"],
-                        "lineStyle": {"width": 2.5, "color": pal[picks.index(t) % len(pal)]},
-                        "itemStyle": {"color": pal[picks.index(t) % len(pal)]}})
-        x = [str(i + 1) for i in range(ev["tickers"][picks[0]]["n_m"])]
-        lines.append({
-            "title": f"{ev['onset']} ~ {ev['end']}  ONI峰值 {ev['peak']}",
-            "x": x, "series": ser,
-            "ev": ev,
-        })
-    # 生成 HTML
-    divs = []
-    scripts = []
-    for i, L in enumerate(lines):
-        divs.append(f'<div class="chart" id="runup{i}"></div>')
-        scripts.append(f'''mkChart("runup{i}", {H.escape(str(L["x"])).replace("'", "&#39;")}, {H.escape(str(L["series"]))});''')
-    # 简化：直接内嵌 JSON
-    import json as J
-    opts = []
-    for L in lines:
-        opts.append({"title": L["title"], "x": L["x"], "series": L["series"],
-                     "ev": {k: L["ev"][k] for k in ("onset", "peak", "n") if k in L["ev"]}})
-    html = f"""<!DOCTYPE html>
-<html lang="zh"><head><meta charset="utf-8">
-<title>强 El Niño 窗口内超额路径（T+12）</title>
-<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
-<style>
-body{{font-family:"Segoe UI","Microsoft YaHei",sans-serif;background:#fff;color:#222;margin:24px;}}
-h1{{font-size:20px}}h2{{font-size:15px;color:#333;margin-top:28px}}
-.note{{font-size:12px;color:#666;background:#f6f6f6;padding:8px 12px;border-left:3px solid #0072B2}}
-.chart{{width:100%;height:380px;margin:10px 0 26px}}
-</style></head><body>
-<h1>强 El Niño 事件：onset 后 12 个月逐月累计超额路径（vs SPY）</h1>
-<div class="note">纵轴为标的 T+N 累计收益 − SPY 同期累计收益（pp）。蓝点为期末值，注意多数标的窗口内先冲高（run-up）再回撤，期末转负≠全程阴跌。色板为 Okabe-Ito 色弱安全。</div>
-<div id="charts"></div>
-<script>
-const OPTS = {J.dumps(opts, ensure_ascii=False)};
-function mkChart(id, o){{
-  var el = document.getElementById(id);
-  var ch = echarts.init(el);
-  ch.setOption({{
-    title:{{text:o.title, left:10, textStyle:{{fontSize:14}}}},
-    tooltip:{{trigger:'axis', valueFormatter:v=>v+' pp'}},
-    legend:{{top:6, left:10}},
-    grid:{{left:60,right:20,top:44,bottom:30}},
-    xAxis:{{type:'category',data:o.x,name:'onset 后月份'}},
-    yAxis:{{type:'value',name:'超额 pp', axisLine:{{show:true}}, splitLine:{{lineStyle:{{type:'dashed'}}}}}},
-    series:o.series.map(s=>({{...s,type:'line',smooth:false,showSymbol:true,symbolSize:6}}))
-  }});
-}}
-const wrap = document.getElementById('charts');
-OPTS.forEach((o,i)=>{{const d=document.createElement('div');d.className='chart';d.id='runup'+i;wrap.appendChild(d);mkChart('runup'+i,o);}});
-</script></body></html>"""
-    p = os.path.join(BASE, "reports", "57_农业股ENSO与利率敏感性", "runup_paths.html")
-    os.makedirs(os.path.dirname(p), exist_ok=True)
-    with open(p, "w", encoding="utf-8") as f:
-        f.write(html)
-    print("html:", p, os.path.getsize(p), "bytes")
-
-if __name__ == "__main__" and os.environ.get("BUILD_HTML") == "1":
-    build_html()
-print("\n== 事件级汇总（T+12 窗口） ==")
+print("事件:", len(events), "| weak:", sum(1 for e in events if tier(e["peak"]) == "weak"),
+      "| strong:", sum(1 for e in events if tier(e["peak"]) == "strong"),
+      "| vstrong:", sum(1 for e in events if tier(e["peak"]) == "vstrong"))
+print("\n== 分档汇总 ==")
+for ts in tier_summary:
+    print(f"  {ts['tier']:8s} 事件{ts['n_ev']}次(有数据{ts['n_ev_data']}) 样本{ts['n_samples']} | "
+          f"avg_max={ts['avg_max']} avg_end={ts['avg_end']} avg_dd={ts['avg_dd']} "
+          f"avg_peak_t=T+{ts['avg_peak_t']} avg_dd_start=T+{ts['avg_dd_start']} "
+          f"冲高转负{ts['n_updown_pct']}% 全程阴跌{ts['n_alldown_pct']}%")
+print("\n== 有数据事件明细 ==")
 for s in ev_summary:
     if s["n"] == 0:
-        print(f"  {s['onset']}: 无个股数据"); continue
-    print(f"  {s['onset']} (ONI {s['peak']}): n={s['n']}  平均peak={s['avg_peak']}pp 平均end={s['avg_end']}pp 平均回撤={s['avg_dd']}pp | 冲高转负 {s['n_updown']}/{s['n']} 全程阴跌 {s['n_alldown']}/{s['n']}")
-print("\n== 标的总览（跨强事件平均） ==")
-for t, v in by_ticker.items():
-    print(f"  {t:5s} {v['sub']}: avg_peak={v['avg_peak']:6.1f}  avg_end={v['avg_end']:6.1f}  avg_dd={v['avg_dd']:6.1f}  | 冲高转负 {v['n_updown']}/{v['n']}  全程阴跌 {v['n_alldown']}/{v['n']}")
+        continue
+    print(f"  {s['onset']} ({s['tier']:8s} ONI {s['oni_peak']}): n={s['n']} avg_max={s['avg_max']} "
+          f"avg_end={s['avg_end']} avg_peak_t=T+{s['avg_peak_t']} 冲高转负 {s['n_updown']}/{s['n']}")

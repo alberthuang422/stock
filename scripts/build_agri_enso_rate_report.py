@@ -15,6 +15,7 @@ enso = json.load(open(os.path.join(RES, "agri_enso.json"), encoding="utf-8"))
 rate = json.load(open(os.path.join(RES, "agri_rate_sens.json"), encoding="utf-8"))
 verify = json.load(open(os.path.join(RES, "agri_verify.json"), encoding="utf-8"))
 strong = json.load(open(os.path.join(RES, "agri_strong_el.json"), encoding="utf-8"))
+runup = json.load(open(os.path.join(RES, "agri_runup.json"), encoding="utf-8"))
 
 SUB = enso["subsector"]
 TICKERS = ["DE", "AGCO", "MOS", "CF", "NTR", "CTVA", "FMC", "ADM", "BG",
@@ -237,6 +238,69 @@ scat = []
 for r in strong["corr_peak"]:
     scat.append({"t": r["t"], "corr": r["corr_peak_e12"], "p": r["p"]})
 
+# ---------- 1.5 runup：分档 + 四指标数据 ----------
+TIER_CN = {"weak": "弱(<+1.5°)", "strong": "强(1.5~2.0°)", "vstrong": "超强(≥2.0°)"}
+def fnum(v, d="-", sgn=True):
+    if v is None:
+        return d
+    return f"{v:+.1f}" if sgn else f"{v:.1f}"
+
+# 分档汇总（三档 × 中位最大/期末 + 见顶/回撤时机）
+tier_rows = []
+for ts in runup["tier_summary"]:
+    tier_rows.append({
+        "tier": ts["tier_cn"], "ev": f"{ts['n_ev']} 次（{ts['n_ev_data']} 有数据）",
+        "n": ts["n_samples"],
+        "mx": fnum(ts["med_max"]), "end": fnum(ts["med_end"]),
+        "mxavg": fnum(ts["avg_max"]), "endavg": fnum(ts["avg_end"]),
+        "dd": fnum(ts["avg_dd"]),
+        "pt": f"T+{ts['avg_peak_t']}" if ts["avg_peak_t"] else "-",
+        "ds": f"T+{ts['avg_dd_start']}" if ts["avg_dd_start"] else "未跌破",
+        "ud": f"{ts['n_updown_pct']:.0f}%", "al": f"{ts['n_alldown_pct']:.0f}%",
+    })
+
+# 事件 × 标的四指标明细（全部有数据事件，按档排序）
+det_rows = []
+for ev in runup["events_detail"]:
+    if not ev["tickers"]:
+        continue
+    tr = TIER_CN[ev["tier"]]
+    for t, v in ev["tickers"].items():
+        e12 = v.get("end_excess12")
+        det_rows.append({
+            "ev": ev["onset"], "tr": tr, "oni": ev["oni_peak"], "t": t, "sub": SUB[t],
+            "mx": fnum(v["max_excess"]), "pt": f"T+{v['peak_t']}",
+            "ds": f"T+{v['dd_start_t']}" if v.get("dd_start_t") else "未跌破",
+            "end": fnum(v["end_excess"]),
+            "end12": fnum(e12) if e12 is not None else "-",
+        })
+# 按档分组顺序排序（超强→强→弱）
+_torder = {"超强(≥2.0°)": 0, "强(1.5~2.0°)": 1, "弱(<+1.5°)": 2}
+det_rows.sort(key=lambda x: (_torder[x["tr"]], x["ev"], x["t"]))
+
+# 标的 × 档位（强/超强两档 avg_max / avg_end / 见顶时机对比）
+byt_rows = []
+for t in TICKERS:
+    st = runup["by_ticker_tier"][t].get("strong")
+    vs = runup["by_ticker_tier"][t].get("vstrong")
+    byt_rows.append({
+        "t": t, "sub": SUB[t],
+        "s_n": st["n"] if st else 0,
+        "s_mx": fnum(st["avg_max"]) if st else "-", "s_end": fnum(st["avg_end"]) if st else "-",
+        "s_pt": f"T+{st['avg_peak_t']:.0f}" if st and st.get("avg_peak_t") else "-",
+        "v_n": vs["n"] if vs else 0,
+        "v_mx": fnum(vs["avg_max"]) if vs else "-", "v_end": fnum(vs["avg_end"]) if vs else "-",
+        "v_pt": f"T+{vs['avg_peak_t']:.0f}" if vs and vs.get("avg_peak_t") else "-",
+    })
+
+# 图 c7 数据：三档 × 中位最大/中位期末（pp）+ 见顶/回撤时机
+c7_tier = []
+for ts in runup["tier_summary"]:
+    c7_tier.append({
+        "tier": ts["tier_cn"], "mx": ts["med_max"], "end": ts["med_end"],
+        "dd": ts["avg_dd"], "pt": ts["avg_peak_t"], "ds": ts["avg_dd_start"],
+    })
+
 # ---------- 图表数据 ----------
 oni_hist = []
 with open(os.path.join(BASE, "data", "agri", "raw", "oni.txt"), encoding="utf-8") as f:
@@ -403,32 +467,34 @@ th{{background:#f0f1f3;font-weight:600;white-space:nowrap}}
 <p><b>子行业排序（La Niña T+12 超额）</b>：<span class="badge b-hi">化肥 CF / MOS / NTR</span><span class="badge b-mid">粮商 BG / ADM</span><span class="badge b-mid">农机 DE</span><span class="badge b-mid">油脂 DAR</span><span class="badge b-lo">肉类 TSN</span></p>
 </div>
 
-<h3>1.5 强厄尔尼诺专项（峰值 ONI ≥ +1.5°C）：强度分级后"越强越弱"</h3>
+<h3>1.5 强厄尔尼诺专项：三档强度 × 窗口内最大超额 / 最终超额 / 见顶时机 / 回撤起始</h3>
 <div class="card">
-<p><b>分级</b>：在 22 次 El Niño 中按事件峰值 ONI 分三档——<b>强（Strong）≥+1.5°C 共 9 次</b>（1957/1965/1972/1982/1991/1997/2009/2014/2023），其中<b>超强（Very Strong）≥+2.0°C 仅 3 次</b>（1982-83 / 1997-98 / 2014-16）。本页所有强/弱对比均沿用同一事件窗口口径（onset 后复利累计 − SPY）。</p>
-<p><b>核心反直觉发现：强度与农业股超额呈负向关系</b>——弱 El Niño（peak&lt;1.5）事件后农业股多数正超额（CF +75.8pp、DAR +65.6pp、DE +13.8pp），<b>强 El Niño 事件后几乎全线转负</b>（T+12 除 HRL/TSN 外全部负超额）。12 只样本中 10 只"事件峰值 ONI → T+12 超额"斜率为负（尽管 n=5~10 未达统计显著）。</p>
-<p class="note">补充：在强事件样本内（n=4），T+6 仅 CF/DE 温和正（+3.5/+3.2pp），T+12~T+24 转负并加深（MOS −30.7pp、DAR −33.7pp、ADM −21pp）；T+24 除 DE/HRL/TSN 相对抗跌外普遍 −40pp 以上。强 El Niño 的"全球干旱/洪水+农产品价格过山车+次年种植面积预期回调"组合对农业链整体偏逆风，尤以商品依赖度高的化肥（MOS/CF）、粮商（ADM/BG）、油脂（DAR）为甚。</p>
+<p><b>分级</b>：22 次 El Niño 按事件峰值 ONI 分三档——<b>弱（&lt;+1.5°C）13 次</b>、<b>强（+1.5~&lt;+2.0°C）6 次</b>、<b>超强（≥+2.0°C）3 次（1982/1997/2014）</b>。路径口径：onset 后逐月复利累计收益 − SPY 同期＝超额（pp），遍历 24 个月。</p>
+<p><b>核心发现（补充 run-up 路径验证）</b>：强度越高，<b>窗口内最大超额越低、见顶越早、回撤越深</b>——弱档中位最大超额 +26.5pp、期末 +4.7pp；强档 +14.6pp / −23.4pp；超强档 +10.9pp / −40.7pp。见顶时机从弱档平均 T+13.6 提前到超强档 T+6.7。即<b>"越强越弱"并非全程阴跌：强/超强事件窗口内仍有冲高（中位 +11~15pp），但多在 onset 后 7-14 个月崩落转负</b>——交易含义＝快钱窗口在 onset 后约 6 个月内，之后转防守。</p>
+<p><b>四指标定义</b>：<b>最大超额</b>=T+24 窗口内最大累计超额（run-up 峰值，pp）；<b>最终超额</b>=T+24 期末累计超额（pp，附 T+12 期末）；<b>见顶 T+</b>=最大超额发生在 onset 后第几个月（1=onset 月）；<b>回撤起始 T+</b>=见顶后首个跌破「峰值−5pp」的月份（≤24；未跌破记"未跌破"）。</p>
 </div>
 
-<h4>强 El Niño 事件清单（峰值 ≥+1.5°C，9 次）</h4>
+<h4>分档汇总（中位数为主口径，避免 2006 化肥牛市极端值污染）</h4>
+{mk_table([("分档", "tier"), ("事件数", "ev"), ("样本", "n"), ("中位最大超额pp", "mx"), ("中位最终超额pp", "end"),
+           ("平均最大超额pp", "mxavg"), ("平均最终超额pp", "endavg"), ("平均回撤pp", "dd"),
+           ("平均见顶T+", "pt"), ("平均回撤起始T+", "ds"), ("冲高后转负", "ud"), ("全程阴跌", "al")], tier_rows,
+          note="中位最大超额=窗口内峰值的中位数（pp）；中位最终超额=T+24 期末中位数；平均回撤=peak−期末；'冲高后转负'=窗口内最大超额>0 且期末<0 的样本占比；'全程阴跌'=窗口内从未转正的样本占比。三档单调：强度↑→最大超额↓、期末↓、见顶提前、回撤加深。")}
+
+<div class="chart" id="c7"></div>
+<div class="legend">三档 El Niño 事件：T+24 窗口内中位最大超额（蓝）vs 中位最终超额（橙，pp）＋ 平均见顶 T+N（紫点，右轴）｜ 强度越高→峰值越低、期末越负、见顶越早。</div>
+
+<h4>事件 × 标的 四指标明细（所有有数据事件，按档排序）</h4>
 <div class="collapse">
-<table><tr><th>起始日</th><th>结束日</th><th>峰值ONI</th><th>持续月数</th><th>峰值月</th></tr>
-{str_ev_html}
-</table>
+{mk_table([("事件", "ev"), ("档", "tr"), ("峰值ONI", "oni"), ("标的", "t"), ("子行业", "sub"),
+           ("最大超额pp", "mx"), ("见顶T+", "pt"), ("回撤起始T+", "ds"), ("T+12期末pp", "end12"), ("T+24期末pp", "end")], det_rows,
+          note="td<sub>12/24</sub>期末=对应窗口复利累计超额；'未跌破'=窗口内未跌破峰值−5pp（回撤未实质发生）。行按超强→强→弱分档排序，同档按事件时间。")}
 </div>
-<div class="note">超强（≥+2.0°C）：1982-05~1983-06（2.14）、1997-05~1998-04（2.37）、2014-10~2016-05（2.59）——3 次。</div>
 
-<h4>强 vs 弱 El Niño 月度收益对比（强 ≥+1.5 / 弱 &lt;+1.5 / 中性）</h4>
-<table><tr><th>标的</th><th>子行业</th><th>强 El Niño 月均收益</th><th>弱 El Niño 月均收益</th><th>中性月均收益</th></tr>
-{''.join(f"<tr><td>{r['t']}</td><td>{r['sub']}</td><td>{r['s']}</td><td>{r['w']}</td><td>{r['neu']}</td></tr>" for r in strong_grp_rows)}
-</table>
-<div class="note">月频口径（同 1.2）。强 El Niño 月均值普遍弱于中性；弱 El Niño 月 DAR +3.84%（p=0.06 edge）、HRL +0.88%。没有标的在强 El Niño 月获得显著正收益。</div>
-
-<h4>强 El Niño 事件 onset 后 T+12 超额（vs SPY）</h4>
-<table><tr><th>标的</th><th>子行业</th><th>n(事件)</th><th>均值超额pp</th><th>中位超额pp</th><th>胜率</th></tr>
-{''.join(f"<tr><td>{r['t']}</td><td>{r['sub']}</td><td>{r['n']}</td><td>{r['mean']}</td><td>{r['med']}</td><td>{r['win']}</td></tr>" for r in str12_rows)}
-</table>
-<div class="note">强事件 n 仅 3-4（数据可得），统计功效极低；中位超额除 DE（+0.8pp）外普偏负。与 La Niña 的化肥强正（1.4）形成鲜明对照。</div>
+<h4>标的 × 强度档（强 vs 超强，平均口径）</h4>
+{mk_table([("标的", "t"), ("子行业", "sub"),
+           ("强n", "s_n"), ("强平均最大pp", "s_mx"), ("强平均期末pp", "s_end"), ("强平均见顶T+", "s_pt"),
+           ("超强n", "v_n"), ("超强平均最大pp", "v_mx"), ("超强平均期末pp", "v_end"), ("超强平均见顶T+", "v_pt")], byt_rows,
+          note="强=峰值 ONI 1.5~&lt;2.0°C（n 小，仅 2009/2023 两次有数据）；超强=≥2.0°C（1997/2014）。多数标的超强档平均期末超额低于强档（超强更惨），且见顶更早；仅 DE/HRL/TSN 等防御/资本品相对抗跌。n=1-2 时仅作方向参考。")}
 
 <h4>事件强度（峰值 ONI）→ T+12 超额 相关性 / 斜率</h4>
 <table><tr><th>标的</th><th>子行业</th><th>n(事件)</th><th>corr(峰值ONI,e12)</th><th>斜率pp/°C</th><th>p</th></tr>
@@ -522,7 +588,8 @@ const ONI = {json.dumps(oni_hist)};
 const BETA = {json.dumps(bar_beta)};
 const GRP = {json.dumps(bar_grp)};
 const STRWEAK = {json.dumps(bar_strweak)};
-const OKB='#0072B2', OKR='#D55E00', OKG='#009E73', OKC='#E69F00', MUT='#888';
+const TIER7 = {json.dumps(c7_tier)};
+const OKB='#0072B2', OKR='#D55E00', OKG='#009E73', OKC='#E69F00', OKP='#CC79A7', MUT='#888';
 
 // 图1 ONI
 (function(){{
@@ -591,6 +658,27 @@ echarts.init(el).setOption({{
   series:[
     {{name:'强 El Niño (≥+1.5°C)',type:'bar',data:data.map(x=>x.s!=null?+(x.s.toFixed(1)):null),itemStyle:{{color:OKC}},barWidth:'30%'}},
     {{name:'弱 El Niño (<+1.5°C)',type:'bar',data:data.map(x=>x.w!=null?+(x.w.toFixed(1)):null),itemStyle:{{color:OKB}},barWidth:'30%'}}
+  ]
+}});
+}})();
+
+// 图5 三档 El Niño：中位最大超额 vs 中位最终超额 + 平均见顶 T+N
+(function(){{
+const el=document.getElementById('c7');
+const d = TIER7;
+echarts.init(el).setOption({{
+  grid:{{left:56,right:56,top:40,bottom:30}},
+  tooltip:{{trigger:'item'}},
+  legend:{{data:['中位最大超额 (pp)','中位最终超额 (pp)','平均见顶 T+N (右)'],textStyle:{{color:MUT,fontSize:11}}}},
+  xAxis:{{type:'category',data:d.map(x=>x.tier),axisLabel:{{fontSize:12}},axisTick:{{show:false}}}},
+  yAxis:[
+    {{type:'value',name:'超额 pp',splitLine:{{lineStyle:{{color:'#eee'}}}}}},
+    {{type:'value',name:'见顶 T+月',min:0,max:16,splitLine:{{show:false}}}}
+  ],
+  series:[
+    {{name:'中位最大超额 (pp)',type:'bar',data:d.map(x=>x.mx),itemStyle:{{color:OKB}},barWidth:'26%'}},
+    {{name:'中位最终超额 (pp)',type:'bar',data:d.map(x=>x.end),itemStyle:{{color:OKC}},barWidth:'26%'}},
+    {{name:'平均见顶 T+N (右)',type:'line',yAxisIndex:1,data:d.map(x=>x.pt),itemStyle:{{color:OKP}},lineStyle:{{width:2,color:OKP}},symbolSize:8}}
   ]
 }});
 }})();

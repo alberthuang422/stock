@@ -57,5 +57,5 @@ async function cdpSession(wsUrl, onMsg) {
   if (sess) sess.close();
   if (target && target.id) { try { await fetch(`${CDP}/json/close/${target.id}`); } catch {} }
   const v = r.result.value || {};
-  process.exit(v.canvas >= 3 && errors.length === 0 ? 0 : 1);
+  process.exit(v.canvas >= 5 && errors.length === 0 ? 0 : 1);
 })().catch(e => { console.error("FATAL:", e.message); process.exit(1); });
