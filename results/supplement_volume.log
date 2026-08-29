@@ -1,0 +1,305 @@
+扫描 OHLCV 文件: 253  | 需处理: 100  | 跳过(已最新): 153
+CDP 不可用, 自启 headless Chrome ...
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\2359.hk\2359.HK, 1D.csv  (2359.HK, last=2026-08-14)
+    追加 9 行 (2026-08-17 ~ 2026-08-27)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\603259.ss\603259.SS, 1D.csv  (603259.SS, last=2026-08-14)
+    追加 9 行 (2026-08-17 ~ 2026-08-27)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\a\A, 1D.csv  (A, last=2026-08-21)
+    追加 3 行 (2026-08-24 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\aapl\aapl, 1D.csv  (AAPL, last=2026-08-20)
+    追加 4 行 (2026-08-21 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\abbv\ABBV, 1D.csv  (ABBV, last=2026-08-14)
+    追加 8 行 (2026-08-17 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\abbv\ABBV, 1W.csv  (ABBV, last=2026-08-20)
+    追加 4 行 (2026-08-21 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\afrm\afrm, 1D.csv  (AFRM, last=2026-08-14)
+    追加 8 行 (2026-08-17 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\alny\ALNY, 1D.csv  (ALNY, last=2026-08-14)
+    追加 8 行 (2026-08-17 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\amgn\AMGN, 1D.csv  (AMGN, last=2026-08-20)
+    追加 4 行 (2026-08-21 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\amzn\amzn, 1D.csv  (AMZN, last=2026-08-20)
+    追加 4 行 (2026-08-21 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\apo\APO, 1D.csv  (APO, last=2026-08-20)
+    追加 4 行 (2026-08-21 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\argx\ARGX, 1D.csv  (ARGX, last=2026-08-14)
+    追加 8 行 (2026-08-17 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\axp\axp, 1D.csv  (AXP, last=2026-08-20)
+    追加 4 行 (2026-08-21 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\ba\ba, 1D.csv  (BA, last=2026-08-20)
+    追加 4 行 (2026-08-21 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\bac\BAC, 1D.csv  (BAC, last=2026-08-18)
+    追加 6 行 (2026-08-19 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\biib\BIIB, 1D.csv  (BIIB, last=2026-08-14)
+    追加 8 行 (2026-08-17 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\blk\BLK, 1D.csv  (BLK, last=2026-08-20)
+    追加 4 行 (2026-08-21 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\brk.b\brk.b, 1D.csv  (BRK-B, last=2026-08-14)
+    追加 8 行 (2026-08-17 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\bug\BUG, 1D.csv  (BUG, last=2026-08-21)
+    追加 3 行 (2026-08-24 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\bx\BX, 1D.csv  (BX, last=2026-08-20)
+    追加 4 行 (2026-08-21 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\cat\cat, 1D.csv  (CAT, last=2026-08-20)
+    追加 4 行 (2026-08-21 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\ceg\CEG, 1D.csv  (CEG, last=2026-08-18)
+    追加 6 行 (2026-08-19 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\cnp\CNP, 1D.csv  (CNP, last=2026-08-14)
+    追加 8 行 (2026-08-17 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\crm\crm, 1D.csv  (CRM, last=2026-08-20)
+    追加 4 行 (2026-08-21 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\crwd\CRWD, 1D.csv  (CRWD, last=2026-08-24)
+    追加 2 行 (2026-08-25 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\csco\csco, 1D.csv  (CSCO, last=2026-08-24)
+    追加 2 行 (2026-08-25 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\cvx\cvx, 1D.csv  (CVX, last=2026-08-20)
+    追加 4 行 (2026-08-21 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\dhr\DHR, 1D.csv  (DHR, last=2026-08-21)
+    追加 3 行 (2026-08-24 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\dis\dis, 1D.csv  (DIS, last=2026-08-20)
+    追加 4 行 (2026-08-21 ~ 2026-08-26)
+
+[ADD_COLUMN] C:\Users\Administrator\Desktop\stock\data\dji\dji, 1D.csv  (^DJI, last=2026-08-25)
+    已补 volume 列: 填充 1253 行, 缺失 2 行
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\etr\ETR, 1D.csv  (ETR, last=2026-08-14)
+    追加 8 行 (2026-08-17 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\ge\ge, 1D.csv  (GE, last=2026-08-14)
+    追加 8 行 (2026-08-17 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\gild\GILD, 1D.csv  (GILD, last=2026-08-14)
+    追加 8 行 (2026-08-17 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\gild\GILD, 1W.csv  (GILD, last=2026-08-20)
+    追加 4 行 (2026-08-21 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\gs\gs, 1D.csv  (GS, last=2026-08-20)
+    追加 4 行 (2026-08-21 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\hd\hd, 1D.csv  (HD, last=2026-08-20)
+    追加 4 行 (2026-08-21 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\hon\hon, 1D.csv  (HON, last=2026-08-20)
+    追加 4 行 (2026-08-21 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\ibb\IBB, 1D.csv  (IBB, last=2026-08-21)
+    追加 3 行 (2026-08-24 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\ibm\ibm, 1D.csv  (IBM, last=2026-08-20)
+    追加 4 行 (2026-08-21 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\ihi\IHI, 1D.csv  (IHI, last=2026-08-21)
+    追加 3 行 (2026-08-24 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\ilmn\ILMN, 1D.csv  (ILMN, last=2026-08-14)
+    追加 8 行 (2026-08-17 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\jnj\JNJ, 1D.csv  (JNJ, last=2026-08-20)
+    追加 4 行 (2026-08-21 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\jpm\jpm, 1D.csv  (JPM, last=2026-08-20)
+    追加 4 行 (2026-08-21 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\kbwb\KBWB, 1D.csv  (KBWB, last=2026-08-21)
+    追加 3 行 (2026-08-24 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\kie\kie, 1D.csv  (KIE, last=2026-08-14)
+    追加 8 行 (2026-08-17 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\kkr\KKR, 1D.csv  (KKR, last=2026-08-20)
+    追加 4 行 (2026-08-21 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\ko\ko, 1D.csv  (KO, last=2026-08-21)
+    追加 3 行 (2026-08-24 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\kre\kre, 1D.csv  (KRE, last=2026-08-14)
+    追加 8 行 (2026-08-17 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\lly\LLY, 1D.csv  (LLY, last=2026-08-14)
+    追加 8 行 (2026-08-17 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\lnt\LNT, 1D.csv  (LNT, last=2026-08-14)
+    追加 8 行 (2026-08-17 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\ma\ma, 1D.csv  (MA, last=2026-08-21)
+    追加 3 行 (2026-08-24 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\mcd\mcd, 1D.csv  (MCD, last=2026-08-20)
+    追加 4 行 (2026-08-21 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\mmm\mmm, 1D.csv  (MMM, last=2026-08-20)
+    追加 4 行 (2026-08-21 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\mo\mo, 1D.csv  (MO, last=2026-08-14)
+    追加 8 行 (2026-08-17 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\mrk\MRK, 1D.csv  (MRK, last=2026-08-20)
+    追加 4 行 (2026-08-21 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\ms\ms, 1D.csv  (MS, last=2026-08-18)
+    追加 6 行 (2026-08-19 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\msft\msft, 1D.csv  (MSFT, last=2026-08-20)
+    追加 4 行 (2026-08-21 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\nee\NEE, 1D.csv  (NEE, last=2026-08-14)
+    追加 8 行 (2026-08-17 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\nke\nke, 1D.csv  (NKE, last=2026-08-20)
+    追加 4 行 (2026-08-21 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\nrg\NRG, 1D.csv  (NRG, last=2026-08-18)
+    追加 6 行 (2026-08-19 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\ntra\NTRA, 1D.csv  (NTRA, last=2026-08-14)
+    追加 8 行 (2026-08-17 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\nvda\nvda, 1D.csv  (NVDA, last=2026-08-14)
+    追加 8 行 (2026-08-17 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\panw\PANW, 1D.csv  (PANW, last=2026-08-24)
+    追加 2 行 (2026-08-25 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\pep\PEP, 1D.csv  (PEP, last=2026-08-21)
+    追加 3 行 (2026-08-24 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\pg\pg, 1D.csv  (PG, last=2026-08-20)
+    追加 4 行 (2026-08-21 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\pm\pm, 1D.csv  (PM, last=2026-08-14)
+    追加 8 行 (2026-08-17 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\qqq\QQQ, 1D.csv  (QQQ, last=2026-08-21)
+    追加 3 行 (2026-08-24 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\regn\REGN, 1D.csv  (REGN, last=2026-08-14)
+    追加 8 行 (2026-08-17 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\rvmd\RVMD, 1D.csv  (RVMD, last=2026-08-14)
+    追加 8 行 (2026-08-17 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\sbux\SBUX, 1D.csv  (SBUX, last=2026-08-14)
+    追加 8 行 (2026-08-17 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\shw\shw, 1D.csv  (SHW, last=2026-08-20)
+    追加 4 行 (2026-08-21 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\sofi\sofi, 1D.csv  (SOFI, last=2026-08-14)
+    追加 8 行 (2026-08-17 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\soxx\SOXX, 1D.csv  (SOXX, last=2026-08-20)
+    追加 4 行 (2026-08-21 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\sre\SRE, 1D.csv  (SRE, last=2026-08-14)
+    追加 8 行 (2026-08-17 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\tln\TLN, 1D.csv  (TLN, last=2026-08-18)
+    追加 6 行 (2026-08-19 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\tmo\TMO, 1D.csv  (TMO, last=2026-08-21)
+    追加 3 行 (2026-08-24 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\trow\TROW, 1D.csv  (TROW, last=2026-08-20)
+    追加 4 行 (2026-08-21 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\trv\trv, 1D.csv  (TRV, last=2026-08-20)
+    追加 4 行 (2026-08-21 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\unh\unh, 1D.csv  (UNH, last=2026-08-20)
+    追加 4 行 (2026-08-21 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\utes\UTES, 1D.csv  (UTES, last=2026-08-18)
+    追加 6 行 (2026-08-19 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\v\v, 1D.csv  (V, last=2026-08-21)
+    追加 3 行 (2026-08-24 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\vrtx\VRTX, 1D.csv  (VRTX, last=2026-08-14)
+    追加 8 行 (2026-08-17 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\vst\VST, 1D.csv  (VST, last=2026-08-18)
+    追加 6 行 (2026-08-19 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\vz\vz, 1D.csv  (VZ, last=2026-08-20)
+    追加 4 行 (2026-08-21 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\wat\WAT, 1D.csv  (WAT, last=2026-08-21)
+    追加 3 行 (2026-08-24 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\wmt\wmt, 1D.csv  (WMT, last=2026-08-20)
+    追加 4 行 (2026-08-21 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\xbi\XBI, 1D.csv  (XBI, last=2026-08-21)
+    追加 3 行 (2026-08-24 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\xel\XEL, 1D.csv  (XEL, last=2026-08-14)
+    追加 8 行 (2026-08-17 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\xlb\xlb, 1D.csv  (XLB, last=2026-08-20)
+    追加 4 行 (2026-08-21 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\xlc\xlc, 1D.csv  (XLC, last=2026-08-20)
+    追加 4 行 (2026-08-21 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\xle\xle, 1D.csv  (XLE, last=2026-08-14)
+    追加 8 行 (2026-08-17 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\xlf\xlf, 1D.csv  (XLF, last=2026-08-20)
+    追加 4 行 (2026-08-21 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\xli\xli, 1D.csv  (XLI, last=2026-08-20)
+    追加 4 行 (2026-08-21 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\xlk\xlk, 1D.csv  (XLK, last=2026-08-21)
+    追加 3 行 (2026-08-24 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\xlp\xlp, 1D.csv  (XLP, last=2026-08-20)
+    追加 4 行 (2026-08-21 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\xlv\XLV, 1D.csv  (XLV, last=2026-08-20)
+    追加 4 行 (2026-08-21 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\xly\xly, 1D.csv  (XLY, last=2026-08-20)
+    追加 4 行 (2026-08-21 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\xom\xom, 1D.csv  (XOM, last=2026-08-14)
+    追加 8 行 (2026-08-17 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\xph\XPH, 1D.csv  (XPH, last=2026-08-20)
+    追加 4 行 (2026-08-21 ~ 2026-08-26)
+
+[APPEND] C:\Users\Administrator\Desktop\stock\data\xyz\xyz, 1D.csv  (XYZ, last=2026-08-14)
+    追加 8 行 (2026-08-17 ~ 2026-08-26)
+
+==== 完成 ====
+成功: 100  失败: 0  补列文件: 1  追加行数: 519
