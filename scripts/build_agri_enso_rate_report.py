@@ -418,10 +418,6 @@ th{{background:#f0f1f3;font-weight:600;white-space:nowrap}}
 #det_tbl{{font-size:12.5px}}
 #det_tbl thead th{{position:sticky;top:0;background:#f0f1f3;z-index:1}}
 .fmore{{text-align:left;color:var(--muted);font-style:italic}}
-.glossary{{background:#f0f7ff;border:1px solid #c8def5;border-radius:10px;padding:14px 18px;margin:18px 0}}
-.glossary b{{color:#185FA5}}
-.glossary td:first-child{{white-space:nowrap;font-weight:600}}
-.glossary th{{background:#e3effc}}
 .term{{border-bottom:1px dashed #7aa5d9;cursor:help;transition:background .15s}}
 .term:hover{{background:#e8f1fc;color:#185FA5}}
 .termtip{{display:none;position:fixed;z-index:9999;max-width:280px;background:#123248;color:#eef6ff;border-radius:8px;padding:8px 12px;font-size:12.5px;line-height:1.6;box-shadow:0 4px 14px rgba(0,0,0,.25);pointer-events:none}}
@@ -444,26 +440,6 @@ th{{background:#f0f1f3;font-weight:600;white-space:nowrap}}
 </ul>
 </div>
 
-<div class="glossary">
-<b>📖 大白话术语速查（看到不懂的词先查这里）</b>
-<table>
-<tr><th>报告里的写法</th><th>大白话</th></tr>
-<tr><td>El Niño / 厄尔尼诺</td><td>太平洋海温异常偏暖的气候现象，常导致南美/东南亚天气反常</td></tr>
-<tr><td>La Niña / 拉尼娜</td><td>与埃尔尼诺相反——太平洋海温偏冷，常导致南美大豆/玉米干旱</td></tr>
-<tr><td>ENSO</td><td>上面两种现象的总称（厄尔尼诺+拉尼娜的合称）</td></tr>
-<tr><td>ONI / 峰值 ONI</td><td>衡量上述现象强弱的"温度计"（°C）；≥+0.5 算出现、≥+1.5 强、≥+2.0 超强</td></tr>
-<tr><td>超额（pp）</td><td>这只股票相比大盘（SPY）多赚/少赚多少（百分点）——剔除大盘普涨普跌后的"真实表现"</td></tr>
-<tr><td>β₁₀（贝塔，对 10 年期利率）</td><td>10 年期国债利率每涨 1 个点，该股月收益平均多涨/少跌多少%。&gt;0＝利率涨它反而跑赢（如化肥股）</td></tr>
-<tr><td>US10Y / US2Y（长短期利率）</td><td>美国 10 年期/2 年期国债利率——长端=经济与通胀预期，短端=货币政策</td></tr>
-<tr><td>DAR 长短端方向相反</td><td>DAR 对长端利率（US10Y）同向、对短端（US2Y）反向——即"收益率曲线走平"时它受益</td></tr>
-<tr><td>T+6 / T+12 / T+24</td><td>事件发生后第 6/12/24 个月（交易日口径）的累计表现</td></tr>
-<tr><td>见顶 T+ / 回撤起始 T+</td><td>窗口内最高点发生在第几个月；从哪个月开始明显回落（跌破峰值−5pp）</td></tr>
-<tr><td>胜率</td><td>历史上多少比例的事件里该股跑赢大盘（超额定正）</td></tr>
-<tr><td>均值 / 中位数</td><td>平均表现 / 排中间那次的成绩（中位数更抗"暴发户"干扰，如 2006 年化肥疯牛）</td></tr>
-<tr><td>p 值 / 显著性（sig/edge/no）</td><td>这个结论"假的可能性"——p&lt;0.01 很可信(sig)、&lt;0.05 一般可信(edge)、≥0.05 就当作没把握(no)</td></tr>
-<tr><td>斜率（pp/°C）</td><td>厄尔尼诺强度每强 1°C，该股超额多变化多少个百分点（负＝越强越差）</td></tr>
-</table>
-</div>
 
 <h2>一、厄尔尼诺量化回测</h2>
 
@@ -764,17 +740,34 @@ render();
 TERMS = [
     ("厄尔尼诺", "太平洋海温异常偏暖的气候现象，常导致南美/东南亚天气反常，农产品产量承压"),
     ("拉尼娜", "与厄尔尼诺相反——太平洋海温偏冷，常导致南美大豆/玉米干旱减产，化肥需求与粮价获支撑"),
-    ("ONI", "NOAA 衡量厄尔尼诺/拉尼娜强弱的温度计（°C）：≥+0.5 算出现、≥+1.5 强、≥+2.0 超强"),
+    ("ENSO", "El Niño-Southern Oscillation（厄尔尼诺-南方涛动）的英文缩写，是厄尔尼诺+拉尼娜现象的合称"),
+    ("ONI", "Oceanic Niño Index（海洋尼诺指数）——NOAA 衡量厄尔尼诺/拉尼娜强弱的温度计（°C）：≥+0.5 算出现、≥+1.5 强、≥+2.0 超强"),
     ("峰值 ONI", "一次气候事件期间 ONI 达到的最高值，用于给事件分强度档"),
+    ("SST", "Sea Surface Temperature（海表温度）的缩写——ONI 就是看赤道太平洋海温比常年偏暖/偏冷多少"),
+    ("onset", "一次厄尔尼诺/拉尼娜事件的\"开始月\"——海温首次连续 5 个月达到 ±0.5°C 阈值的那一个月，事件窗口就从它算起"),
+    ("sonset", "事件开始月（onset 的另一种写法，同义）——即海温首次连续 5 个月达到 ±0.5°C 阈值的那一个月"),
+    ("事件", "一次完整的厄尔尼诺（或拉尼娜）从开始到消退的整个过程，大约持续 1-2 年；本报告按季节按月记录"),
+    ("事件窗口", "从事件开始月（onset）起算的一段观察时间，本报告看 onset 后 6/12/24 个月"),
+    ("窗口", "本报告中指事件发生后观察的固定时间段（如 onset 后 12 个月）"),
+    ("月频", "以每个月为单位的频率——把每天的涨跌按月汇总成一个月度收益"),
     ("超额", "该股相比大盘（SPY）多赚/少赚的百分点——剔除大盘普涨普跌后的真实表现"),
     ("超额（pp）", "该股相比大盘多赚/少赚的百分点，pp=百分点"),
+    ("累计收益", "从事件开始月一路持有到窗口结束，中间每个月的收益连续复利叠加后的总收益——不是某个月单月的涨跌"),
+    ("复利", "利滚利——每个月的收益都是在上个月已经涨/跌过的基础上再算，会把涨跌叠加放大"),
     ("β₁₀", "10 年期国债利率每变动 1 个点，该股月收益平均跟随变动多少%——贝塔值"),
     ("US10Y", "美国 10 年期国债利率——长端，反映经济与通胀预期"),
     ("US2Y", "美国 2 年期国债利率——短端，反映货币政策（加息/降息预期）"),
     ("长短端", "长期利率（10Y）与短期利率（2Y）两个期限端，方向相反说明受曲线形态影响"),
-    ("T+6", "事件发生后第 6 个月的累计表现（T+12/T+24 同理）"),
+    ("回归", "统计学里找\"两件事之间的关系\"的方法——比如利率每涨 1bp，股价平均跟着涨/跌多少，就是靠回归估出来的"),
+    ("双因子回归", "同时用两个因素（利率变动+大盘涨跌）解释个股收益的统计模型，可以单独剥离出利率的影响"),
+    ("贝塔", "衡量一只股票跟随大盘（SPY）波动的敏感度——β 越大，大盘涨跌它跟得越凶"),
+    ("T+6", "事件发生后第 6 个月的累计表现（T+12/T+24 同理，T=事件开始月）"),
     ("T+12", "事件发生后第 12 个月的累计表现"),
     ("T+24", "事件发生后第 24 个月的累计表现"),
+    ("见顶", "股票（超额收益）在窗口内涨到的最高点，之后就开始回落"),
+    ("见顶 T+", "最高点出现在事件开始月后的第几个月（1=开始当月就见顶）"),
+    ("回撤", "从最高点往下掉的幅度——本报告用\"峰值与期末之差\"衡量掉得有多深"),
+    ("回撤起始", "从最高点回落、且首次跌破\"峰值−5个百分点\"的那个月份，表示回撤真正开始"),
     ("胜率", "历史上多少比例的事件里该股跑赢大盘（超额为正）"),
     ("均值", "一组数字的平均值（把所有数加起来除以个数）"),
     ("中位数", "一组数字按大小排中间那个——比均值更抗极端值干扰"),
@@ -782,7 +775,14 @@ TERMS = [
     ("显著性", "结论可信度的统计表述——越显著越不可能是碰巧"),
     ("sig", "统计上很可信（p<0.01 的缩写）"),
     ("edge", "统计上一般可信（p<0.05 的缩写，还没到很可信）"),
-    ("斜率", "相关强度每变化 1 个单位，该股超额的变化率"),
+    ("斜率", "相关强度每变化 1 个单位，该股超额的变化率（如 ONI 每强 1°C，超额变化多少个百分点）"),
+    ("口径", "统计计算采用的具体规则/标准——同一件事用不同口径算，结果会不一样，所以要先说清口径"),
+    ("子行业", "农业链再细分的小板块——化肥、农机、粮商、油脂、肉类、农业 REIT 等"),
+    ("基准", "用来对比的参照物——本报告用 SPY（标普 500 ETF）代表\"大盘平均表现\"，超额就是比它多/少的部分"),
+    ("SPY", "追踪标普 500 指数的 ETF，代表美股大盘，本报告用它做\"跑赢/跑输大盘\"的参照线"),
+    ("标的", "研究对象——本报告指 15 只农业相关股票"),
+    ("日线", "每个交易日一条收盘价的数据，1990-2026 约 9000+ 条"),
+    ("中性", "既不是厄尔尼诺也不是拉尼娜——海温在正常范围，天气无气候级异常"),
 ]
 # 生成悬停解释词典（长词优先）
 TERM_DICT = {k: v for k, v in sorted(TERMS, key=lambda x: -len(x[0]))}
@@ -797,7 +797,7 @@ _TERM_PAT = _re.compile("|".join(_re.escape(k) for k in TERM_DICT.keys()))
 # script / style 块（跳过，不标注其内部字符串）。带捕获组 → re.split 时块内容保留在奇数位
 _BLOCK_RE = _re.compile(r"(<script[\s\S]*?</script>)|(<style[\s\S]*?</style>)", _re.S)
 # 速查表（glossary）区块（跳过，其中已是解释，无需再悬停）。精确闭合到表格结束
-_GLOSS_RE = _re.compile(r'<div class="glossary">[\s\S]*?</table>\s*</div>', _re.S)
+_GLOSS_RE = None  # 速查表已移除，无需特殊处理
 # HTML 标签与文本分片（避免把标签属性里的词误标，如 class='sig'）
 _TAG_SPLIT_RE = _re.compile(r"<[^>]+>")
 
@@ -823,15 +823,11 @@ def _annotate_block(text):
     return "".join(out)
 
 def annotate_terms(html_str):
-    """把正文中的专业术语替换为带悬停浮窗的 span；跳过 <script>/<style>/速查表 内部。"""
-    # 先抽走速查表，再按 script/style 分块标注，最后放回
-    m = _GLOSS_RE.search(html_str)
-    gloss = m.group(0) if m else ""
-    rest = _GLOSS_RE.sub("@@GLOSS@@", html_str, count=1)
-    parts = _BLOCK_RE.split(rest)
+    """把正文中的专业术语替换为带悬停浮窗的 span；跳过 <script>/<style> 内部（速查表已移除）。"""
+    parts = _BLOCK_RE.split(html_str)
     # 偶数位=正文（标注），奇数位=<script>/<style> 块原文（保留；多个捕获组可能插入 None）
     joined = "".join(_annotate_block(p) if (i % 2 == 0 and p) else (p or "") for i, p in enumerate(parts))
-    return joined.replace("@@GLOSS@@", gloss)
+    return joined
 
 html = annotate_terms(html)
 # 注入浮窗引擎 JS（放 </body> 前）

@@ -35,11 +35,12 @@ async function cdpSession(wsUrl, onMsg) {
     return r.result.value;
   };
 
-  // 1. 基础状态：canvas=5（图表渲染 OK）+ 正文标注数
+  // 1. 基础状态：canvas=5（图表渲染 OK）+ 正文标注数 + 速查表已移除
   const base = await probe(`({
     canvas: document.querySelectorAll('canvas').length,
     termN: document.querySelectorAll('.term').length,
-    glossaryTermN: (() => { const g = document.querySelector('.glossary'); return g ? g.querySelectorAll('.term').length : -1; })(),
+    glossRemoved: !document.querySelector('.glossary'),
+    hasOnsetTip: !!document.querySelector('.term[data-tip*="开始月"]'),
     tipInitial: (() => { const t = document.getElementById('termtip'); return t ? getComputedStyle(t).display : 'NO_DIV'; })()
   })`);
 
@@ -79,7 +80,7 @@ async function cdpSession(wsUrl, onMsg) {
   if (sess) sess.close();
   if (target && target.id) { try { await fetch(`${CDP}/json/close/${target.id}`); } catch {} }
 
-  const ok = base.canvas === 5 && base.termN > 30 && base.glossaryTermN === 0 &&
+  const ok = base.canvas === 5 && base.termN > 30 && base.glossRemoved && base.hasOnsetTip &&
              base.tipInitial === "none" && hover.display === "block" && hover.content.length > 0 &&
              out.display === "none" && hover2.content.length > 0 && hover2.word !== hover.word &&
              errors.length === 0;
