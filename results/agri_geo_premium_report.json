@@ -1,0 +1,162 @@
+{
+ "meta": {
+  "generated": "2026-08-30 00:17",
+  "baseline": "2025-12-01",
+  "oil_move_pct": 3.0,
+  "beta_windows": [
+   20,
+   60
+  ],
+  "corr_window": 60,
+  "data_span": "2025-11-03 ~ 2026-08-27",
+  "note": "CF/DAR 地缘溢价剥离监测：油价异动日→CF/DAR 是否跟跌。跟跌=地缘占比高；不跟跌=剥离中。"
+ },
+ "latest": {
+  "ratio_cf_cl": 136.78,
+  "ratio_dar_cl": 147.6,
+  "beta_cf_60": 0.035,
+  "beta_dar_60": -0.314,
+  "corr60_cf_cl": 0.0239,
+  "corr60_dar_cl": -0.2243,
+  "asof": {
+   "stocks": "2026-08-27",
+   "cl_last_valid": "2026-08-26"
+  }
+ },
+ "trend_notes": [
+  "CF |β60| 近30日均0.11 vs 前30日均1.48 → ↓对油敏感度下降(剥离)",
+  "DAR |β60| 近30日均0.26 vs 前30日均0.31 → ↓对油敏感度下降(剥离)"
+ ],
+ "recent_oil_drop_events": [
+  {
+   "date": "2026-03-11",
+   "oil_ret_pct": -3.11,
+   "direction": "油价大跌",
+   "CF": 9.16,
+   "CF_nxt": 13.21,
+   "DAR": 5.63,
+   "DAR_nxt": 1.39,
+   "MOS": 10.08,
+   "MOS_nxt": 7.58,
+   "XLE": 2.48,
+   "XLE_nxt": 0.93,
+   "judge": "CF未跟跌(剥离中)；DAR未跟跌(剥离中)"
+  },
+  {
+   "date": "2026-06-03",
+   "oil_ret_pct": -3.85,
+   "direction": "油价大跌",
+   "CF": 2.75,
+   "CF_nxt": 0.79,
+   "DAR": 2.01,
+   "DAR_nxt": -1.35,
+   "MOS": 0.0,
+   "MOS_nxt": -1.72,
+   "XLE": 1.29,
+   "XLE_nxt": 0.07,
+   "judge": "CF未跟跌(剥离中)；DAR跟跌(占比高)"
+  }
+ ],
+ "new_high": {
+  "window": 60,
+  "oil_high_days": 34,
+  "cf_also_high_days": 9,
+  "dar_also_high_days": 21,
+  "cf_sync_rate": 0.265,
+  "dar_sync_rate": 0.618,
+  "recent": [
+   {
+    "date": "2026-03-24",
+    "xle_hi": true,
+    "cl_hi": false,
+    "cf_hi": false,
+    "dar_hi": true
+   },
+   {
+    "date": "2026-03-26",
+    "xle_hi": true,
+    "cl_hi": false,
+    "cf_hi": false,
+    "dar_hi": true
+   },
+   {
+    "date": "2026-03-27",
+    "xle_hi": true,
+    "cl_hi": false,
+    "cf_hi": true,
+    "dar_hi": true
+   },
+   {
+    "date": "2026-06-24",
+    "xle_hi": false,
+    "cl_hi": true,
+    "cf_hi": false,
+    "dar_hi": false
+   },
+   {
+    "date": "2026-06-26",
+    "xle_hi": false,
+    "cl_hi": true,
+    "cf_hi": false,
+    "dar_hi": false
+   },
+   {
+    "date": "2026-06-29",
+    "xle_hi": false,
+    "cl_hi": true,
+    "cf_hi": false,
+    "dar_hi": false
+   },
+   {
+    "date": "2026-07-01",
+    "xle_hi": false,
+    "cl_hi": true,
+    "cf_hi": false,
+    "dar_hi": false
+   },
+   {
+    "date": "2026-07-02",
+    "xle_hi": false,
+    "cl_hi": true,
+    "cf_hi": false,
+    "dar_hi": false
+   },
+   {
+    "date": "2026-08-14",
+    "xle_hi": true,
+    "cl_hi": false,
+    "cf_hi": false,
+    "dar_hi": true
+   },
+   {
+    "date": "2026-08-17",
+    "xle_hi": true,
+    "cl_hi": false,
+    "cf_hi": false,
+    "dar_hi": true
+   },
+   {
+    "date": "2026-08-18",
+    "xle_hi": true,
+    "cl_hi": false,
+    "cf_hi": false,
+    "dar_hi": true
+   },
+   {
+    "date": "2026-08-20",
+    "xle_hi": true,
+    "cl_hi": false,
+    "cf_hi": false,
+    "dar_hi": false
+   }
+  ]
+ },
+ "span_chg_pct": {
+  "CF": 48.93,
+  "DAR": 87.22,
+  "CL": 22.78,
+  "XLE": 41.34,
+  "SPY": 12.84
+ },
+ "conclusion": "截至 2025-11-03 ~ 2026-08-27：CF/DAR 对油价 β60 分别为 0.035 / -0.314，60日相关 0.0239 / -0.2243。区间涨跌 {'CF': 48.93, 'DAR': 87.22, 'CL': 22.78, 'XLE': 41.34, 'SPY': 12.84}。CF |β60| 近30日均0.11 vs 前30日均1.48 → ↓对油敏感度下降(剥离)；DAR |β60| 近30日均0.26 vs 前30日均0.31 → ↓对油敏感度下降(剥离)；最近一次油价大跌(2026-06-03, -3.85%)：CF未跟跌(剥离中)；DAR跟跌(占比高)；判定三：能源锚(XLE/CL)创60日新高 34 天中，CF 同步 9 天(0.265)、DAR 同步 21 天(0.618)"
+}
