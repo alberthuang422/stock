@@ -14,6 +14,7 @@ os.makedirs(OUT_DIR, exist_ok=True)
 enso = json.load(open(os.path.join(RES, "agri_enso.json"), encoding="utf-8"))
 rate = json.load(open(os.path.join(RES, "agri_rate_sens.json"), encoding="utf-8"))
 verify = json.load(open(os.path.join(RES, "agri_verify.json"), encoding="utf-8"))
+strong = json.load(open(os.path.join(RES, "agri_strong_el.json"), encoding="utf-8"))
 
 SUB = enso["subsector"]
 TICKERS = ["DE", "AGCO", "MOS", "CF", "NTR", "CTVA", "FMC", "ADM", "BG",
@@ -147,6 +148,95 @@ ev_html_rows = "".join(
     f"<tr><td>{e['onset']}</td><td>{e['end']}</td><td>{e['peak_oni']}</td><td>{e['len_m']}</td></tr>"
     for e in enso["el_events"])
 
+# ---------- 强厄尔尼诺数据 ----------
+strong_ev = strong["strong_events"]
+vstrong_ev = strong["vstrong_events"]
+str_ev_html = "".join(
+    f"<tr><td>{e['onset']}</td><td>{e['end']}</td><td>{e['peak']}</td><td>{e['len']}</td><td>{e['peak_ym']}</td></tr>"
+    for e in strong_ev)
+
+# 强 vs 弱 vs 全部 T+6/12/24 统计（合并计算，仅用 mean/med/win）
+def agg_from_rows(rows, key):
+    out = {}
+    for r in rows:
+        t = r["t"]
+        if r["n"] == 0:
+            continue
+        out[t] = {"n": r["n"], "mean": r["mean"], "med": r["med"], "win": r["win"]}
+    return out
+
+def combine_block(key):
+    str_rows = agg_from_rows(strong["strong_el_rows"][key], key)
+    weak_rows_m = agg_from_rows(strong["weak_el_rows"][key], key)
+    all_rows = {}
+    for t in TICKERS:
+        s, w = str_rows.get(t), weak_rows_m.get(t)
+        if not s and not w:
+            continue
+        n = (s["n"] if s else 0) + (w["n"] if w else 0)
+        if n == 0:
+            continue
+        mean = ((s["mean"] * s["n"] if s else 0) + (w["mean"] * w["n"] if w else 0)) / n
+        # 中位与胜率无法精确合并，用加权近似(n 小时偏差大）
+        meds = [ss["med"] if ss else None for ss in (s, w)]
+        wins = [ss["win"] if ss else None for ss in (s, w)]
+        all_rows[t] = {"n": n, "mean": round(mean, 1),
+                       "med_s": s["med"] if s else None, "med_w": w["med"] if w else None,
+                       "win_s": s["win"] if s else None, "win_w": w["win"] if w else None}
+    return str_rows, weak_rows_m, all_rows
+
+str6, weak6, _ = combine_block("e6")
+str12, weak12, all12 = combine_block("e12")
+str24, weak24, _ = combine_block("e24")
+
+# 强 T+12 表格行
+str12_rows = []
+for t in TICKERS:
+    v = str12.get(t)
+    if not v:
+        str12_rows.append({"t": t, "sub": SUB[t], "n": 0, "mean": "-", "med": "-", "win": "-"})
+        continue
+    str12_rows.append({"t": t, "sub": SUB[t], "n": v["n"], "mean": f"{v['mean']:+.1f}",
+                       "med": f"{v['med']:+.1f}", "win": f"{v['win']:.0f}%"})
+
+# 强度-超额相关
+corr_rows = []
+for r in sorted(strong["corr_peak"], key=lambda x: abs(x.get("corr_peak_e12", 0)), reverse=True):
+    sigc = "sig" if r["p"] < 0.01 else ("edge" if r["p"] < 0.05 else "no")
+    corr_rows.append({"t": r["t"], "sub": r["sub"], "n": r["n"],
+                      "corr": f"{r['corr_peak_e12']:+.3f}",
+                      "slope": f"{r['slope']:+.1f}",
+                      "p": f"{r['p']:.3f}", "sigc": sigc})
+
+# 强/弱月度对比
+g = strong["group"]
+strong_grp_rows = []
+for t in TICKERS:
+    s, w, n = g[t]["strong_el"], g[t]["weak_el"], g[t]["neutral"]
+    def gfmt(x):
+        if x.get("mean") is None:
+            return "-"
+        tag = {"sig": "<span class='tag sig'>sig</span>", "edge": "<span class='tag edge'>edge</span>", "no": ""}.get(x.get("sig", ""), "")
+        return f"{x['mean']:+.2f}%<span class='note-in'>(n={x['n']})</span>{tag}"
+    strong_grp_rows.append({"t": t, "sub": SUB[t], "s": gfmt(s), "w": gfmt(w), "neu": gfmt(n)})
+
+# 强事件窗口 e6/e24 简短版（仅列 n>0）
+def ev_mini(rows, key):
+    return [{"t": r["t"], "n": r["n"], "mean": r["mean"], "med": r["med"], "win": r["win"]}
+            for r in sorted(rows, key=lambda x: -x.get("mean", -999)) if r["n"] > 0]
+
+# 图表数据：强 vs 弱 T+12 mean（按全事件排序）
+bar_strweak = []
+for t in TICKERS:
+    s = str12.get(t)
+    w = weak12.get(t)
+    bar_strweak.append({"t": t, "s": s["mean"] if s else None, "w": w["mean"] if w else None,
+                        "sn": s["n"] if s else 0, "wn": w["n"] if w else 0})
+# 相关性散点数据
+scat = []
+for r in strong["corr_peak"]:
+    scat.append({"t": r["t"], "corr": r["corr_peak_e12"], "p": r["p"]})
+
 # ---------- 图表数据 ----------
 oni_hist = []
 with open(os.path.join(BASE, "data", "agri", "raw", "oni.txt"), encoding="utf-8") as f:
@@ -272,6 +362,7 @@ th{{background:#f0f1f3;font-weight:600;white-space:nowrap}}
 <li><b>农业股对利率上行并不悲观，方向与直觉相反</b>：全期月频回归中 MOS（β₁₀=+0.075，p=0.001）、CF（+0.073，p=0.009）显著为正，DAR（+0.064，p=0.049）、AGCO（+0.048，p=0.019）边缘为正——US10Y 上行月化肥/农机反而跑赢；控制 CPI 后系数几乎不变（非通胀代理）；近 10 年 MOS β₁₀=+0.169、CF +0.142（均 p&lt;0.001），敏感度增强。</li>
 <li><b>但这是"增长型"利率上行的属性，非"紧缩型"</b>：DAR 长短端方向相反（US10Y +0.164 显著 / US2Y −0.131 显著）＝曲线平坦化交易的受益者；粮商（ADM/BG）、肉类（TSN/HRL）、农业 REIT（FPI）对利率真正中性；DE 亦不显著（业绩由全球农机周期主导）。</li>
 <li><b>操作含义</b>：担心利率上行不必系统性回避农业股（化肥/农机甚至是顺风）；若做天气交易，盯 La Niña 而非 El Niño，化肥（CF/MOS/NTR）首选、农机（DE）次之，持仓周期宜 12 个月+。样本警示：CF/NTR/CTVA 事件数少（n=2~8）、CF 的 T+24 均值被 2006 化肥超级牛市单事件拉高，置信度打折。</li>
+<li><b>强厄尔尼诺专项（≥+1.5°C，9 次）</b>：强度分级后出现"<b>越强越弱</b>"——弱 El Niño 事件后农业股多数正超额（CF +75.8pp、DAR +65.6pp、DE +13.8pp），<b>强 El Niño（含 1982/1997/2014 三次超强 ≥+2.0°C）后几乎所有标的 T+12 转负</b>（MOS −30.7pp、DAR −33.7pp、ADM −21.0pp；仅 DE/HRL/TSN 相对抗跌）；12 只中 10 只"峰值 ONI × 超额"斜率为负。强 El Niño 的全球天气紊乱+农产品价格过山车对农业链整体逆风，<b>与 La Niña 化肥强正构成不对称镜像</b>——交易上应反向对待（强 El Niño 期减持化肥/粮商/油脂，弱 El Niño 可做多 DE/DAR）。</li>
 </ul>
 </div>
 
@@ -311,6 +402,42 @@ th{{background:#f0f1f3;font-weight:600;white-space:nowrap}}
 <p><b>机理（基本面）</b>：La Niña 典型天气＝南美（阿根廷/巴西南部）干旱、美国南部冬麦区干燥、东南亚偏湿。传导：南美大豆/玉米减产预期 → 全球谷物价格获支撑 → 美国农户种植利润与出口优势改善 → <b>化肥投入意愿不减反增（量价齐升）</b>。历史窗口验证此链条：CF（北美最大氮肥）8/8 事件 T+12 全胜、MOS（磷钾肥）73% 胜率、BG/ADM（粮商，受益价差与贸易流）75%/64%。反例：TSN（27%）——饲料成本抬升挤压肉类加工毛利。</p>
 <p><b>子行业排序（La Niña T+12 超额）</b>：<span class="badge b-hi">化肥 CF / MOS / NTR</span><span class="badge b-mid">粮商 BG / ADM</span><span class="badge b-mid">农机 DE</span><span class="badge b-mid">油脂 DAR</span><span class="badge b-lo">肉类 TSN</span></p>
 </div>
+
+<h3>1.5 强厄尔尼诺专项（峰值 ONI ≥ +1.5°C）：强度分级后"越强越弱"</h3>
+<div class="card">
+<p><b>分级</b>：在 22 次 El Niño 中按事件峰值 ONI 分三档——<b>强（Strong）≥+1.5°C 共 9 次</b>（1957/1965/1972/1982/1991/1997/2009/2014/2023），其中<b>超强（Very Strong）≥+2.0°C 仅 3 次</b>（1982-83 / 1997-98 / 2014-16）。本页所有强/弱对比均沿用同一事件窗口口径（onset 后复利累计 − SPY）。</p>
+<p><b>核心反直觉发现：强度与农业股超额呈负向关系</b>——弱 El Niño（peak&lt;1.5）事件后农业股多数正超额（CF +75.8pp、DAR +65.6pp、DE +13.8pp），<b>强 El Niño 事件后几乎全线转负</b>（T+12 除 HRL/TSN 外全部负超额）。12 只样本中 10 只"事件峰值 ONI → T+12 超额"斜率为负（尽管 n=5~10 未达统计显著）。</p>
+<p class="note">补充：在强事件样本内（n=4），T+6 仅 CF/DE 温和正（+3.5/+3.2pp），T+12~T+24 转负并加深（MOS −30.7pp、DAR −33.7pp、ADM −21pp）；T+24 除 DE/HRL/TSN 相对抗跌外普遍 −40pp 以上。强 El Niño 的"全球干旱/洪水+农产品价格过山车+次年种植面积预期回调"组合对农业链整体偏逆风，尤以商品依赖度高的化肥（MOS/CF）、粮商（ADM/BG）、油脂（DAR）为甚。</p>
+</div>
+
+<h4>强 El Niño 事件清单（峰值 ≥+1.5°C，9 次）</h4>
+<div class="collapse">
+<table><tr><th>起始日</th><th>结束日</th><th>峰值ONI</th><th>持续月数</th><th>峰值月</th></tr>
+{str_ev_html}
+</table>
+</div>
+<div class="note">超强（≥+2.0°C）：1982-05~1983-06（2.14）、1997-05~1998-04（2.37）、2014-10~2016-05（2.59）——3 次。</div>
+
+<h4>强 vs 弱 El Niño 月度收益对比（强 ≥+1.5 / 弱 &lt;+1.5 / 中性）</h4>
+<table><tr><th>标的</th><th>子行业</th><th>强 El Niño 月均收益</th><th>弱 El Niño 月均收益</th><th>中性月均收益</th></tr>
+{''.join(f"<tr><td>{r['t']}</td><td>{r['sub']}</td><td>{r['s']}</td><td>{r['w']}</td><td>{r['neu']}</td></tr>" for r in strong_grp_rows)}
+</table>
+<div class="note">月频口径（同 1.2）。强 El Niño 月均值普遍弱于中性；弱 El Niño 月 DAR +3.84%（p=0.06 edge）、HRL +0.88%。没有标的在强 El Niño 月获得显著正收益。</div>
+
+<h4>强 El Niño 事件 onset 后 T+12 超额（vs SPY）</h4>
+<table><tr><th>标的</th><th>子行业</th><th>n(事件)</th><th>均值超额pp</th><th>中位超额pp</th><th>胜率</th></tr>
+{''.join(f"<tr><td>{r['t']}</td><td>{r['sub']}</td><td>{r['n']}</td><td>{r['mean']}</td><td>{r['med']}</td><td>{r['win']}</td></tr>" for r in str12_rows)}
+</table>
+<div class="note">强事件 n 仅 3-4（数据可得），统计功效极低；中位超额除 DE（+0.8pp）外普偏负。与 La Niña 的化肥强正（1.4）形成鲜明对照。</div>
+
+<h4>事件强度（峰值 ONI）→ T+12 超额 相关性 / 斜率</h4>
+<table><tr><th>标的</th><th>子行业</th><th>n(事件)</th><th>corr(峰值ONI,e12)</th><th>斜率pp/°C</th><th>p</th></tr>
+{''.join(f"<tr><td>{r['t']}</td><td>{r['sub']}</td><td>{r['n']}</td><td class='{r['sigc']}'>{r['corr']}</td><td>{r['slope']}</td><td>{r['p']}</td></tr>" for r in corr_rows)}
+</table>
+<div class="note">corr 均为 12 次事件（含强弱）线性相关；斜率=ONI 每 +1°C 的 T+12 超额变化（pp）。FMC −34.6pp/°C、DAR −60.9pp/°C、CF −56.3pp/°C 等为强负，但 p 全部 &gt;0.28（n 小，方向性结论）。</div>
+
+<div class="chart" id="c6"></div>
+<div class="legend">强（≥+1.5°C，橙）vs 弱（&lt;+1.5°C，蓝）El Niño 事件 onset 后 T+12 平均超额（pp）｜ 弱事件多为正、强事件几乎全负 → 强度与超额反向。</div>
 
 <h2>二、利率敏感性量化</h2>
 
@@ -386,7 +513,7 @@ th{{background:#f0f1f3;font-weight:600;white-space:nowrap}}
 
 <div class="foot">
 报告 57 · 生成于 2026-08-29 · 数据：NOAA ONI（1950-2026）/ FRED DGS10,DGS2,CPIAUCSL（1962-2026）/ Yahoo 日线至 08-27 / 富途快照 08-28<br>
-参数图例：β₁₀=个股月收益对 US10Y 月变动的敏感度（%/bp）；超额=累计收益−SPY 同期（pp）；胜率=正超额事件占比；El Niño/La Niña 按 ONI≥+0.5/≤−0.5 连续≥5 月；sig=双侧 p&lt;0.01、edge=p&lt;0.05、no=p≥0.05。
+参数图例：β₁₀=个股月收益对 US10Y 月变动的敏感度（%/bp）；超额=累计收益−SPY 同期（pp）；胜率=正超额事件占比；El Niño/La Niña 按 ONI≥+0.5/≤−0.5 连续≥5 月；强 El Niño=事件峰值 ONI ≥+1.5°C（超强 ≥+2.0°C）；sig=双侧 p&lt;0.01、edge=p&lt;0.05、no=p≥0.05。
 </div>
 
 </div>
@@ -394,7 +521,8 @@ th{{background:#f0f1f3;font-weight:600;white-space:nowrap}}
 const ONI = {json.dumps(oni_hist)};
 const BETA = {json.dumps(bar_beta)};
 const GRP = {json.dumps(bar_grp)};
-const OKB='#0072B2', OKR='#D55E00', OKG='#009E73', MUT='#888';
+const STRWEAK = {json.dumps(bar_strweak)};
+const OKB='#0072B2', OKR='#D55E00', OKG='#009E73', OKC='#E69F00', MUT='#888';
 
 // 图1 ONI
 (function(){{
@@ -446,6 +574,23 @@ echarts.init(el).setOption({{
   series:[
     {{name:'US10Y 上行月',type:'bar',data:GRP.map(x=>+(x.u.toFixed(2))),itemStyle:{{color:OKR}},barWidth:'32%'}},
     {{name:'US10Y 下行月',type:'bar',data:GRP.map(x=>+(x.d.toFixed(2))),itemStyle:{{color:OKG}},barWidth:'32%'}}
+  ]
+}});
+}})();
+
+// 图4 强 vs 弱 El Niño T+12 超额
+(function(){{
+const el=document.getElementById('c6');
+const data = STRWEAK.filter(x=>x.s!=null||x.w!=null);
+echarts.init(el).setOption({{
+  grid:{{left:52,right:16,top:34,bottom:64}},
+  tooltip:{{trigger:'axis'}},
+  legend:{{data:['强 El Niño (≥+1.5°C)','弱 El Niño (<+1.5°C)'],textStyle:{{color:MUT,fontSize:11}}}},
+  xAxis:{{type:'category',data:data.map(x=>x.t),axisLabel:{{rotate:35,fontSize:11}},axisTick:{{show:false}}}},
+  yAxis:{{type:'value',name:'T+12 平均超额 pp',splitLine:{{lineStyle:{{color:'#eee'}}}}}},
+  series:[
+    {{name:'强 El Niño (≥+1.5°C)',type:'bar',data:data.map(x=>x.s!=null?+(x.s.toFixed(1)):null),itemStyle:{{color:OKC}},barWidth:'30%'}},
+    {{name:'弱 El Niño (<+1.5°C)',type:'bar',data:data.map(x=>x.w!=null?+(x.w.toFixed(1)):null),itemStyle:{{color:OKB}},barWidth:'30%'}}
   ]
 }});
 }})();
