@@ -60,3 +60,10 @@
 - 安全说明：全程仅 add/commit/push，无删除/clean/reset/restore；`reports/57.../厄尔尼诺x农业股.html`（重做前旧备份，与 index.html 100% 相同）按"不做删除"原则保留为未跟踪未入库，已写入交接文档待用户确认。
 - 有意未入库：`results/_scan_step2.log`、`results/supplement_volume.log`（运行日志惯例）；重复文件 厄尔尼诺x农业股.html（见上）。
 - 备查：自动化日志 ~/.workbuddy/automation-logs/2026-08-30_github提交.log。
+
+## 2026-08-31 00:0x（第八次执行）
+- 任务：总结 8/30 全天工作、更新交接文档、git 提交并 push（用户明确要求"提交到 github 即可"）。
+- 前情：8/30 白天多会话已按主题提交完毕——00:17 第七次 automation（a0d46e4）+ 并行 58 号（cdb0bdd）→ 02:06-07 非农情景交接/58 双口径修正/57 专项 HTML/执行记录 → 22:19 57附+59 号（140e932）→ 22:39-41 README 整理（fa7dd07/4d5a791）；**远端 main 已推进至 140e932**（白天的自动化与并行会话已 push 过），待 push 仅 2 个 README 提交。
+- 执行：读 8/30 日志（ENSO 研判/CF 腿分解/超额双口径/RS 仪表盘/59 MOS×CF/非农情景×两段利差/双口径修正）→ 覆盖更新 overview.md（8/30 全天，方法论新增 期末vs max 双口径/残差分解归因/CF−XLE RS 仪表盘/连续负非农先例扫描/两段利差分工/沙箱代理坑/annotate_terms 单次 sub 修法/尾 bar 体检）→ 追加日志收尾 → 单 commit `258c9e0` → push 3 个提交（140e932..258c9e0）成功，ls-remote 验证远端 258c9e0=本地一致。
+- 安全说明：全程仅 add/commit/push，工作区无未跟踪文件、无删除/clean/reset；全部改动可 git 回滚；stash@{0}（JH 交接 3 行）保留备查。
+- 备查：自动化日志 ~/.workbuddy/automation-logs/2026-08-31_github提交.log。
