@@ -116,6 +116,7 @@
 - **[57附 农业股 ENSO + 利率敏感性（绝对收益版）](reports/57_农业股ENSO与利率敏感性/绝对收益版.html)** · ENSO 回测的绝对收益口径重算
 - **[58 农业股（CF/DAR）地缘溢价脱钩监测](reports/58_农业股地缘溢价脱钩监测/index.html)** · CF/DAR 与油价相关性的脱钩监测
 - **[59 MOS vs CF：都是化肥股，走势为何差这么大](reports/59_MOS与CF化肥走势分化/index.html)** · MOS 与 CF 走势分化的归因拆解
+- **[60 日线MACD死叉 × 4hRSI超卖 买入胜率回测](reports/60_MACD死叉_4hRSI超卖_胜率回测/index.html)** · SOXX/NVDA/XAUUSD/QQQ 死叉+4h RSI 30-35 共振买多的胜率与显著性（2年4h样本，n=20 主口径 vs n=87 仅死叉对照）
 
 ---
 

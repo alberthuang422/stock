@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>日线 MACD 死叉 + 4h RSI 30-35 超卖——买多胜率回测（SOXX/NVDA/XAUUSD/QQQ）</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<style>
+  :root { --up:#c0392b; --dn:#1e8449; --ink:#2c3e50; --muted:#7f8c8d; --line:#e3e7ea; --bg:#f7f8fa; --card:#ffffff; --accent:#c0392b; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif; background:var(--bg); color:var(--ink); line-height:1.75; }
+  .wrap { max-width:1080px; margin:0 auto; padding:28px 20px 60px; }
+  header { border-bottom:3px solid var(--accent); padding-bottom:14px; margin-bottom:22px; }
+  header h1 { font-size:26px; letter-spacing:.5px; }
+  header .meta { color:var(--muted); font-size:13px; margin-top:6px; }
+  h2 { font-size:19px; margin:34px 0 12px; padding-left:10px; border-left:4px solid var(--accent); }
+  h3 { font-size:15.5px; margin:18px 0 8px; }
+  p { margin:8px 0; font-size:14.5px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:16px 18px; margin:12px 0; }
+  .tldr { background:#fff6f4; border:1px solid #f3c8c0; }
+  .tldr h2 { border:none; padding:0; margin:0 0 8px; font-size:17px; color:var(--accent); }
+  .kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:10px; margin:14px 0 4px; }
+  .kpi { background:var(--card); border:1px solid var(--line); border-radius:8px; padding:10px 12px; }
+  .kpi .lab { font-size:12px; color:var(--muted); }
+  .kpi .val { font-size:21px; font-weight:700; margin-top:2px; }
+  .up { color:var(--up); font-weight:600; }
+  .dn { color:var(--dn); font-weight:600; }
+  .na { color:var(--muted); }
+  .sub { color:var(--muted); font-size:12px; font-weight:400; }
+  table { width:100%; border-collapse:collapse; font-size:13.5px; background:var(--card); }
+  th, td { border:1px solid var(--line); padding:7px 9px; text-align:center; }
+  th { background:#f0f3f6; font-weight:600; }
+  td.tk { text-align:left; white-space:nowrap; }
+  td.bold { font-weight:700; }
+  td.hot { background:#fff0ed; }
+  .chart { width:100%; height:400px; }
+  .chart-sm { width:100%; height:340px; }
+  .note { font-size:12.5px; color:var(--muted); margin-top:6px; }
+  .warn { background:#fdf6e3; border-left:4px solid #d4a017; padding:10px 14px; font-size:13.5px; margin:12px 0; border-radius:0 8px 8px 0; }
+  .term { border-bottom:1px dashed #b08; cursor:help; }
+  .termtip { display:none; position:fixed; z-index:99; max-width:300px; background:#2c3e50; color:#fff; font-size:12.5px; line-height:1.6; padding:8px 10px; border-radius:6px; box-shadow:0 4px 14px rgba(0,0,0,.25); pointer-events:none; }
+  .src { font-size:12.5px; color:var(--muted); }
+  .src li { margin:4px 0 4px 18px; }
+  .sig { display:inline-block; font-size:11px; padding:1px 7px; border-radius:10px; margin-left:6px; vertical-align:middle; }
+  .sig.sig-on { background:#fdecea; color:#c0392b; border:1px solid #e5b8b2; }
+  .sig.sig-edge { background:#fff7e0; color:#a06d00; border:1px solid #e8d48a; }
+  .sig.sig-no { background:#eef1f4; color:#7f8c8d; border:1px solid #d5dbe0; }
+  footer { margin-top:40px; padding-top:14px; border-top:1px solid var(--line); font-size:12.5px; color:var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>日线 <span class='term' data-tip='Moving Average Convergence Divergence，指数平滑异同移动平均线。由快线 DIF（EMA12−EMA26）、慢线 DEA（DIF 的 9 日 EMA）与柱状图组成，用于衡量趋势动能与拐点。'>MACD</span> <span class='term' data-tip='DIF 下穿 DEA——常被视为多头动能转弱的信号；本回测要求&#39;刚刚死叉&#39;即当日才发生交叉。'>死叉</span> + 4 小时 <span class='term' data-tip='相对强弱指数（Relative Strength Index），衡量近期涨跌动能的强弱，0–100。传统上 &lt;30 为超卖、&gt;70 为超买。'>RSI</span>(14) 30–35 <span class='term' data-tip='RSI 进入低位（通常 &lt;30）表示短期跌势过快、抛压可能透支，技术派常将其视为潜在反弹点。本回测用 30–35 这一&#39;偏超卖但未深跌&#39;的档位。'>超卖</span> → 买多，<span class='term' data-tip='收益为正的次数 / 总次数。本报告统一按&#39;当日收益 &gt; 0&#39;计。'>胜率</span>几何？</h1>
+  <div class="meta">量化回测 · 60 号报告 ｜ 标的：SOXX / NVDA / XAUUSD(<span class='term' data-tip='COMEX 黄金期货连续合约的 Yahoo 代码，用于代理金价。Yahoo 无现货 XAUUSD 报价，期货与现货价差通常很小。'>GC=F</span>) / QQQ ｜ 4h 数据窗口 2024-09 ~ 2026-08（Yahoo 盘中数据上限约 2 年）｜ 生成于 2026-08-31</div>
+</header>
+
+<div class="card tldr">
+  <h2>结论先行</h2>
+  <p><b>这套信号在过去 2 年回测样本里"偏正"，但远谈不上稳赚：</b>四标的合计触发 <b>20 次</b>，T+1 <span class='term' data-tip='收益为正的次数 / 总次数。本报告统一按&#39;当日收益 &gt; 0&#39;计。'>胜率</span> 70%、T+5 <span class='term' data-tip='收益为正的次数 / 总次数。本报告统一按&#39;当日收益 &gt; 0&#39;计。'>胜率</span> 73.7%（中位 +2.5%）、T+10 <span class='term' data-tip='收益为正的次数 / 总次数。本报告统一按&#39;当日收益 &gt; 0&#39;计。'>胜率</span> 68.4%（中位 +2.6%）；但 T+20 <span class='term' data-tip='收益为正的次数 / 总次数。本报告统一按&#39;当日收益 &gt; 0&#39;计。'>胜率</span>回落到 52.6%。<b>最大的限制是样本太少</b>——4h 数据只有约 2 年，而<span class='term' data-tip='DIF 下穿 DEA——常被视为多头动能转弱的信号；本回测要求&#39;刚刚死叉&#39;即当日才发生交叉。'>死叉</span>之后恰好轮到 4h <span class='term' data-tip='相对强弱指数（Relative Strength Index），衡量近期涨跌动能的强弱，0–100。传统上 &lt;30 为超卖、&gt;70 为超买。'>RSI</span> 进入 30–35 档的"共振"极其罕见，单标的每年只出 1–3 次，统计上多数持有期达不到显著（仅 T+5 在合并样本上达"边缘显著"，<span class='term' data-tip='检验&#39;胜率是否显著高于 50%&#39;的统计方法：若 p&lt;0.05，说明观察到的胜率不太可能纯靠运气。'>二项检验</span> p=0.03）。</p>
+  <div class="kpis">
+    <div class="kpi"><div class="lab">四标的合并信号数（2 年）</div><div class="val">20 次</div></div>
+    <div class="kpi"><div class="lab">T+5 <span class='term' data-tip='收益为正的次数 / 总次数。本报告统一按&#39;当日收益 &gt; 0&#39;计。'>胜率</span>（合并）</div><div class="val up">73.7%</div></div>
+    <div class="kpi"><div class="lab">T+5 <span class='term' data-tip='把每次收益排序后取正中间那个数——比均值更抗极端值（如单次大跌/大涨）干扰。'>中位收益</span></div><div class="val up">+2.5%</div></div>
+    <div class="kpi"><div class="lab">T+20 <span class='term' data-tip='收益为正的次数 / 总次数。本报告统一按&#39;当日收益 &gt; 0&#39;计。'>胜率</span>（合并）</div><div class="val">52.6%</div></div>
+    <div class="kpi"><div class="lab">对照：仅日线<span class='term' data-tip='DIF 下穿 DEA——常被视为多头动能转弱的信号；本回测要求&#39;刚刚死叉&#39;即当日才发生交叉。'>死叉</span> T+10 <span class='term' data-tip='收益为正的次数 / 总次数。本报告统一按&#39;当日收益 &gt; 0&#39;计。'>胜率</span></div><div class="val up">71.3% <span class="sub">(n=87)</span></div></div>
+    <div class="kpi"><div class="lab">黄金（XAUUSD）当前状态</div><div class="val" style="color:#d4a017;">正处信号窗 🎯</div></div>
+  </div>
+  <p><b>关键提醒</b>：真正拉动<span class='term' data-tip='收益为正的次数 / 总次数。本报告统一按&#39;当日收益 &gt; 0&#39;计。'>胜率</span>的是"日线<span class='term' data-tip='DIF 下穿 DEA——常被视为多头动能转弱的信号；本回测要求&#39;刚刚死叉&#39;即当日才发生交叉。'>死叉</span>"本身（仅<span class='term' data-tip='DIF 下穿 DEA——常被视为多头动能转弱的信号；本回测要求&#39;刚刚死叉&#39;即当日才发生交叉。'>死叉</span>、无一额外条件时 T+5~T+20 <span class='term' data-tip='收益为正的次数 / 总次数。本报告统一按&#39;当日收益 &gt; 0&#39;计。'>胜率</span>也有 70–72%、n=87、<span class="term" data-tip="假设'其实没有效应'时，观察到当前这么强结果（或更强）的概率。p<0.05 才算统计显著。">p&lt;0.01</span> 显著）；4h <span class='term' data-tip='相对强弱指数（Relative Strength Index），衡量近期涨跌动能的强弱，0–100。传统上 &lt;30 为超卖、&gt;70 为超买。'>RSI</span> 30–35 过滤把样本砍掉近八成、收益并未显著抬升。把它当"择时确认"，而不是"圣杯"。</p>
+</div>
+
+<div class="warn">
+  <b>⚠️ 样本不足警告</b>：4h 级数据 Yahoo 只回溯约 730 天，本回测实际仅覆盖 2024-09 ~ 2026-08 两年。日线<span class='term' data-tip='DIF 下穿 DEA——常被视为多头动能转弱的信号；本回测要求&#39;刚刚死叉&#39;即当日才发生交叉。'>死叉</span>两年内每标的 20 多次，但叠加"4h <span class='term' data-tip='相对强弱指数（Relative Strength Index），衡量近期涨跌动能的强弱，0–100。传统上 &lt;30 为超卖、&gt;70 为超买。'>RSI</span> 恰好落 30–35"后每标的只剩 <b>3–8 个信号</b>。20 个样本的<span class='term' data-tip='收益为正的次数 / 总次数。本报告统一按&#39;当日收益 &gt; 0&#39;计。'>胜率</span> 95% 置信区间宽达 ±20pp——说"73% <span class='term' data-tip='收益为正的次数 / 总次数。本报告统一按&#39;当日收益 &gt; 0&#39;计。'>胜率</span>"和"50% <span class='term' data-tip='收益为正的次数 / 总次数。本报告统一按&#39;当日收益 &gt; 0&#39;计。'>胜率</span>"在统计上无法区分。结论仅供策略参考，不可作为稳定概率使用。
+</div>
+
+<h2>一、信号定义与口径</h2>
+<div class="card">
+  <h3>买入条件（主口径）</h3>
+  <p>① <b>日线 <span class='term' data-tip='Moving Average Convergence Divergence，指数平滑异同移动平均线。由快线 DIF（EMA12−EMA26）、慢线 DEA（DIF 的 9 日 EMA）与柱状图组成，用于衡量趋势动能与拐点。'>MACD</span>(12,26,9) "刚刚<span class='term' data-tip='DIF 下穿 DEA——常被视为多头动能转弱的信号；本回测要求&#39;刚刚死叉&#39;即当日才发生交叉。'>死叉</span>"</b>：当日 <span class="term" data-tip="<span class='term' data-tip='Moving Average Convergence Divergence，指数平滑异同移动平均线。由快线 DIF（EMA12−EMA26）、慢线 DEA（DIF 的 9 日 EMA）与柱状图组成，用于衡量趋势动能与拐点。'>MACD</span> 快线 = EMA12 − EMA26，代表短期动能；<span class='term' data-tip='MACD 信号线 = DIF 的 9 日指数移动平均。DIF 与 DEA 的交叉构成买卖信号。'>DEA</span> 是 <span class='term' data-tip='MACD 快线 = EMA12 − EMA26。正值=短期均线在上（多头），负值=水下方（空头）。'>DIF</span> 的 9 日均线，代表中期趋势。<span class='term' data-tip='MACD 快线 = EMA12 − EMA26。正值=短期均线在上（多头），负值=水下方（空头）。'>DIF</span> 下穿 <span class='term' data-tip='MACD 信号线 = DIF 的 9 日指数移动平均。DIF 与 DEA 的交叉构成买卖信号。'>DEA</span> 即'<span class='term' data-tip='DIF 下穿 DEA——常被视为多头动能转弱的信号；本回测要求&#39;刚刚死叉&#39;即当日才发生交叉。'>死叉</span>'，常被看作多头动能转弱信号。"><span class='term' data-tip='MACD 快线 = EMA12 − EMA26。正值=短期均线在上（多头），负值=水下方（空头）。'>DIF</span></span> 由 ≥ <span class="term" data-tip="<span class='term' data-tip='Moving Average Convergence Divergence，指数平滑异同移动平均线。由快线 DIF（EMA12−EMA26）、慢线 DEA（DIF 的 9 日 EMA）与柱状图组成，用于衡量趋势动能与拐点。'>MACD</span> 信号线（<span class='term' data-tip='MACD 快线 = EMA12 − EMA26。正值=短期均线在上（多头），负值=水下方（空头）。'>DIF</span> 的 9 日 EMA）。<span class='term' data-tip='MACD 快线 = EMA12 − EMA26。正值=短期均线在上（多头），负值=水下方（空头）。'>DIF</span> 下穿 <span class='term' data-tip='MACD 信号线 = DIF 的 9 日指数移动平均。DIF 与 DEA 的交叉构成买卖信号。'>DEA</span> = <span class='term' data-tip='DIF 下穿 DEA——常被视为多头动能转弱的信号；本回测要求&#39;刚刚死叉&#39;即当日才发生交叉。'>死叉</span>。"><span class='term' data-tip='MACD 信号线 = DIF 的 9 日指数移动平均。DIF 与 DEA 的交叉构成买卖信号。'>DEA</span></span> 变为 &lt; <span class='term' data-tip='MACD 信号线 = DIF 的 9 日指数移动平均。DIF 与 DEA 的交叉构成买卖信号。'>DEA</span>（前一日 <span class='term' data-tip='MACD 快线 = EMA12 − EMA26。正值=短期均线在上（多头），负值=水下方（空头）。'>DIF</span>≥<span class='term' data-tip='MACD 信号线 = DIF 的 9 日指数移动平均。DIF 与 DEA 的交叉构成买卖信号。'>DEA</span>）</p>
+  <p>② <b><span class='term' data-tip='DIF 下穿 DEA——常被视为多头动能转弱的信号；本回测要求&#39;刚刚死叉&#39;即当日才发生交叉。'>死叉</span>后 ≤3 个交易日内</b>，4 小时级别 <span class="term" data-tip="相对强弱指数 <span class='term' data-tip='相对强弱指数（Relative Strength Index），衡量近期涨跌动能的强弱，0–100。传统上 &lt;30 为超卖、&gt;70 为超买。'>RSI</span> = 100 − 100/(1+平均涨/平均跌)。<span class='term' data-tip='相对强弱指数（Relative Strength Index），衡量近期涨跌动能的强弱，0–100。传统上 &lt;30 为超卖、&gt;70 为超买。'>RSI</span>&lt;30 传统<span class='term' data-tip='RSI 进入低位（通常 &lt;30）表示短期跌势过快、抛压可能透支，技术派常将其视为潜在反弹点。本回测用 30–35 这一&#39;偏超卖但未深跌&#39;的档位。'>超卖</span>，30–35 是"偏<span class='term' data-tip='RSI 进入低位（通常 &lt;30）表示短期跌势过快、抛压可能透支，技术派常将其视为潜在反弹点。本回测用 30–35 这一&#39;偏超卖但未深跌&#39;的档位。'>超卖</span>但未深跌"的档位。"><span class='term' data-tip='相对强弱指数（Relative Strength Index），衡量近期涨跌动能的强弱，0–100。传统上 &lt;30 为超卖、&gt;70 为超买。'>RSI</span>(14)</span> 的<b>当日收盘值</b>落在 <b>30–35</b> 区间　→　触发</p>
+  <p>③ <b>执行</b>：触发日次日开盘买入；持有 T+1 / T+3 / T+5 / T+10 / T+20 交易日，按<span class='term' data-tip='把历史价格按分红/拆股比例统一调整，使收益序列连续、可正确计算长期回报。避免 NVDA 2024 年 1:10 拆股造成的假收益。'>后复权</span>收盘价结算（含分红/拆股调整，避免 NVDA 拆股造成的假收益）。</p>
+  <p class="note">口径说明：主口径要求"日末 4h bar 收盘 <span class='term' data-tip='相对强弱指数（Relative Strength Index），衡量近期涨跌动能的强弱，0–100。传统上 &lt;30 为超卖、&gt;70 为超买。'>RSI</span> 落档"；若盘中触及但收盘已跌破 30（深<span class='term' data-tip='RSI 进入低位（通常 &lt;30）表示短期跌势过快、抛压可能透支，技术派常将其视为潜在反弹点。本回测用 30–35 这一&#39;偏超卖但未深跌&#39;的档位。'>超卖</span>），记为"跌穿 30、错过"，不混淆进 30–35 档<span class='term' data-tip='收益为正的次数 / 总次数。本报告统一按&#39;当日收益 &gt; 0&#39;计。'>胜率</span>。另有"盘中任意 bar 触及即算"的宽松口径与"<span class='term' data-tip='DIF 下穿 DEA——常被视为多头动能转弱的信号；本回测要求&#39;刚刚死叉&#39;即当日才发生交叉。'>死叉</span>当日即落档"的严格口径作对照。</p>
+</div>
+
+<h2>二、回测主结果：合并<span class='term' data-tip='收益为正的次数 / 总次数。本报告统一按&#39;当日收益 &gt; 0&#39;计。'>胜率</span>与各标的明细</h2>
+<div class="card" style="overflow-x:auto;">
+  <table>
+    <tr><th class="tk">标的</th><th>2年信号数</th><th>T+1 <span class='term' data-tip='收益为正的次数 / 总次数。本报告统一按&#39;当日收益 &gt; 0&#39;计。'>胜率</span></th><th>T+3 <span class='term' data-tip='收益为正的次数 / 总次数。本报告统一按&#39;当日收益 &gt; 0&#39;计。'>胜率</span></th><th>T+5 <span class='term' data-tip='收益为正的次数 / 总次数。本报告统一按&#39;当日收益 &gt; 0&#39;计。'>胜率</span></th><th>T+10 <span class='term' data-tip='收益为正的次数 / 总次数。本报告统一按&#39;当日收益 &gt; 0&#39;计。'>胜率</span></th><th>T+20 <span class='term' data-tip='收益为正的次数 / 总次数。本报告统一按&#39;当日收益 &gt; 0&#39;计。'>胜率</span></th></tr>
+  <tr><th class='tk'>标的</th><th>信号数</th><th>T+1 胜率</th><th>T+3 胜率</th><th>T+5 胜率</th><th>T+10 胜率</th><th>T+20 胜率</th></tr><tr><td><b>SOXX</b></td><td>3</td><td class="bold">67%<br><span class="sub">n=3</span></td><td class="bold">33%<br><span class="sub">n=3</span></td><td class="bold">33%<br><span class="sub">n=3</span></td><td class="bold">33%<br><span class="sub">n=3</span></td><td class="bold">33%<br><span class="sub">n=3</span></td></tr><tr><td><b>NVDA</b></td><td>5</td><td class="bold">60%<br><span class="sub">n=5</span></td><td class="bold">80%<br><span class="sub">n=5</span></td><td class="bold">75%<br><span class="sub">n=4</span></td><td class="bold">100%<br><span class="sub">n=4</span></td><td class="bold">50%<br><span class="sub">n=4</span></td></tr><tr><td><b>XAUUSD</b></td><td>7</td><td class="bold">100%<br><span class="sub">n=7</span></td><td class="bold">71%<br><span class="sub">n=7</span></td><td class="bold">86%<br><span class="sub">n=7</span></td><td class="bold">86%<br><span class="sub">n=7</span></td><td class="bold">71%<br><span class="sub">n=7</span></td></tr><tr><td><b>QQQ</b></td><td>5</td><td class="bold">40%<br><span class="sub">n=5</span></td><td class="bold">60%<br><span class="sub">n=5</span></td><td class="bold">80%<br><span class="sub">n=5</span></td><td class="bold">40%<br><span class="sub">n=5</span></td><td class="bold">40%<br><span class="sub">n=5</span></td></tr>
+    <tr class="total"><td class="tk" style="font-weight:700;">合并（四标的）</td><td>20</td>
+      <td>70.0% <span class="sub">(n=20)</span></td><td>65.0% <span class="sub">(n=20)</span></td><td>73.7% <span class="sub">(n=19)</span></td><td>68.4% <span class="sub">(n=19)</span></td><td>52.6% <span class="sub">(n=19)</span></td>
+    </tr>
+  </table>
+  <div class="note">信号数 = 2 年内"日线<span class='term' data-tip='DIF 下穿 DEA——常被视为多头动能转弱的信号；本回测要求&#39;刚刚死叉&#39;即当日才发生交叉。'>死叉</span>后 ≤3 日 4h <span class='term' data-tip='相对强弱指数（Relative Strength Index），衡量近期涨跌动能的强弱，0–100。传统上 &lt;30 为超卖、&gt;70 为超买。'>RSI</span> 收于 30–35"的触发次数。<span class='term' data-tip='收益为正的次数 / 总次数。本报告统一按&#39;当日收益 &gt; 0&#39;计。'>胜率</span>按当日收益&gt;0 计；n 为已有完整持有期数据的样本数。</div>
+</div>
+
+<div class="card">
+  <div id="c_scatter" class="chart"></div>
+  <div class="note">每次信号买入后的 T+5 / T+20 收益散点（X=日期，Y=收益%）。红点=正收益（红涨），绿点=负收益（绿跌）。黄金（黄绿点）的 T+20 大多为正——它是这套信号里最稳的标的。</div>
+</div>
+
+<div class="card">
+  <h3>黄金（XAUUSD）明细 —— 信号最密集、最稳</h3>
+  <div style="overflow-x:auto;"><table>
+  <tr><th class="tk"><span class='term' data-tip='DIF 下穿 DEA——常被视为多头动能转弱的信号；本回测要求&#39;刚刚死叉&#39;即当日才发生交叉。'>死叉</span>日</th><th>触发日</th><th>买入日</th><th>买入价</th><th>4h <span class='term' data-tip='相对强弱指数（Relative Strength Index），衡量近期涨跌动能的强弱，0–100。传统上 &lt;30 为超卖、&gt;70 为超买。'>RSI</span>末</th><th>T+1</th><th>T+3</th><th>T+5</th><th>T+10</th><th>T+20</th></tr>
+  <tr><td>2024-12-18</td><td>2024-12-19</td><td>2024-12-20</td><td>2605.30</td><td>31.8</td><td class="up">+0.27%</td><td class="up">+1.29%</td><td class="up">+0.03%</td><td class="up">+1.97%</td><td class="up">+6.23%</td></tr><tr><td>2025-02-25</td><td>2025-02-27</td><td>2025-02-28</td><td>2877.10</td><td>32.1</td><td class="up">+0.46%</td><td class="up">+1.33%</td><td class="up">+0.96%</td><td class="up">+4.08%</td><td class="up">+7.28%</td></tr><tr><td>2025-04-04</td><td>2025-04-07</td><td>2025-04-08</td><td>2994.00</td><td>31.8</td><td class="up">+2.09%</td><td class="up">+7.62%</td><td class="up">+7.51%</td><td class="up">+9.43%</td><td class="up">+12.94%</td></tr><tr><td>2025-11-17</td><td>2025-11-17</td><td>2025-11-18</td><td>4037.40</td><td>32.4</td><td class="up">+1.00%</td><td class="up">+0.97%</td><td class="up">+2.52%</td><td class="up">+4.01%</td><td class="up">+7.68%</td></tr><tr><td>2026-04-28</td><td>2026-04-29</td><td>2026-04-30</td><td>4561.90</td><td>33.4</td><td class="up">+1.49%</td><td class="dn">-0.13%</td><td class="up">+3.02%</td><td class="up">+2.55%</td><td class="dn">-0.03%</td></tr><tr><td>2026-05-18</td><td>2026-05-19</td><td>2026-05-20</td><td>4502.60</td><td>30.3</td><td class="up">+0.83%</td><td class="dn">-0.05%</td><td class="dn">-0.07%</td><td class="dn">-0.60%</td><td class="dn">-6.19%</td></tr><tr><td>2026-06-22</td><td>2026-06-24</td><td>2026-06-25</td><td>3988.40</td><td>30.7</td><td class="up">+2.26%</td><td class="up">+0.87%</td><td class="up">+3.12%</td><td class="up">+2.90%</td><td class="up">+1.99%</td></tr>
+  </table></div>
+  <div class="note">黄金 2 年内 7 次信号：T+1 <span class='term' data-tip='收益为正的次数 / 总次数。本报告统一按&#39;当日收益 &gt; 0&#39;计。'>胜率</span> 7/7（100%）、T+5 <span class='term' data-tip='收益为正的次数 / 总次数。本报告统一按&#39;当日收益 &gt; 0&#39;计。'>胜率</span> 6/7、T+20 <span class='term' data-tip='收益为正的次数 / 总次数。本报告统一按&#39;当日收益 &gt; 0&#39;计。'>胜率</span> 5/7。注意 2025-04-08（贸易战恐慌底部）与 2026 年 6 月各含一次大反弹——黄金在"日线<span class='term' data-tip='DIF 下穿 DEA——常被视为多头动能转弱的信号；本回测要求&#39;刚刚死叉&#39;即当日才发生交叉。'>死叉</span>+4h <span class='term' data-tip='RSI 进入低位（通常 &lt;30）表示短期跌势过快、抛压可能透支，技术派常将其视为潜在反弹点。本回测用 30–35 这一&#39;偏超卖但未深跌&#39;的档位。'>超卖</span>"后短期偏强，与它趋势性上涨的大背景（2024–2026 金价从 $2000 涨到 $4500）相辅相成。</div>
+</div>
+
+<h3>其余标的全量明细</h3>
+<div class="card" style="overflow-x:auto;">
+  <table>
+  <tr><th class="tk">标的</th><th><span class='term' data-tip='DIF 下穿 DEA——常被视为多头动能转弱的信号；本回测要求&#39;刚刚死叉&#39;即当日才发生交叉。'>死叉</span>日</th><th>触发日</th><th>买入日</th><th>买入价</th><th>4h <span class='term' data-tip='相对强弱指数（Relative Strength Index），衡量近期涨跌动能的强弱，0–100。传统上 &lt;30 为超卖、&gt;70 为超买。'>RSI</span>末</th><th>T+1</th><th>T+3</th><th>T+5</th><th>T+10</th><th>T+20</th></tr>
+  <tr><td>2025-02-25</td><td>2025-02-25</td><td>2025-02-26</td><td>215.20</td><td>34.0</td><td class="dn">-5.39%</td><td class="dn">-7.28%</td><td class="dn">-4.76%</td><td class="dn">-9.62%</td><td class="dn">-8.40%</td></tr><tr><td>2025-03-28</td><td>2025-03-28</td><td>2025-03-31</td><td>183.44</td><td>34.1</td><td class="up">+1.93%</td><td class="dn">-7.76%</td><td class="dn">-12.69%</td><td class="dn">-6.12%</td><td class="dn">-1.19%</td></tr><tr><td>2025-12-16</td><td>2025-12-17</td><td>2025-12-18</td><td>295.40</td><td>32.7</td><td class="up">+1.38%</td><td class="up">+3.12%</td><td class="up">+3.49%</td><td class="up">+7.55%</td><td class="up">+14.08%</td></tr>
+  <tr><td>2025-02-26</td><td>2025-02-27</td><td>2025-02-28</td><td>117.84</td><td>32.1</td><td class="dn">-3.36%</td><td class="dn">-0.61%</td><td class="dn">-4.52%</td><td class="up">+3.10%</td><td class="dn">-7.07%</td></tr><tr><td>2026-02-03</td><td>2026-02-04</td><td>2026-02-05</td><td>174.72</td><td>32.8</td><td class="up">+5.99%</td><td class="up">+7.78%</td><td class="up">+6.87%</td><td class="up">+8.51%</td><td class="up">+1.65%</td></tr><tr><td>2026-02-27</td><td>2026-02-27</td><td>2026-03-02</td><td>174.80</td><td>34.4</td><td class="up">+2.88%</td><td class="up">+4.76%</td><td class="up">+4.37%</td><td class="up">+4.70%</td><td class="dn">-5.62%</td></tr><tr><td>2026-07-27</td><td>2026-07-29</td><td>2026-07-30</td><td>193.45</td><td>32.8</td><td class="up">+3.77%</td><td class="up">+9.56%</td><td class="up">+13.20%</td><td class="up">+16.46%</td><td class="up">+17.85%</td></tr><tr><td>2026-08-21</td><td>2026-08-24</td><td>2026-08-25</td><td>211.03</td><td>33.6</td><td class="dn">-0.65%</td><td class="up">+4.28%</td><td class="na">—</td><td class="na">—</td><td class="na">—</td></tr>
+  <tr><td>2025-02-24</td><td>2025-02-26</td><td>2025-02-27</td><td>514.30</td><td>32.4</td><td class="dn">-1.92%</td><td class="dn">-4.36%</td><td class="dn">-5.78%</td><td class="dn">-9.61%</td><td class="dn">-6.91%</td></tr><tr><td>2025-04-03</td><td>2025-04-03</td><td>2025-04-04</td><td>435.55</td><td>30.2</td><td class="dn">-3.30%</td><td class="up">+6.36%</td><td class="up">+3.71%</td><td class="dn">-1.15%</td><td class="up">+10.91%</td></tr><tr><td>2025-12-15</td><td>2025-12-17</td><td>2025-12-18</td><td>607.58</td><td>32.6</td><td class="up">+1.19%</td><td class="up">+2.15%</td><td class="up">+2.44%</td><td class="up">+1.47%</td><td class="dn">-0.16%</td></tr><tr><td>2026-02-03</td><td>2026-02-05</td><td>2026-02-06</td><td>598.78</td><td>30.6</td><td class="up">+2.35%</td><td class="up">+2.15%</td><td class="up">+0.29%</td><td class="up">+0.20%</td><td class="up">+1.26%</td></tr><tr><td>2026-06-04</td><td>2026-06-05</td><td>2026-06-08</td><td>717.02</td><td>33.7</td><td class="dn">-1.39%</td><td class="dn">-0.10%</td><td class="up">+3.65%</td><td class="dn">-0.47%</td><td class="dn">-0.78%</td></tr>
+  </table>
+  <div class="note">NVDA 的 2026-08-25 买入（8-21 <span class='term' data-tip='DIF 下穿 DEA——常被视为多头动能转弱的信号；本回测要求&#39;刚刚死叉&#39;即当日才发生交叉。'>死叉</span>、8-24 触发）为最近一次信号，T+5 时点数据尚未走完，故空栏。SOXX 三次信号集中在 2025 年，2025-03-28 那次（关税冲击周）T+5 −12.7% 是四标的合并样本里最差的一笔。</div>
+</div>
+
+<h2>三、对照组：把"4h <span class='term' data-tip='相对强弱指数（Relative Strength Index），衡量近期涨跌动能的强弱，0–100。传统上 &lt;30 为超卖、&gt;70 为超买。'>RSI</span>"这个过滤器拆掉看</h2>
+<p>信号条件加得越多、样本越少，就越难判断"到底是哪个条件在起作用"。因此做了三组对照：</p>
+<div class="card" style="overflow-x:auto;">
+  <table>
+    <tr><th class="tk">口径（同一 2 年窗口）</th><th>样本数</th><th>T+5 <span class='term' data-tip='收益为正的次数 / 总次数。本报告统一按&#39;当日收益 &gt; 0&#39;计。'>胜率</span></th><th>T+10 <span class='term' data-tip='收益为正的次数 / 总次数。本报告统一按&#39;当日收益 &gt; 0&#39;计。'>胜率</span></th><th>T+20 <span class='term' data-tip='收益为正的次数 / 总次数。本报告统一按&#39;当日收益 &gt; 0&#39;计。'>胜率</span></th></tr>
+    <tr><td class="tk"><b>① 日线<span class='term' data-tip='DIF 下穿 DEA——常被视为多头动能转弱的信号；本回测要求&#39;刚刚死叉&#39;即当日才发生交叉。'>死叉</span> + 4h <span class='term' data-tip='相对强弱指数（Relative Strength Index），衡量近期涨跌动能的强弱，0–100。传统上 &lt;30 为超卖、&gt;70 为超买。'>RSI</span> 30–35（主口径）</b></td><td>20</td>
+      <td class="bold">73.7% <span class="sub">p=0.03</span></td><td>68.4% <span class="sub">p=0.08</span></td><td>52.6% <span class="sub">p=0.50</span></td></tr>
+    <tr><td class="tk">② 仅日线<span class='term' data-tip='DIF 下穿 DEA——常被视为多头动能转弱的信号；本回测要求&#39;刚刚死叉&#39;即当日才发生交叉。'>死叉</span>（无 <span class='term' data-tip='相对强弱指数（Relative Strength Index），衡量近期涨跌动能的强弱，0–100。传统上 &lt;30 为超卖、&gt;70 为超买。'>RSI</span> 过滤）</td><td>87</td>
+      <td>72.4% <span class="sub">p=0.005</span></td><td>71.3% <span class="sub">p&lt;0.001</span></td><td>70.1% <span class="sub">p&lt;0.001</span></td></tr>
+    <tr><td class="tk">③ 仅 4h <span class='term' data-tip='相对强弱指数（Relative Strength Index），衡量近期涨跌动能的强弱，0–100。传统上 &lt;30 为超卖、&gt;70 为超买。'>RSI</span> 30–35（无<span class='term' data-tip='DIF 下穿 DEA——常被视为多头动能转弱的信号；本回测要求&#39;刚刚死叉&#39;即当日才发生交叉。'>死叉</span>过滤）</td><td>~13/标的</td><td>76.9%</td><td>—</td><td>61.5%</td></tr>
+    <tr><td class="tk">④ 无条件基准（每 20 交易日一次）</td><td>~25/标的</td><td>64.0%</td><td>—</td><td>62.5%</td></tr>
+  </table>
+  <div class="note">p 值 = <span class='term' data-tip='检验&#39;胜率是否显著高于 50%&#39;的统计方法：若 p&lt;0.05，说明观察到的胜率不太可能纯靠运气。'>二项检验</span>（<span class='term' data-tip='收益为正的次数 / 总次数。本报告统一按&#39;当日收益 &gt; 0&#39;计。'>胜率</span>是否显著高于 50%）。②仅<span class='term' data-tip='DIF 下穿 DEA——常被视为多头动能转弱的信号；本回测要求&#39;刚刚死叉&#39;即当日才发生交叉。'>死叉</span> n=87、p&lt;0.01，是三组里唯一统计扎实的；主口径①样本砍到 20 个后 p 值普遍掉到 0.03–0.5，只剩边缘显著性。<b>结论：日线<span class='term' data-tip='DIF 下穿 DEA——常被视为多头动能转弱的信号；本回测要求&#39;刚刚死叉&#39;即当日才发生交叉。'>死叉</span>是主效果，4h <span class='term' data-tip='相对强弱指数（Relative Strength Index），衡量近期涨跌动能的强弱，0–100。传统上 &lt;30 为超卖、&gt;70 为超买。'>RSI</span> 30–35 是"锦上添花"而非"起死回生"。</b></div>
+</div>
+
+<h2>四、当前状态快照（2026-08-31 收盘）</h2>
+<div class="card" style="overflow-x:auto;">
+  <table>
+    <tr><th class="tk">标的</th><th>日线 <span class='term' data-tip='Moving Average Convergence Divergence，指数平滑异同移动平均线。由快线 DIF（EMA12−EMA26）、慢线 DEA（DIF 的 9 日 EMA）与柱状图组成，用于衡量趋势动能与拐点。'>MACD</span> 状态</th><th>4h <span class='term' data-tip='相对强弱指数（Relative Strength Index），衡量近期涨跌动能的强弱，0–100。传统上 &lt;30 为超卖、&gt;70 为超买。'>RSI</span>(14)</th><th>是否触发信号</th><th>备注</th></tr>
+    <tr><td class="tk"><b>XAUUSD 黄金</b></td><td class="hot"><span class='term' data-tip='DIF 下穿 DEA——常被视为多头动能转弱的信号；本回测要求&#39;刚刚死叉&#39;即当日才发生交叉。'>死叉</span>（<span class='term' data-tip='MACD 快线 = EMA12 − EMA26。正值=短期均线在上（多头），负值=水下方（空头）。'>DIF</span> 102.5 &lt; <span class='term' data-tip='MACD 信号线 = DIF 的 9 日指数移动平均。DIF 与 DEA 的交叉构成买卖信号。'>DEA</span> 103.1）</td><td class="hot">32.4 <span class="sub">(30-35 档)</span></td><td class="hot"><b>√ 正处信号窗</b> <span class="sig sig-on">、次日开盘即买点</span></td><td>回测中黄金信号最稳（T+1 7/7），值得重点跟踪</td></tr>
+    <tr><td class="tk">SOXX</td><td>水下（<span class='term' data-tip='MACD 快线 = EMA12 − EMA26。正值=短期均线在上（多头），负值=水下方（空头）。'>DIF</span> −7.2 &lt; <span class='term' data-tip='MACD 信号线 = DIF 的 9 日指数移动平均。DIF 与 DEA 的交叉构成买卖信号。'>DEA</span> −6.1）</td><td>41.5</td><td>×（未<span class='term' data-tip='DIF 下穿 DEA——常被视为多头动能转弱的信号；本回测要求&#39;刚刚死叉&#39;即当日才发生交叉。'>死叉</span>当日、<span class='term' data-tip='相对强弱指数（Relative Strength Index），衡量近期涨跌动能的强弱，0–100。传统上 &lt;30 为超卖、&gt;70 为超买。'>RSI</span> 偏高）</td><td>接近但未触发</td></tr>
+    <tr><td class="tk">NVDA</td><td><span class='term' data-tip='DIF 上穿 DEA——多头动能转强的信号，与死叉相反。'>金叉</span>后（<span class='term' data-tip='MACD 快线 = EMA12 − EMA26。正值=短期均线在上（多头），负值=水下方（空头）。'>DIF</span> 2.6 &gt; <span class='term' data-tip='MACD 信号线 = DIF 的 9 日指数移动平均。DIF 与 DEA 的交叉构成买卖信号。'>DEA</span> 2.9）</td><td>53.5</td><td>×</td><td>—</td></tr>
+    <tr><td class="tk">QQQ</td><td><span class='term' data-tip='DIF 上穿 DEA——多头动能转强的信号，与死叉相反。'>金叉</span>后（<span class='term' data-tip='MACD 快线 = EMA12 − EMA26。正值=短期均线在上（多头），负值=水下方（空头）。'>DIF</span> 1.7 &gt; <span class='term' data-tip='MACD 信号线 = DIF 的 9 日指数移动平均。DIF 与 DEA 的交叉构成买卖信号。'>DEA</span> 2.3）</td><td>50.1</td><td>×</td><td>—</td></tr>
+  </table>
+  <div class="note">数据截至 2026-08-31（周一）收盘。黄金 08-31 盘中 4h <span class='term' data-tip='相对强弱指数（Relative Strength Index），衡量近期涨跌动能的强弱，0–100。传统上 &lt;30 为超卖、&gt;70 为超买。'>RSI</span> 已落 30–35 档、日线 <span class='term' data-tip='Moving Average Convergence Divergence，指数平滑异同移动平均线。由快线 DIF（EMA12−EMA26）、慢线 DEA（DIF 的 9 日 EMA）与柱状图组成，用于衡量趋势动能与拐点。'>MACD</span> 当日刚<span class='term' data-tip='DIF 下穿 DEA——常被视为多头动能转弱的信号；本回测要求&#39;刚刚死叉&#39;即当日才发生交叉。'>死叉</span>（前一日 <span class='term' data-tip='MACD 快线 = EMA12 − EMA26。正值=短期均线在上（多头），负值=水下方（空头）。'>DIF</span>≥<span class='term' data-tip='MACD 信号线 = DIF 的 9 日指数移动平均。DIF 与 DEA 的交叉构成买卖信号。'>DEA</span>）——按回测规则，下一个交易日（09-01）开盘即"触发日次日买入"。</div>
+</div>
+
+<h2>五、解读与局限</h2>
+<div class="card">
+  <h3>为什么会有"<span class='term' data-tip='DIF 下穿 DEA——常被视为多头动能转弱的信号；本回测要求&#39;刚刚死叉&#39;即当日才发生交叉。'>死叉</span> + <span class='term' data-tip='RSI 进入低位（通常 &lt;30）表示短期跌势过快、抛压可能透支，技术派常将其视为潜在反弹点。本回测用 30–35 这一&#39;偏超卖但未深跌&#39;的档位。'>超卖</span>"的看多逻辑？</h3>
+  <p>逻辑上说得通：日线 <span class='term' data-tip='Moving Average Convergence Divergence，指数平滑异同移动平均线。由快线 DIF（EMA12−EMA26）、慢线 DEA（DIF 的 9 日 EMA）与柱状图组成，用于衡量趋势动能与拐点。'>MACD</span> <span class='term' data-tip='DIF 下穿 DEA——常被视为多头动能转弱的信号；本回测要求&#39;刚刚死叉&#39;即当日才发生交叉。'>死叉</span> ≠ 必跌，反而常出现在强趋势中的<b>回调末端</b>——若此时 4h 级别已先一步<span class='term' data-tip='RSI 进入低位（通常 &lt;30）表示短期跌势过快、抛压可能透支，技术派常将其视为潜在反弹点。本回测用 30–35 这一&#39;偏超卖但未深跌&#39;的档位。'>超卖</span>（<span class='term' data-tip='相对强弱指数（Relative Strength Index），衡量近期涨跌动能的强弱，0–100。传统上 &lt;30 为超卖、&gt;70 为超买。'>RSI</span> 30–35），说明短线抛压已在小时级别释放殆尽，大概率迎来反抽。回测数据给了部分支持（T+1~T+10 <span class='term' data-tip='收益为正的次数 / 总次数。本报告统一按&#39;当日收益 &gt; 0&#39;计。'>胜率</span> 65–74%、中位正收益），但也清晰显示：<b>它捕捉的是"短线反抽"而非"趋势反转"</b>——T+20 <span class='term' data-tip='收益为正的次数 / 总次数。本报告统一按&#39;当日收益 &gt; 0&#39;计。'>胜率</span>掉回 52.6%、几乎无增益，说明 1 个月级别上信号没有预测力。</p>
+  <h3>局限（务必知情）</h3>
+  <ul style="margin-left:18px; font-size:14px;">
+    <li><b>样本极小</b>：合并仅 20 个信号，单标的 3–8 个。<span class='term' data-tip='收益为正的次数 / 总次数。本报告统一按&#39;当日收益 &gt; 0&#39;计。'>胜率</span>置信区间宽带 ±20pp，任何"XX%"都不可当作稳定<span class='term' data-tip='收益为正的次数 / 总次数。本报告统一按&#39;当日收益 &gt; 0&#39;计。'>胜率</span>。</li>
+    <li><b>数据窗口恰逢特殊行情</b>：2024-09 ~ 2026-08 是美国 AI 牛市 + 黄金大牛市的两年，普涨环境下"<span class='term' data-tip='RSI 进入低位（通常 &lt;30）表示短期跌势过快、抛压可能透支，技术派常将其视为潜在反弹点。本回测用 30–35 这一&#39;偏超卖但未深跌&#39;的档位。'>超卖</span>后买入"天然占便宜（对照基准 T+5 <span class='term' data-tip='收益为正的次数 / 总次数。本报告统一按&#39;当日收益 &gt; 0&#39;计。'>胜率</span>也达 64%）。牛转熊时结果可能完全不同。</li>
+    <li><b>Yahoo 盘中数据上限</b>：4h 仅回溯 2 年，无法跨更长周期验证。</li>
+    <li><b>未计成本</b>：未含手续费/滑点/保证金；黄金期货还有展期成本。</li>
+    <li><b>单笔极端风险</b>：SOXX 2025-03-28 信号 T+5 −12.7%——顺势<span class='term' data-tip='DIF 下穿 DEA——常被视为多头动能转弱的信号；本回测要求&#39;刚刚死叉&#39;即当日才发生交叉。'>死叉</span>在急跌中也会继续跌，信号不是保险。</li>
+  </ul>
+</div>
+
+<h2>来源与时点</h2>
+<ul class="src">
+  <li>日线数据：本地 Yahoo Finance chart API 全量（SOXX 自 2001、NVDA 自 1999、QQQ 自 1999、<span class='term' data-tip='COMEX 黄金期货连续合约的 Yahoo 代码，用于代理金价。Yahoo 无现货 XAUUSD 报价，期货与现货价差通常很小。'>GC=F</span> 自 2000），<span class='term' data-tip='把历史价格按分红/拆股比例统一调整，使收益序列连续、可正确计算长期回报。避免 NVDA 2024 年 1:10 拆股造成的假收益。'>后复权</span>价结算，2026-08-31 收盘。</li>
+  <li>4h 数据：Yahoo Finance chart API interval=4h，覆盖 2024-09 ~ 2026-08（约 730 天上限）。</li>
+  <li>XAUUSD 以 COMEX 黄金期货 <span class='term' data-tip='COMEX 黄金期货连续合约的 Yahoo 代码，用于代理金价。Yahoo 无现货 XAUUSD 报价，期货与现货价差通常很小。'>GC=F</span> 代理（Yahoo 无现货 XAUUSD 代码），日线与 4h 均为同一数据源。</li>
+  <li>统计：Python（pandas/numpy/scipy），t 检验与<span class='term' data-tip='检验&#39;胜率是否显著高于 50%&#39;的统计方法：若 p&lt;0.05，说明观察到的胜率不太可能纯靠运气。'>二项检验</span>均基于本地计算结果。</li>
+  <li>指标参数：<span class='term' data-tip='Moving Average Convergence Divergence，指数平滑异同移动平均线。由快线 DIF（EMA12−EMA26）、慢线 DEA（DIF 的 9 日 EMA）与柱状图组成，用于衡量趋势动能与拐点。'>MACD</span>(12,26,9)、<span class='term' data-tip='相对强弱指数（Relative Strength Index），衡量近期涨跌动能的强弱，0–100。传统上 &lt;30 为超卖、&gt;70 为超买。'>RSI</span>(14)，均为标准默认参数。</li>
+</ul>
+
+<footer>
+  免责声明：以上内容基于公开数据和量化分析，仅供参考，不构成投资建议。市场有风险，投资需谨慎。任何投资决策应结合个人风险承受能力、资金状况和投资目标独立判断，必要时咨询持牌专业机构。过往表现不预示未来收益。
+</footer>
+<div class="termtip" id="termtip"></div>
+<script>
+(function(){
+  const tip=document.getElementById('termtip');
+  let cur=null;
+  document.addEventListener('mouseover',e=>{
+    const t=e.target.closest('.term');
+    if(!t||t===cur)return; cur=t;
+    tip.textContent=t.dataset.tip||'';
+    tip.style.display='block';
+    const r=t.getBoundingClientRect();
+    tip.style.left=Math.min(r.left,window.innerWidth-300)+'px';
+    tip.style.top=r.bottom+6+'px';
+  });
+  document.addEventListener('mouseout',e=>{
+    if(e.target.closest('.term')){cur=null;tip.style.display='none';}
+  });
+})();
+</script>
+</div>
+<script>
+const D = {"scatter": [{"date": "2025-02-25", "asset": "SOXX", "r5": -4.76, "r20": -8.4}, {"date": "2025-03-28", "asset": "SOXX", "r5": -12.69, "r20": -1.19}, {"date": "2025-12-17", "asset": "SOXX", "r5": 3.49, "r20": 14.08}, {"date": "2025-02-27", "asset": "NVDA", "r5": -4.52, "r20": -7.07}, {"date": "2026-02-04", "asset": "NVDA", "r5": 6.87, "r20": 1.65}, {"date": "2026-02-27", "asset": "NVDA", "r5": 4.37, "r20": -5.62}, {"date": "2026-07-29", "asset": "NVDA", "r5": 13.2, "r20": 17.85}, {"date": "2026-08-24", "asset": "NVDA", "r5": null, "r20": null}, {"date": "2024-12-19", "asset": "XAUUSD", "r5": 0.03, "r20": 6.23}, {"date": "2025-02-27", "asset": "XAUUSD", "r5": 0.96, "r20": 7.28}, {"date": "2025-04-07", "asset": "XAUUSD", "r5": 7.51, "r20": 12.94}, {"date": "2025-11-17", "asset": "XAUUSD", "r5": 2.52, "r20": 7.68}, {"date": "2026-04-29", "asset": "XAUUSD", "r5": 3.02, "r20": -0.03}, {"date": "2026-05-19", "asset": "XAUUSD", "r5": -0.07, "r20": -6.19}, {"date": "2026-06-24", "asset": "XAUUSD", "r5": 3.12, "r20": 1.99}, {"date": "2025-02-26", "asset": "QQQ", "r5": -5.78, "r20": -6.91}, {"date": "2025-04-03", "asset": "QQQ", "r5": 3.71, "r20": 10.91}, {"date": "2025-12-17", "asset": "QQQ", "r5": 2.44, "r20": -0.16}, {"date": "2026-02-05", "asset": "QQQ", "r5": 0.29, "r20": 1.26}, {"date": "2026-06-05", "asset": "QQQ", "r5": 3.65, "r20": -0.78}], "hold_dist": {"1": [{"asset": "SOXX", "v": -5.39}, {"asset": "SOXX", "v": 1.93}, {"asset": "SOXX", "v": 1.38}, {"asset": "NVDA", "v": -3.36}, {"asset": "NVDA", "v": 5.99}, {"asset": "NVDA", "v": 2.88}, {"asset": "NVDA", "v": 3.77}, {"asset": "NVDA", "v": -0.65}, {"asset": "XAUUSD", "v": 0.27}, {"asset": "XAUUSD", "v": 0.46}, {"asset": "XAUUSD", "v": 2.09}, {"asset": "XAUUSD", "v": 1.0}, {"asset": "XAUUSD", "v": 1.49}, {"asset": "XAUUSD", "v": 0.83}, {"asset": "XAUUSD", "v": 2.26}, {"asset": "QQQ", "v": -1.92}, {"asset": "QQQ", "v": -3.3}, {"asset": "QQQ", "v": 1.19}, {"asset": "QQQ", "v": 2.35}, {"asset": "QQQ", "v": -1.39}], "3": [{"asset": "SOXX", "v": -7.28}, {"asset": "SOXX", "v": -7.76}, {"asset": "SOXX", "v": 3.12}, {"asset": "NVDA", "v": -0.61}, {"asset": "NVDA", "v": 7.78}, {"asset": "NVDA", "v": 4.76}, {"asset": "NVDA", "v": 9.56}, {"asset": "NVDA", "v": 4.28}, {"asset": "XAUUSD", "v": 1.29}, {"asset": "XAUUSD", "v": 1.33}, {"asset": "XAUUSD", "v": 7.62}, {"asset": "XAUUSD", "v": 0.97}, {"asset": "XAUUSD", "v": -0.13}, {"asset": "XAUUSD", "v": -0.05}, {"asset": "XAUUSD", "v": 0.87}, {"asset": "QQQ", "v": -4.36}, {"asset": "QQQ", "v": 6.36}, {"asset": "QQQ", "v": 2.15}, {"asset": "QQQ", "v": 2.15}, {"asset": "QQQ", "v": -0.1}], "5": [{"asset": "SOXX", "v": -4.76}, {"asset": "SOXX", "v": -12.69}, {"asset": "SOXX", "v": 3.49}, {"asset": "NVDA", "v": -4.52}, {"asset": "NVDA", "v": 6.87}, {"asset": "NVDA", "v": 4.37}, {"asset": "NVDA", "v": 13.2}, {"asset": "XAUUSD", "v": 0.03}, {"asset": "XAUUSD", "v": 0.96}, {"asset": "XAUUSD", "v": 7.51}, {"asset": "XAUUSD", "v": 2.52}, {"asset": "XAUUSD", "v": 3.02}, {"asset": "XAUUSD", "v": -0.07}, {"asset": "XAUUSD", "v": 3.12}, {"asset": "QQQ", "v": -5.78}, {"asset": "QQQ", "v": 3.71}, {"asset": "QQQ", "v": 2.44}, {"asset": "QQQ", "v": 0.29}, {"asset": "QQQ", "v": 3.65}], "10": [{"asset": "SOXX", "v": -9.62}, {"asset": "SOXX", "v": -6.12}, {"asset": "SOXX", "v": 7.55}, {"asset": "NVDA", "v": 3.1}, {"asset": "NVDA", "v": 8.51}, {"asset": "NVDA", "v": 4.7}, {"asset": "NVDA", "v": 16.46}, {"asset": "XAUUSD", "v": 1.97}, {"asset": "XAUUSD", "v": 4.08}, {"asset": "XAUUSD", "v": 9.43}, {"asset": "XAUUSD", "v": 4.01}, {"asset": "XAUUSD", "v": 2.55}, {"asset": "XAUUSD", "v": -0.6}, {"asset": "XAUUSD", "v": 2.9}, {"asset": "QQQ", "v": -9.61}, {"asset": "QQQ", "v": -1.15}, {"asset": "QQQ", "v": 1.47}, {"asset": "QQQ", "v": 0.2}, {"asset": "QQQ", "v": -0.47}], "20": [{"asset": "SOXX", "v": -8.4}, {"asset": "SOXX", "v": -1.19}, {"asset": "SOXX", "v": 14.08}, {"asset": "NVDA", "v": -7.07}, {"asset": "NVDA", "v": 1.65}, {"asset": "NVDA", "v": -5.62}, {"asset": "NVDA", "v": 17.85}, {"asset": "XAUUSD", "v": 6.23}, {"asset": "XAUUSD", "v": 7.28}, {"asset": "XAUUSD", "v": 12.94}, {"asset": "XAUUSD", "v": 7.68}, {"asset": "XAUUSD", "v": -0.03}, {"asset": "XAUUSD", "v": -6.19}, {"asset": "XAUUSD", "v": 1.99}, {"asset": "QQQ", "v": -6.91}, {"asset": "QQQ", "v": 10.91}, {"asset": "QQQ", "v": -0.16}, {"asset": "QQQ", "v": 1.26}, {"asset": "QQQ", "v": -0.78}]}, "assets": ["SOXX", "NVDA", "XAUUSD", "QQQ"]};
+const UP='#c0392b', DN='#1e8449';
+const COLORS = {'SOXX':'#e69f00','NVDA':'#56b4e9','XAUUSD':'#ccd03c','QQQ':'#d55e00'};
+
+// 散点：每次信号 T+5/T+20 收益
+const s1=[],s2=[];
+D.scatter.forEach(pt=>{
+  const c=COLORS[pt.asset]||'#999';
+  if(pt.r5!=null) s1.push({value:[pt.date,pt.r5],symbolSize:11,itemStyle:{color:c},name:pt.asset});
+  if(pt.r20!=null) s2.push({value:[pt.date,pt.r20],symbolSize:11,itemStyle:{color:c},name:pt.asset});
+});
+const baseScatter={
+  tooltip:{trigger:'item',formatter:p=>p.name+'<br>'+p.value[0]+' T+5/T+20 收益: '+p.value[1].toFixed(2)+'%'},
+  legend:{top:0,textStyle:{color:'#555'}},
+  grid:{left:55,right:20,top:36,bottom:40},
+  xAxis:{type:'category',data:D.scatter.map(p=>p.date).filter((v,i,a)=>a.indexOf(v)===i),axisLabel:{color:'#666',rotate:30,fontSize:10}},
+  yAxis:{type:'value',scale:true,axisLabel:{color:'#555'},splitLine:{lineStyle:{color:'#e5e9f0'}},axisLine:{show:false}},
+  series:[
+    {name:'T+5',type:'scatter',data:s1},
+    {name:'T+20',type:'scatter',data:s2}
+  ]
+};
+echarts.init(document.getElementById('c_scatter')).setOption(baseScatter);
+</script></body>
+</html>
