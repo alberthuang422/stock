@@ -5,6 +5,7 @@
 
 ## 数据与拉数
 - 币安 7×24 资产 ret 必须原始全序列先算再 merge（merge 后重算污染周五→周一，50 号实证）。
+- **Yahoo 日线/盘中直连**（60 号实证，无需 CDP）：⚠️ **日线 range=max 返回月度采样假数据**（~302 行、日期全在月初），必须显式 `period1/period2`（如 1995→今）拉全量；⚠️ **4h 仅支持 range=2y（上限约 730 天）**，美股 2 根/日（ET 09:30/13:30），range=max 对 4h 无效。XAUUSD 无现货代码，用 **GC=F 黄金期货代理**。模板：scripts/fetch_macd_soxx_nvda_xau_qqq.py。
 - **Yahoo 日线 CDP**：先 curl 探活 9222 复用；无实例则后台起 Chrome（`--remote-debugging-port=9222 --user-data-dir=Temp/chrome-cdp-xxx --no-sandbox --headless=new`）。**Windows Chrome 路径** `C:\Users\Administrator\AppData\Local\Google\Chrome\Application\chrome.exe`。fetch_*.cjs 原生 WS（建 tab→navigate→sleep→evaluate）。**收尾关 Chrome：reg 被策略禁用，用 PowerShell Get-CimInstance Win32_Process 按 CommandLine 关键字 Stop-Process**。增量补数模板 fetch_geo_cdp.cjs（只 append 新日期）。**尾 bar 体检**：成交量远低于常态=不完整 bar 须剔除（CL 08-27 25.6 万 vs 常态 360 万）。
 - venv `...python\envs\default\Scripts\python.exe`（含 scipy）。富途 MCP：期权 OI 用 quote_stock_quote；选股器技术指标筛选报 invalid parameter、取回可用；口径 市值×1e3、PE×1e5、RSI×1e3。
 - 蓝筹池 73 只：data/blue_chips.csv。
@@ -14,6 +15,7 @@
 - T+N=交易日；超额=减基准 fwdN；json.dump 前 clean()。
 - **60 日滚动主口径**（13/30 仅辅助）；显著性三档 sig/edge/no + p 值列；**R 与 β 同列**；表格带参数图例；**术语一律悬停浮窗、禁速查表**（TERMS 词典 + annotate_terms，_BLOCK_RE 单捕获组）；红涨绿跌 + Okabe-Ito 叠符号线型；浅底研报风+ECharts；超长明细独立 tab。
 - **pandas 坑（08-30）**：int 索引 Series 赋给 date 索引 DataFrame 全 NaN，必须 `.values` 按位置对齐（monitor 曾产出全 None）。
+- **回测坑（08-31，60 号）**：①收益明细已是 % 后 summarize 勿再 ×100（产生双倍缩放）；②拆股标的（NVDA 2024 1:10）收益必须用 adj_close 后复权价结算，信号用原价；③术语词典定义文本会被二次注释成嵌套 span → annotate_terms 先保护 data-tip 内容再注释。
 - 交付必须 present_files 打开预览；不附渲染截图；git 本地 commit `yyyy-mm-dd  msg: （≤50字）` -c user.name=Makemoney，push 走 ssh 443 且需用户明确要求。
 
 ## 关键结论（压缩）
@@ -23,6 +25,7 @@
 - 57 农业：厄尔尼诺非信号、拉尼娜化肥链强正（CF T+12 8/8）；利率上行化肥/农机正敏感；强厄尔尼诺"越强越弱"快顶（2023 模板 T+2.7，成因=快爬坡×种植季抢跑×档位）；交接文档含快顶模板。**57附 绝对收益版（08-30）**：拉尼娜 CF T+12 +77.1% vs SPY+8.1%；强厄尔尼诺三档 T+24 中位期末 弱+35.5%/强+21.6%/超强−3.4%（绝对亏损仅超强档）；**⚠️ 主报告 p 值 bug**（手写 t CDF 45 组合错 42 个，scipy 重算拉尼娜 CF 月均 +5.79% sig）主报告 index.html 未修待确认。
 - **57/58 追加·2026 厄尔尼诺研判（08-30 会话）**：ONI 至 MJJ26 +1.39 未达超强但爬坡史上最快（超 1997/2015 同期）；类比=海温像 1997、形态像 2023、宏观 β 像 2009。CF 收盘新高止于 03-30，残差分解（1.08×XLE）：拉尼娜最强期残差为负、3 月单月 +13.7pp 化肥脉冲后衰减至 +6.3pp；7 月 onset T+1 抢跑 8 月即回吐。**历史厄尔尼诺 CF−XLE（T+24）：2006 +743pp / 2009 +35 / 2015-16 −34（CF −54.8% 跑输 SPY 66pp，唯一超强先例）/ 2023 +48 / 本轮仅 +9.5pp** → 历史正超额皆非能源主导（"以前厄尔尼诺 CF 有超额"=均值假象，6 窗口 4 负），本轮首次能源锚供超额大头、非能源腿上市以来最弱；超强确认则上调 2015 剧本。判定节点 9 月初 ASO / 10 月初 SON。DAR 已见顶信号最明确（08-18 后 7 日 −10% 脱锚）。
 - **58 CF/DAR 地缘溢价脱钩（08-30，2025-11 起；双口径，详见交接文档）**：**CL 口径**——油价≥3% 大跌 CF 0 跟跌/DAR 1 次弱跟跌；3 月起 CF×CL −0.32、DAR×CL −0.26 显著负。**XLE 口径（追问补算，推翻"脱钩独立走"）**——CF×XLE +0.58、DAR×XLE +0.44（3 月后 +0.59/+0.52），控 SPY/XLF/XLI/XLV 后 b_XLE=+1.08(t=9.4)/+0.70(t=7.7) 稳健；**XLE×CL 全期仅 −0.07 = 能源股已与油价脱钩**。→ 正确表述：**脱的是油价锚、不是能源板块锚**，CF 对 XLE 的 β≈1.1。判定三不受影响：能源锚新高 34 天 CF 同步 26%（引擎切换）/DAR 62%。区间 CF+48.9%/DAR+87.2% vs CL+22.8%/SPY+12.8%。待办：主报告仍 CL 单口径未改；NG 天然气链条属推断未核实。
+- **60 MACD 死叉×4hRSI超卖 买入回测（08-31，SOXX/NVDA/XAUUSD/QQQ）**：合并仅 20 信号（2 年 4h 样本），T+1 胜率 70%/T+5 73.7%/T+10 68.4%/T+20 掉回 52.6%——捕捉短线反抽非趋势反转。**对照组：仅日线死叉 n=87、T+5~T+20 胜率 70-72%、p<0.01 显著 → 主效果是死叉本身，4h RSI 30-35 过滤砍 8 成样本且仅边缘显著**。黄金信号最稳（7 信号 T+1 7/7）。**当前快照（08-31 收盘）：XAUUSD 正处信号窗（日线刚死叉+4h RSI 32.4）→ 09-01 开盘即买点；SOXX 水下接近未触发**。详见 results/60_*.json。
 
 ## 报告索引
-- 宏观常设入口 `宏观背景.md`（利率上行×板块全景）；21-25 生物医药/工具链；30 资管；37/38 中期选举；50 SOFI×BTC；52 持仓；54/55 宏观利率；56 CCL RSI；57 农业 ENSO+利率；58 农业地缘脱钩。
+- 宏观常设入口 `宏观背景.md`（利率上行×板块全景）；21-25 生物医药/工具链；30 资管；37/38 中期选举；50 SOFI×BTC；52 持仓；54/55 宏观利率；56 CCL RSI；57 农业 ENSO+利率；58 农业地缘脱钩；59 MOS/CF 分化；60 MACD 死叉×4hRSI 超卖回测。
