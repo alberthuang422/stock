@@ -10,6 +10,7 @@
 - venv `...python\envs\default\Scripts\python.exe`（含 scipy）。富途 MCP：期权 OI 用 quote_stock_quote；选股器技术指标筛选报 invalid parameter、取回可用；口径 市值×1e3、PE×1e5、RSI×1e3。
 - **富途 MCP 通道（09-01）**：futu-mcp 是远程 OAuth 端点，token 2h 过期但 **refreshToken 可自动续期**（授权一次撑一周+，expiresAt 毫秒）；失效时重跑 Temp/futu_oauth_reauth.py（需浏览器授权，python urllib 不支持 https 走 curl 子进程）。**Yahoo/stooq 挂掉时用 Futu over-HTTP**：curl+Bearer → initialize 抓 Mcp-Session-Id → notifications/initialized → tools/call（SSE data: 行）；quote_history_kline 只传 {symbol,end,num}（ktype 显式传会 schema 报错）；**0.25s pacing + 指数退避**可 354/354 全成；热门度 sort featured_property=5214（综合）×1e5，分页 next_key 在响应顶层。
 - 蓝筹池 73 只：data/blue_chips.csv。
+- **项目级 skill `support-resistance-levels`** 在 `.workbuddy/skills/`，CLI `python support_levels_demo.py TICKER --months N`（默认 swing 3 K 线 ≈ 周级），4 步算法（swing+ATR 聚类+评分+破位检测），调用 `find_pivots(vals, n=40, kind=...)` 可把窗口扩到 40 根 ≈ 2 月级。**用户说"用 skill"时先查 `.workbuddy/skills/` 是否有现成**（65 号复盘教训）。
 
 ## 方法口径（铁律）
 - **图表单位陷阱**：分析脚本 corr ×100 存百分数，build 注入 ECharts 必须 ÷100；交付前跑 scripts/_scan_corr_units.py。
@@ -32,5 +33,6 @@
 - **SPY 对冲评估（09-01）**：11 月 VX 期货劣选（11/18 到期时点错配 + 无事件 −4050/合约 carry）；12 月 OTM10% put 劣选（盈亏平衡 −10.9% + theta 0.24%/月）；**主推 12/18 熊市价差 690/630（成本<0.5%、盈亏平衡 −10.5%）**；比较期货升水须与该期限正常 carry 比（contango 常态，不能直接比现货）。**Futu OAuth：refreshToken 可自动续期（授权一次撑一周+）**。
 
 ## 报告索引
-- 宏观常设入口 `宏观背景.md`（利率上行×板块全景）；21-25 生物医药/工具链；30 资管；37/38 中期选举；50 SOFI×BTC；52 持仓；54/55 宏观利率；56 CCL RSI；57 农业 ENSO+利率；58 农业地缘脱钩；59 MOS/CF 分化；60 MACD 死叉×4hRSI 超卖回测。
+- 宏观常设入口 `宏观背景.md`（利率上行×板块全景）；21-25 生物医药/工具链；30 资管；37/38 中期选举；50 SOFI×BTC；52 持仓；54/55 宏观利率；56 CCL RSI；57 农业 ENSO+利率；58 农业地缘脱钩；59 MOS/CF 分化；60 MACD 死叉×4hRSI 超卖回测；61 APO 资管深度；62 CCL 全面；63 SOFI×AFRM×SQ 相关性；64 DAL RSI 跌落买入。
+- **65 随机 10 只美股阻力位** `reports/resistance_10stocks_20260902.html`（KKR/NRG/ACN/BG/XOM/NEE/ABT/SPGI/TROW/TDG，2023-01 至今，swing 40 K 线 ≈ 2 月级）。
 - 富途热榜：`reports/hot354_rsi_eval_20260901.html`（RSI+板块透视+组合筛选）；每日 07:00 任务 f78907c8 → `hot_rsi_eval_YYYYMMDD.html`。
