@@ -1,0 +1,179 @@
+{
+ "ticker": "BG",
+ "window": {
+  "start": "2023-02-03",
+  "end": "2026-08-27",
+  "n": 894,
+  "last_close": 111.57,
+  "atr_med": 3.76,
+  "tol": 2.82,
+  "swing_window": 40,
+  "months": 43
+ },
+ "supports": [
+  {
+   "kind": "支撑",
+   "price": 67.87,
+   "band_lo": 65.04,
+   "band_hi": 70.69,
+   "touches": 2,
+   "react_med_pct": 9.96,
+   "first_touch": "2025-02-06",
+   "last_touch": "2025-04-09",
+   "days_live": 567,
+   "broken": false,
+   "score": 22.88,
+   "rank": 1
+  },
+  {
+   "kind": "支撑",
+   "price": 71.6,
+   "band_lo": 68.78,
+   "band_hi": 74.42,
+   "touches": 1,
+   "react_med_pct": 9.4,
+   "first_touch": "2025-07-17",
+   "last_touch": "2025-07-17",
+   "days_live": 406,
+   "broken": false,
+   "score": 9.4,
+   "rank": 2
+  },
+  {
+   "kind": "支撑",
+   "price": 87.17,
+   "band_lo": 84.35,
+   "band_hi": 89.99,
+   "touches": 2,
+   "react_med_pct": 3.98,
+   "first_touch": "2024-02-07",
+   "last_touch": "2025-12-23",
+   "days_live": 932,
+   "broken": false,
+   "score": 9.15,
+   "rank": 3
+  },
+  {
+   "kind": "支撑",
+   "price": 99.12,
+   "band_lo": 96.3,
+   "band_hi": 101.94,
+   "touches": 1,
+   "react_med_pct": 8.66,
+   "first_touch": "2023-10-12",
+   "last_touch": "2023-10-12",
+   "days_live": 1050,
+   "broken": false,
+   "score": 8.66,
+   "rank": 4
+  }
+ ],
+ "resists": [
+  {
+   "kind": "阻力",
+   "price": 115.75,
+   "band_lo": 112.93,
+   "band_hi": 118.58,
+   "touches": 2,
+   "react_med_pct": -9.81,
+   "first_touch": "2023-08-07",
+   "last_touch": "2024-07-26",
+   "days_live": 1116,
+   "broken": false,
+   "score": 22.53,
+   "rank": 1
+  },
+  {
+   "kind": "阻力",
+   "price": 110.35,
+   "band_lo": 107.53,
+   "band_hi": 113.18,
+   "touches": 2,
+   "react_med_pct": -7.26,
+   "first_touch": "2023-12-01",
+   "last_touch": "2024-04-19",
+   "days_live": 1000,
+   "broken": true,
+   "score": 16.69,
+   "rank": 2
+  },
+  {
+   "kind": "阻力",
+   "price": 99.55,
+   "band_lo": 96.73,
+   "band_hi": 102.37,
+   "touches": 1,
+   "react_med_pct": -6.73,
+   "first_touch": "2025-10-27",
+   "last_touch": "2025-10-27",
+   "days_live": 304,
+   "broken": true,
+   "score": 6.73,
+   "rank": 3
+  },
+  {
+   "kind": "阻力",
+   "price": 87.49,
+   "band_lo": 84.67,
+   "band_hi": 90.31,
+   "touches": 1,
+   "react_med_pct": -6.3,
+   "first_touch": "2025-06-17",
+   "last_touch": "2025-06-17",
+   "days_live": 436,
+   "broken": true,
+   "score": 6.3,
+   "rank": 4
+  },
+  {
+   "kind": "阻力",
+   "price": 134.87,
+   "band_lo": 132.05,
+   "band_hi": 137.69,
+   "touches": 1,
+   "react_med_pct": -8.45,
+   "first_touch": "2026-06-03",
+   "last_touch": "2026-06-03",
+   "days_live": 85,
+   "broken": false,
+   "score": 3.59,
+   "rank": 5
+  }
+ ],
+ "summary": {
+  "piv_low": 6,
+  "piv_high": 7,
+  "support_clusters": 4,
+  "resist_clusters": 5
+ },
+ "resists_above": [
+  {
+   "kind": "阻力",
+   "price": 115.75,
+   "band_lo": 112.93,
+   "band_hi": 118.58,
+   "touches": 2,
+   "react_med_pct": -9.81,
+   "first_touch": "2023-08-07",
+   "last_touch": "2024-07-26",
+   "days_live": 1116,
+   "broken": false,
+   "score": 22.53,
+   "rank": 1
+  },
+  {
+   "kind": "阻力",
+   "price": 134.87,
+   "band_lo": 132.05,
+   "band_hi": 137.69,
+   "touches": 1,
+   "react_med_pct": -8.45,
+   "first_touch": "2026-06-03",
+   "last_touch": "2026-06-03",
+   "days_live": 85,
+   "broken": false,
+   "score": 3.59,
+   "rank": 5
+  }
+ ]
+}

@@ -1,0 +1,593 @@
+{
+  "kkr": {
+    "last_close": 108.5,
+    "last_date": "2026-08-26",
+    "start": "2023-01-01",
+    "resistance": [
+      {
+        "price": 129.31,
+        "level": 119.2,
+        "pivots": 2,
+        "touches": 26,
+        "first_date": "2024-07-31",
+        "last_touch": "2026-01-13",
+        "band": [
+          128.79,
+          129.82
+        ],
+        "score": 13.9
+      },
+      {
+        "price": 152.99,
+        "level": 141.0,
+        "pivots": 2,
+        "touches": 22,
+        "first_date": "2025-07-29",
+        "last_touch": "2025-07-29",
+        "band": [
+          152.1,
+          153.87
+        ],
+        "score": 13.4
+      },
+      {
+        "price": 113.91,
+        "level": 105.0,
+        "pivots": 1,
+        "touches": 29,
+        "first_date": "2024-06-12",
+        "last_touch": "2026-08-14",
+        "band": [
+          113.91
+        ],
+        "score": 12.2
+      },
+      {
+        "price": 144.84,
+        "level": 133.5,
+        "pivots": 1,
+        "touches": 22,
+        "first_date": "2025-12-11",
+        "last_touch": "2025-12-11",
+        "band": [
+          144.84
+        ],
+        "score": 11.4
+      },
+      {
+        "price": 163.68,
+        "level": 150.9,
+        "pivots": 1,
+        "touches": 6,
+        "first_date": "2024-11-29",
+        "last_touch": "2025-02-03",
+        "band": [
+          163.68
+        ],
+        "score": 7.8
+      }
+    ],
+    "summary": {
+      "total_pivots": 15,
+      "bands_found": 11
+    }
+  },
+  "nrg": {
+    "last_close": 116.14,
+    "last_date": "2026-08-26",
+    "start": "2023-01-01",
+    "resistance": [
+      {
+        "price": 150.97,
+        "level": 130.0,
+        "pivots": 1,
+        "touches": 51,
+        "first_date": "2026-06-29",
+        "last_touch": "2026-06-29",
+        "band": [
+          150.97
+        ],
+        "score": 13.9
+      },
+      {
+        "price": 168.57,
+        "level": 145.1,
+        "pivots": 1,
+        "touches": 38,
+        "first_date": "2025-06-27",
+        "last_touch": "2026-04-17",
+        "band": [
+          168.57
+        ],
+        "score": 13.0
+      },
+      {
+        "price": 175.74,
+        "level": 151.3,
+        "pivots": 2,
+        "touches": 8,
+        "first_date": "2025-08-05",
+        "last_touch": "2026-03-02",
+        "band": [
+          175.52,
+          175.96
+        ],
+        "score": 10.6
+      },
+      {
+        "price": 180.54,
+        "level": 155.5,
+        "pivots": 1,
+        "touches": 4,
+        "first_date": "2025-10-29",
+        "last_touch": "2026-02-27",
+        "band": [
+          180.54
+        ],
+        "score": 6.8
+      }
+    ],
+    "summary": {
+      "total_pivots": 14,
+      "bands_found": 10
+    }
+  },
+  "acn": {
+    "last_close": 181.38,
+    "last_date": "2026-08-26",
+    "start": "2023-01-01",
+    "resistance": [
+      {
+        "price": 326.82,
+        "level": 180.2,
+        "pivots": 4,
+        "touches": 46,
+        "first_date": "2023-06-16",
+        "last_touch": "2025-05-15",
+        "band": [
+          324.19,
+          325.71,
+          327.93,
+          330.44
+        ],
+        "score": 19.6
+      },
+      {
+        "price": 289.87,
+        "level": 159.8,
+        "pivots": 2,
+        "touches": 40,
+        "first_date": "2023-04-12",
+        "last_touch": "2026-01-16",
+        "band": [
+          288.65,
+          291.09
+        ],
+        "score": 15.1
+      },
+      {
+        "price": 377.12,
+        "level": 207.9,
+        "pivots": 2,
+        "touches": 32,
+        "first_date": "2024-10-21",
+        "last_touch": "2025-01-30",
+        "band": [
+          376.91,
+          377.34
+        ],
+        "score": 14.5
+      },
+      {
+        "price": 295.79,
+        "level": 163.1,
+        "pivots": 1,
+        "touches": 33,
+        "first_date": "2023-02-02",
+        "last_touch": "2025-07-09",
+        "band": [
+          295.79
+        ],
+        "score": 12.6
+      },
+      {
+        "price": 255.44,
+        "level": 140.8,
+        "pivots": 1,
+        "touches": 27,
+        "first_date": "2025-10-29",
+        "last_touch": "2025-12-01",
+        "band": [
+          255.44
+        ],
+        "score": 12.0
+      }
+    ],
+    "summary": {
+      "total_pivots": 13,
+      "bands_found": 7
+    }
+  },
+  "bg": {
+    "last_close": 111.57,
+    "last_date": "2026-08-27",
+    "start": "2023-01-01",
+    "resistance": [
+      {
+        "price": 115.84,
+        "level": 103.8,
+        "pivots": 3,
+        "touches": 32,
+        "first_date": "2023-08-07",
+        "last_touch": "2026-08-20",
+        "band": [
+          114.92,
+          115.84,
+          116.59
+        ],
+        "score": 16.5
+      },
+      {
+        "price": 125.75,
+        "level": 112.7,
+        "pivots": 1,
+        "touches": 34,
+        "first_date": "2026-07-23",
+        "last_touch": "2026-07-22",
+        "band": [
+          125.75
+        ],
+        "score": 12.7
+      }
+    ],
+    "summary": {
+      "total_pivots": 16,
+      "bands_found": 9
+    }
+  },
+  "xom": {
+    "last_close": 158.19,
+    "last_date": "2026-08-26",
+    "start": "2023-01-01",
+    "resistance": [
+      {
+        "price": 163.68,
+        "level": 103.5,
+        "pivots": 1,
+        "touches": 11,
+        "first_date": "2026-05-20",
+        "last_touch": "2026-08-24",
+        "band": [
+          163.68
+        ],
+        "score": 9.5
+      }
+    ],
+    "summary": {
+      "total_pivots": 15,
+      "bands_found": 7
+    }
+  },
+  "nee": {
+    "last_close": 84.22,
+    "last_date": "2026-08-26",
+    "start": "2023-01-01",
+    "resistance": [
+      {
+        "price": 86.81,
+        "level": 103.1,
+        "pivots": 2,
+        "touches": 48,
+        "first_date": "2024-10-03",
+        "last_touch": "2026-08-19",
+        "band": [
+          86.1,
+          87.53
+        ],
+        "score": 15.7
+      },
+      {
+        "price": 90.99,
+        "level": 108.0,
+        "pivots": 1,
+        "touches": 33,
+        "first_date": "2026-07-28",
+        "last_touch": "2026-07-24",
+        "band": [
+          90.99
+        ],
+        "score": 12.6
+      },
+      {
+        "price": 95.91,
+        "level": 113.9,
+        "pivots": 1,
+        "touches": 15,
+        "first_date": "2026-02-25",
+        "last_touch": "2026-05-14",
+        "band": [
+          95.91
+        ],
+        "score": 10.3
+      }
+    ],
+    "summary": {
+      "total_pivots": 16,
+      "bands_found": 10
+    }
+  },
+  "abt": {
+    "last_close": 114.1,
+    "last_date": "2026-08-26",
+    "start": "2023-01-01",
+    "resistance": [
+      {
+        "price": 116.33,
+        "level": 102.0,
+        "pivots": 2,
+        "touches": 61,
+        "first_date": "2023-07-24",
+        "last_touch": "2026-08-25",
+        "band": [
+          115.83,
+          116.82
+        ],
+        "score": 16.4
+      },
+      {
+        "price": 132.03,
+        "level": 115.7,
+        "pivots": 1,
+        "touches": 97,
+        "first_date": "2025-11-18",
+        "last_touch": "2025-11-14",
+        "band": [
+          132.03
+        ],
+        "score": 15.8
+      },
+      {
+        "price": 135.76,
+        "level": 119.0,
+        "pivots": 2,
+        "touches": 39,
+        "first_date": "2025-05-02",
+        "last_touch": "2025-10-08",
+        "band": [
+          134.71,
+          136.8
+        ],
+        "score": 15.1
+      },
+      {
+        "price": 118.54,
+        "level": 103.9,
+        "pivots": 1,
+        "touches": 40,
+        "first_date": "2024-09-17",
+        "last_touch": "2025-01-22",
+        "band": [
+          118.54
+        ],
+        "score": 13.1
+      },
+      {
+        "price": 121.32,
+        "level": 106.3,
+        "pivots": 2,
+        "touches": 14,
+        "first_date": "2024-03-08",
+        "last_touch": "2026-01-21",
+        "band": [
+          121.0,
+          121.64
+        ],
+        "score": 12.1
+      }
+    ],
+    "summary": {
+      "total_pivots": 13,
+      "bands_found": 8
+    }
+  },
+  "spgi": {
+    "last_close": 436.49,
+    "last_date": "2026-08-26",
+    "start": "2023-01-01",
+    "resistance": [
+      {
+        "price": 499.42,
+        "level": 114.4,
+        "pivots": 3,
+        "touches": 75,
+        "first_date": "2024-10-15",
+        "last_touch": "2026-02-02",
+        "band": [
+          498.13,
+          499.42,
+          504.53
+        ],
+        "score": 19.0
+      },
+      {
+        "price": 478.97,
+        "level": 109.7,
+        "pivots": 1,
+        "touches": 88,
+        "first_date": "2025-11-13",
+        "last_touch": "2026-01-02",
+        "band": [
+          478.97
+        ],
+        "score": 15.5
+      },
+      {
+        "price": 462.02,
+        "level": 105.8,
+        "pivots": 1,
+        "touches": 82,
+        "first_date": "2026-07-17",
+        "last_touch": "2026-07-16",
+        "band": [
+          462.02
+        ],
+        "score": 15.3
+      },
+      {
+        "price": 519.22,
+        "level": 119.0,
+        "pivots": 2,
+        "touches": 32,
+        "first_date": "2025-02-14",
+        "last_touch": "2026-01-16",
+        "band": [
+          515.98,
+          522.47
+        ],
+        "score": 14.5
+      }
+    ],
+    "summary": {
+      "total_pivots": 15,
+      "bands_found": 9
+    }
+  },
+  "trow": {
+    "last_close": 112.55,
+    "last_date": "2026-08-26",
+    "start": "2023-01-01",
+    "resistance": [
+      {
+        "price": 118.32,
+        "level": 105.1,
+        "pivots": 3,
+        "touches": 96,
+        "first_date": "2024-06-12",
+        "last_touch": "2026-07-30",
+        "band": [
+          118.22,
+          118.32,
+          120.54
+        ],
+        "score": 19.7
+      },
+      {
+        "price": 122.0,
+        "level": 108.4,
+        "pivots": 3,
+        "touches": 26,
+        "first_date": "2024-03-28",
+        "last_touch": "2026-07-28",
+        "band": [
+          121.17,
+          122.0,
+          122.27
+        ],
+        "score": 15.9
+      },
+      {
+        "price": 115.27,
+        "level": 102.4,
+        "pivots": 1,
+        "touches": 98,
+        "first_date": "2023-04-12",
+        "last_touch": "2026-08-11",
+        "band": [
+          115.27
+        ],
+        "score": 15.8
+      },
+      {
+        "price": 125.81,
+        "level": 111.8,
+        "pivots": 1,
+        "touches": 5,
+        "first_date": "2024-12-06",
+        "last_touch": "2024-12-05",
+        "band": [
+          125.81
+        ],
+        "score": 7.4
+      }
+    ],
+    "summary": {
+      "total_pivots": 13,
+      "bands_found": 7
+    }
+  },
+  "tdg": {
+    "last_close": 1207.06,
+    "last_date": "2026-08-26",
+    "start": "2023-01-01",
+    "resistance": [
+      {
+        "price": 1367.68,
+        "level": 113.3,
+        "pivots": 4,
+        "touches": 73,
+        "first_date": "2024-06-06",
+        "last_touch": "2026-07-02",
+        "band": [
+          1361.77,
+          1365.79,
+          1369.58,
+          1379.46
+        ],
+        "score": 20.9
+      },
+      {
+        "price": 1303.06,
+        "level": 108.0,
+        "pivots": 1,
+        "touches": 133,
+        "first_date": "2026-04-14",
+        "last_touch": "2026-08-03",
+        "band": [
+          1303.06
+        ],
+        "score": 16.7
+      },
+      {
+        "price": 1457.17,
+        "level": 120.7,
+        "pivots": 2,
+        "touches": 27,
+        "first_date": "2024-10-02",
+        "last_touch": "2026-02-02",
+        "band": [
+          1451.32,
+          1463.03
+        ],
+        "score": 14.0
+      },
+      {
+        "price": 1488.54,
+        "level": 123.3,
+        "pivots": 1,
+        "touches": 6,
+        "first_date": "2025-05-05",
+        "last_touch": "2025-06-27",
+        "band": [
+          1488.54
+        ],
+        "score": 7.8
+      },
+      {
+        "price": 1623.83,
+        "level": 134.5,
+        "pivots": 1,
+        "touches": 6,
+        "first_date": "2025-07-30",
+        "last_touch": "2025-08-04",
+        "band": [
+          1623.83
+        ],
+        "score": 7.8
+      }
+    ],
+    "summary": {
+      "total_pivots": 12,
+      "bands_found": 7
+    }
+  }
+}
