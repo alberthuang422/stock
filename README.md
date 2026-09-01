@@ -1,7 +1,7 @@
 # 📊 美股研究 · 报告索引
 
 > 本工作区全部研究报告的统一检索入口（报告存放在 `reports/` 目录）
-> 最后更新：2026-08-30 ｜ 覆盖报告：86 份 HTML
+> 最后更新：2026-09-02 ｜ 覆盖报告：87 份 HTML
 
 ---
 
@@ -63,6 +63,7 @@
 - **[MCD RSI 区间跌落买入（越跌越买）](reports/49_MCD_RSI区间跌落买入/index.html)** · MCD 依 RSI 档位跌落的连续加仓回测
 - **[纳指区间 RSI 低买高卖（修正版）](reports/50_纳指区间RSI低买高卖/index.html)** · 纳指横盘期 RSI 低买高卖配对回测
 - **[CCL 嘉年华邮轮 · RSI 区间跌落买入（越跌越买）](reports/56_CCL_RSI档位买入/index.html)** · CCL 依 RSI 档位跌落的买入回测
+- **[CCL 嘉年华邮轮 · 全面分析](reports/62_CCL全面分析/index.html)** · 基本面 × 估值 × 技术面 × 量化回测 × 行业 × 风险（62 号）
 - **[持仓组合技术面与操作建议](reports/52_持仓组合技术面与操作建议/index.html)** · 8 标的组合逐股技术面拆解
 
 ---
@@ -97,6 +98,7 @@
 - **[SOFI / XYZ × 比特币 季度分阶段相关性](reports/50_SOFI_BTC_相关性季度分阶段/index.html)** · SOFI/XYZ 与比特币季度分阶段相关性
 - **[MCD / SBUX × 道琼斯 / XLY 相关性](reports/51_MCD_SBUX_DJI_XLY_相关性/index.html)** · 两消费股与道指/XLY 的 2×2 相关性
 - **[SOFI / AFRM / UPST 财报交易日涨跌相关性](reports/53_金融科技财报日相关性/index.html)** · 金融科技三股财报日相关性事件研究
+- **[SOFI × AFRM × Block(SQ) 相关性（选举后窗口）](reports/63_SOFI_AFRM_SQ相关性分析/index.html)** · 特朗普当选前1个月至今：全期 r=0.51~0.64 中高相关，60日滚动 0.19~0.91 大幅摆动，近3月收拢（AFRM×Block 0.789）
 
 ---
 
