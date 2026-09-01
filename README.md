@@ -108,6 +108,7 @@
 - **[银行熊陡](reports/09_银行熊陡/banks_bear_steep_report.html)** · 熊陡形态下银行表现
 - **[陡峭化 × 消费股](reports/06_陡峭化消费股/steep_ko_pm_mo_report.html)** · 陡峭化对消费龙头的敏感性分析
 - **[资管 × 曲线陡峭化](reports/30_资管陡峭化/index.html)** · 资管股对曲线陡峭化的敏感性
+- **[Apollo 全球资管深度研究](reports/61_Apollo全球资管深度研究.html)** · APO 全周期量价、财务与估值、同行对比、驱动拆解
 - **[全球 10Y 国债收益率风险](reports/global-bond-yields-risk-20260817.html)** · 收益率创高全景与风险分层评估
 - **[宏观利率背景 × 六股影响](reports/54_宏观利率背景六股影响/index.html)** · 利差变动下六股的利率敏感度分析
 - **[宏观背景（常设背景文件）](reports/55_宏观背景/index.html)** · 蓝筹池索引、利差与 Jackson Hole 更新

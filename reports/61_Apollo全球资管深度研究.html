@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>61 · Apollo Global Management（APO）深度研究 — 万亿资管的"信而优则险"</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<script src="61_apo_data.js"></script>
+<style>
+  :root{
+    --ink:#1a2332; --ink2:#3d4a5c; --sub:#7b8794; --line:#e4e8ee;
+    --bg:#ffffff; --card:#f7f9fb; --accent:#0b6bcb; --accent2:#0053a1;
+    --up:#c0392b; --down:#1e8449; --warn:#b9770e; --chip:#eef3f8;
+    --oi-blue:#0072B2; --oi-orange:#E69F00; --oi-sky:#56B4E9; --oi-red:#D55E00;
+    --oi-green:#009E73; --oi-black:#000000; --oi-purple:#CC79A7; --oi-yellow:#F0E442;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--bg); color:var(--ink); font-family:"PingFang SC","Microsoft YaHei","Segoe UI",sans-serif; line-height:1.75; font-size:15px; padding-bottom:80px;}
+  .wrap{max-width:1180px; margin:0 auto; padding:0 28px;}
+  /* ===== header ===== */
+  .hero{background:linear-gradient(135deg,#0b2e4f 0%,#0e3d66 55%,#14507f 100%); color:#fff; padding:44px 0 38px; border-bottom:4px solid var(--oi-orange);}
+  .hero .tag{display:inline-block; background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.3); border-radius:20px; font-size:12px; padding:2px 12px; letter-spacing:1px; margin-bottom:14px;}
+  .hero h1{font-size:30px; font-weight:700; line-height:1.4; margin-bottom:10px;}
+  .hero .sub{font-size:15px; color:#cfe0f0; max-width:900px;}
+  .hero .meta{margin-top:18px; font-size:12.5px; color:#9fb8cd; display:flex; gap:22px; flex-wrap:wrap;}
+  /* ===== TLDR ===== */
+  .tldr{margin:26px 0 8px; border:1px solid var(--line); border-left:6px solid var(--oi-orange); background:var(--card); border-radius:10px; padding:22px 26px;}
+  .tldr h2{font-size:18px; margin-bottom:14px; color:var(--accent2);}
+  .tldr .verdict{font-size:15.5px; font-weight:600; color:var(--ink); line-height:1.9;}
+  .tldr ul{margin:10px 0 0 20px;}
+  .tldr li{margin-bottom:8px; font-size:14px;}
+  .tldr b.k{color:var(--accent2);}
+  .one-liner{background:#0e3d66; color:#fff; border-radius:8px; padding:14px 18px; margin-top:14px; font-size:14.5px;}
+  .one-liner b{color:#ffd9a0;}
+  /* ===== kpi ===== */
+  .kpi-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:14px; margin:22px 0;}
+  .kpi{background:var(--card); border:1px solid var(--line); border-radius:10px; padding:14px 16px;}
+  .kpi .lbl{font-size:12px; color:var(--sub); margin-bottom:6px;}
+  .kpi .val{font-size:22px; font-weight:700; color:var(--ink); letter-spacing:-.3px;}
+  .kpi .note{font-size:11.5px; color:var(--sub); margin-top:4px;}
+  .kpi .val.up{color:var(--up);} .kpi .val.down{color:var(--down);}
+  .kpi.blue .val{color:var(--accent);}
+  /* ===== section ===== */
+  h2.sec{font-size:22px; font-weight:700; margin:42px 0 6px; padding-left:14px; border-left:6px solid var(--oi-blue); color:var(--accent2);}
+  .secsub{color:var(--sub); font-size:13px; margin-bottom:18px; padding-left:20px;}
+  h3{font-size:17px; margin:26px 0 10px; color:var(--ink);}
+  h4{font-size:14.5px; margin:18px 0 8px; color:var(--accent2);}
+  p.para{margin-bottom:12px; color:var(--ink2);}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:10px; padding:18px 22px; margin:16px 0;}
+  .chart-box{width:100%; height:400px;}
+  .chart-box.h300{height:310px;}
+  .chart-note{font-size:12px; color:var(--sub); margin-top:8px; text-align:right;}
+  .src{font-size:11.5px; color:var(--sub); background:var(--chip); display:inline-block; border-radius:4px; padding:1px 8px; margin-top:6px;}
+  /* ===== table ===== */
+  table{width:100%; border-collapse:collapse; margin:14px 0; font-size:13.5px;}
+  th{background:#0e3d66; color:#fff; font-weight:600; padding:9px 10px; text-align:left; white-space:nowrap;}
+  td{padding:8px 10px; border-bottom:1px solid var(--line);}
+  tr:nth-child(even) td{background:#fafbfd;}
+  td.num, th.num{text-align:right; font-variant-numeric:tabular-nums;}
+  td.best{color:var(--up); font-weight:700;}
+  td.hl{font-weight:700;}
+  .pct-up{color:var(--up);} .pct-dn{color:var(--down);}
+  /* ===== tabs ===== */
+  .tabs{display:flex; gap:8px; margin:12px 0 4px;}
+  .tab{background:var(--chip); border:1px solid var(--line); border-radius:6px; padding:5px 16px; font-size:13px; cursor:pointer; color:var(--ink2);}
+  .tab.on{background:var(--accent); color:#fff; border-color:var(--accent);}
+  .tabpane{display:none;} .tabpane.on{display:block;}
+  /* ===== risk ===== */
+  .risk{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:16px;}
+  .risk .rbox{border:1px solid var(--line); border-radius:10px; padding:16px 18px; background:#fff;}
+  .risk .rbox b{display:block; font-size:14px; margin-bottom:8px;}
+  .risk .rbox ul{margin-left:18px;}
+  .risk .rbox li{font-size:13px; margin-bottom:7px;}
+  .lv-hi{color:var(--up); font-weight:700;} .lv-mid{color:var(--warn); font-weight:700;}
+  /* ===== 结论 ===== */
+  .concl{border:1px solid var(--line); border-left:6px solid var(--oi-green); background:var(--card); border-radius:10px; padding:20px 24px; margin-top:18px;}
+  .concl h3{margin:0 0 10px;}
+  .concl p{font-size:14px; color:var(--ink2); margin-bottom:10px;}
+  .disclaimer{margin-top:34px; border-top:1px dashed var(--line); padding-top:16px; font-size:12px; color:var(--sub);}
+  /* ===== footnote ===== */
+  .termtip{border-bottom:1px dashed var(--oi-blue); cursor:help; position:relative;}
+  .termtip:hover::after{content:attr(data-tip); position:absolute; bottom:130%; left:0; background:#102b45; color:#fff; font-size:12px; padding:6px 10px; border-radius:6px; width:260px; z-index:50; line-height:1.5; box-shadow:0 4px 12px rgba(0,0,0,.2);}
+  .mt{border:1px solid var(--line); border-radius:8px; padding:10px 16px; margin:14px 0; background:#fff; font-size:13.5px;}
+  .mt b{color:var(--accent2);}
+  .flex2{display:grid; grid-template-columns:1fr 1fr; gap:18px; align-items:start;}
+  @media (max-width:860px){ .risk,.flex2{grid-template-columns:1fr;} .hero h1{font-size:23px;} .chart-box{height:320px;} }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="wrap">
+    <span class="tag">研究报告 #61 · 另类资管（Alternative Asset Management）</span>
+    <h1>Apollo Global Management（NYSE: APO）深度研究<br>万亿资管的"信而优则险"</h1>
+    <div class="sub">从 2011 年上市前身 Apollo Investment，到管理 1.05 万亿美元资产、全球第二大另类资管平台——拆解这家把"保险资本"与"信用制造"绑成复利机器的公司，回答两个问题：市场为什么买它，未来还买不买。</div>
+    <div class="meta">
+      <span>数据截至：2026-09-01 收盘（行情）/ 2026Q2 财报（2026-08-04 披露）</span>
+      <span>标的：APO.N / 代码 APO</span>
+      <span>现价 $131.29 · 市值约 $1,018 亿</span>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- ================= TLDR ================= -->
+<div class="tldr" id="tldr">
+  <h2>◆ 摘要 · 结论先行</h2>
+  <div class="verdict">长期视角：优质复利资产，10 年 CAGR 26.6%（vs SPY 15.3%），管理层资本配置能力历史验证充分；<span style="color:var(--up)">但短期（2025-2026）正处于"高增长叙事 vs 渠道景气走弱"的验证期，近 1 年显著跑输大盘</span>，当前估值对增长确定性要求较高，适合回调后配置而非追高。</div>
+  <ul>
+    <li><b class="k">规模里程碑</b>：AUM 2026 年中突破 <b>$1.05 万亿</b>（同比 +25%），计费 AUM <b>$8,580 亿</b>（+34%）；永续资本占计费 AUM 70%，费用基础跨周期稳定。</li>
+    <li><b class="k">盈利质量</b>：2026Q2 FRE（费用相关收益）创纪录 <b>$7.85 亿（+25% YoY）</b>、SRE 创纪录 <b>$8.77 亿（+11%）</b>，FRE 利润率 58.5% 连续扩张；全年指引 FRE +20% 以上。</li>
+    <li><b class="k">关键分歧</b>：GAAP 调整后 EPS $2.11 略低于一致预期 $2.16（终结连续四季度超预期）；财富渠道景气偏弱 + NAV BDC 赎回压力上升——增长的质量与持续性正被市场检验。</li>
+    <li><b class="k">估值</b>：TTM PE 46.7x 贵（同行 BX 30.6x / KKR 34.1x），但按远期 FRE 口径隐含估值仅 ~20x；23 家机构中 74% 买入、一致目标价 <b>$154.3</b>（上行 +17.5%）。</li>
+    <li><b class="k">行情判断</b>：本地日线显示 1Y 收益 <b>-0.5%</b>（SPY +20.1%）、YTD -6.7%（SPY +13.5%）、最大回撤 -34%（SPY -8.9%）——波动与回撤接近成长股而非资管股，<b>β 属性先于 α 兑现</b>。</li>
+  </ul>
+  <div class="one-liner"><b>一句话本质</b>：买 APO 本质上是买"长期资本驱动的信用制造机"——以保险资本（Athene）为锚、以<span class="termtip" data-tip="永续资本（Perpetual Capital）：无固定到期赎回压力的常青型基金结构，如保险负债、interval fund、BDC 等，费用基础比传统封闭式基金更稳定。">永续资本</span>为杠杆，把"制造投资级资产"的能力持续转成管理费+利差收益；它的估值溢价，买的是"这家公司能把信用能力复利化"的确定性。</div>
+</div>
+
+<!-- ================= KPI ================= -->
+<div class="kpi-grid">
+  <div class="kpi"><div class="lbl">现价（2026-09-01）</div><div class="val">$131.29</div><div class="note">08-27 本地收盘 $133.44</div></div>
+  <div class="kpi blue"><div class="lbl">总市值（摊薄）</div><div class="val">$1,018亿</div><div class="note">折合 ¥7,100+亿</div></div>
+  <div class="kpi"><div class="lbl">TTM PE / PB</div><div class="val">46.7× / 4.0×</div><div class="note">远期 FRE 口径约 20×</div></div>
+  <div class="kpi"><div class="lbl">AUM（2026-06-30）</div><div class="val">$1.05万亿</div><div class="note">全球第二大另类资管</div></div>
+  <div class="kpi"><div class="lbl">2026Q2 FRE</div><div class="val up">$7.85亿</div><div class="note">创纪录 · +25% YoY</div></div>
+  <div class="kpi"><div class="lbl">2026 YTD 收益</div><div class="val down">-6.7%</div><div class="note">SPY +13.5%</div></div>
+  <div class="kpi"><div class="lbl">1Y 总收益</div><div class="val down">-0.5%</div><div class="note">SPY +20.1%</div></div>
+  <div class="kpi blue"><div class="lbl">一致目标价</div><div class="val">$154.3</div><div class="note">23 家 · 74% 买入 · +17.5%</div></div>
+</div>
+
+<!-- ================= 1. 公司概况 ================= -->
+<h2 class="sec" id="s1">一、公司概况与业务结构</h2>
+<div class="secsub">三级火箭：另类资管 × 保险平台 × 信用制造 — 谁是估值的主人</div>
+
+<p class="para"><b>Apollo Global Management</b>（NYSE: APO）由 Marc Rowan、Leon Black、Josh Harris 于 1990 年创立，2011 年重组上市，总部纽约。它是全球唯一一家把<b>大型保险公司（Athene 雅典娜）</b>作为内生资产引擎的上市另类资管公司——这一结构使其从"收管理费的基金管理人"升级为"拥有自有负债端的信用资产工厂"。2026 年中 AUM 突破 <b>$1.05 万亿</b>，其中Credit（信用）$8,490 亿、Equity（股权）$1,980 亿。</p>
+
+<div class="card">
+  <h3>业务三支柱</h3>
+  <table>
+    <tr><th style="width:22%">业务板块</th><th style="width:34%">内容</th><th style="width:22%">角色</th><th>盈利来源</th></tr>
+    <tr><td><b>资产管理<br>(Asset Management)</b></td><td>传统另类基金（PE/信贷/混合）+ 永续产品 + 资本市场解决方案（Capital Solutions）</td><td>平台核心 · 贡献 <b>FRE</b>（费用相关收益）</td><td>管理费（% AUM）、绩效费（carry）、交易/顾问费</td></tr>
+    <tr><td><b>退休服务<br>(Retirement Services / Athene)</b></td><td>固定年金、指数年金、再保险等寿险负债业务</td><td>内生"资本引擎" · 贡献 <b>SRE</b>（利差相关收益）</td><td>资产利差（投资收益 − 保单负债成本）</td></tr>
+    <tr><td><b>信用制造<br>(Origination & 资本解决方案)</b></td><td>直接放贷、结构化融资、银团分销（ACS）、AI 基础设施融资</td><td>增长飞轮 · 创造稀缺资产</td><td>利差 + 安排费 + 分销收入</td></tr>
+  </table>
+  <div class="src">来源：Apollo IR 2Q26 8-K（2026-08-04 披露）、公司公开材料</div>
+</div>
+
+<p class="para"><b>收入结构（2026Q2 GAAP，总营收 $112.1 亿 / +62.7% YoY）</b>：表面的"营收暴增"主要来自 Athene 合并口径的投资收益与保费（Retirement Services 净投资收益 $51.4 亿 +）——这正是外部对 APO "GAAP 失真、须看非 GAAP"的长期争论点。<b>真正驱动估值的是两簇非 GAAP 盈利：FRE（平台收费能力）与 SRE（保险利差能力）</b>，二者合计 2026Q2 约 $16.6 亿，同比 +18%。</p>
+
+<p class="para"><b>资本结构</b>：2026Q2 末总资产 $4,940 亿、资产负债率 91%（保险行业特征）；控股母公司口径净资产负债表价值 $25.3 亿（$4.06/股），剔除合并保险后核心平台负债很低——这是它与银行/保险公司估值逻辑的分水岭：<span class="termtip" data-tip="控股公司净资产（Net Balance Sheet Value）：剔除合并保险与基金负债后的母公司账面净值，反映平台真实资本占用，APO 约每股 $4。">HoldCo 净资产</span>仅占市值约 3%，意味着市值几乎完全由"未来收费流"贴现而来。</p>
+
+<!-- ================= 2. 商业模式 ================= -->
+<h2 class="sec" id="s2">二、商业模式与护城河拆解</h2>
+<div class="secsub">为什么"另类资管 + 保险"是护城河，而不是负担</div>
+
+<h3>2.1 护城河一：内生保险负债 = 别人借不到的超长期资本</h3>
+<p class="para">多数 PE/信贷公司靠 LP 承诺出资（受赎回约束、靠募资周期），Apollo 则有 Athene 提供 <b>10-15 年久期的保单负债</b>。2026Q2 保单负债驱动流入 $220 亿，占总流入 37%；Athene 总投资资产 $4,140 亿（+14% YoY），固定收益组合 98% 为投资级。这意味着：<b>在信贷资产荒时它有"钱"、在利率下行时它有可重新定价的负债</b>——"资产制造"与"负债持有"在同一资产负债表内闭环。</p>
+
+<h3>2.2 护城河二：信用"制造"能力（Origination）≠ 信用"买入"能力</h3>
+<p class="para">APO 自述是 <b>"credit origination"（信用创造）</b>而非认购型买家：2026Q2 发起量 $740 亿（H1 近 $1,500 亿、TTM $3,200 亿），其中 ~75% 为投资级、平均评级 BBB+，投资级放贷相对国债超额利差 ~280bp。其独有能力是把企业客户对资金的定制需求（并购融资、基础设施、资产证券化）转成可分销的信贷资产，再通过 Capital Solutions（Q2 费用 $2.77 亿创纪录、连续 5 个季度 >$2 亿）与 ACS 银团（H1 分销 $300 亿+，同比 +50%）变现。<b>这条"制造→分销"链条构成了对传统信贷机构的差异化</b>。典型案例：2026Q2 宣布的 <b>Broadcom $350 亿 AI 基础设施私募信贷融资</b>，是目前行业最大单笔 AI 基础设施信贷安排之一。</p>
+
+<h3>2.3 护城河三：永续资本纵深（Perpetual Capital = 费用稳定性）</h3>
+<div class="card">
+  <table>
+    <tr><th>指标（2026-06-30）</th><th class="num">数值</th><th>含义</th></tr>
+    <tr><td>总 AUM</td><td class="num hl">$10,470亿</td><td>同比 +25%，2026Q1 破万亿</td></tr>
+    <tr><td>计费 AUM（FGAUM）</td><td class="num hl">$8,580亿</td><td>同比 +34%，快于总 AUM</td></tr>
+    <tr><td>永续资本占比</td><td class="num hl">AUM 60% / FGAUM 70%</td><td>无固定到期赎回压力</td></tr>
+    <tr><td>季度净流入</td><td class="num hl">$600亿</td><td>创纪录（资管 $380亿 + 保险 $220亿）</td></tr>
+    <tr><td>TTM 净流入</td><td class="num">$2,980亿</td><td>占 AUM 增量主体</td></tr>
+    <tr><td>干火药（Dry Powder）</td><td class="num">$820亿</td><td>其中 $620 亿为未来管理费资产（~70% 信贷）</td></tr>
+  </table>
+  <div class="src">来源：Apollo IR 2Q26 Earnings Release（2026-08-04 披露）</div>
+</div>
+<p class="para">永续资本占计费 AUM 70%，意味着 <b>约 2/3 的管理费不受募资周期与赎回周期摆动</b>——这在 2025-2026 私人信贷赎回潮中是最重要的防御属性（详见风险章节）。</p>
+
+<h3>2.4 反方视角：这套模式的风险源也在"信用"二字</h3>
+<p class="para">护城河的另一面是<b>"信贷基本面下行时的双向敞口"</b>：资产管理端（放贷资产违约/减值）与保险端（利差收窄、赔付久期错配）同周期受损；且 Athene 高杠杆（合并口径资产负债率 91%）放大了净值波动。2026 年 NAV BDC（非上市 BDC）赎回创历史纪录、行业对私募信贷资产质量的质疑上升，正是对该护城河的新一轮压力测试。</p>
+
+<!-- ================= 3. 行业格局 ================= -->
+<h2 class="sec" id="s3">三、行业格局与竞争地位</h2>
+<div class="secsub">万亿俱乐部：Blackstone / Apollo / Brookfield / KKR 四大金刚</div>
+
+<div class="card">
+  <div class="tabs" id="peer-tabs">
+    <div class="tab on" data-pane="peer-chart">图：AUM 与市值对比</div>
+    <div class="tab" data-pane="peer-table">表：估值与盈利对比</div>
+  </div>
+  <div class="tabpane on" id="peer-chart"><div id="chart-peers" class="chart-box h300"></div></div>
+  <div class="tabpane" id="peer-table">
+    <table>
+      <tr><th>公司</th><th>代码</th><th class="num">总AUM<br>($亿)</th><th class="num">市值<br>($亿)</th><th class="num">PE(TTM)</th><th class="num">PB</th><th class="num">股息率</th></tr>
+      <tr><td>Blackstone</td><td>BX</td><td class="num">13,460</td><td class="num">1,637</td><td class="num">30.6×</td><td class="num">11.4×</td><td class="num">3.82%</td></tr>
+      <tr class="hl"><td><b>Apollo Global</b></td><td><b>APO</b></td><td class="num"><b>10,470</b></td><td class="num"><b>1,018</b></td><td class="num"><b>46.7×</b></td><td class="num"><b>4.0×</b></td><td class="num"><b>1.64%</b></td></tr>
+      <tr><td>KKR</td><td>KKR</td><td class="num">7,960</td><td class="num">993</td><td class="num">34.1×</td><td class="num">3.4×</td><td class="num">0.71%</td></tr>
+      <tr><td>Blue Owl</td><td>OWL</td><td class="num">3,190</td><td class="num">185</td><td class="num">148.9×</td><td class="num">4.0×</td><td class="num">7.73%</td></tr>
+      <tr><td>TPG</td><td>TPG</td><td class="num">3,060</td><td class="num">205</td><td class="num">78.3×</td><td class="num">7.1×</td><td class="num">4.27%</td></tr>
+    </table>
+    <div class="src">数据：2026-09-01 收盘快照 / 2026Q2 财报（各公司 IR 披露）。注：另类资管 GAAP PE 参考意义有限，业界更常用 FRE 倍数估值；APO 远期 FRE 口径约 20×。</div>
+  </div>
+</div>
+
+<h3>3.1 竞争定位</h3>
+<table>
+  <tr><th style="width:16%">维度</th><th>APO 相对同行的位置</th></tr>
+  <tr><td><b>规模</b></td><td>全球第二（AUM $1.05T），仅次于 Blackstone（$1.35T）；显著领先 KKR（$0.80T）</td></tr>
+  <tr><td><b>资产结构</b></td><td>信贷主导（88% 计费 AUM 为信用类）——与 BX/KKR 的多资产均衡截然不同，<b>本质是"私人信贷 + 保险"纯度最高的上市平台</b>；永续占比 70% 为五家中最高</td></tr>
+  <tr><td><b>成长速度</b></td><td>FGAUM +34% YoY，AUM +25%——<b>增速五家中最高</b>（BX +12%区间、KKR +16%、OWL +12%、TPG 中单位数）</td></tr>
+  <tr><td><b>盈利模式差异</b></td><td>唯一双轮（FRE + SRE）；BX 以 FRE 为主（revenue 多来自管理费），KKR 介于其间；OWL 是"纯管理费"现金牛但 GAAP 利润薄</td></tr>
+  <tr><td><b>估值位置</b></td><td>TTM PE 高于 BX/KKR（46.7× vs 30-34×）——市场为"高增长 + 保险特许权"付溢价；但 PB 仅 4.0×（BX 11.4×），因 Athene 并表摊薄账面净资产</td></tr>
+</table>
+
+<h3>3.2 行业景气坐标（2026 年中）</h3>
+<div class="mt"><b>行业背景</b>：另类资管整体处"规模扩张、估值重新定价"阶段。私人信贷从高速增长期进入<b>赎回与资产质量检验期</b>——非上市 BDC 赎回请求创历史新高（Q2 请求量=NAV 的 12.4%，上季 7.9%），赞助商仅满足约 38%。财富管理渠道（普适养老/散户）销售 Q2 环比走弱（全行业 non-traded BDC 募资同比下降 82%）。<b>这构成 2026 年板块估值压缩的大背景</b>，也解释了 APO/KKR/BX 今年普遍 -4%~-14% 的回撤。</div>
+
+<!-- ================= 4. 价格与表现 ================= -->
+<h2 class="sec" id="s4">四、行情与历史表现：长期复利机器 · 短期 β 属性</h2>
+<div class="secsub">本地日线统计（2011-03 上市起，后复权）——"慢牛股、快回撤"的双面性</div>
+
+<div class="card">
+  <h3>4.1 复权价格走势（2011-04 = 100）</h3>
+  <div id="chart-price" class="chart-box"></div>
+  <div class="chart-note">后复权月均线，以各自 2011-04=100；APO 2011-03-30 上市。来源：本地 Yahoo 日线数据（截至 2026-08-27）</div>
+</div>
+
+<div class="card">
+  <div class="tabs" id="perf-tabs">
+    <div class="tab on" data-pane="perf-chart">图：多周期累计收益</div>
+    <div class="tab" data-pane="perf-table">表：区间明细（收益/CAGR/波动/最大回撤）</div>
+  </div>
+  <div class="tabpane on" id="perf-chart"><div id="chart-perf" class="chart-box h300"></div></div>
+  <div class="tabpane" id="perf-table">
+    <table>
+      <tr><th>区间</th><th class="num">APO</th><th class="num">SPY</th><th class="num">BX</th><th class="num">KKR</th><th>口径</th></tr>
+      <tr><td><b>1Y</b></td><td class="num hl">-0.5%</td><td class="num">+20.1%</td><td class="num">-13.4%</td><td class="num">-22.0%</td><td>总收益</td></tr>
+      <tr><td><b>3Y</b></td><td class="num">+67.1%</td><td class="num best">+80.8%</td><td class="num">+56.2%</td><td class="num">+82.6%</td><td>总收益</td></tr>
+      <tr><td><b>5Y</b></td><td class="num best">+150.7%</td><td class="num">+83.2%</td><td class="num">+37.3%</td><td class="num">+76.3%</td><td>总收益</td></tr>
+      <tr><td><b>10Y</b></td><td class="num best">+951.8%</td><td class="num">+314.6%</td><td class="num">+708.7%</td><td class="num">+759.8%</td><td>总收益</td></tr>
+      <tr><td><b>上市以来</b></td><td class="num best">+1,801%</td><td class="num">+660%</td><td class="num">+1,596%</td><td class="num">+990%</td><td>2011-03 起</td></tr>
+      <tr><td colspan="6" style="border-bottom:none; font-size:12px; color:#7b8794; padding-top:4px">CAGR：1Y -0.6%（SPY +20.2%）｜3Y 18.7%（SPY 21.8%）｜5Y 20.2%（SPY 12.9%）｜10Y 26.6%（SPY 15.3%）｜最大回撤：1Y -34.1%（SPY -8.9%）、10Y -53.5%（SPY -33.7%）。来源：本地日线后复权统计，截至 2026-08-27。</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="tabs" id="year-tabs">
+    <div class="tab on" data-pane="year-chart">图：年度收益（红▲/绿▼ = APO 相对 SPY 超额）</div>
+    <div class="tab" data-pane="year-table">表：年度收益明细</div>
+  </div>
+  <div class="tabpane on" id="year-chart"><div id="chart-year" class="chart-box h300"></div></div>
+  <div class="tabpane" id="year-table">
+    <table>
+      <tr><th>年度</th><th class="num">APO</th><th class="num">SPY</th><th class="num">相对超额</th><th class="num">BX</th><th class="num">KKR</th></tr>
+      <tr><td>2017</td><td class="num pct-up">+82.3%</td><td class="num pct-up">+20.8%</td><td class="num pct-up">▲ +61.5pp</td><td class="num pct-up">+22.4%</td><td class="num pct-up">+37.8%</td></tr>
+      <tr><td>2018</td><td class="num pct-dn">-22.3%</td><td class="num pct-dn">-5.3%</td><td class="num pct-dn">▼ -17.1pp</td><td class="num pct-dn">-1.4%</td><td class="num pct-dn">-6.3%</td></tr>
+      <tr><td>2019</td><td class="num pct-up">+104.1%</td><td class="num pct-up">+31.1%</td><td class="num pct-up">▲ +73.0pp</td><td class="num pct-up">+94.6%</td><td class="num pct-up">+51.7%</td></tr>
+      <tr><td>2020</td><td class="num pct-up">+8.1%</td><td class="num pct-up">+17.2%</td><td class="num pct-dn">▼ -9.1pp</td><td class="num pct-up">+20.1%</td><td class="num pct-up">+40.2%</td></tr>
+      <tr><td>2021</td><td class="num pct-up">+57.1%</td><td class="num pct-up">+30.5%</td><td class="num pct-up">▲ +26.6pp</td><td class="num pct-up">+113.1%</td><td class="num pct-up">+89.7%</td></tr>
+      <tr><td>2022</td><td class="num pct-dn">-8.5%</td><td class="num pct-dn">-18.7%</td><td class="num pct-up">▲ +10.2pp</td><td class="num pct-dn">-38.7%</td><td class="num pct-dn">-36.1%</td></tr>
+      <tr><td>2023</td><td class="num pct-up">+51.8%</td><td class="num pct-up">+26.7%</td><td class="num pct-up">▲ +25.1pp</td><td class="num pct-up">+78.1%</td><td class="num pct-up">+79.5%</td></tr>
+      <tr><td>2024</td><td class="num pct-up">+83.5%</td><td class="num pct-up">+25.6%</td><td class="num pct-up">▲ +57.9pp</td><td class="num pct-up">+37.9%</td><td class="num pct-up">+83.1%</td></tr>
+      <tr><td>2025</td><td class="num pct-dn">-11.5%</td><td class="num pct-up">+18.0%</td><td class="num pct-dn">▼ -29.5pp</td><td class="num pct-dn">-8.6%</td><td class="num pct-dn">-14.1%</td></tr>
+      <tr><td>2026 YTD</td><td class="num pct-dn">-7.8%</td><td class="num pct-up">+13.5%</td><td class="num pct-dn">▼ -21.3pp</td><td class="num pct-dn">-7.0%</td><td class="num pct-dn">-15.4%</td></tr>
+    </table>
+    <div class="src">本地日线后复权，年度=自然年最后一个交易日收盘相对首日；2026 截至 08-27。颜色仅作辅助，方位符号▲▼为区分主通道（Okabe-Ito 色弱安全组合）。</div>
+  </div>
+</div>
+
+<div class="card">
+  <h3>4.3 60 日滚动相关性：APO 是"资管 β"还是"成长 β"？</h3>
+  <div id="chart-corr" class="chart-box h300"></div>
+  <div class="chart-note">60 日滚动收益相关性（本地日线）。末值（2026-08-27）：APO×SPY 0.40、APO×BX 0.78、APO×KKR 0.83；全区间日收益线性相关：APO×BX 0.67、APO×KKR 0.69、APO×SPY 0.62（BX×KKR 0.75）。</div>
+  <p class="para" style="margin-top:10px"><b>解读</b>：APO 与同行（BX/KKR）的相关性长期处于 0.7-0.8 高位，说明股价的主要驱动是<b>行业贝塔（另类资管板块流动性/利率敏感）</b>而非个股 α；与大盘相关性 0.4-0.6、年化波动 37-40%（近 SPY 3 倍、接近成长股），即"费率定价的是资管股，股价波动却像半成长股"。<b>这意味 APO 的买卖时点很大程度上由板块流动性周期决定，而非公司基本面单点事件</b>——2025-2026 板块整体回撤约 30-45% 就是明证。</p>
+</div>
+
+<!-- ================= 5. 财务纵深 ================= -->
+<h2 class="sec" id="s5">五、盈利引擎的季度纵深：FRE/SRE 双引擎</h2>
+<div class="secsub">GAAP 会骗人，看非 GAAP 双引擎</div>
+
+<div class="card">
+  <div class="tabs" id="fre-tabs">
+    <div class="tab on" data-pane="fre-chart">图：FRE / SRE 季度走势</div>
+    <div class="tab" data-pane="fre-table">表：2026 全年指引与关键指标</div>
+  </div>
+  <div class="tabpane on" id="fre-chart"><div id="chart-fre" class="chart-box h300"></div></div>
+  <div class="tabpane" id="fre-table">
+    <table>
+      <tr><th>指标（2026Q2 / 2026 展望）</th><th class="num">数值</th><th>解读</th></tr>
+      <tr><td>FRE（费用相关收益）</td><td class="num hl">$7.85亿</td><td>创纪录，+25% YoY / +8% QoQ；管理费收入 +23%（$10 亿）</td></tr>
+      <tr><td>SRE（利差相关收益）</td><td class="num hl">$8.77亿</td><td>创纪录，+11% YoY（调整口径）；Athene 有机增长+净利差改善</td></tr>
+      <tr><td>调整净收益（ANI）</td><td class="num">$13亿 / EPS $2.11</td><td>低于一致预期 $2.16（-2.2%），终结 4 连超预期</td></tr>
+      <tr><td>FRE 利润率</td><td class="num">58.5%</td><td>环比 +80bp、同比 +120bp</td></tr>
+      <tr><td>Capital Solutions 费</td><td class="num">$2.77亿</td><td>创纪录，连续第 5 个季度 >$2 亿（>100 笔交易）</td></tr>
+      <tr><td>2026 全年指引</td><td class="num">FRE +20% 以上</td><td>SRE 约 +10%（假设另类回报率 11%）</td></tr>
+      <tr><td>股东回报</td><td class="num">TTM $16亿</td><td>股息 $2.25/年 + 回购；Q2 回购 $1.02 亿</td></tr>
+      <tr><td>净资产负债表价值</td><td class="num">$25.3亿</td><td>$4.06/股，占市值约 3%</td></tr>
+    </table>
+    <div class="src">来源：Apollo IR 2Q26 8-K 与电话会纪要（2026-08-04）；分析师预期来自 24/7 Wall St. 汇总。</div>
+  </div>
+</div>
+
+<div class="flex2">
+  <div>
+    <h3>5.1 GAAP 的矛盾面：Q1 亏损，Q2 大增</h3>
+    <p class="para">2026Q1 因 Bermuda <b>ACRA 税制变更</b>一次性计提 $17 亿估值备抵，GAAP 归母净亏损 $19.3 亿（EPS -$3.27）；2026Q2 GAAP 归母净利 $13.1 亿（+115% YoY）、基本 EPS $2.18。<b>这解释了为什么"看 GAAP 的散户"对 APO 又爱又怕</b>——季度间大幅摆动，而 FRE/SRE 才是平滑的可比口径。转折：2026Q2 是单季盈利规模（GAAP EPS）五家同行最高（APO $2.18 vs BX $1.54 / KKR $0.74 / TPG $0.44）。</p>
+  </div>
+  <div>
+    <h3>5.2 增长三支柱落地情况</h3>
+    <ul style="margin-left:20px; color:var(--ink2); font-size:13.5px;">
+      <li style="margin-bottom:6px"><b>Origination（发起）</b>：Q2 $740 亿，H1 $1,500 亿，TTM $3,200 亿——"资产制造机"马力充足；</li>
+      <li style="margin-bottom:6px"><b>Global Wealth（全球财富）</b>：Q1 净流入 $40 亿（永续/半流动产品占比 >70%），Q2 零售年金竞争激烈、渠道景气偏弱——<b>这是当前最大不确定性</b>；</li>
+      <li><b>Capital Solutions（资本解决方案）</b>：Q2 费收 $2.77 亿创纪录——在银行削减资产负债表的背景下，APO 承接了更多企业定制融资（Broadcom $350 亿 AI 基建融资为行业最大单之一）。</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ================= 6. 投资逻辑 ================= -->
+<h2 class="sec" id="s6">六、核心投资逻辑（3 条）+ 关键变量</h2>
+<div class="secsub">每条逻辑都必须回答：买的是什么、为什么成立、定价了没有</div>
+
+<div class="card">
+  <h3>逻辑 1：保险资本共生的"利差复利机"（SRE 引擎）</h3>
+  <p class="para"><b>逻辑</b>：Athene 把保单负债转化为可投的长期资产，APO 从中赚取"投资收益 − 负债成本"的利差；利差再投入新资产，形成资产负债表规模复利。<br><b>为什么成立</b>：SRE 连续多季创新高（Q2 $8.77 亿，LTM $34.3 亿），Athene 投资资产 +14% YoY，净利差改善；保险负债 98% 为投资级资产、久期匹配管理成熟。<br><b>影响路径</b>：SRE 增长 → ANI 增长 → 股价（SRE 占 ANI 约 2/3）。<br><b>定价程度</b>：<b>部分定价。</b>市场已给 APO 高于同行的 PE 溢价，但隐含假设是"利差长期稳定 + 保险规模继续高增"——若利率大幅下行或保单保证成本上升，SRE 增长斜率将低于指引假定的 +10%，估值需下修。</p>
+  <div class="src">关键变量：10Y 美债收益率路径、Athene 新业务（年金销售）保费增速、再保险安排利率。</div>
+</div>
+
+<div class="card">
+  <h3>逻辑 2：信用"制造—分销"飞轮（FRE 引擎 + 资本解决方案）</h3>
+  <p class="para"><b>逻辑</b>：APO 不是"买债放贷"的钱柜，而是"造债分债"的工厂——发起端有企业客户关系与结构化能力（Q2 $740 亿发起、75% 投资级），分销端有 ACS 银团与 Capital Solutions（每季 >$2 亿费收）。<br><b>为什么成立</b>：管理费收入 +23%、Capital Solutions 费 +28% 双创纪录；干火药 $820 亿（$620 亿未来管理费）为后续 FRE 提供可见度。<br><b>影响路径</b>：FRE 利润率（58.5%，全年指引再扩 100bp）+ 管理费资产增长 → 每股 FRE 复利 → 估值重估。<br><b>定价程度</b>：<b>已定价较满。</b>TTM 46.7× 隐含市场已按"FRE 双位数增长 + 利润率扩张"给价；一旦 Q3/Q4 FRE 增速低于 20% 指引下限，股价可能回落 10%+（历史方式：2025 年盈利多次超预期但股价仍随板块杀跌）。</p>
+  <div class="src">关键变量：每季 FRE 增速 vs 20% 指引、发起量 TTM 能否维持 $3,200 亿、干火药部署节奏。</div>
+</div>
+
+<div class="card">
+  <h3>逻辑 3：永续资本护城河在行业下行期的"逆势募资"能力</h3>
+  <p class="para"><b>逻辑</b>：当非上市 BDC 与私募信贷遭遇赎回潮、全行业募资放缓时，永续资本占比 70% 的 APO 受到的流动性冲击最小，甚至可以<b>承接同行被迫出售的资产、并购陷入困境的平台</b>（历史先例：2025 收购 Bridge Investment Group）。<br><b>为什么成立</b>：Q2 净流入创纪录 $600 亿中保险端占 $220 亿，TTM 净流入 $2,980 亿；永续结构下不存在大规模强制赎回。<br><b>影响路径</b>：行业出清 → APO 相对份额提升 → 下一轮周期 FRE 基数更高。<br><b>定价程度</b>：<b>未充分定价。</b>市场目前按"行业赎回担忧"压制整体板块估值（APO YTD -6.7%），但对"抗赎回结构"的溢价体现不足——这是当前最大的预期差候选。</p>
+  <div class="src">关键变量：财富渠道（semi-liquid 产品）赎回率、行业 NAV BDC 赎回数据、利率曲线形态。</div>
+</div>
+
+<h3>一句话本质（可证伪版）</h3>
+<div class="concl">
+  <p><b>"买 APO = 买'信用制造能力 × 保险资本'的复利，而不是买'另类资管牌照'。"</b></p>
+  <p style="font-size:13.5px">证伪条件：若未来 4 个季度出现 ①FRE 增速回落至 15% 以下，②SRE 连续两季同比负增长，或 ③干火药/发起量萎缩至 TTM $2,000 亿以下而管理层无法解释——则"信用制造 + 利差复利"逻辑不成立，估值应从 46× 向 30×（BX 水平）回归。</p>
+</div>
+
+<!-- ================= 7. 共识与预期差 ================= -->
+<h2 class="sec" id="s7">七、市场共识与预期差</h2>
+<div class="secsub">市场知道什么 ≠ 市场定价了什么</div>
+
+<div class="card">
+  <h3>7.1 共识（已被定价）</h3>
+  <ul style="margin-left:20px; color:var(--ink2); font-size:14px;">
+    <li style="margin-bottom:6px"><b>高增长叙事</b>：AUM 万亿里程碑、FRE/SRE 双创纪录、Four-point 的 FRE +20% 指引——这些是 Reddit/媒体/研报都在说的"明牌"，已反映在 46× 的溢价 PE 里。</li>
+    <li style="margin-bottom:6px"><b>AI 基础设施信贷主题</b>：Broadcom $350 亿融资、与 BlackRock/Blackstone 的 AI 算力融资平台（$5000 亿规模目标）——市场给了"AI 信贷旗手"的故事溢价。</li>
+    <li><b>管理层信誉</b>：Marc Rowan 的资本配置历史（多次股价大跌后回购/战略投资）被市场信任，投资者普遍将其视为"长期复利"标的。</li>
+  </ul>
+</div>
+
+<div class="card">
+  <h3>7.2 预期差（未被充分定价）</h3>
+  <ul style="margin-left:20px; color:var(--ink2); font-size:14px;">
+    <li style="margin-bottom:8px"><b>① 抗赎回结构的价值被低估。</b>行业正在经历 NAV BDC 赎回创纪录（Q2 请求 = NAV 12.4%）与财富渠道景气下滑，但 APO 70% 永续资本决定其受冲击程度显著小于 OWL/TPG 等纯募资平台。若 Q3 行业赎回数据继续恶化而 APO 净流入保持为正，将出现"板块杀跌 vs 个股韧性"的分化交易机会。</li>
+    <li style="margin-bottom:8px"><b>② "GAAP 失真"可能制造反向噪音。</b>Q1 的 $17 亿税项亏损让散户恐慌（YTD 一度跌 25%+），但那是非现金、非经营性项目；对只看 GAAP 的投资者，2026 年财报存在"Q1 亏损 → Q2 暴增"的剧烈摆动，容易在 Q3 财报季引发误导性抛售。</li>
+    <li><b>③ AI 信贷进入"从故事到合同"的兑现期。</b>市场已给 AI 主题溢价，但 $5000 亿 AI 算力融资平台的合同落地进度、利差真实水平（vs 承诺的 280-440bp 超额利差）仍未充分验证——若其中任一兑现低于预期，主题溢价将收缩，反之则进一步打开空间。</li>
+  </ul>
+</div>
+
+<!-- ================= 8. 估值 ================= -->
+<h2 class="sec" id="s8">八、估值框架与当前位置</h2>
+<div class="secsub">GAAP PE 会误导，FRE/ANE 倍数才是资管股的正确标尺</div>
+
+<div class="card">
+  <table>
+    <tr><th style="width:30%">口径</th><th class="num">APO</th><th class="num">BX</th><th class="num">KKR</th><th style="width:30%">说明</th></tr>
+    <tr><td>PE（TTM GAAP）</td><td class="num hl">46.7×</td><td class="num">30.6×</td><td class="num">34.1×</td><td>GAAP 含投资损益/税项噪音，横向可比性差</td></tr>
+    <tr><td>远期 PE（FWD）</td><td class="num">~20×</td><td class="num">~22×</td><td class="num">~24×</td><td>基于远期 EPS ~$6.3（含 FRE/SRE）</td></tr>
+    <tr><td>PB（TTM）</td><td class="num">4.0×</td><td class="num">11.4×</td><td class="num">3.4×</td><td>APO 因 Athene 并表摊薄净资产，PB 失真</td></tr>
+    <tr><td>股息率</td><td class="num">1.64%</td><td class="num">3.82%</td><td class="num">0.71%</td><td>APO 主要靠回购+再投资而非股息</td></tr>
+    <tr><td>一致目标价</td><td class="num hl">$154.3</td><td class="num">—</td><td class="num">—</td><td>23 家机构：74% 买入 / 26% 持有 / 0 卖出；区间 $130-$173</td></tr>
+  </table>
+  <div class="src">估值来源：agentic_search 多源（Investing.com / Yahoo / neodata，2026-09-01 时点）；目标价为机构一致预期，非一手来源，需结合公司指引复核。</div>
+</div>
+
+<h3>8.1 估值定位判断</h3>
+<p class="para">把 APO 放在同行坐标系里：<b>它卖的不比"增长最快"便宜，但也不比"确定性最高"贵</b>。TTM PE 46.7× 高于 BX（30.6×）/KKR（34.1×），对应 FGAUM 增速（+34%）也是五家最高——<b>市场给它的其实是"增速 x 永续质量"的合定价</b>。若以 FRE 口径重算（市值 / 预期 2026 FRE），隐含约 25-28×，处于其历史中枢偏高但未极端。</p>
+
+<div class="mt"><b>当前估值的含义</b>：现价 $131 隐含市场已接受"2026 FRE +20%、SRE +10%、其后保持双位数"的指引组合。若您认为管理层指引可兑现（历史上 2023-2024 连续两年超额完成），则 $154 一致目标价对应的约 <b>+17.5%</b> 空间更多来自"市场 2026 年资金重新流入板块"的贝塔修复，而非新的盈利上调；若您对私人信贷周期持谨慎态度，则当前 46× 的溢价缺乏安全边际，需等待板块情绪转暖信号。</div>
+
+<!-- ================= 9. 风险 ================= -->
+<h2 class="sec" id="s9">九、风险清单（短期 / 中期分层）</h2>
+
+<div class="risk">
+  <div class="rbox">
+    <b style="color:var(--up)">短期风险（未来 1-2 个季度，概率/影响高）</b>
+    <ul>
+      <li><span class="lv-hi">[高] 私人信贷赎回潮蔓延：</span>NAV BDC Q2 赎回请求 = NAV 12.4% 创纪录，若 Q3 恶化至 APO 的 wealth 产品（semi-liquid），FRE 增长将直接受损。APO 已披露 Q3 初 ADS 赎回约为上季同期一半（缓和迹象），但仍未完全解除。</li>
+      <li><span class="lv-mid">[中] 财报噪音交易：</span>Q1 税项亏损 + Q2 暴增的 GAAP 摆动 + Q3 财报（预计 11 月披露）预期差，易引发双向大波动（历史单季 ±8-15% 常见）。</li>
+      <li><span class="lv-mid">[中] 利率中枢下移：</span>SRE 对利差敏感，若美联储加速降息、10Y 快速下行，Athene 新资金利差收窄，SRE 指引 +10% 承压。</li>
+    </ul>
+  </div>
+  <div class="rbox">
+    <b style="color:var(--warn)">中期风险（1-3 年，影响大）</b>
+    <ul>
+      <li><span class="lv-hi">[高] 信用周期转向：</span>若经济下行、投资级/次投资级信贷违约率上升，APO 的发起资产与 Athene 投资组合将同步承压——"信贷工厂 + 保险杠杆"模式在周期底部是双刃剑（2011 上市以来最大回撤 -57% 即发生在信贷承压期）。</li>
+      <li><span class="lv-mid">[中] 保险监管/资本要求变化：</span>Bermuda/美国保险金融监管趋严（如今年 ACRA 税改先例）、偿付能力资本要求上调将压缩 Athene 的杠杆与利差。</li>
+      <li><span class="lv-mid">[中] 财富渠道结构性走弱：</span>若零售年金竞争导致保费增速下降（已现端倪），SRE 增长引擎将失去规模动能。</li>
+      <li><span class="lv-mid">[中] 关键人风险：</span>Marc Rowan 仍是战略核心（此前共同创始人 Josh Harris 2022 年离职、Leon Black 2021 年卸任），继任连续性需跟踪。</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ================= 10. 结论 ================= -->
+<h2 class="sec" id="s10">十、投资结论</h2>
+
+<div class="concl">
+  <h3>结论（数据驱动，非建议）</h3>
+  <p><b>长期（3 年+）：优质复利资产。</b>10Y CAGR 26.6%、上市以来 +1,801% 的资本配置记录、70% 永续资本带来的费用稳定性、以及"信用制造+保险共生"这一行业最强的结构性增长引擎，支持其在另类资管中保持头部地位。若按 2026 指引兑现，3Y 视角年化收益 15-20% 的中枢假设合理。</p>
+  <p><b>中期（6-18 个月）：处于"增长质量验证期"，β 风险大于 α 瑕疵。</b>2025-2026 连续两年显著跑输（累计超额 -50pp）主要来自板块贝塔（私人信贷赎回 + 利率路径），而非 APO 自身 FRE/SRE 失速——实际上 FRE +25% 仍在加速。这意味着：<b>板块情绪修复是中期股价的主要催化，公司基本面二次确认是安全垫</b>。</p>
+  <p><b>短期（1-3 个月）：偏谨慎。</b>YTD -6.7%、60 日滚动相关性仍处 0.4-0.8 高位、一致目标价 $154 隐含 +17.5% 但更依赖贝塔；在 Q3 财报（11 月初）与联储路径明朗前，缺乏个股层面的明确向上催化。技术面 52 周区间 $98.7-$151.4，现价处于中位偏下。</p>
+  <p style="font-size:13px; color:var(--sub)">—— 仓位视角：若按资管股框架配置，建议把 APO 视为"高 β 的行业龙头"，用板块贝塔择时、用 FRE 指引看基本面；对波动容忍度低的投资者，等待 10Y 利率企稳或板块资金转正的右侧信号更合适。</p>
+</div>
+
+<div class="disclaimer">
+  <b>数据来源与口径</b>：行情/历史收益/相关性为本地数据（Yahoo Finance 日线，截至 2026-08-27，后复权，交易日期口径）；财务与估值数据来自公司 2026Q2 财报（2026-08-04 披露，IR 一手来源）及多源金融检索（neodata/Investing.com/Yahoo 汇总，2026-09-01 时点；机构目标价为分析师一致预期，属非一手来源，需复核）。术语口径：FRE=费用相关收益、SRE=利差相关收益、ANI=调整净收益、FGAUM=计费管理资产、永续资本=无固定赎回压力的常青基金/保险负债。红涨绿跌仅作辅助，图线以颜色+线型/符号双重编码（Okabe-Ito 色弱安全）。
+  <br><br>
+  <b>免责声明</b>：以上内容基于公开数据和量化分析，仅供参考，不构成投资建议。市场有风险，投资需谨慎。任何投资决策应结合个人风险承受能力、资金状况和投资目标独立判断，必要时咨询持牌专业机构。过往表现不预示未来收益。
+</div>
+
+</div><!-- /wrap -->
+
+<script>
+(function(){
+  // ---------- tab 切换 ----------
+  document.querySelectorAll('.tabs').forEach(function(tb){
+    var btns = tb.querySelectorAll('.tab');
+    btns.forEach(function(b){
+      b.addEventListener('click', function(){
+        var paneId = b.getAttribute('data-pane');
+        var wrap = tb.parentElement;
+        btns.forEach(function(x){x.classList.remove('on');});
+        b.classList.add('on');
+        wrap.querySelectorAll('.tabpane').forEach(function(p){p.classList.remove('on');});
+        var el = wrap.querySelector('#'+paneId);
+        if(el){ el.classList.add('on');
+          // 重新渲染隐藏中的图表
+          var chartEl = el.querySelector('.chart-box, div[data-chart]');
+          if(chartEl && chartEl.getAttribute('data-chart')){
+            var key = chartEl.getAttribute('data-chart');
+            var c = document.getElementById(chartEl.id);
+            if(c && window.__charts && window.__charts[key]){ c.style.height='310px'; window.__charts[key].resize(); }
+          }
+        }
+      });
+    });
+  });
+
+  var OIC = {blue:'#0072B2', orange:'#E69F00', sky:'#56B4E9', red:'#D55E00', green:'#009E73', black:'#000000', purple:'#CC79A7', yellow:'#F0E442', gray:'#8c98a8'};
+  window.__charts = {};
+
+  function mk(id, option, key){
+    var el = document.getElementById(id);
+    if(!el) return;
+    var c = echarts.init(el);
+    c.setOption(option);
+    if(key) window.__charts[key] = c;
+    return c;
+  }
+
+  // ---------- 4.1 复权价格 ----------
+  var P = APO_DATA.price;
+  mk('chart-price', {
+    tooltip:{trigger:'axis', valueFormatter:function(v){return v==null?'—':v.toFixed(0);}},
+    legend:{data:['APO','SPY','BX','KKR'], top:4},
+    grid:{left:50,right:16,top:40,bottom:30},
+    xAxis:{type:'category', data:P.date, axisLabel:{interval:47}},
+    yAxis:{type:'log', name:'指数(2011-04=100)', nameTextStyle:{color:'#7b8794'}},
+    dataZoom:[{type:'inside'},{type:'slider', height:18, bottom:4}],
+    series:[
+      {name:'APO', type:'line', data:P.APO, smooth:true, symbol:'none', lineStyle:{width:3, color:OIC.blue}, itemStyle:{color:OIC.blue}},
+      {name:'BX',  type:'line', data:P.BX,  smooth:true, symbol:'none', lineStyle:{width:1.6, color:OIC.orange, type:'dashed'}, itemStyle:{color:OIC.orange}},
+      {name:'KKR', type:'line', data:P.KKR, smooth:true, symbol:'none', lineStyle:{width:1.6, color:OIC.purple, type:'dotted'}, itemStyle:{color:OIC.purple}},
+      {name:'SPY', type:'line', data:P.SPY, smooth:true, symbol:'none', lineStyle:{width:1.4, color:OIC.gray}, itemStyle:{color:OIC.gray}}
+    ]
+  }, 'price');
+
+  // ---------- 4.2 区间表现图 ----------
+  var R = APO_DATA.regions;
+  var periods = Object.keys(R.periods);
+  var tickers = ['APO','SPY','BX','KKR'];
+  mk('chart-perf', {
+    tooltip:{trigger:'axis', valueFormatter:function(v){return v==null?'—':v.toFixed(1)+'%';}},
+    legend:{data:tickers, top:4},
+    grid:{left:50,right:16,top:36,bottom:30},
+    xAxis:{type:'category', data:periods},
+    yAxis:{type:'value', name:'累计收益 %', nameTextStyle:{color:'#7b8794'}},
+    series: tickers.map(function(t){
+      return {name:t, type:'bar', barGap:'18%',
+        data: periods.map(function(p){ return {value:R.periods[p][t], itemStyle:{color: t==='APO' ? OIC.blue : (t==='BX'?OIC.orange:(t==='KKR'?OIC.purple:OIC.gray))}}; }),
+        itemStyle:{borderRadius:[3,3,0,0]}};
+    })
+  }, 'perf');
+
+  // ---------- 4.3 年度收益 ----------
+  var Y = APO_DATA.yearly;
+  mk('chart-year', {
+    tooltip:{trigger:'axis', valueFormatter:function(v){return v==null?'—':v.toFixed(1)+'%';}},
+    legend:{data:['APO','SPY','APO 相对 SPY 超额'], top:4},
+    grid:{left:50,right:16,top:36,bottom:30},
+    xAxis:{type:'category', data:Y.years},
+    yAxis:{type:'value', name:'%', nameTextStyle:{color:'#7b8794'}},
+    series:[
+      {name:'APO', type:'bar', barGap:'20%', data:Y.APO.map(function(v,i){
+        return {value:v, itemStyle:{color: v>=0 ? OIC.blue : OIC.red, borderRadius:[3,3,0,0]}};
+      })},
+      {name:'SPY', type:'bar', data:Y.SPY.map(function(v){
+        return {value:v, itemStyle:{color:'#c9d6e4', borderRadius:[3,3,0,0]}};
+      })},
+      {name:'APO 相对 SPY 超额', type:'line', symbol:'diamond', symbolSize:7,
+        data:Y.APO.map(function(v,i){ return (v - Y.SPY[i]).toFixed(1)*1; }),
+        lineStyle:{width:2, color:OIC.orange}, itemStyle:{color:OIC.orange}}
+    ]
+  }, 'year');
+
+  // ---------- 4.4 60日滚动相关性 ----------
+  var C = APO_DATA.corr60;
+  mk('chart-corr', {
+    tooltip:{trigger:'axis', valueFormatter:function(v){return v==null?'—':v.toFixed(2);}},
+    legend:{data:['APO×SPY','APO×BX','APO×KKR'], top:4},
+    grid:{left:50,right:16,top:36,bottom:30},
+    xAxis:{type:'category', data:C.dates, axisLabel:{interval:Math.floor(C.dates.length/9)}},
+    yAxis:{type:'value', name:'60日滚动相关', min:-0.4, max:1, nameTextStyle:{color:'#7b8794'}},
+    dataZoom:[{type:'inside'},{type:'slider', height:18, bottom:4}],
+    series:[
+      {name:'APO×SPY', type:'line', data:C.APO_SPY, symbol:'none', lineStyle:{width:2, color:OIC.blue}},
+      {name:'APO×BX',  type:'line', data:C.APO_BX,  symbol:'none', lineStyle:{width:1.8, color:OIC.orange, type:'dashed'}},
+      {name:'APO×KKR', type:'line', data:C.APO_KKR, symbol:'none', lineStyle:{width:1.8, color:OIC.purple, type:'dotted'}}
+    ]
+  }, 'corr');
+
+  // ---------- 5.0 FRE/SRE ----------
+  var F = APO_DATA.fre;
+  mk('chart-fre', {
+    tooltip:{trigger:'axis', valueFormatter:function(v){return v==null?'—':'$'+v+'M';}},
+    legend:{data:['FRE 费用相关收益','SRE 利差相关收益'], top:4},
+    grid:{left:60,right:60,top:36,bottom:30},
+    xAxis:{type:'category', data:F.q},
+    yAxis:[{type:'value', name:'$ 百万'}, {type:'value', name:'同比 %', max:40}],
+    series:[
+      {name:'FRE 费用相关收益', type:'bar', data:F.fre, barWidth:34, itemStyle:{color:OIC.blue, borderRadius:[4,4,0,0]}},
+      {name:'SRE 利差相关收益', type:'bar', data:F.sre, barWidth:34, itemStyle:{color:OIC.orange, borderRadius:[4,4,0,0]}}
+    ]
+  }, 'fre');
+
+  // ---------- 3.0 同行对比 ----------
+  var peers = APO_DATA.peers;
+  var ptickers = peers.map(function(p){return p.ticker;});
+  mk('chart-peers', {
+    tooltip:{trigger:'axis'},
+    legend:{data:['AUM ($亿)','市值 ($亿)','PE(TTM)'], top:4},
+    grid:{left:60,right:60,top:36,bottom:30},
+    xAxis:{type:'category', data:ptickers},
+    yAxis:[{type:'value', name:'$亿'}, {type:'value', name:'PE', min:0}],
+    series:[
+      {name:'AUM ($亿)', type:'bar', data:peers.map(function(p){return {value:p.aum, itemStyle:{color: OIC.blue}};}), barWidth:26},
+      {name:'市值 ($亿)', type:'bar', data:peers.map(function(p){return {value:p.mktcap, itemStyle:{color: OIC.orange}};}), barWidth:26},
+      {name:'PE(TTM)', type:'line', yAxisIndex:1, data:peers.map(function(p){return p.pe;}), symbol:'diamond', symbolSize:8, lineStyle:{width:2, color:OIC.red}, itemStyle:{color:OIC.red}}
+    ]
+  }, 'peers');
+
+  window.addEventListener('resize', function(){
+    Object.keys(window.__charts).forEach(function(k){
+      var c = window.__charts[k];
+      var el = c.getDom();
+      var visible = el.offsetParent !== null;
+      if(visible && c.resize) c.resize();
+    });
+  });
+})();
+</script>
+</body>
+</html>
