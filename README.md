@@ -158,6 +158,8 @@
 - **[VIX 低位分析](reports/vix_low_spx_report.html)** · VIX 低位下 SPX 后续与持续性
 - **[VIX 低位 × SPY 事件研究](reports/vix_low_spy_dashboard/index.html)** · VIX 低位日的 SPY 事件研究
 - **[期权墙八标的](reports/20_期权墙八标的/index.html)** · 2026-09-18 到期期权持仓结构分析
+- **[富途热门股Top500过滤版](reports/hot_us_stocks_top500_filtered_20260901.html)** · 热度榜剔除>500$/中概/ADR 后 354 只明细
+- **[热门股池RSI评估](reports/hot354_rsi_eval_20260901.html)** · 354 只 Wilder RSI14 分布、超买超卖分层、17 板块×RSI 交叉透视与组合筛选（分档×分板块×搜索）
 
 ---
 
