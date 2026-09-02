@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 """
 CVS + VIX 日线获取（2026-09-02，Yahoo 直连 403 后的替代通道）
-- CVS: 新浪美股 US_MinKService.getDailyK（未复权原始价，1980 起全历史）
-- VIX: CBOE 官方 VIX_History.csv（1990 起，权威收盘口径）
-输出: data/cvs/CVS, 1D.csv ; data/vix/VIX, 1D.csv（兼容 7 列格式）
+- CVS(新浪未复权): 新浪美股 US_MinKService.getDailyK，1980 起全历史 → 存 CVS_sina_raw, 1D.csv
+  ⚠️ 主数据已切换为用户提供的 TradingView BATS:CVS 前复权（data/cvs/CVS, 1D.csv），
+     新浪未复权仅作对照备份，勿再覆盖主文件。
+- VIX: CBOE 官方 VIX_History.csv（1990 起，权威收盘口径）→ data/vix/VIX, 1D.csv
 """
 import json
 import os
@@ -66,8 +67,8 @@ def main():
     which = sys.argv[1:] or ["cvs", "vix"]
     if "cvs" in which:
         rows = load_sina_cvs()
-        fn = save("cvs", "CVS", rows)
-        print(f"CVS: {len(rows)} 行 {rows[0][0]} ~ {rows[-1][0]} -> {fn}")
+        fn = save("cvs", "CVS_sina_raw", rows)
+        print(f"CVS(新浪未复权备份): {len(rows)} 行 {rows[0][0]} ~ {rows[-1][0]} -> {fn}")
     if "vix" in which:
         rows = load_cboe_vix()
         fn = save("vix", "VIX", rows)

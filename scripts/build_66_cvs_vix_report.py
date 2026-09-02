@@ -215,28 +215,28 @@ __ECHARTS_LIB__
 
 <div class="card">
   <h1>CVS Health × VIX&gt;18 <span class="tag b">66 号</span><span class="tag a">问答转正式报告</span></h1>
-  <div class="meta">研究问题：<b>VIX 处于较高位（&gt;18）时，CVS 的表现如何？</b>｜ 窗口 <b>2015-01-02 ~ 2026-09-01（2933 个交易日）</b>｜ 口径：CVS/SPY 均为<b>未复权收盘价</b>（价格收益、<b>不含股息</b>）；VIX 用 CBOE 官方每日收盘 ｜ 数据：CVS 新浪美股日线（1980 起，Yahoo 直连 403 后的替代源）、VIX CBOE 官方、SPY 本地 Yahoo（新浪交叉验证一致）</div>
+  <div class="meta">研究问题：<b>VIX 处于较高位（&gt;18）时，CVS 的表现如何？</b>｜ 窗口 <b>2015-01-02 ~ 2026-09-01（2933 个交易日）</b>｜ 口径：CVS 采用<b>用户提供的 TradingView BATS:CVS 日线</b>（<b>前复权</b>，2010-12-31 ~ 2026-09-01，收益≈含分红总回报）；SPY 未复权收盘价对照；VIX 用 CBOE 官方每日收盘 ｜ 交叉验证：新浪美股未复权（1980 起）与富途前复权两通道互证一致（2022 高点 111.25 / 95.30）</div>
 
   <div class="callout blue">
-    <b>一句话结论：</b>VIX&gt;18 对 CVS 的<b>绝对收益没有择时价值</b>（高组与低组未来 1/5/20/60 日中位收益几乎无差别，p=0.54），但高 VIX 状态下 CVS <b>相对 SPY 显著跑输更多</b>（fwd20 超额 −1.2pp / fwd60 −3.5pp，p&lt;0.001）——恐慌后大盘反弹 CVS 跟不上。CVS 仅在 VIX 单日飙升当天有微弱防御性（99 次冲击日中位跑赢 SPY +0.8pp、73% 跑赢率），5 日后消失。其长期走势由自身医保基本面事件主导，与 VIX 高低无稳定关系。
+    <b>一句话结论：</b>VIX&gt;18 对 CVS 的<b>绝对收益没有择时价值</b>（高组与低组未来 1/5/20/60 日中位收益几乎无差别，p=0.54），但高 VIX 状态下 CVS <b>相对 SPY 显著跑输更多</b>（fwd20 超额 −1.0pp / fwd60 −2.8pp，p&lt;0.001）——恐慌后大盘反弹 CVS 跟不上。CVS 仅在 VIX 单日飙升当天有微弱防御性（99 次冲击日中位跑赢 SPY +0.8pp、73% 跑赢率），5 日后消失。其长期走势由自身医保基本面事件主导，与 VIX 高低无稳定关系。口径稳健性：改用前复权（含息）复跑结论不变。
   </div>
 
   <h3>核心速览</h3>
   <div class="kpi-row">
     <div class="kpi"><div class="k">CVS 现价（09-01，未复权）</div><div class="v">$97.60</div><div class="s">52 周 __META_WK__</div></div>
     <div class="kpi"><div class="k">VIX（09-01，CBOE）</div><div class="v grn">16.34</div><div class="s">&lt;18，处低波动区</div></div>
-    <div class="kpi"><div class="k">2015 以来价格累计</div><div class="v dn">CVS +2.6%</div><div class="s">SPY +270.3% ｜ β 0.66</div></div>
+    <div class="kpi"><div class="k">2015 以来累计（CVS）</div><div class="v up">+43.5%</div><div class="s">前复权含息 ｜ 未复权价 +2.6% ｜ SPY +270%</div></div>
     <div class="kpi"><div class="k">2022 高点（两口径）</div><div class="v">95.3 / 111.3</div><div class="s">前复权 / 未复权 @ 02-08</div></div>
     <div class="kpi"><div class="k">样本（交易日）</div><div class="v">2,933</div><div class="s">VIX&gt;18 占 1,186 日 = 40%</div></div>
-    <div class="kpi"><div class="k">高 VIX 日 fwd20</div><div class="v">+0.27%</div><div class="s">vs 低 VIX 日 +0.32%（无差异）</div></div>
-    <div class="kpi"><div class="k">高 VIX 日 fwd60 超额</div><div class="v dn">−3.5pp</div><div class="s">vs 低组 −1.8pp（p&lt;0.001）</div></div>
+    <div class="kpi"><div class="k">高 VIX 日 fwd20</div><div class="v">+0.46%</div><div class="s">vs 低 VIX 日 +0.54%（无差异）</div></div>
+    <div class="kpi"><div class="k">高 VIX 日 fwd60 超额</div><div class="v dn">−2.8pp</div><div class="s">vs 低组 −1.1pp（p&lt;0.001）</div></div>
     <div class="kpi"><div class="k">冲击日当日超额</div><div class="v up">+0.78pp</div><div class="s">99 次 VIX 单日 +≥15%，73% 跑赢</div></div>
   </div>
 </div>
 
 <div class="card">
   <h2>一、数据与口径校验</h2>
-  <p>本次 Yahoo 直连被风控（HTTP 403），改用双通道并做了交叉验证：CVS 走新浪美股日线（未复权），VIX 走 <span class="term">CBOE 官方<span class="tip">VIX 由芝加哥期权交易所计算发布，本报告用官方 VIX_History.csv 每日收盘值，比第三方转载更权威；个别交易日第三方值与官方结算有 ~0.5 的小出入。</span></span> 文件。用 SPY 验证新浪接口：2015/2020/2022/2024/2026 六个锚点与本地 Yahoo 数据<b>完全一致</b>，源可信。</p>
+  <p>CVS 价格序列采用<b>用户提供的 TradingView BATS:CVS 日线导出</b>（前复权，3940 行，2010-12-31 起），覆盖到 2026-09-01。为确认口径做三源互证：①该文件 2022-02-08 高点 95.30 与用户行情软件记忆一致；②富途 over-HTTP 前复权实测同点位 95.30/94.94 <b>逐位吻合</b>；③新浪美股未复权数据同日 111.25（真实成交价），复权因子随时间从 0.674（2011）单调收敛至 1.0（2026）= 分红回溯特征，与无拆股事实一致 → 数据可靠。VIX 走 <span class="term">CBOE 官方<span class="tip">VIX 由芝加哥期权交易所计算发布，本报告用官方 VIX_History.csv 每日收盘值，比第三方转载更权威；个别交易日第三方值与官方结算有 ~0.5 的小出入。</span></span> 官方文件；SPY 用本地 Yahoo（新浪接口六锚点交叉一致）。</p>
   <div class="grid2">
     <div>
       <h3>CVS 2022 高点：两口径对照（防拉错校验）</h3>
@@ -245,13 +245,13 @@ __ECHARTS_LIB__
         <tr><td>未复权（本报告收益口径）</td><td style="text-align:right">111.25 / 收盘 110.83</td><td>真实历史成交价</td></tr>
         <tr><td>前复权 adj（行情软件默认）</td><td class="up" style="text-align:right">95.30 / 收盘 94.94</td><td>回溯扣减此后累计分红</td></tr>
       </table></div>
-      <div class="mini">CVS 无拆股，~14% 差幅全部来自 2022-02-08 之后累计分红的回溯调整——两口径都对，用户提示「2022 高点约 95」为前复权口径，与富途前复权实测完全一致。</div>
+      <div class="mini">CVS 无拆股，~14% 差幅全部来自 2022-02-08 之后累计分红的回溯调整——两口径都对。本报告主数据（用户提供 TradingView 文件）即前复权：2022 高点 95.30，与富途前复权实测逐位一致。</div>
     </div>
     <div>
       <h3>收益口径（重要）</h3>
       <ul class="tight">
-        <li>本报告所有收益 = <b>未复权价格收益</b>，<b>不含股息</b>（用户明确口径）。</li>
-        <li>CVS 股息率约 3.5%/年：若含股息再投资，各档收益约整体上移，但<b>高/低 VIX 组之间的相对差异不变</b>。</li>
+        <li>主收益序列 = <b>TradingView 前复权收盘价</b>：无分红的相邻两日收益与未复权一致，仅在<b>除息日多计当日分红</b> → 近似「含息总回报」口径。</li>
+        <li>对照组已用<b>新浪未复权（纯价格、不含息）</b>完整复跑：fwd20/60 绝对收益整体低约 0.2 / 0.7pp，高/低 VIX 组之间的<b>差异与全部定性结论不变</b> → 股息口径不改变结论。</li>
         <li>VIX&gt;18 为「当日收盘 VIX 值」判定；fwdN = 当日收盘买入持有 N 个交易日的收益。</li>
         <li>超额 = CVS 收益 − SPY 同期收益（百分点 pp）。</li>
       </ul>
@@ -262,19 +262,16 @@ __ECHARTS_LIB__
 <div class="card">
   <h2>二、全景：11.7 年 CVS 与 VIX（2015 = 100）</h2>
   <div id="ch_pan" class="chart tall"></div>
-  <div class="src">上：CVS（蓝）与 SPY（橙）价格指数，2015-01-02=100 —— CVS 基本横盘（+2.6%），SPY 翻了 2.7 倍；下：VIX 每日收盘（CBOE）+ 18 阈值线（红），阴影为 VIX&gt;18 的持续高波动窗口。可拖拽缩放。</div>
+  <div class="src">上：CVS（蓝，前复权）与 SPY（橙）价格指数，2015-01-02=100 —— CVS 含息累计 +43.5%（纯价格仅 +2.6%），SPY 翻了 2.7 倍；下：VIX 每日收盘（CBOE）+ 18 阈值线（红），阴影为 VIX&gt;18 的持续高波动窗口。可拖拽缩放。</div>
 </div>
 
 <div class="card">
   <h2>三、核心对比：VIX&gt;18 日 vs VIX≤18 日</h2>
   <div class="scroll"><table>
     <tr><th>状态（当日收盘 VIX）</th><th style="text-align:right">样本</th><th style="text-align:right">当日收益中位</th><th style="text-align:right">T+1 中位</th><th style="text-align:right">T+5 中位</th><th style="text-align:right">T+20 中位</th><th style="text-align:right">T+60 中位</th><th style="text-align:right">T+20 胜率</th><th style="text-align:right">T+60 胜率</th></tr>
-    <tr><td><span class="tag a">VIX &gt; 18</span>（绝对收益）</td><td style="text-align:right">1,186</td><td class="dn" style="text-align:right">−0.09%</td><td style="text-align:right">+0.05%</td><td style="text-align:right">+0.10%</td><td style="text-align:right">+0.27%</td><td style="text-align:right">+0.19%</td><td style="text-align:right">51.9%</td><td style="text-align:right">49.7%</td></tr>
-    <tr><td><span class="tag g">VIX ≤ 18</span>（绝对收益）</td><td style="text-align:right">1,747</td><td style="text-align:right">+0.11%</td><td style="text-align:right">+0.05%</td><td style="text-align:right">+0.13%</td><td style="text-align:right">+0.32%</td><td style="text-align:right">−0.11%</td><td style="text-align:right">51.6%</td><td style="text-align:right">48.4%</td></tr>
-    <tr><td><span class="tag a">VIX &gt; 18</span>（相对 SPY 超额）</td><td style="text-align:right">1,186</td><td style="text-align:right">+0.07pp</td><td style="text-align:right">0.00pp</td><td class="dn" style="text-align:right">−0.45pp</td><td class="dn" style="text-align:right">−1.23pp</td><td class="dn" style="text-align:right">−3.51pp</td><td style="text-align:right">41.3%</td><td style="text-align:right">39.0%</td></tr>
-    <tr><td><span class="tag g">VIX ≤ 18</span>（相对 SPY 超额）</td><td style="text-align:right">1,747</td><td style="text-align:right">−0.02pp</td><td style="text-align:right">+0.02pp</td><td style="text-align:right">−0.07pp</td><td class="dn" style="text-align:right">−0.27pp</td><td class="dn" style="text-align:right">−1.76pp</td><td style="text-align:right">47.2%</td><td style="text-align:right">41.2%</td></tr>
+    __TAB3_ROWS__
   </table></div>
-  <div class="mini">显著性（Mann-Whitney U，高组 vs 低组）：绝对收益 T+20 p=0.54、T+60 p=0.28（<b>不显著</b>）；超额 T+20 p=0.0005、T+60 p&lt;0.0001（<b>显著为负</b>）。<br>注意：CVS 本身长期跑输 SPY（2015 起 ~−268pp），低组超额已为负；高 VIX 把「跑输」进一步放大 1~2pp/月，但绝对收益两组打平 → 高 VIX 后 CVS 不是跌得更狠，而是大盘反弹它不跟。</div>
+  <div class="mini">显著性（Mann-Whitney U，高组 vs 低组）：绝对收益 T+20 p=0.54、T+60 p=0.28（<b>不显著</b>）；超额 T+20 p=0.0005、T+60 p&lt;0.0001（<b>显著为负</b>）。<br>注意：CVS 含息也长期跑输 SPY（2015 起 ~−227pp），低组超额已为负；高 VIX 把「跑输」进一步放大 ~1pp/月，但绝对收益两组打平 → 高 VIX 后 CVS 不是跌得更狠，而是大盘反弹它不跟。</div>
   <div class="grid2">
     <div><h3>CVS 绝对收益（中位 %）</h3><div id="ch_fwd_abs" class="chart"></div></div>
     <div><h3>相对 SPY 超额（中位 pp）</h3><div id="ch_fwd_exc" class="chart"></div></div>
@@ -289,7 +286,7 @@ __ECHARTS_LIB__
       <tr><th>VIX 桶</th><th style="text-align:right">样本</th><th style="text-align:right">fwd20 中位</th><th style="text-align:right">fwd20 胜率</th><th style="text-align:right">超额中位</th><th style="text-align:right">跑赢率</th></tr>
       __BUCKET_ROWS__
     </table>
-    <div class="mini">读数：真正让 CVS <b>绝对</b>赚钱的是极端恐慌桶（VIX&gt;35，63 日，fwd20 中位 +3.4%、胜率 64%），但同期跑赢 SPY 的只有 25%——那是市场 V 型反弹的 β 而非 CVS 的 α。18–25（普通偏高波动）与 ≤15（过热低波动）都平淡。CVS 相对舒适区在 15–18。</div></div>
+    <div class="mini">读数：真正让 CVS <b>绝对</b>赚钱的是极端恐慌桶（VIX&gt;35，63 日，fwd20 中位 +4.3%、胜率 67%），但同期跑赢 SPY 的只有约 30%——那是市场 V 型反弹的 β 而非 CVS 的 α。18–25（普通偏高波动）与 ≤15（过热低波动）都平淡。CVS 相对舒适区在 15–18。</div></div>
   </div>
 </div>
 
@@ -318,7 +315,7 @@ __ECHARTS_LIB__
       __SEG_ROWS__
     </table></div>
   </div>
-  <div class="mini">左图按超额从负到正排列。两大超长段（2020-02~2021-03 共 279 日 / 2022-01~2023-01 共 263 日）CVS 均跑输（−12.2 / −3.8pp）；2020 全年 CVS −7.9% vs SPY +15.1%，2022 CVS −10.5% vs SPY −19.9%（熊市里相对抗跌但绝对仍亏）。2018-12 与 2025-03~05 两段 CVS 暴跌 −17 / −14pp，主因是 CVS 自身财报指引下修（与 VIX 无因果关系）。</div>
+  <div class="mini">左图按超额从负到正排列。两大超长段（2020-02~2021-03 共 279 日 / 2022-01~2023-01 共 263 日）CVS 均跑输（含息口径 −8.6 / −1.3pp）；2020 全年 CVS −5.0% vs SPY +15.1%，2022 CVS −8.5% vs SPY −19.9%（熊市里相对抗跌但绝对仍亏）。2018-12 与 2025-03~05 两段 CVS 暴跌 −17 / −13pp，主因是 CVS 自身财报指引下修（与 VIX 无因果关系）。</div>
 </div>
 
 <div class="card">
@@ -327,21 +324,21 @@ __ECHARTS_LIB__
     <tr><th>年份</th><th style="text-align:right">VIX&gt;18 天数</th><th style="text-align:right">占比</th><th style="text-align:right">CVS 年收益</th><th style="text-align:right">SPY 年收益</th><th style="text-align:right">年超额</th><th style="text-align:right">VIX 均值</th></tr>
     __YEAR_ROWS__
   </table></div>
-  <div class="mini">可见 CVS 只在 2022 熊市跑赢大盘（相对抗跌），其余年份大体跑输；2020 疫情 VIX 均值 29.3 的年份 CVS 也跑输 23pp。CVS 的「高 VIX 年」表现好坏完全取决于自身事件（2022 无自身暴雷→相对抗跌；2020 疫情药店受益但股价仍跑输）。</div>
+  <div class="mini">含息口径下 CVS 跑赢 SPY 的年份有 2015（+5pp）、2021（+22pp）、2022 熊市（+11pp）、2025（+70pp，自身业绩修复+医保情绪）、2026 至今（+13pp）；跑输最惨为 2024 财报暴雷年（−66pp）。高 VIX 占比较高的年份表现好坏仍取决于 CVS 自身事件：2020 疫情 VIX 均值 29.3 却跑输 20pp，2022 无自身暴雷则相对抗跌。</div>
 </div>
 
 <div class="card">
   <h2>八、结论与使用边界</h2>
   <div class="verdict"><b>1｜高 VIX 不是 CVS 的择时信号。</b>VIX&gt;18 与 ≤18 两状态下 CVS 未来 1/5/20/60 日绝对收益几乎相同（p=0.54）；把它当「恐慌买入」或「恐慌卖出」条件都没有统计支持。</div>
-  <div class="verdict"><b>2｜高 VIX 后 CVS 跑输大盘显著放大。</b>fwd20/fwd60 超额 −1.2/−3.5pp（vs 低组 −0.3/−1.8pp，p&lt;0.001）——高波动期大盘均值回归快，CVS β 仅 0.66 且无弹性叙事，反弹跟不上。若需在 VIX&gt;18 时表达市场反弹，CVS 是差的载体。</div>
+  <div class="verdict"><b>2｜高 VIX 后 CVS 跑输大盘显著放大。</b>fwd20/fwd60 超额 −1.0/−2.8pp（vs 低组 −0.1/−1.1pp，p&lt;0.001）——高波动期大盘均值回归快，CVS β 仅 0.66 且无弹性叙事，反弹跟不上。若需在 VIX&gt;18 时表达市场反弹，CVS 是差的载体。</div>
   <div class="verdict"><b>3｜唯一防御窗口：冲击日当天。</b>VIX 单日飙升 ≥15% 的 99 个交易日，CVS 当日中位跑赢 +0.8pp（73%）；但 5 日后优势消失——是「跌得比大盘少」，不是「逆势上涨」，也不可延续为策略。</div>
-  <div class="verdict"><b>4｜CVS 由自身事件定价。</b>2024-04 与 2024-12 财报崩盘（$80→$45）、2026-05~07 的 +70% 大涨均与 VIX 无关；个股 alpha 分析应围绕医保赔付率（MLR）、药房报销与监管政策展开，VIX 只贡献当日 β 扰动。</div>
-  <div class="verdict amber"><b>使用边界：</b>①收益为价格收益（不含股息）；②VIX&gt;18 覆盖 40% 交易日、长段高度连续（2020/2022 主导），逐日样本有自相关，故超额负差异应读作「长段事件的平均」而非 1186 个独立实验；③极端桶（&gt;35）仅 63 日样本；④2022 高点提示 95 为前复权口径，本报告收益口径一律未复权。</div>
+  <div class="verdict"><b>4｜CVS 由自身事件定价。</b>2024 年两次财报暴雷（一年内腰斩）与 2026-05~07 的大涨均与 VIX 无关；个股 alpha 分析应围绕医保赔付率（MLR）、药房报销与监管政策展开，VIX 只贡献当日 β 扰动。</div>
+  <div class="verdict amber"><b>使用边界：</b>①CVS 收益基于前复权价（≈含息总回报）；以未复权价（不含息）复跑，fwd 绝对收益约低 0.2~0.7pp，高/低组差异与结论不变；②VIX&gt;18 覆盖 40% 交易日、长段高度连续（2020/2022 主导），逐日样本有自相关，故超额负差异应读作「长段事件的平均」而非 1186 个独立实验；③极端桶（&gt;35）仅 63 日样本；④2022 高点提示 95 为前复权口径（本报告主数据即前复权），未复权真实成交价为 111.3。</div>
   <h3>当前快照（2026-09-01）</h3>
   <p>VIX 16.34（低波动区，≤18），CVS 97.60（未复权）距 2026-07-22 高点 110.68 回落 11.8%。历史统计口径下：当前既不在高 VIX 状态、也无冲击日信号——上述「高 VIX 效应」均不适用于当下；CVS 后续走势仍以自身医保基本面为主线。</p>
 </div>
 
-<div class="src">数据：新浪美股（CVS 日线）/ CBOE VIX_History（VIX）/ 本地 Yahoo（SPY）｜ 构建：scripts/build_66_cvs_vix_report.py ｜ 明细：results/cvs_vix_analysis.json ｜ 生成于 2026-09-02。本报告为统计研究，不构成投资建议。</div>
+<div class="src">数据：CVS = 用户提供 TradingView BATS:CVS（前复权）｜ VIX = CBOE VIX_History（官方）｜ SPY = 本地 Yahoo ｜ 构建：scripts/build_66_cvs_vix_report.py ｜ 明细：results/cvs_vix_analysis.json ｜ 生成于 2026-09-02（用户数据复跑版）。本报告为统计研究，不构成投资建议。</div>
 </div>
 
 <script>
@@ -459,6 +456,39 @@ function base(grid){
 </html>
 """
 
+# 第三节核心对比表 4 行（动态取自 results json，与复跑数据强一致）
+FWD = o['tab_fwd_abs_exc']
+D0 = o['tab_d0']
+
+
+def row3(tag, label, is_abs, g):
+    def fmtv(x, unit):
+        return f'{x:+.2f}'.replace('-', '−') + unit
+    d0v = D0[g]['cvs_d0_med'] if is_abs else D0[g]['cvs_exc_d0_med']
+    unit = '%' if is_abs else 'pp'
+    f = FWD[g]
+    fe = FWD[g + '_exc']
+    w20 = f['fwd20']['win'] if is_abs else fe['fwd20']['win']
+    w60 = f['fwd60']['win'] if is_abs else fe['fwd60']['win']
+    cls0 = 'dn' if d0v < 0 else ''
+    cells = [f"<td class='{cls0}' style='text-align:right'>{fmtv(d0v, unit)}</td>"]
+    for n in (1, 5, 20, 60):
+        v = (f if is_abs else fe)[f'fwd{n}']['med']
+        cls = 'dn' if v < 0 else ''
+        cells.append(f"<td class='{cls}' style='text-align:right'>{fmtv(v, unit)}</td>")
+    n = f"{o['hi_days'] if g == 'VIX>18' else o['lo_days']:,}"
+    return (f"<tr><td><span class=\"tag {tag}\">{label}</span></td>"
+            f"<td style='text-align:right'>{n}</td>{''.join(cells)}"
+            f"<td style='text-align:right'>{w20:.1f}%</td><td style='text-align:right'>{w60:.1f}%</td></tr>")
+
+
+TAB3_ROWS = '\n'.join([
+    row3('a', 'VIX &gt; 18（绝对收益）', True, 'VIX>18'),
+    row3('g', 'VIX ≤ 18（绝对收益）', True, 'VIX<=18'),
+    row3('a', 'VIX &gt; 18（相对 SPY 超额）', False, 'VIX>18'),
+    row3('g', 'VIX ≤ 18（相对 SPY 超额）', False, 'VIX<=18'),
+])
+
 # 组装（模板占位符）
 bk_rows = []
 for i, lb in enumerate(labs):
@@ -476,6 +506,7 @@ M = C['meta']
 html = HTML.replace('__ECHARTS_LIB__', '<script>' + open(LIB, encoding='utf-8').read() + '</script>')
 html = html.replace('__DATA_JS__', DATA_JS)
 html = html.replace('__BUCKET_ROWS__', BUCKET_ROWS)
+html = html.replace('__TAB3_ROWS__', TAB3_ROWS)
 html = html.replace('__EVENT_ROWS__', EVENT_ROWS)
 html = html.replace('__SEG_ROWS__', SEG_ROWS)
 html = html.replace('__YEAR_ROWS__', YEAR_ROWS)
