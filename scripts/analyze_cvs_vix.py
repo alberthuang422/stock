@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 """
 分析：VIX 较高（>18）时 CVS 的表现如何
-口径：CVS 用未复权 close（不含股息）；VIX 用 CBOE 官方收盘；
-      SPY 作大盘对照（未复权 close）。窗口 2015-01-01 ~ 最新。
+口径（2026-09-02 更换数据源）：CVS 用 BATS 前复权 close（TradingView 导出，含分红回溯，
+锚点 2022-02-08 high=95.30 与富途 autype=1 前复权一致）；VIX 用 CBOE 官方收盘；
+      SPY 作大盘对照（未复权 close，价格收益近似）。窗口 2015-01-01 ~ 最新。
 日期对齐采用三表 inner join。收益均为价格收益百分比。
 """
 import json

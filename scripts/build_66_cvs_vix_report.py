@@ -223,7 +223,7 @@ __ECHARTS_LIB__
 
   <h3>核心速览</h3>
   <div class="kpi-row">
-    <div class="kpi"><div class="k">CVS 现价（09-01，未复权）</div><div class="v">$97.60</div><div class="s">52 周 __META_WK__</div></div>
+    <div class="kpi"><div class="k">CVS 现价（09-01，前复权=原始价）</div><div class="v">$97.60</div><div class="s">52 周 __META_WK__</div></div>
     <div class="kpi"><div class="k">VIX（09-01，CBOE）</div><div class="v grn">16.34</div><div class="s">&lt;18，处低波动区</div></div>
     <div class="kpi"><div class="k">2015 以来累计（CVS）</div><div class="v up">+43.5%</div><div class="s">前复权含息 ｜ 未复权价 +2.6% ｜ SPY +270%</div></div>
     <div class="kpi"><div class="k">2022 高点（两口径）</div><div class="v">95.3 / 111.3</div><div class="s">前复权 / 未复权 @ 02-08</div></div>
@@ -335,7 +335,7 @@ __ECHARTS_LIB__
   <div class="verdict"><b>4｜CVS 由自身事件定价。</b>2024 年两次财报暴雷（一年内腰斩）与 2026-05~07 的大涨均与 VIX 无关；个股 alpha 分析应围绕医保赔付率（MLR）、药房报销与监管政策展开，VIX 只贡献当日 β 扰动。</div>
   <div class="verdict amber"><b>使用边界：</b>①CVS 收益基于前复权价（≈含息总回报）；以未复权价（不含息）复跑，fwd 绝对收益约低 0.2~0.7pp，高/低组差异与结论不变；②VIX&gt;18 覆盖 40% 交易日、长段高度连续（2020/2022 主导），逐日样本有自相关，故超额负差异应读作「长段事件的平均」而非 1186 个独立实验；③极端桶（&gt;35）仅 63 日样本；④2022 高点提示 95 为前复权口径（本报告主数据即前复权），未复权真实成交价为 111.3。</div>
   <h3>当前快照（2026-09-01）</h3>
-  <p>VIX 16.34（低波动区，≤18），CVS 97.60（未复权）距 2026-07-22 高点 110.68 回落 11.8%。历史统计口径下：当前既不在高 VIX 状态、也无冲击日信号——上述「高 VIX 效应」均不适用于当下；CVS 后续走势仍以自身医保基本面为主线。</p>
+  <p>VIX 16.34（低波动区，≤18），CVS 97.60（前复权，最新日与未复权同值）距 2026-07-21 高点 109.92 回落 11.2%。历史统计口径下：当前既不在高 VIX 状态、也无冲击日信号——上述「高 VIX 效应」均不适用于当下；CVS 后续走势仍以自身医保基本面为主线。</p>
 </div>
 
 <div class="src">数据：CVS = 用户提供 TradingView BATS:CVS（前复权）｜ VIX = CBOE VIX_History（官方）｜ SPY = 本地 Yahoo ｜ 构建：scripts/build_66_cvs_vix_report.py ｜ 明细：results/cvs_vix_analysis.json ｜ 生成于 2026-09-02（用户数据复跑版）。本报告为统计研究，不构成投资建议。</div>
