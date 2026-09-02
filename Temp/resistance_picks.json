@@ -1,0 +1,16 @@
+{
+  "seed": 20260902,
+  "pool_size": 139,
+  "tickers": [
+    "kkr",
+    "nrg",
+    "acn",
+    "bg",
+    "xom",
+    "nee",
+    "abt",
+    "spgi",
+    "trow",
+    "tdg"
+  ]
+}

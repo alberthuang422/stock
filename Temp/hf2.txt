@@ -1,0 +1,9 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/1.1 200 OK
+Date: Tue, 01 Sep 2026 18:41:28 GMT
+Content-Type: application/json; charset=utf-8
+Content-Length: 249
+Connection: keep-alive
+Server: fgw_web_conn/1.2.0
+

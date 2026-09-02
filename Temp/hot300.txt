@@ -1,0 +1,300 @@
+1|US.TSLA|Tesla|99|367.95|+5.50|1453
+2|US.SNDK|SanDisk|76|1566.70|+5.50|229
+3|US.NVDA|NVIDIA|72|220.78|+1.48|5321
+4|US.MU|Micron Technology|67|958.73|+2.77|1083
+5|US.SPCX|SpaceX|60|143.69|+1.55|1894
+6|US.INTC|Intel|43|89.51|+0.04|470
+7|US.GOOG|Alphabet-C|42|335.41|-2.18|4102
+8|US.CRCL|Circle|36|95.55|+9.65|24
+9|US.MRVL|Marvell Technology|36|211.66|-2.29|186
+10|US.AVGO|Broadcom|33|370.34|+0.42|1762
+11|US.AAPL|Apple|33|316.85|-0.89|4624
+12|US.SKHY|SK hynix|32|164.58|+2.20|1200
+13|US.MSTR|Strategy|28|132.94|+4.42|51
+14|US.GOOGL|Alphabet-A|28|339.35|-2.09|4150
+15|US.TSM|Taiwan Semiconductor|26|415.32|-0.53|2154
+16|US.AMZN|Amazon|24|259.77|-2.50|2802
+17|US.BABA|Alibaba|24|114.02|-4.10|273
+18|US.MSFT|Microsoft|20|507.29|-1.22|3767
+19|US.MRNA|Moderna|20|140.34|+1.70|56
+20|US.NIO|NIO Inc|19|4.23|-3.20|11
+21|US.BE|Bloom Energy|19|206.30|-2.12|61
+22|US.NBIS|NEBIUS|19|206.32|-1.37|56
+23|US.PLTR|Palantir|17|186.38|+0.05|448
+24|US.META|Meta Platforms|16|572.34|-0.98|1458
+25|US.DELL|Dell Technologies|16|456.01|-0.05|296
+26|US.AMD|Advanced Micro Devices|15|470.72|+1.10|768
+27|US.HOOD|Robinhood|15|104.81|+0.53|94
+28|US.LITE|Lumentum|15|914.76|+2.21|82
+29|US.RKLB|Rocket Lab|14|63.92|-0.73|38
+30|US.CRWD|CrowdStrike|13|231.00|+5.77|237
+31|US.COIN|Coinbase|13|188.12|+5.31|50
+32|US.NOW|ServiceNow|12|147.99|+2.27|153
+33|US.QCOM|Qualcomm|12|170.48|+3.83|179
+34|US.AAOI|Applied Optoelectronics|12|107.69|+1.37|9
+35|US.CRM|Salesforce|11|257.54|+0.60|212
+36|US.PDD|PDD Holdings|11|84.00|-1.97|120
+37|US.ORCL|Oracle|11|149.12|-1.15|430
+38|US.GPRO|GoPro|10|0.88|+46.06|0
+39|US.AXTI|AXT Inc|9|60.61|+3.38|4
+40|US.TEM|Tempus AI|9|63.05|-1.54|11
+41|US.ONDS|Ondas|9|7.66|-3.10|4
+42|US.CRWV|CoreWeave|9|84.89|+0.78|47
+43|US.GLW|Corning|9|148.73|+0.02|128
+44|US.KO|Coca-Cola|8|88.67|-1.10|382
+45|US.GEV|GE Vernova|8|898.53|-1.47|239
+46|US.IREN|IREN Ltd|8|37.12|+4.70|15
+47|US.COHR|Coherent|8|277.83|-0.49|54
+48|US.APP|Applovin|7|312.06|-1.79|104
+49|US.LLY|Eli Lilly and Co|7|1156.73|-1.52|1089
+50|US.CBRS|Cerebras Systems|7|184.24|+2.88|44
+51|US.PANW|Palo Alto Networks|7|382.13|+2.84|311
+52|US.AMAT|Applied Materials|6|458.39|-0.71|364
+53|US.NKE|Nike|6|39.06|-1.36|58
+54|US.TTWO|Take-Two Interactive Software|6|219.70|-6.67|41
+55|US.ASTS|AST SpaceMobile|6|59.10|+1.81|23
+56|US.FUTU|Futu Holdings Ltd|6|122.14|-1.71|17
+57|US.WDC|Western Digital|6|450.55|-1.94|162
+58|US.XPEV|XPeng|6|11.36|-1.47|11
+59|US.CRDO|Credo Technology|6|226.19|-2.82|43
+60|US.SMCI|Super Micro Computer|6|37.28|+0.54|24
+61|US.LI|Li Auto|6|12.10|-1.06|13
+62|US.RBLX|Roblox|5|41.29|+7.16|29
+63|US.BMNR|Bitmine Immersion Technologies|5|25.32|+6.39|15
+64|US.NOK|Nokia Oyj|5|10.14|-0.69|57
+65|US.NFLX|Netflix|5|81.05|-0.82|337
+66|US.MCD|McDonald's|5|263.54|-0.55|186
+67|US.WMT|Walmart|5|104.87|+1.73|832
+68|US.ARM|Arm Holdings|5|241.91|+1.20|258
+69|US.BEKE|KE Holdings|5|17.19|-6.17|20
+70|US.VRT|Vertiv Holdings|5|258.72|+0.64|100
+71|US.EIX|Edison International|5|53.98|-23.07|21
+72|US.FIG|Figma Inc|5|27.49|-4.61|15
+73|US.BIDU|Baidu|5|95.28|-1.89|32
+74|US.PCG|PG&E Corp|5|13.27|-20.06|29
+75|US.VST|Vistra Energy|5|137.37|+0.20|46
+76|US.BRK.B|Berkshire Hathaway-B|4|504.03|-0.19|1079
+77|US.OXY|Occidental Petroleum|4|60.18|+1.83|60
+78|US.DXYZ|Destiny Tech100|4|32.13|-7.51|1
+79|US.SOFI|SoFi Technologies|4|17.88|-1.00|23
+80|US.TCEHY|Tencent|4|57.19|-1.33|521
+81|US.SNOW|Snowflake|4|331.43|+1.04|115
+82|US.OKLO|Oklo Inc|4|40.57|+1.07|8
+83|US.ASST|Strive|4|24.22|+11.41|2
+84|US.UNH|UnitedHealth|4|389.41|-0.90|350
+85|US.ADBE|Adobe|4|292.79|+0.43|116
+86|US.PYPL|PayPal|3|52.66|-1.85|45
+87|US.LX|LexinFintech|3|1.07|-9.32|0
+88|US.JD|JD.com|3|28.24|-1.74|38
+89|US.IBM|IBM Corp|3|233.87|-0.73|220
+90|US.SY|So-young International|3|2.91|+21.25|0
+91|US.HIMS|Hims & Hers Health|3|29.58|+2.56|7
+92|US.MNSO|MINISO|3|9.30|-9.97|3
+93|US.MP|MP Materials|3|54.75|-2.46|10
+94|US.GME|GameStop|3|18.38|+2.85|8
+95|US.PURR|Hyperliquid Strategies|3|12.25|+5.51|2
+96|US.FFAI|Faraday Future Intelligent Electric Inc.|3|2.26|+2.26|0
+97|US.NET|Cloudflare|3|305.11|+1.76|109
+98|US.SE|Sea|3|113.48|-4.93|70
+99|US.AEHR|Aehr Test Systems|3|79.27|-1.91|3
+100|US.RDDT|Reddit|3|147.81|-3.39|28
+101|US.PFE|Pfizer|3|28.46|+1.79|162
+102|US.V|Visa|3|379.37|-0.58|710
+103|US.TRON|Tron Inc|3|1.75|-15.87|1
+104|US.UBER|Uber Technologies|3|75.65|-4.02|155
+105|US.CHA|Chagee Holdings|3|11.63|+7.68|2
+106|US.CLGN|Collplant|3|0.39|+8.35|0
+107|US.BILI|Bilibili|3|16.16|-2.65|7
+108|US.XE|X-Energy|3|18.45|+7.14|7
+109|US.CVX|Chevron|3|206.14|+2.12|407
+110|US.STX|Seagate Technology|3|828.38|-0.17|188
+111|US.IONQ|IonQ Inc|3|39.31|+0.28|15
+112|US.ASX|ASE Technology|2|36.95|-2.20|83
+113|US.GE|GE Aerospace|2|335.71|-2.00|348
+114|US.RDHL|Redhill Biopharma|2|0.90|+36.16|0
+115|US.OKTA|Okta|2|173.04|+4.10|30
+116|US.MRK|Merck & Co|2|147.76|-0.40|365
+117|US.USAR|USA Rare Earth|2|17.82|-0.94|4
+118|US.BA|Boeing|2|207.78|-0.97|164
+119|US.XYZ|Block|2|82.02|-1.85|49
+120|US.LRCX|Lam Research|2|301.49|-0.14|377
+121|US.FCX|Freeport-McMoRan|2|75.74|-0.93|109
+122|US.TTD|The Trade Desk|2|13.72|+1.10|6
+123|US.UMC|United Microelectronics|2|19.88|+0.45|50
+124|US.MPNGY|Meituan ADR|2|19.98|-0.15|62
+125|US.HPE|Hewlett Packard Enterprise|2|52.24|-0.13|69
+126|US.ISRG|Intuitive Surgical|2|376.86|+1.14|133
+127|US.ALAB|Astera Labs|2|296.98|+2.59|52
+128|US.SMR|NuScale Power|2|9.27|-0.21|4
+129|US.HUT|Hut 8|2|78.64|-0.98|10
+130|US.PATH|UiPath|2|18.67|+2.87|10
+131|US.AIM|AIM ImmunoTech|2|0.23|-12.54|0
+132|US.CEG|Constellation Energy|2|274.77|-0.71|97
+133|US.MDB|MongoDB|2|453.37|+1.51|36
+134|US.NVO|Novo-Nordisk A/S|2|45.33|-0.61|202
+135|US.CF|CF Industries Holdings|2|130.03|+3.37|20
+136|US.SLB|SLB Ltd|2|60.10|+4.83|89
+137|US.AMKR|Amkor Technology|2|47.30|-1.21|12
+138|US.XIACY|Xiaomi Corp. Unsponsored ADR Class B|2|17.46|-1.91|90
+139|US.LULU|Lululemon Athletica|2|120.26|-0.46|14
+140|US.PASW|Ping An Biomedical|2|0.15|+15.99|0
+141|US.XOM|Exxon Mobil|2|160.95|+2.71|662
+142|US.CAT|Caterpillar|2|797.47|-0.35|367
+143|US.ASML|ASML Holding|2|1696.01|-0.01|651
+144|US.NVTS|Navitas Semiconductor|2|11.59|+0.87|3
+145|US.CCL|Carnival|2|23.89|-3.51|33
+146|US.PONY|Pony AI|2|7.09|-6.46|3
+147|US.DUO|Fangdd Network|2|0.76|-20.85|0
+148|US.TME|Tencent Music|2|8.27|-3.39|13
+149|US.APLD|Applied Digital|2|25.41|+0.28|7
+150|US.DUOL|Duolingo|2|148.36|+0.94|7
+151|US.TCOM|Trip.com|2|44.65|-1.54|28
+152|US.JPM|JPMorgan|2|356.02|-0.45|946
+153|US.HWM|Howmet Aerospace|2|244.95|-7.51|98
+154|US.RDW|Redwire|2|10.70|-1.56|3
+155|US.ANET|Arista Networks|2|195.69|+0.16|247
+156|US.MARA|MARA Holdings|2|10.77|+0.94|4
+157|US.LMT|Lockheed Martin|2|561.23|-0.46|130
+158|US.LKNCY|Luckin Coffee|2|35.90|-0.72|12
+159|US.PSQL|Pasqal Holding|2|17.30|-9.47|4
+160|US.BAC|Bank of America|2|61.94|-0.61|433
+161|US.TEAM|Atlassian|2|194.17|+1.97|49
+162|US.PG|Procter & Gamble|2|145.12|+0.93|337
+163|US.WDAY|Workday|2|197.45|-3.55|48
+164|US.AAL|American Airlines|2|13.43|-1.54|9
+165|US.AFRM|Affirm Holdings|2|74.45|-4.26|25
+166|US.PL|Planet Labs PBC|2|19.85|-0.65|7
+167|US.CIEN|Ciena|2|382.80|+1.15|54
+168|US.IBKR|Interactive Brokers|2|97.29|+1.51|165
+169|US.AVAV|AeroVironment|2|148.35|+0.28|8
+170|US.DIDIY|DiDi Global Inc|2|3.65|-1.08|16
+171|US.OPEN|Opendoor Technologies|2|3.20|-2.73|3
+172|US.SNPS|Synopsys|2|439.59|-0.68|84
+173|US.CRML|Critical Metals|2|7.21|+1.26|1
+174|US.POET|POET Technologies|2|7.46|-0.53|1
+175|US.FNGR|FingerMotion|2|0.22|-43.97|0
+176|US.HSAI|Hesai|1|16.12|-7.46|3
+177|US.BTDR|Bitdeer Technologies Group|1|10.85|+5.13|3
+178|US.FTNT|Fortinet|1|170.93|+2.97|125
+179|US.NEM|Newmont|1|126.06|-1.50|133
+180|US.RBRK|Rubrik|1|93.04|-0.01|19
+181|US.JNJ|Johnson & Johnson|1|265.85|-0.82|641
+182|US.UMAC|Unusual Machines|1|23.67|-1.29|1
+183|US.INTU|Intuit|1|359.30|+0.35|98
+184|US.RCAT|Red Cat Holdings|1|8.59|+1.18|1
+185|US.BSX|Boston Scientific|1|48.30|+3.12|70
+186|US.MOS|The Mosaic|1|24.12|+2.20|8
+187|US.HSBC|HSBC Holdings|1|103.14|-0.38|354
+188|US.NDAQ|Nasdaq|1|98.61|-0.70|55
+189|US.DIS|Disney|1|107.55|-0.51|186
+190|US.TER|Teradyne|1|349.83|-1.45|55
+191|US.RZLV|Rezolve AI|1|2.89|-2.69|1
+192|US.CSCO|Cisco|1|110.49|+0.51|435
+193|US.WOLF|Wolfspeed|1|27.40|+6.00|1
+194|US.AEHL|Antelope Enterprise|1|6.49|+83.33|0
+195|US.ONC|BeiGene|1|359.58|-1.95|41
+196|US.PM|Philip Morris International|1|187.30|-2.39|292
+197|US.KC|Kingsoft Cloud|1|10.24|-3.76|3
+198|US.COST|Costco|1|943.89|-0.17|419
+199|US.IQ|iQIYI|1|0.93|+1.51|1
+200|US.KLAC|KLA Corp|1|175.45|-0.05|229
+201|US.YDDL|One and one Green Technologies|1|2.28|+38.18|0
+202|US.U|Unity Software|1|42.10|-2.79|19
+203|US.GS|Goldman Sachs|1|1025.90|-0.78|299
+204|US.MOVE|Corvex|1|10.95|-4.70|0
+205|US.NTES|NetEase|1|121.78|-0.80|78
+206|US.DDOG|Datadog|1|237.04|+0.03|85
+207|US.ADM|Archer Daniels Midland|1|81.29|-0.31|39
+208|US.CPNG|Coupang|1|16.06|-2.78|29
+209|US.SHOP|Shopify|1|147.37|-3.62|190
+210|US.DAL|Delta Air Lines|1|78.00|-2.58|51
+211|US.STRC|STRATEGY INC VAR RT SER A PERP STRETCH PREFERRED STK|1|97.10|+0.28|5
+212|US.ZM|Zoom Communications|1|96.68|-1.78|28
+213|US.SIVEF|SIVERS SEMICONDUCTORS AB|1|2.75|-2.65|1
+214|US.ON|ON Semiconductor|1|74.09|+2.04|29
+215|US.WULF|TeraWulf|1|15.13|-1.43|8
+216|US.MSCI|MSCI Inc|1|570.64|-0.02|41
+217|US.BZ|Kanzhun|1|17.36|-2.47|8
+218|US.ETN|Eaton|1|401.88|-0.22|156
+219|US.PBR|Petroleo Brasileiro SA Petrobras|1|19.35|+4.42|125
+220|US.PEP|PepsiCo|1|140.34|-0.52|192
+221|US.AA|Alcoa|1|49.95|-0.73|13
+222|US.NTR|Nutrien|1|75.53|+2.75|36
+223|US.EOSE|Eos Energy|1|3.22|-1.23|1
+224|US.TWST|Twist Bioscience|1|139.00|-1.68|9
+225|US.BNTX|BioNTech|1|101.61|-0.46|26
+226|US.RIOT|Riot Platforms|1|19.00|+0.03|7
+227|US.FCEL|FuelCell Energy|1|17.23|-2.98|1
+228|US.TWLO|Twilio|1|235.63|-0.90|36
+229|US.SOUN|SoundHound AI|1|7.16|+0.70|3
+230|US.NEE|NextEra Energy|1|82.34|+0.61|172
+231|US.RXRX|Recursion Pharmaceuticals|1|3.40|+1.80|2
+232|US.SMMT|Summit Therapeutics|1|13.62|-0.80|11
+233|US.WETO|Wetour Robotics|1|5.48|-4.20|0
+234|US.BULL|Webull|1|9.48|+1.17|5
+235|US.XHLD|TEN Holdings|1|9.09|-2.26|0
+236|US.MANE|Veradermics|1|98.41|+0.49|4
+237|US.TTMI|TTM Technologies|1|118.92|+0.23|13
+238|US.B|Barrick Mining|1|44.83|-1.42|74
+239|US.CIFR|Cipher Digital|1|15.50|+2.17|6
+240|US.SCCO|Southern Copper|1|208.87|-0.44|176
+241|US.BB|BlackBerry|1|8.15|-0.12|5
+242|US.DJT|Trump Media & Technology|1|9.77|+1.40|3
+243|US.ZETA|Zeta Global|1|30.97|+1.41|8
+244|US.ONON|On Holding|1|28.50|-1.21|10
+245|US.RGTI|Rigetti Computing|1|15.66|+0.45|5
+246|US.TE|T1 Energy|1|4.45|-7.10|1
+247|US.UUUU|Energy Fuels|1|14.75|+0.55|4
+248|US.LUNR|Intuitive Machines|1|15.36|-0.07|4
+249|US.VSH|Vishay Intertechnology|1|30.43|-0.42|5
+250|US.TENX|Tenax Therapeutics|1|1.84|-13.62|0
+251|US.OUST|Ouster|1|34.44|-0.52|2
+252|US.GFS|GlobalFoundries|1|44.69|-0.16|25
+253|US.CLS|Celestica|1|299.40|+0.23|37
+254|US.FROG|JFrog|1|100.07|+1.35|12
+255|US.SYM|Symbotic|1|39.67|-0.51|24
+256|US.CVKD|Cadrenal Therapeutics|1|1.75|+13.64|0
+257|US.UAMY|United States Antimony|1|4.87|+0.41|1
+258|US.ESTC|Elastic|1|97.55|-2.36|10
+259|US.FN|Fabrinet|1|412.93|-0.34|15
+260|US.LEU|Centrus Energy|1|171.40|-2.49|3
+261|US.MA|MasterCard|1|589.31|-1.01|516
+262|US.WRD|WeRide|1|5.76|-4.79|2
+263|US.VIPS|Vipshop|1|13.10|-2.96|6
+264|US.MO|Altria|1|68.48|-0.25|114
+265|US.GTLB|Gitlab|1|46.54|+3.72|8
+266|US.AMC|AMC Entertainment|1|2.64|+1.93|2
+267|US.RCL|Royal Caribbean|1|268.74|-3.82|72
+268|US.PMI|Picard Medical|1|8.46|-3.86|0
+269|US.DE|Deere|1|654.91|+3.90|177
+270|US.QNT|Quantinuum|1|50.10|+0.36|13
+271|US.BRK.A|Berkshire Hathaway-A|1|756650.01|-0.18|1080
+272|US.VEEV|Veeva Systems|1|285.69|+3.25|46
+273|US.TXN|Texas Instruments|1|260.91|+0.88|238
+274|US.GENB|Generate Biomedicines|1|15.27|-0.39|2
+275|US.QBTS|D-Wave Quantum|1|17.20|+1.24|6
+276|US.RVMD|Revolution Medicines|1|205.57|-1.11|44
+277|US.ATI|ATI Inc|1|204.20|-3.11|28
+278|US.VNET|21Vianet|1|6.06|-7.48|2
+279|US.NEOV|NeoVolta|1|4.24|+26.95|0
+280|US.C|Citigroup|1|131.62|-0.96|221
+281|US.KEEL|Keel Infrastructure|1|3.15|-2.17|2
+282|US.TM|Toyota Motor|1|196.54|+1.06|233
+283|US.F|Ford Motor|1|13.94|+0.43|56
+284|US.TSEM|Tower Semiconductor|1|205.05|-1.42|23
+285|US.ALB|Albemarle|1|134.97|-1.74|16
+286|US.RTX|RTX Corp|1|207.73|-1.88|280
+287|US.TJGC|TJGC Group|1|10.08|+1.82|0
+288|US.NOC|Northrop Grumman|1|539.70|-0.63|77
+289|US.HPQ|HP Inc|1|30.02|-1.64|27
+290|US.CSIQ|Canadian Solar|1|12.33|-6.16|1
+291|US.MGM|MGM Resorts International|1|41.36|-2.17|10
+292|US.NAVN|Navan|1|29.06|+1.96|7
+293|US.AON|Aon PLC|1|321.52|-9.53|68
+294|US.BG|Bunge|1|116.21|+0.63|22
+295|US.ABNB|Airbnb|1|183.22|-3.28|110
+296|US.NTAP|NetApp|1|185.29|-0.93|36
+297|US.NCRA|Nocera|1|2.83|+49.73|0
+298|US.CLSK|CleanSpark|1|11.62|-0.34|3
+299|US.SONY|Sony|1|24.56|-1.17|144
+300|US.UAL|United Airlines|1|107.99|-2.36|35

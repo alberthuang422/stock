@@ -1,0 +1,7 @@
+HTTP/1.1 200 OK
+Date: Wed, 02 Sep 2026 07:12:10 GMT
+Content-Type: application/json; charset=utf-8
+Content-Length: 389
+Connection: keep-alive
+Server: fgw_web_conn/1.2.0
+

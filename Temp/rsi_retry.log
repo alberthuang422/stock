@@ -1,0 +1,13 @@
+to retry: 174
+  20/174 ok=20 fail=0 | 18s
+  40/174 ok=38 fail=2 | 68s
+  60/174 ok=58 fail=2 | 86s
+  80/174 ok=76 fail=4 | 135s
+  100/174 ok=94 fail=6 | 185s
+  120/174 ok=114 fail=6 | 201s
+  140/174 ok=132 fail=8 | 251s
+  160/174 ok=150 fail=10 | 294s
+RETRY DONE recovered=164 still_fail=10 in 312s
+STILL: ASST,UNH,CRML,FNGR,AMC,RCL,QS,VEEA,GPUS,CCXI
+TOTAL 344 rows, RSI present 344
+RSI<30:9 | 30-50:183 | 50-70:133 | >=70:19

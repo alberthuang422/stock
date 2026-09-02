@@ -1,0 +1,36 @@
+CLIENT_ID=7f121000-60b3-48a9-a4f9-f655c0829da2
+AUTH_URL=https://webapi.futunn.com/oauth2/authorize/confirm?response_type=code&client_id=7f121000-60b3-48a9-a4f9-f655c0829da2&redirect_uri=http%3A%2F%2F127.0.0.1%3A59407%2Foauth%2Fcallback&scope=quote%3Aread+quote%3Awrite&state=f58e7870cc7735732b7fcb52a8960afc&code_challenge=iygxVkggX71tHKVExqEFA5EDUZCAJwu8acwN_YByGgE&code_challenge_method=S256&resource=https%3A%2F%2Fmcp.futunn.com%2Fmcp
+所在位置 行:1 字符: 89
++ ... ebapi.futunn.com/oauth2/authorize/confirm?response_type=code&client_i ...
++                                                                 ~
+不允许使用与号(&)。& 运算符是为将来使用而保留的；请用双引号将与号引起来("&")，以将其作为字符串的一部分传递。
+所在位置 行:1 字符: 136
++ ... nse_type=code&client_id=7f121000-60b3-48a9-a4f9-f655c0829da2&redirect ...
++                                                                 ~
+不允许使用与号(&)。& 运算符是为将来使用而保留的；请用双引号将与号引起来("&")，以将其作为字符串的一部分传递。
+所在位置 行:1 字符: 199
++ ... direct_uri=http%3A%2F%2F127.0.0.1%3A59407%2Foauth%2Fcallback&scope=qu ...
++                                                                 ~
+不允许使用与号(&)。& 运算符是为将来使用而保留的；请用双引号将与号引起来("&")，以将其作为字符串的一部分传递。
+所在位置 行:1 字符: 232
++ ... %3A59407%2Foauth%2Fcallback&scope=quote%3Aread+quote%3Awrite&state=f5 ...
++                                                                 ~
+不允许使用与号(&)。& 运算符是为将来使用而保留的；请用双引号将与号引起来("&")，以将其作为字符串的一部分传递。
+所在位置 行:1 字符: 271
++ ... %3Aread+quote%3Awrite&state=f58e7870cc7735732b7fcb52a8960afc&code_cha ...
++                                                                 ~
+不允许使用与号(&)。& 运算符是为将来使用而保留的；请用双引号将与号引起来("&")，以将其作为字符串的一部分传递。
+所在位置 行:1 字符: 330
++ ... c&code_challenge=iygxVkggX71tHKVExqEFA5EDUZCAJwu8acwN_YByGgE&code_cha ...
++                                                                 ~
+不允许使用与号(&)。& 运算符是为将来使用而保留的；请用双引号将与号引起来("&")，以将其作为字符串的一部分传递。
+所在位置 行:1 字符: 357
++ ... 1tHKVExqEFA5EDUZCAJwu8acwN_YByGgE&code_challenge_method=S256&resource ...
++                                                                 ~
+不允许使用与号(&)。& 运算符是为将来使用而保留的；请用双引号将与号引起来("&")，以将其作为字符串的一部分传递。
+    + CategoryInfo          : ParserError: (:) [], ParentContainsErrorRecordException
+    + FullyQualifiedErrorId : AmpersandNotAllowed
+ 
+BROWSER_OPENED waiting for callback (300s)...
+TOKEN_OK expires_in=7200 scope=quote:read quote:write accid:281756477363913922 accid:281756477675135332
+CREDENTIALS_WRITTEN
