@@ -1,7 +1,7 @@
 # 📊 美股研究 · 报告索引
 
 > 本工作区全部研究报告的统一检索入口（报告存放在 `reports/` 目录）
-> 最后更新：2026-09-02 ｜ 覆盖报告：87 份 HTML
+> 最后更新：2026-09-03 ｜ 覆盖报告：88 份 HTML
 
 ---
 
@@ -120,6 +120,7 @@
 - **[57附 农业股 ENSO + 利率敏感性（绝对收益版）](reports/57_农业股ENSO与利率敏感性/绝对收益版.html)** · ENSO 回测的绝对收益口径重算
 - **[58 农业股（CF/DAR）地缘溢价脱钩监测](reports/58_农业股地缘溢价脱钩监测/index.html)** · CF/DAR 与油价相关性的脱钩监测
 - **[59 MOS vs CF：都是化肥股，走势为何差这么大](reports/59_MOS与CF化肥走势分化/index.html)** · MOS 与 CF 走势分化的归因拆解
+- **[68 上周谷物暴涨归因调查（小麦/玉米/大豆）](reports/68_谷物暴涨归因调查_20260903/index.html)** · 08-24~28 周 CBOT 三品种暴涨：分品种主因拆解（黑海断供/美欧减产预期差/中国需求）、事件时间线与 21 条编号出处（数据/推论逐条可点击溯源）
 - **[60 日线MACD死叉 × 4hRSI超卖 买入胜率回测](reports/60_MACD死叉_4hRSI超卖_胜率回测/index.html)** · SOXX/NVDA/XAUUSD/QQQ 死叉+4h RSI 30-35 共振买多的胜率与显著性（2年4h样本，n=20 主口径 vs n=87 仅死叉对照）
 
 ---
@@ -147,6 +148,7 @@
 - **[星巴克 SBUX 基本面分析](reports/29_sbux基本面分析/sbux基本面分析-20260824.html)** · 2026-08 全面基本面
 - **[SBUX 财报与估值研究](reports/07_sbux星巴克/sbux_report.html)** · SBUX 财报与估值分析
 - **[KO vs PEP 相对强弱](reports/28_ko_vs_pep_相对强弱研究.html)** · KO 与百事相对强弱拆解
+- **[PG 宝洁深度分析](reports/67_PG宝洁深度分析/index.html)** · FY2026 财报拆解、五大问题严重度分层、估值与同业对比、跟踪点（67 号）
 
 ### 💳 金融科技
 - **[SOFI × Block × AFRM](reports/sofi_xyz_afrm_report.html)** · 财报对比与 US10Y 敏感性

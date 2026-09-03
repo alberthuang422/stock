@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>68 · 上周谷物暴涨归因调查（小麦 / 玉米 / 大豆）· 2026-09-03</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<style>
+  :root{
+    --oi-blue:#0072B2; --oi-orange:#E69F00; --oi-sky:#56B4E9;
+    --oi-vermillion:#D55E00; --oi-purple:#CC79A7; --oi-green:#009E73;
+    --oi-yellow:#F0E442; --ink:#1a2330; --sub:#5a6a7d; --line:#dde4ec;
+    --card:#ffffff; --bg:#f5f7fa; --ref-bg:#eef2f7;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:"Microsoft YaHei","PingFang SC",sans-serif;background:var(--bg);color:var(--ink);line-height:1.75;font-size:15px;}
+  .wrap{max-width:1080px;margin:0 auto;padding:24px 20px 60px;}
+  .hero{background:linear-gradient(135deg,#12365e 0%,#1d5c93 100%);color:#fff;border-radius:12px;padding:28px 32px;margin-bottom:20px;}
+  .hero h1{font-size:24px;margin-bottom:6px;line-height:1.4;}
+  .hero .meta{font-size:12.5px;opacity:.85;margin-top:4px;}
+  .hero .sub{margin-top:12px;font-size:14px;opacity:.95;border-top:1px solid rgba(255,255,255,.25);padding-top:10px;}
+  .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px;}
+  .kcard{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;}
+  .kcard .lab{font-size:12px;color:var(--sub);margin-bottom:3px;}
+  .kcard .val{font-size:21px;font-weight:700;font-variant-numeric:tabular-nums;}
+  .kcard .note{font-size:12px;color:var(--sub);margin-top:3px;}
+  .up{color:#b2182b;} /* 上涨按中国市场惯例用红 */
+  h2{font-size:19px;margin:36px 0 12px;padding-left:12px;border-left:4px solid var(--oi-blue);}
+  h3{font-size:15px;margin:18px 0 8px;color:#12365e;}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px 22px;margin-bottom:16px;}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  table{width:100%;border-collapse:collapse;font-size:13px;background:#fff;}
+  th{background:#eef2f7;color:#12365e;padding:7px 9px;text-align:left;border-bottom:2px solid var(--line);font-weight:600;}
+  td{padding:6px 9px;border-bottom:1px solid var(--line);vertical-align:top;}
+  tr:last-child td{border-bottom:none;}
+  .num{font-variant-numeric:tabular-nums;}
+  .src{font-size:11px;color:var(--sub);margin-top:7px;line-height:1.5;}
+  sup.c a{color:var(--oi-blue);text-decoration:none;font-size:11px;font-weight:700;}
+  sup.c a:hover{text-decoration:underline;}
+  ul{padding-left:22px;} li{margin:5px 0;}
+  .callout{background:#fff8ee;border:1px solid #f0d9a8;border-radius:10px;padding:14px 18px;margin:14px 0;font-size:13.5px;}
+  .warn{background:#fdf2f2;border:1px solid #eccaca;border-radius:10px;padding:12px 16px;margin:12px 0;font-size:13px;}
+  .tl{list-style:none;padding-left:0;position:relative;}
+  .tl li{padding:6px 0 6px 22px;position:relative;border-left:2px solid var(--line);margin-left:6px;}
+  .tl li:last-child{border-left-color:transparent;}
+  .tl li::before{content:"";position:absolute;left:-6px;top:14px;width:10px;height:10px;border-radius:50%;background:var(--oi-blue);}
+  .tl .d{font-weight:700;color:#12365e;font-size:13.5px;}
+  .tl .e{font-size:13.5px;}
+  .footer{margin-top:34px;padding:16px 20px;background:var(--ref-bg);border-radius:10px;font-size:12px;color:var(--sub);}
+  ol.refs{font-size:12.5px;padding-left:24px;color:var(--ink);}
+  ol.refs li{margin:6px 0;}
+  ol.refs a{color:var(--oi-blue);word-break:break-all;}
+  .refnote{font-size:11.5px;color:var(--sub);}
+  a{color:var(--oi-blue);}
+  .tag{display:inline-block;font-size:11px;color:#fff;background:var(--oi-blue);border-radius:4px;padding:1px 8px;margin-right:6px;vertical-align:1px;}
+  .tag.g{background:var(--oi-vermillion);}
+  .lead{font-size:15px;}
+  @media(max-width:820px){.cards{grid-template-columns:repeat(2,1fr);}.two{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <h1>上周谷物暴涨归因调查：小麦 / 玉米 / 大豆</h1>
+    <div class="meta">报告编号 68 ｜ 撰写日期 2026-09-03 ｜ 行情窗口：2026-08-24（周一）— 08-28（周五）CBOT 交易周（部分口径延伸至 08-31 当周）｜ 公开信源交叉汇编，逐条数据带编号出处，点击跳转文末参考资料</div>
+    <div class="sub">结论先行：<b>不是单一事件，而是「三品种三条独立主因 + 共同放大器」的共振</b>——<b>小麦</b>＝俄乌互袭黑海港口商船导致的<b>出口物流近乎归零</b>（地缘供给恐慌）；<b>玉米</b>＝美国单产<b>「预期差」</b>（USDA 已下调、Pro Farmer 田间巡查却比 USDA 再低 7.5 蒲/英亩）叠加<b>欧洲历史性减产</b>；<b>大豆</b>＝<b>中国采购放量</b>的需求拉动 + 玉米上涨外溢（美豆自身并无减产故事）。三者共同被「全球低库存缓冲 + 厄尔尼诺远期叙事 + 投机资金」放大，才走出单周两位数的「暴涨」。</div>
+  </div>
+
+  <div class="cards">
+    <div class="kcard"><div class="lab">小麦 SRW（12月合约）</div><div class="val up">$7.84 <span style="font-size:14px;">+12.12%</span></div><div class="note">三年新高（2023-02 以来）｜YTD 约 +54.5%</div></div>
+    <div class="kcard"><div class="lab">玉米（12月合约）</div><div class="val up">$5.36½ <span style="font-size:14px;">+5.51%</span></div><div class="note">三年新高（2023-07 以来）｜YTD 约 +21.8%</div></div>
+    <div class="kcard"><div class="lab">大豆（11月新作）</div><div class="val up">$12.88 <span style="font-size:14px;">+3.91%</span></div><div class="note">两年半新高</div></div>
+    <div class="kcard"><div class="lab">豆粕（12月合约）</div><div class="val up">$348.90 <span style="font-size:14px;">+7.09%</span></div><div class="note">两年多新高</div></div>
+  </div>
+  <div class="src" style="margin-top:-14px;margin-bottom:16px;">KPI 数据源：CME 期货周度结算价，周涨幅为 Ag Policy &amp; Markets Daily 按结算价计算（<a href="#r1">[1]</a>）；YTD 口径引自 CNBC 报道（<a href="#r4">[4]</a>）。</div>
+
+  <h2>一、先确认事实：上周到底涨了多少</h2>
+  <div class="panel">
+    <p>“暴涨”集中在 <b>2026-08-24 ~ 08-28 交易周</b>（下称“上周”），主升浪由周三（8/26）黑海局势升级消息触发。全周 CBOT 主要谷物/油籽合约结算表现如下：</p>
+    <div id="c_week" style="height:340px;margin-top:10px;"></div>
+    <table style="margin-top:6px;">
+      <tr><th>品种（合约）</th><th>周五收盘</th><th>单周涨跌</th><th>单周涨跌幅</th><th>价格位置</th></tr>
+      <tr class="num"><td>小麦 SRW（12月）</td><td>$7.84</td><td class="up">+84¾¢</td><td class="up">+12.12%</td><td>合约与三年新高（2023-02 以来最高）</td></tr>
+      <tr class="num"><td>小麦 HRW（12月）</td><td>$8.44¼</td><td class="up">+67¾¢</td><td class="up">+8.73%</td><td>合约与三年新高</td></tr>
+      <tr class="num"><td>小麦（连续/最活跃）</td><td>766.00¢</td><td class="up">+12.40%</td><td class="up">+12.40%</td><td>三年新高；同比 +47.88%</td></tr>
+      <tr class="num"><td>玉米（12月）</td><td>$5.36½</td><td class="up">+28¢</td><td class="up">+5.51%</td><td>三年新高（2023-07 以来最高）</td></tr>
+      <tr class="num"><td>玉米（连续合约）</td><td>511.02¢</td><td class="up">+5.64%</td><td class="up">+5.64%</td><td>2023-08 以来最高</td></tr>
+      <tr class="num"><td>大豆（11月新作）</td><td>$12.88</td><td class="up">+48½¢</td><td class="up">+3.91%</td><td>两年半新高</td></tr>
+      <tr class="num"><td>大豆（连续合约）</td><td>1,277.75¢</td><td class="up">+4.31%</td><td class="up">+4.31%</td><td>——</td></tr>
+      <tr class="num"><td>豆粕（12月）</td><td>$348.90</td><td class="up">+$23.10</td><td class="up">+7.09%</td><td>两年多来最高</td></tr>
+    </table>
+    <div class="src">主力/12月合约口径（CME 结算价，周涨幅为媒体基于结算价计算）：<a href="#r1">[1]</a>；连续合约口径（Trading Economics 数据）：<a href="#r3">[3]</a>；YTD 与创高表述（CNBC）：<a href="#r4">[4]</a>。不同合约与口径数值略有差异，均已列出。</div>
+    <div class="callout"><b>两个背景刻度</b>：① 小麦本周单周涨幅约 +12.1%，为 <b>2022 年 3 月以来最大单周涨幅</b>（<a href="#r16">[16]</a>）；② 从 8 月整月看，CBOT 小麦连续合约 8 月累计约 +20%、玉米约 +16%，均创 2023 年以来最高（<a href="#r15">[15]</a>）。也就是说：暴涨不是一周之内突然发生的，而是 8 月中旬以来事件链的集中兑现（见第二节时间线）。</div>
+  </div>
+
+  <h2>二、事件时间线：8 月中旬以来的催化剂如何在当周引爆</h2>
+  <div class="panel">
+    <ul class="tl">
+      <li><span class="d">7 月底 ~ 8 月上旬</span> <span class="e">俄乌在黑海/亚速海互袭港口与商船持续升级；乌克兰敖德萨（Odesa）港区 7 月底起基本停运，多家船东停止挂靠（<a href="#r5">[5]</a><a href="#r6">[6]</a>）。</span></li>
+      <li><span class="d">8/12（三）</span> <span class="e">USDA 8 月 WASDE：玉米单产由 183.0 下调至 <b>180.7 蒲/英亩</b>，高于市场预期的下调幅度（华尔街日报调查预期 182.5）；当晚乌克兰无人机命中俄罗斯新罗西斯克港（Novorossiysk）年处理约 1,500 万吨的 NZT/NKHP 粮码头 → 当日玉米 +4.5%、小麦 +3.6%（<a href="#r7">[7]</a>）。同份报告下调俄乌 2026/27 小麦出口预测、上调全球结转库存（<a href="#r20">[20]</a>）。</span></li>
+      <li><span class="d">8/17–20</span> <span class="e">Pro Farmer 年度田间巡查（7 个主产州、约 2,000 块田）（<a href="#r8">[8]</a>）。</span></li>
+      <li><span class="d">8/21（五）</span> <span class="e">巡查结果发布：美国玉米单产估计仅 <b>173.2 蒲/英亩</b>（比 USDA 8 月数字低 7.5 蒲）→ 当周玉米 +5.2%，主力合约 <b>18 个月来首次站上 $5</b>（<a href="#r8">[8]</a>）。</span></li>
+      <li><span class="d">8/24–25</span> <span class="e">周初相对平稳；玉米在欧洲减产与美单产担忧中走高，大豆受豆油走弱拖累先跌（<a href="#r2">[2]</a>）。</span></li>
+      <li><span class="d">8/26（三）</span> <span class="e"><b>引爆点</b>：市场出现俄罗斯拟升级黑海冲突的报道 → 芝加哥小麦当日<b>触及涨停</b>（近月 +45¢），KC、明尼阿波利斯小麦同步大涨（<a href="#r2">[2]</a>）。</span></li>
+      <li><span class="d">8/26–27 夜</span> <span class="e">俄对敖德萨地区发动持续 7 小时以上的导弹+无人机联合袭击，损毁含粮库设施在内的基础设施（敖德萨州当局披露）（<a href="#r1">[1]</a>）。</span></li>
+      <li><span class="d">8/27（四）晚</span> <span class="e">一艘商船在罗马尼亚近海起火沉没，再度收紧黑海航运风险定价（<a href="#r2">[2]</a>）。</span></li>
+      <li><span class="d">8/28–29 夜</span> <span class="e">多瑙河港口伊兹梅尔（Izmail）交通基础设施遭袭，8 辆运粮卡车被烧毁（<a href="#r1">[1]</a>）。</span></li>
+      <li><span class="d">8/28（五）收盘</span> <span class="e">小麦、玉米、大豆齐创多年新高，完成全周暴涨（<a href="#r1">[1]</a>）。</span></li>
+      <li><span class="d">8/29–30（周末）</span> <span class="e"><b>首个潜在利空</b>：土耳其向俄乌双方提出黑海“停火/安全通航”斡旋；乌克兰也已通过第三方向俄提交“停止袭击黑海民用目标”的提议、等待回应（<a href="#r1">[1]</a><a href="#r12">[12]</a>）。</span></li>
+    </ul>
+    <div class="callout"><b>先厘清一个关键点</b>：三种作物的上涨<b>并非同一逻辑</b>。环球时报援引分析师指出：玉米主要受美国供应预期收紧推动，小麦则更多由黑海出口受阻驱动（<a href="#r4">[4]</a>）；大豆则更接近“需求 + 外溢”驱动（见后文各节）。把三者混为一谈是这轮报道里最常见的误读。</div>
+  </div>
+
+  <h2>三、小麦（单周 +12.1%）：黑海出口能力被战争打到近乎归零</h2>
+  <div class="panel">
+    <p class="lead">归因一句话：<b>这轮定价的不是“全球小麦不够吃”，而是“黑海的粮还能不能运得出来”</b>——地缘事件直接摧毁了全球最大两个小麦出口国的装运通道，市场在给“供给可得性”重新定价。</p>
+    <h3>3.1 结构性事实：两个出口巨头的通道同时断了</h3>
+    <ul>
+      <li><b>出口份额</b>：俄乌合计约占全球小麦出口的 <b>1/4 以上</b>（2026 年语境，<a href="#r4">[4]</a>）；按 FAO 口径 2019–21 年两者占全球小麦贸易约 <b>34%</b>（<a href="#r20">[20]</a>）。俄罗斯 2025 年出口小麦约 4,100 万吨，居世界第一（<a href="#r15">[15]</a>）。</li>
+      <li><b>能力损失</b>：据路透社基于官方数据与机构估算的计算，俄乌在黑海+亚速海的谷物出口能力已<b>损失超 97%</b>（<a href="#r5">[5]</a><a href="#r6">[6]</a>）。俄乌上季经由该区域月均出口谷物约 720 万吨（<a href="#r6">[6]</a>）。</li>
+      <li><b>俄罗斯一侧</b>：新罗西斯克 NZT / NKHP / KSK 三座粮码头停运，Taman 码头亦暂停（<a href="#r5">[5]</a><a href="#r6">[6]</a><a href="#r11">[11]</a>）；唯一未正式停运的仅图阿普谢（Tuapse）小型码头，月吞吐约 16 万吨（<a href="#r5">[5]</a><a href="#r6">[6]</a>）。市场估计基础设施修复需 <b>1–4 个月</b>（<a href="#r2">[2]</a>），亦有来源称或达 4–5 个月（<a href="#r13">[13]</a>）。</li>
+      <li><b>乌克兰一侧</b>：敖德萨港区 7 月底起基本停运，乌农业部长称 8 月中旬已无新船进港（<a href="#r5">[5]</a>）。</li>
+    </ul>
+    <h3>3.2 出口预测被一路下修（下图），直接定价进期货</h3>
+    <div id="c_russia" style="height:320px;margin-top:8px;"></div>
+    <div class="src" style="margin-top:4px;">俄罗斯 8 月小麦出口预测下修路径：SovEcon 8 月中旬预测 300–340 万吨（五年 8 月均值 500 万吨、2016/17 以来最低，<a href="#r19">[19]</a>）→ 8 月底进一步下调至 220 万吨（2025 年同期 450 万吨、2010 年以来最低，<a href="#r11">[11]</a>）；另据 Rusagrotrans 估算仅 180 万吨（<a href="#r6">[6]</a>）。即使部分码头 8 月底前复工，上述预测也隐含装运远低于常态。</div>
+    <ul style="margin-top:8px;">
+      <li><b>乌克兰实际出口</b>：8 月 1–21 日谷物出口仅 <b>53.9 万吨，同比（173 万吨）下降约 69%</b>（乌农业部 / 路透，<a href="#r1">[1]</a>）；8 月全月同比降幅约 76%（<a href="#r12">[12]</a>）；8 月出货量仅为其潜在出口能力的约 20%（<a href="#r16">[16]</a>）。乌克兰已把 2026/27 年度谷物出口预测由 4,300 万吨下调至 3,800–4,000 万吨，并预警若粮食无法出海可能产生约 1,100 万吨国内仓储缺口（<a href="#r1">[1]</a>）。</li>
+      <li><b>替代路线拥堵</b>：约 70 艘船在罗马尼亚苏利纳运河（Sulina Canal）外排队，日通行仅 5–7 艘，单船延误成本最高约 8,000 美元/天（<a href="#r1">[1]</a><a href="#r2">[2]</a>）；黑海战争险保费已升至船价约 <b>2%</b>（此前约 1%）（<a href="#r1">[1]</a>）。</li>
+    </ul>
+    <h3>3.3 关键辨析：为什么说这不是“总量短缺”而是“物流/风险溢价”</h3>
+    <p>两个反向证据需要同时摆出来，结论才站得住：</p>
+    <ul>
+      <li><b>反方证据（需求弱）</b>：美国本市场年度小麦出口销售同比 <b>−31%</b>，仅完成 USDA 出口预测的 40%（历史均值 52%）（<a href="#r2">[2]</a>）——说明这波上涨不是美国需求拉动。</li>
+      <li><b>反方证据（库存不算紧）</b>：USDA 8 月报告反而把 2026/27 全球小麦结转库存<b>上调</b>至约 2.733 亿吨，高于市场预期（<a href="#r20">[20]</a>）——“纸面上小麦是够的，但买主拿不到（运不出）”。</li>
+      <li><b>传导实锤</b>：埃及、苏丹等传统黑海买家已转向采购法国小麦（<a href="#r2">[2]</a>）；这解释了为何欧洲热浪减产（分析师估计约 800–1,000 万吨，<a href="#r4">[4]</a>）也叠进了定价——替代货源同时变贵。</li>
+    </ul>
+    <p><b>推论（本报告判断）</b>：由此，小麦的涨幅结构里地缘/物流风险溢价占主导、基本面（库存）支撑薄弱 → <b>小麦是三者中对“停火/复航”消息最敏感、回吐风险最大的品种</b>（与第八节证伪点呼应）。机构观点一致指向供给端：Barchart 分析师 Osnatto——“真正驱动市场的是预期改变，俄罗斯将少出口数百万吨，因黑海外运能力已遭实质破坏”（<a href="#r4">[4]</a>）；SovEcon CEO Sizov——“当前冲击远超 2022 年水平，俄罗斯 8 月小麦出口将是 2010 年以来最低”（<a href="#r3">[3]</a><a href="#r11">[11]</a>）。</p>
+  </div>
+
+  <h2>四、玉米（单周 +5.5%，站上 $5）：美国单产“预期差” + 欧洲历史性减产</h2>
+  <div class="panel">
+    <p class="lead">归因一句话：<b>USDA 已经把美国玉米单产下调了，但田间巡查说“你还远没调够”</b>——官方与民间的 7.5 蒲/英亩差距，叠加大西洋两岸同时减产，把玉米推上三年新高。</p>
+    <h3>4.1 美国的单产“预期差”链条</h3>
+    <div id="c_yield" style="height:320px;margin-top:8px;"></div>
+    <ul style="margin-top:8px;">
+      <li><b>USDA（8/12 WASDE）</b>：玉米单产由 183.0 下调至 <b>180.7 蒲/英亩</b>——高于华尔街日报调查预期的 182.5，属“超预期下调”；但因收获面积上调至 8,860 万英亩，总产预测反而小幅上修至 160.13 亿蒲（<a href="#r7">[7]</a>）。</li>
+      <li><b>Pro Farmer 巡查（8/21）</b>：单产仅 <b>173.2 蒲/英亩</b>、总产 153.44 亿蒲——比 USDA 8 月产量预测低约 <b>6.69 亿蒲</b>（<a href="#r2">[2]</a><a href="#r8">[8]</a>）。巡查领队 Flory 的实地观察是“西部旱、东部涝”的割裂：内布拉斯加/爱荷华/南达科他/明尼苏达热旱，俄亥俄/印第安纳积水晚播——明尼苏达农场主原话：“7 月刚过完史上第五热的月份，就别指望 200 蒲的单产了”（<a href="#r8">[8]</a>）。作物优良率当周再降 3 个百分点至 <b>57%</b>（超预期恶化）（<a href="#r2">[2]</a>）。</li>
+      <li><b>这个差距要打多大折扣？</b>（后验视角）：历史上 Pro Farmer 巡查<b>连续 10 年中有 9 年</b>低于 USDA 8 月数字、平均低 3.5 蒲；且巡查与 USDA 的差距在 10 月前通常收敛（历史向 2.3 蒲收敛）。今年 <b>7.5 蒲的缺口是 2016 年以来样本中最宽的</b>——历史不支持缺口全额兑现，但方向（减产）一致（<a href="#r9">[9]</a>）。<b>含义：玉米涨幅里含相当成分的“预期差交易”，9 月 USDA 报告是首个验证点。</b></li>
+    </ul>
+    <h3>4.2 欧洲减产是全球故事的另一半</h3>
+    <ul>
+      <li>欧盟委员会把欧盟玉米产量下调至 <b>5,010 万吨——近 20 年最低，同比 −17%</b>；进口预测上调 100 万吨至 2,500 万吨（<a href="#r2">[2]</a>）。</li>
+      <li>法国玉米优良率仅 <b>28%</b>（去年同期 62%）；法国产量估计约 690 万吨，同比 −48%，为 <b>50 年来最低</b>（<a href="#r2">[2]</a>）。</li>
+    </ul>
+    <h3>4.3 需求端与资金端火上浇油</h3>
+    <ul>
+      <li><b>需求在涨</b>：美国玉米周度出口检验同比 <b>+81.7%</b>（墨西哥/日本/哥伦比亚为锚）；巴西二茬玉米（safrinha）收获进度 85%、慢于常规的 94%，出口旺季窗口延长（<a href="#r14">[14]</a>）；乙醇每年约 56 亿蒲的刚需不因减产而收缩（<a href="#r14">[14]</a>）。</li>
+      <li><b>资金在加</b>：管理基金玉米净多单周 <b>+126,008 手至 376,513 手，为 2022 年 4 月以来最大</b>；纯粹投机多头一度创纪录（<a href="#r2">[2]</a>）。</li>
+      <li><b>缓冲在变薄</b>：全球玉米库存消费比降至约 <b>17.9%，近十年最低</b>（<a href="#r16">[16]</a>）——库存越薄，减产预期向价格的传导越剧烈。</li>
+    </ul>
+  </div>
+
+  <h2>五、大豆（单周 +3.9%，两年半新高）：需求拉动，不是减产故事</h2>
+  <div class="panel">
+    <p class="lead">归因一句话：<b>美豆自己几乎没有减产题材（巡查单产反而高于 USDA），这波上涨的主引擎是“中国采购放量”的需求拉动 + 玉米上涨的比价外溢</b>——大豆是三者里基本面最“干净”的一涨。</p>
+    <h3>5.1 先排除天气减产假设（关键的反向验证）</h3>
+    <p>Pro Farmer 巡查估计美豆单产 <b>53.3 蒲/英亩</b>、总产 45.72 亿蒲——<b>高于</b> USDA 8 月的 52.7 蒲/英亩与 45.19 亿蒲（<a href="#r8">[8]</a><a href="#r10">[10]</a>）。专业分析明确指出：“大豆没有任何单产故事”（soybeans: no yield story at all）（<a href="#r9">[9]</a>）。因此美豆主产区 8 月下旬的高温干燥只能算“晚季尾部风险”，不是本轮主驱动（<a href="#r2">[2]</a>）。</p>
+    <h3>5.2 需求端：中国买盘是唯一的主引擎</h3>
+    <ul>
+      <li>当周美国新作大豆出口销售达 <b>247.8 万吨，超去年同期两倍</b>；其中中国 110 万吨、另有 104.6 万吨售往“未知目的地”（惯例解读为对华）（<a href="#r2">[2]</a>）。</li>
+      <li>8/26 另有向中国销售的“闪电单”（flash sale）1,220 万蒲（<a href="#r13">[13]</a>）。</li>
+      <li>2026 年年内中国已累计采购美国大豆约 1,250 万吨+，距年度约 2,500 万吨的采购承诺仍有缺口（<a href="#r13">[13]</a>）；StoneX 指出 USDA 平衡表<b>尚未计入该承诺</b>——“中国会不会继续买”是本季美豆最大的已知未知数（<a href="#r7">[7]</a>）。</li>
+    </ul>
+    <h3>5.3 两个“反向拉扯”因素（避免单向归因）</h3>
+    <ul>
+      <li><b>压制项</b>：周初豆油因能源走弱与“小型炼厂豁免（SRE）”不确定性而大跌，一度拖累大豆；EPA 于 8/31 公布的 RFS/SRE 决定悬而未决，是全周反复的压制变量（<a href="#r2">[2]</a><a href="#r1">[1]</a>）。</li>
+      <li><b>支撑项（外溢与远期）</b>：玉米大涨抬高整体谷物比价，大豆跟涨；远期看，9–11 月巴西播种窗口叠加厄尔尼诺（10–12 月达超强概率 95%），南美供给风险为远期合约提供升水（我国豆粕供给约 70% 依赖南美）（<a href="#r21">[21]</a><a href="#r15">[15]</a>）。</li>
+    </ul>
+    <div class="callout"><b>小结（三品种驱动结构对照）</b>：小麦 = 地缘供给（物流归零）；玉米 = 天气减产（官方 vs 田间预期差）+ 欧洲减产；大豆 = 需求（中国采购）+ 比价外溢。三者只有玉米是“经典天气减产逻辑”，小麦与大豆的驱动都容易被误读为天气——这是本次调查最重要的纠偏。</div>
+  </div>
+
+  <h2>六、共同放大器：为什么是“暴涨”而不是温和上涨</h2>
+  <div class="panel">
+    <ol>
+      <li><b>库存缓冲的品种差异决定了弹性的品种差异</b>：玉米/大豆全球库存缓冲薄（玉米库消比 17.9% 为近十年最低，<a href="#r16">[16]</a>），减产预期被高倍放大；小麦库存相对充足（2.733 亿吨、USDA 还上调了，<a href="#r20">[20]</a>），所以小麦的暴涨完全靠“风险溢价”支撑——这也是它回吐风险最高的原因（重申 3.3 节）。</li>
+      <li><b>厄尔尼诺/气候远期叙事</b>：NOAA 监测显示 2026 年 5 月已进入厄尔尼诺且强度持续提升，预计秋冬季达峰、2026 Q4 达到“超强”级别的概率已上调至 <b>95%</b>、峰值强度突破 1950 年以来纪录的概率升至近 70%（<a href="#r15">[15]</a>，CPC 口径另见 <a href="#r21">[21]</a>）；FAO 预测 2026/27 全球小麦产量同比 −4.3%、USDA 预测全球玉米产量 −2.3%、贸易量 −4.9%（<a href="#r17">[17]</a>）。这为全板块提供“远期供给收缩”的做多背景（与内部 57 号 ENSO 研究可衔接，<b>注意：这更多是情绪与升水放大器，而非上周的直接触发</b>）。</li>
+      <li><b>投机与动量资金</b>：小麦盘中触及涨停（<a href="#r2">[2]</a><a href="#r16">[16]</a>）、玉米管理基金净多创 2022-04 以来最大（<a href="#r2">[2]</a>）；分析师直言价格刷新多年高位会吸引动量与程序化资金进场，形成“基本面 + 量化”共振（<a href="#r4">[4]</a>）。</li>
+      <li><b>成本与保险抬升</b>：黑海战争险保费升至船价约 2%（<a href="#r1">[1]</a>）；能源价格高位（布伦特约 $89）从化肥/柴油/运输端抬升种植与物流成本中枢（<a href="#r14">[14]</a>）。<span style="background:#fdf2f2;">个别中文综述转述称“柴油化肥价格翻倍、美国农民面临 40 年最严重危机”，本报告未检索到一手出处，标注存疑、不采信（<a href="#r16">[16]</a>）。</span></li>
+    </ol>
+  </div>
+
+  <h2>七、附：国内传导——为什么国内主粮期货只涨了零头</h2>
+  <div class="panel">
+    <p>本调查主体为国际市场（CBOT 定价），此处仅回应“国内怎么没暴涨”的常见疑问，简短说明：</p>
+    <ul>
+      <li>按浙江省粮食和物资储备局官方周报（截至 8/25 当周），国际谷物周涨幅玉米 +5.07%、小麦 +4.06%、大豆 +1.93%（<a href="#r18">[18]</a>），而国内同期玉米仅 +2.34%、豆油 +0.79%、棕榈油 +1.33%（<a href="#r18">[18]</a>）——内外涨幅差距显著，呈“内稳外震”。</li>
+      <li>原因：国内主粮自给率高 + 进口配额管理。2026 年夏收小麦产量 13,895.2 万吨（增产）；上半年小麦进口仅 302.78 万吨、约占产量 2.2%（<a href="#r17">[17]</a>）。卓创资讯指出：美麦到港完税价与国内价差扩大对国内优质麦是边际利多，但受配额制与国内供给宽松约束，短期影响甚微（<a href="#r17">[17]</a>）。</li>
+      <li><b>一个需区分的联动</b>：A 股种植业个股 8 月平均涨幅超 30%、粮食类 ETF 连续走强——这更多是“国际价格预期 + 国内政策（8/28 新修订《农业法》通过）+ 情绪”驱动，与国内现货/期货基本面并非 1:1（<a href="#r15">[15]</a>）。</li>
+    </ul>
+  </div>
+
+  <h2>八、上行逻辑的证伪点与观察清单（对研判最有用的一节）</h2>
+  <div class="panel">
+    <table>
+      <tr><th style="width:24%;">证伪/风险点</th><th>逻辑</th><th style="width:30%;">观察信号与时间</th></tr>
+      <tr><td><b>① 黑海停火斡旋</b></td><td>土耳其 8/29–30 向俄乌提出停火/安全通航机制，乌克兰亦已向俄提交黑海民用目标停火提议（等待回应）——市场公认这是小麦涨势的<b>首个可信利空</b>（<a href="#r1">[1]</a><a href="#r12">[12]</a>）。小麦的风险溢价属性最强，一旦复航预期出现，回吐幅度或最大（见 3.3）。</td><td>俄方对停火提议的回应；黑海/亚速海码头是否复工（新罗西斯克修复需 1–4 个月，<a href="#r2">[2]</a>）</td></tr>
+      <tr><td><b>② 美玉米“预期差”收敛</b></td><td>Pro Farmer 与 USDA 的 7.5 蒲差距为样本最宽，但历史上差距在 10 月前收敛、且 USDA 8 月数字历史上比巡查更接近最终值（<a href="#r9">[9]</a>）。若 USDA 9 月仅小幅下调，玉米涨幅含的“预期差交易”部分有回吐压力。</td><td>9/11 USDA 作物产量报告（首个含实地调查的验证点，<a href="#r9">[9]</a>）；9/30 季度谷物库存（<a href="#r13">[13]</a>）</td></tr>
+      <tr><td><b>③ 中国采购节奏</b></td><td>大豆高位全靠中国买盘续命；年内已购约 1,250 万吨、距 2,500 万吨承诺有缺口，USDA 未计入（<a href="#r7">[7]</a><a href="#r13">[13]</a>）。若采购放缓或中美出现变数，大豆失去主引擎。</td><td>USDA 周度出口销售报告；9 月中美领导人会晤预期（<a href="#r13">[13]</a>）</td></tr>
+      <tr><td><b>④ 生柴政策</b></td><td>EPA 8/31 RFS/SRE 决定悬置，直接牵动豆油（大豆压榨利润）与乙醇（玉米需求侧）（<a href="#r1">[1]</a>）。</td><td>EPA 决定落地内容</td></tr>
+      <tr><td><b>⑤ 厄尔尼诺兑现度</b></td><td>10–12 月“超强”概率 95% 是远期升水来源；若强度不及预期或巴西播种顺利，远期溢价回吐（<a href="#r15">[15]</a><a href="#r21">[21]</a>）。</td><td>CPC/NOAA 月度更新（10 月初关键节点）；9–11 月巴西播种进度</td></tr>
+    </table>
+    <div class="warn"><b>口径与局限说明</b>：① “上周”指 2026-08-24～08-28 交易周，个别连续合约口径延伸至 8/31 当周（<a href="#r3">[3]</a>）；② 本报告价格为媒体对 CME 结算价的复述（非交易所原始数据核验），具体到分位的结算数据以 CME 官方为准；③ 事实与机构/分析师观点已尽量分列，观点均标注机构（SovEcon、Barchart、StoneX、Pro Farmer 等）；④ “柴油化肥价格翻倍”等无一手出处之说已标注存疑；⑤ 本报告为公开资料汇编，不构成投资建议。</div>
+  </div>
+
+  <h2>参考资料（逐条编号，与正文 [n] 对应）</h2>
+  <div class="footer">
+    <ol class="refs">
+      <li id="r1">Ag Bull Trading（Ag Policy &amp; Markets Daily），<i>Black Sea Risk Ignites Grains as Policy Shakes Livestock Markets</i>，2026-08-29 —— CME 周结算价表（本报告涨幅主口径）、黑海断供量化表（乌 8/1–21 出口 53.9 万吨 vs 173 万吨、苏利纳运河 ~70 艘排队、战争险保费 1%→2%、伊兹梅尔 8/28–29 遇袭、土耳其 8/29 斡旋、敖德萨 8/26–27 夜袭、乌 2026/27 出口预测 38–40 MMT 与 1,100 万吨仓储缺口预警、EPA 8/31 决策悬置）。<a href="https://www.agbull.com/black-sea-risk-ignites-grains-as-policy-shakes-livestock-markets/">链接</a></li>
+      <li id="r2">GrainsPrices.com，<i>Weekly Analysis 24.08.2026 – 28.08.2026</i> —— 8/26 小麦涨停 +45¢、新罗西斯克修复 1–4 个月、欧盟玉米 5,010 万吨（近 20 年最低、同比 −17%）与进口上调至 2,500 万吨、法国玉米优良率 28% vs 62%、法国产量 −48%/50 年最低、玉米基金净多 +126,008 手至 376,513（2022-04 来最大）、美玉米产量较 USDA 低 6.69 亿蒲、美小麦出口销售同比 −31%、中国大豆采购 110 万吨 + 未知目的地 104.6 万吨、新作大豆销售 247.8 万吨、埃及/苏丹转向法国小麦、8/27 罗马尼亚近海商船沉没。<a href="https://grainsprices.com/article/19761">链接</a></li>
+      <li id="r3">iGrow News，<i>Agricultural Commodities Market Update (Week Ending August 31, 2026)</i>（价格数据 Trading Economics）—— 连续合约口径：小麦 +12.40% 至 766.00¢（同比 +47.88%）、玉米 +5.64% 至 511.02¢、大豆 +4.31% 至 1,277.75¢；SovEcon CEO Sizov 言论（俄小麦出口 2010 年来最低、乌克兰 16 年来最低、冲击“远超 2022”）。<a href="https://igrownews.com/agricultural-commodities-weekly-update/">链接</a></li>
+      <li id="r4">环球时报（引 CNBC），<i>粮食期货飙升，全球餐桌或承压</i>，2026-08-31 —— 周五小麦收 $7.84（盘中 $7.90，2023-02 以来最高）、YTD 约 +54.5%；玉米收 $5.36½（盘中 $5.41，2023-07 以来最高）、YTD 约 +21.8%；俄乌合计占全球小麦出口 1/4 以上、出口能力损失超 97%；欧洲热浪减产约 800–1,000 万吨；Barchart 分析师 Osnatto 评论；动量/程序化资金进场。<a href="https://www.toutiao.com/w/1875028839696587/">链接</a></li>
+      <li id="r5">新华社（引路透社报道），<i>英媒：俄乌黑海粮食出口近乎停滞</i>，2026-08-20 —— 出口能力损失超 97%；新罗西斯克 NZT/NKHP/KSK 停运、图阿普谢 16 万吨/月未停；敖德萨 7 月底起基本停运、8 月中旬无新船（乌农业部长 Vysotskyi）；铁路/多瑙河各约占出口 45%；全球小麦价 8 月以来 +6.5%、同比约 +30%。<a href="https://www.toutiao.com/article/7676029806827291171/">链接</a></li>
+      <li id="r6">Reuters（经 Arab News），<i>Russia and Ukraine's Black Sea grain exports grind to a virtual halt</i>，2026-08 —— 俄乌黑海+亚速海上季月均出口谷物约 720 万吨；Rusagrotrans 估俄 8 月小麦出口 180 万吨（2010 年以来最低月）；KSK/Taman 停运；乌若港口封锁仅能维持约 50% 出口潜力。<a href="https://www.arabnews.com/node/2655265/world">链接</a></li>
+      <li id="r7">Dow Jones Newswires / The Wall Street Journal（经 Morningstar），<i>Corn Futures Higher After USDA Makes Surprise Cut — Daily Grain Highlights</i>，2026-08-12 —— USDA 8/12 WASDE：玉米单产 183.0→180.7 蒲/英亩（超预期，WSJ 调查预期 182.5）；收获面积 8,860 万英亩、总产 160.13 亿蒲（小幅上修）；乌无人机夜袭新罗西斯克 NZT/NKHP（年处理约 1,500 万吨）；当日玉米 +4.5% 至 $4.81、小麦 +3.6% 至 $6.53；StoneX Suderman 评论（USDA 未计入中国采购承诺）。<a href="https://www.morningstar.com/news/dow-jones/202608129741/corn-futures-higher-after-usda-makes-surprise-cut-daily-grain-highlights">链接</a></li>
+      <li id="r8">Reuters（Ed White，经 Price Group Market Insights），<i>Grains Report 08/24/2026</i>，2026-08-21 —— Pro Farmer 巡查结果：玉米 173.2 蒲/英亩、总产 153.44 亿蒲（同比 −9.9%、历史第三大、2020 年以来最低单产）；大豆 53.3 蒲/英亩、45.72 亿蒲；USDA 对比（180.7 / 160.13 亿蒲、52.7 / 45.19 亿蒲）；巡查领队 Flory 与明尼苏达农场主 Schlecht 引语；当周玉米 +5.2% 站上 $5（18 个月来首次）。<a href="https://blog.pricegroup.com/2026/08/24/grains-report-08-24-2026">链接</a></li>
+      <li id="r9">Southern Ag Today，<i>Does a Big Pro Farmer Crop Tour Gap Mean a Big WASDE Yield Change?</i>，2026-09-02 —— 2016–2025 样本：巡查 10 年中 9 年低于 USDA 8 月数字、平均低 3.5 蒲，差距向 2.3 蒲收敛；今年 7.5 蒲缺口为样本最宽；大豆巡查高于 USDA（“无单产故事”）；9/11 USDA 作物产量报告为下一验证点。<a href="https://southernagtoday.org/2026/09/02/does-a-big-pro-farmer-crop-tour-gap-mean-a-big-wasde-yield-change">链接</a></li>
+      <li id="r10">University of Delaware，Weekly Crop Update，<i>Pro Farmer Tour and DELMARVA Corn Tour Results</i> —— Pro Farmer vs USDA 数字表（与 [8] 相互印证）。<a href="https://sites.udel.edu/weeklycropupdate?p=28720">链接</a></li>
+      <li id="r11">APK-Inform（SovEcon 预测），<i>Russian wheat exports in August may be the lowest in 26 years – forecast</i>，2026-08 下旬 —— SovEcon 将俄 8 月小麦出口预测下调至 220 万吨（2025 年同期 450 万吨、五年 8 月均值 500 万吨；2010 年 8 月 160 万吨为上次低点）；新罗西斯克全部码头仍关闭、Taman 停运；俄国内食品小麦价 6 月以来 −18% 至 11,025 卢布/吨。<a href="https://www.apk-inform.com/en/harvest/1556071">链接</a></li>
+      <li id="r12">Marine Insight（Reuters），<i>Ukraine Proposes Black Sea Truce To Russia As Attacks On Ports And Vessels Raise Global Food Supply Concerns</i>，2026-09-01 —— 乌经第三方向俄提交黑海民用目标停火提议、等待回应；8 月乌谷物出口同比约 −76%；土耳其外长呼吁双方宣布停火。<a href="https://www.marineinsight.com/ukraine-proposes-black-sea-truce-to-russia-as-attacks-on-ports-and-vessels-raise-global-food-supply-concerns">链接</a></li>
+      <li id="r13">WSNext，<i>Black Sea Tensions and Drought Drive Grain Prices to Multi-Year Highs</i>，2026-08-28 —— 8/27 最活跃小麦收 $7.60¾（+12½¢）；中国年内已购美国大豆约 1,250 万吨+、距 2,500 万吨承诺有缺口；8/26 对华闪电单 1,220 万蒲；新罗西斯克修复或需 4–5 个月；9/30 季度库存报告；9 月中美领导人会晤预期。<a href="https://wsnext.com/1006401-agricultural-commodities-commodity-rally">链接</a></li>
+      <li id="r14">Alpha Briefing，<i>Why Corn Is Up 23% While Everyone Watches Oil</i> —— 玉米近一年约 +23%、十三周新高；美玉米周出口检验同比 +81.7%（墨西哥/日本/哥伦比亚）；巴西二茬玉米收获 85% vs 常规 94%；乙醇年需求约 56 亿蒲；原油约 $89 的宏观背景。<a href="https://www.alphabriefing.com/why-corn-is-up-23-while-everyone-watches-oil">链接</a></li>
+      <li id="r15">新华财经（中国金融信息网），<i>全球农产品价格上行 A股种植业个股8月平均涨幅超30%</i>，2026-09-01 —— CBOT 小麦连续 8 月约 +20% 至 766¢（2023-03 以来高）、玉米约 +16% 至 511¢（2023-08 以来高）；俄 2025 年出口小麦约 4,100 万吨居世界第一；NOAA：5 月进入厄尔尼诺、Q4 达超强概率 95%、峰值强度破 1950 年以来纪录概率近 70%；A 股种植业 8 月平均涨 30%+（万向德农 5 连板）；8/28 新修订《农业法》通过。<a href="https://m.cnfin.com/gs-lb//zixun/20260901/4463146_1.html">链接</a></li>
+      <li id="r16">新浪财经（转载市场综述），<i>本轮粮价暴涨的主要原因是什么?</i>，2026-08-30 —— 小麦单周约 +12.1%、2022 年 3 月以来最大单周涨幅、年内 +54% 以上；俄 8 月小麦出口预测降至约 190 万吨（机构）；乌克兰 8 月出货仅潜在能力约 20%；全球玉米库消比约 17.9% 近十年最低；CBOT 小麦盘中触及涨停；“柴油化肥价格翻倍/40 年最严重危机”表述（无一手出处，本报告标注存疑）。<a href="https://cj.sina.cn/articles/view/7879776978/1d5abdad206801lld4">链接</a></li>
+      <li id="r17">新浪财经，<i>全球粮价冲高，外部波动会传导至国内粮食市场吗?</i>，2026-09-01 —— FAO 2026/27 全球小麦产量预测 8.06 亿吨（同比 −4.3%）、大米 −1.8%；USDA 全球玉米产量 −2.3%、贸易量 −4.9%；国内：2026 夏收小麦 13,895.2 万吨、上半年小麦进口 302.78 万吨（约占产量 2.2%）、配额管理；卓创资讯关于美麦到港完税价与国内价差的评论；农业农村部月报背景。<a href="https://finance.sina.cn/2026-09-01/detail-iniqitrq4793112.d.html">链接</a></li>
+      <li id="r18">浙江省粮食和物资储备局，《粮食市场行情专报（第 32 期）》—— 官方周报（截至 8/25 当周）：国际玉米 +5.07%、大豆 +1.93%、小麦 +4.06%；国内玉米 +2.34%、豆油 +0.79%、棕榈油 +1.33%；国内外期货价格对照表（国内玉米 2,278 元/吨等）。<a href="https://lswzj.zj.gov.cn/col/col1229840128/art/2026/art_4c1eff3f071e4e0ca3679dcbb235d632.html">链接</a></li>
+      <li id="r19">财联社（经新浪财经），<i>黑海港口频频遇袭 俄罗斯8月粮食出口量或降至十年来最低水平</i>，2026-08-12 —— SovEcon 8 月中旬预测俄 8 月小麦出口 300–340 万吨（五年 8 月均值 500 万吨、2016/17 以来最低）；ProZerno 更悲观（约 250 万吨）；俄国内小麦价周跌 450 卢布/吨、乌港价周跌 12–15%；多瑙河水位历史低位。<a href="https://finance.sina.com.cn/roll/2026-08-12/doc-inimzqcv4066099.shtml">链接</a></li>
+      <li id="r20">Voice of Emirates（Reuters 综述），<i>The Black Sea conflict is hitting the world's wheat lifeline</i>，2026-08-15 —— FAO：俄乌 2019–21 年约占全球小麦贸易 34%；欧委会：乌克兰约 90% 谷物出口走海路（2026-06 时仅约 10% 走陆路团结走廊）；USDA 8/12 WASDE 下调俄乌出口预测、全球小麦结转库存上调至约 2.733 亿吨；新罗西斯克 8/12 遇袭当日 CBOT 小麦约 +3%。<a href="https://www.voiceofemirates.com/en/politics/2026/08/15/the-black-sea-conflict-is-hitting-the-worlds-wheat-lifeline-russia-and-ukraine-at-the-heart-of-the-supply-crisis/">链接</a></li>
+      <li id="r21">国泰基金（经新浪新闻），<i>全球农产品正经历“通胀映射”，关注粮食板块布局机遇</i> —— CPC 将 2026 年 10–12 月超强厄尔尼诺概率上调至 95%；我国豆粕供给约 70% 依赖南美；USDA 8 月预计 2026/27 主要谷物库消比普遍下降（机构观点，供放大器一节参考）。<a href="https://k.sina.com.cn/article_1733360754_6750fc7202001i934.html">链接</a></li>
+    </ol>
+    <div class="refnote" style="margin-top:10px;">注：本报告检索完成于 2026-09-03；[n] 上标即正文数据出处，点击可跳回本文档相应来源条目；[n] 亦保留原链接供外部核验。价格数据存在媒体复述口径差异，已尽量并列不同口径。</div>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  if (typeof window.echarts === 'undefined') {
+    var boxes = document.querySelectorAll('[id^="c_"]');
+    for (var i = 0; i < boxes.length; i++) {
+      boxes[i].innerHTML = '<div style="padding:40px;text-align:center;color:#5a6a7d;font-size:13px;">图表组件加载失败（ECharts CDN 不可达），正文表格数据完整可用。</div>';
+    }
+    return;
+  }
+  var axis = ['#1a2330'];
+  var cat = { '#0072B2': ['小麦','黑海断供'], '#E69F00': ['玉米','美单产预期差'], '#009E73': ['大豆','中国需求'] };
+  var common = { textStyle:{fontFamily:'Microsoft YaHei',color:'#1a2330'} };
+  var charts = [];
+
+  // 图1：上周 CBOT 单周涨幅（主力合约口径）
+  var el1 = document.getElementById('c_week');
+  charts.push(echarts.init(el1));
+  charts[0].setOption({
+    title:{text:'上周（08-24~08-28）CBOT 主要谷物/油籽单周涨幅（%）',left:'center',textStyle:{fontSize:14,color:'#1a2330'}},
+    tooltip:{trigger:'axis',axisPointer:{type:'shadow'}},
+    grid:{left:90,right:40,top:46,bottom:30},
+    xAxis:{type:'value',name:'%',axisLabel:{color:'#1a2330'},splitLine:{lineStyle:{color:'#e3e9f0'}}},
+    yAxis:{type:'category',inverse:true,data:['小麦 SRW（12月）','豆粕（12月）','小麦 HRW（12月）','玉米（12月）','大豆（11月新作）'],axisLabel:{color:'#1a2330'}},
+    series:[{type:'bar',data:[
+      {value:12.12,itemStyle:{color:'#D55E00'}},
+      {value:7.09,itemStyle:{color:'#CC79A7'}},
+      {value:8.73,itemStyle:{color:'#D55E00'}},
+      {value:5.51,itemStyle:{color:'#E69F00'}},
+      {value:3.91,itemStyle:{color:'#009E73'}}
+    ],barWidth:22,label:{show:true,position:'right',formatter:'{c}%',color:'#1a2330',fontWeight:'bold'}}]
+  });
+
+  // 图2：美玉米单产估计序列（USDA vs Pro Farmer）
+  var el2 = document.getElementById('c_yield');
+  charts.push(echarts.init(el2));
+  charts[1].setOption({
+    title:{text:'2026/27 美国玉米单产估计：官方与田间巡查的“预期差”（蒲/英亩）',left:'center',textStyle:{fontSize:14,color:'#1a2330'}},
+    tooltip:{trigger:'axis',axisPointer:{type:'shadow'}},
+    grid:{left:50,right:30,top:46,bottom:46},
+    xAxis:{type:'category',data:['USDA 7月预测\n183.0','USDA 8/12 WASDE\n180.7','Pro Farmer 田间巡查\n173.2','USDA vs 巡查\n差距 7.5'],axisLabel:{color:'#1a2330',interval:0,fontSize:11}},
+    yAxis:{type:'value',name:'蒲/英亩',min:165,axisLabel:{color:'#1a2330'},splitLine:{lineStyle:{color:'#e3e9f0'}}},
+    series:[{type:'bar',data:[
+      {value:183.0,itemStyle:{color:'#56B4E9'}},
+      {value:180.7,itemStyle:{color:'#0072B2'}},
+      {value:173.2,itemStyle:{color:'#D55E00'}},
+      {value:7.5,itemStyle:{color:'#888'}}
+    ],barWidth:44,label:{show:true,position:'top',color:'#1a2330',fontWeight:'bold'}}]
+  });
+
+  // 图3：俄罗斯 8 月小麦出口预测的下修序列（百万吨）
+  var el3 = document.getElementById('c_russia');
+  charts.push(echarts.init(el3));
+  charts[2].setOption({
+    title:{text:'俄罗斯 8 月小麦出口：历史对照 vs 2026 年预测一路下修（百万吨）',left:'center',textStyle:{fontSize:14,color:'#1a2330'}},
+    tooltip:{trigger:'axis',axisPointer:{type:'shadow'}},
+    grid:{left:50,right:40,top:46,bottom:56},
+    xAxis:{type:'category',data:['五年 8 月均值\n5.0','2025 年 8 月\n4.5','SovEcon 预测\n(8月中旬) 3.0–3.4','SovEcon 预测\n(8月底) 2.2','Rusagrotrans\n8月底 1.8','2010 年 8 月\n(上次低点) 1.6'],axisLabel:{color:'#1a2330',interval:0,fontSize:10.5}},
+    yAxis:{type:'value',name:'百万吨',axisLabel:{color:'#1a2330'},splitLine:{lineStyle:{color:'#e3e9f0'}}},
+    series:[{type:'bar',data:[
+      {value:5.0,itemStyle:{color:'#56B4E9'}},
+      {value:4.5,itemStyle:{color:'#0072B2'}},
+      {value:3.4,itemStyle:{color:'#E69F00'}},
+      {value:2.2,itemStyle:{color:'#D55E00'}},
+      {value:1.8,itemStyle:{color:'#D55E00'}},
+      {value:1.6,itemStyle:{color:'#999999'}}
+    ],barWidth:34,label:{show:true,position:'top',color:'#1a2330'}}]
+  });
+
+  window.addEventListener('resize', function(){
+    for (var i=0;i<charts.length;i++){ if(charts[i]) charts[i].resize(); }
+  });
+})();
+</script>
+</body>
+</html>
