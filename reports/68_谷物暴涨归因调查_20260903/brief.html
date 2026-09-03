@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>谷物暴涨归因·简报（68 号报告精简版）</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<style>
+  :root{
+    --ink:#24292f; --muted:#57606a; --line:#d8dee4; --bg:#f6f7f9;
+    --up:#C0392B; --down:#00734D; --accent:#0072B2;
+    --o-blue:#56B4E9; --o-navy:#0072B2; --o-teal:#009E73; --o-verm:#D55E00;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Segoe UI","Microsoft YaHei",system-ui,-apple-system,sans-serif;
+    font-size:15px;line-height:1.65;}
+  .wrap{max-width:960px;margin:0 auto;padding:28px 20px 60px;}
+  a{color:var(--accent);text-decoration:none;}
+  a:hover{text-decoration:underline;}
+  sup a{font-size:11px;margin:0 1px;font-weight:600;}
+
+  .hero{background:#fff;border:1px solid var(--line);border-radius:10px;padding:22px 24px;margin-bottom:14px;}
+  .hero h1{margin:0 0 6px;font-size:23px;letter-spacing:.5px;}
+  .meta{font-size:12.5px;color:var(--muted);line-height:1.7;}
+  .concl{margin-top:12px;padding:12px 14px;background:#eef5fb;border-left:4px solid var(--accent);
+    border-radius:6px;font-size:14.5px;}
+  .brief-link{margin-top:10px;font-size:13px;}
+
+  h2{font-size:17px;margin:26px 0 10px;padding-left:10px;border-left:4px solid var(--accent);letter-spacing:.5px;}
+  h3{font-size:14.5px;margin:14px 0 8px;color:var(--muted);font-weight:600;}
+  .panel{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 20px;margin-bottom:14px;}
+
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:8px 0;}
+  th{background:#f0f3f6;text-align:left;padding:8px 10px;border:1px solid var(--line);font-weight:600;}
+  td{padding:8px 10px;border:1px solid var(--line);vertical-align:top;}
+  tr.num td{font-variant-numeric:tabular-nums;}
+  .up{color:var(--up);font-weight:600;}
+  .up::before{content:"▲";font-size:11px;margin-right:2px;}
+  .down{color:var(--down);font-weight:600;}
+  .down::before{content:"▼";font-size:11px;margin-right:2px;}
+  .src{font-size:12px;color:var(--muted);margin-top:6px;}
+
+  .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px;}
+  .kcard{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 14px;}
+  .kcard .lab{font-size:12px;color:var(--muted);margin-bottom:4px;}
+  .kcard .val{font-size:20px;font-weight:700;font-variant-numeric:tabular-nums;}
+  .kcard .val .pct{font-size:13px;font-weight:600;margin-left:4px;}
+  .kcard .note{font-size:11.5px;color:var(--muted);margin-top:3px;}
+  .up .pct,.val.up{color:var(--up);}
+  @media (max-width:720px){.cards{grid-template-columns:repeat(2,1fr);}}
+
+  .callout{margin-top:10px;padding:10px 14px;background:#f4f6f8;border-left:4px solid #8a949e;border-radius:6px;font-size:13.5px;}
+  .callout.red{border-left-color:#B2182B;background:#fdf4f4;}
+  ul.tight{margin:6px 0;padding-left:20px;}
+  ul.tight li{margin-bottom:5px;font-size:13.5px;}
+  .footer{font-size:12.5px;color:var(--muted);background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 20px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <h1>谷物暴涨归因·简报 <span style="font-size:14px;color:#57606a;font-weight:400;">（68 号报告精简版）</span></h1>
+    <div class="meta">报告 68-S ｜ 2026-09-03 ｜ 行情窗口：2026-08-24 ~ 08-28 CBOT 交易周（进展延伸至 09-03）｜ 数据：CME 结算价（媒体口径）+ USDA FAS PSD 官方数据库 ｜ 全部数据/推论带编号出处，点击跳转完整版参考资料</div>
+    <div class="concl"><b>一句话结论</b>：不是单一事件，而是<b>「三品种三条独立主因 + 共同放大器」共振</b>；定价核心是<b>「供给可得性」而非库存总量</b>——纸面库存大头（中国储备）不参与贸易、第二大头（俄乌）被战争堵在境内、真正能替代黑海货源的五国缓冲已回到危机水平。</div>
+    <div class="brief-link">📖 完整版（九节、4 图、37 条出处）：<a href="index.html">index.html</a> ｜ 库存分段明细：results/68_psd_exporter_stocks_segments_20260903.csv</div>
+  </div>
+
+  <div class="cards">
+    <div class="kcard"><div class="lab">小麦 SRW（12月）</div><div class="val up">$7.84<span class="pct">+12.12%</span></div><div class="note">2022-03 以来最大单周｜YTD 约 +54.5%</div></div>
+    <div class="kcard"><div class="lab">玉米（12月）</div><div class="val up">$5.36½<span class="pct">+5.51%</span></div><div class="note">三年新高｜YTD 约 +21.8%</div></div>
+    <div class="kcard"><div class="lab">大豆（11月新作）</div><div class="val up">$12.88<span class="pct">+3.91%</span></div><div class="note">两年半新高</div></div>
+    <div class="kcard"><div class="lab">豆粕（12月）</div><div class="val up">$348.90<span class="pct">+7.09%</span></div><div class="note">两年多新高</div></div>
+  </div>
+  <div class="src" style="margin:-6px 0 4px 2px;">涨幅为媒体对 CME 结算价的周度计算 <a href="index.html#r1">[1]</a>；YTD 引自 CNBC <a href="index.html#r4">[4]</a>。</div>
+
+  <h2>① 三品种：三条独立主因（本轮最重要的纠偏——只有玉米是经典天气逻辑）</h2>
+  <div class="panel">
+    <table>
+      <tr><th style="width:13%;">品种</th><th style="width:34%;">主因</th><th style="width:31%;">关键证据</th><th style="width:22%;">驱动性质与脆弱度</th></tr>
+      <tr class="num"><td><b>小麦</b><br><span class="up">+12.12%</span></td><td>黑海出口物流近乎归零——俄乌互袭港口商船，<b>黑海+亚速海出口能力损失超 97%</b>（上季月均 720 万吨 → 仅剩图阿普谢 16 万吨/月）</td><td>俄 8 月小麦出口预测一路下修至 220 万吨（2010 年来最低，Rusagrotrans 仅 180）；乌 8/1–21 出口 53.9 万吨（同比 −69%）</td><td><b>地缘/物流风险溢价</b>——溢价占比最高、<b>对停火消息最敏感、回吐风险最大</b></td></tr>
+      <tr class="num"><td><b>玉米</b><br><span class="up">+5.51%</span></td><td>美国单产<b>「预期差」</b>（USDA 180.7 vs Pro Farmer 巡查 173.2 蒲/英亩）+ <b>欧洲历史性减产</b>（欧盟 5,010 万吨近 20 年最低、法国 −48% 为 50 年低）</td><td>7.5 蒲差距为 2016 年来样本最宽（≈6.7 亿蒲产量差）；但历史上该差距 10 月前收敛（均值 3.5 → 2.3 蒲）且 USDA 更接近最终值</td><td><b>经典天气减产</b>（三者唯一）+ 仓位拥挤——<b>9/11 USDA 报告是分水岭</b></td></tr>
+      <tr class="num"><td><b>大豆</b><br><span class="up">+3.91%</span></td><td><b>中国采购放量</b>（当周新作销售 247.8 万吨，超去年同期两倍；年内约 1,250 万吨 vs 2,500 万吨承诺）+ 玉米上涨比价外溢</td><td>巡查单产 53.3 <b>高于</b> USDA 52.7——美豆<b>没有减产故事</b>；USDA 平衡表尚未计入中国承诺</td><td><b>需求拉动</b>——库存缓冲最厚（88% 分位），<b>三者中短期最抗跌</b>；回吐需「中国暂停采购」类需求利空触发</td></tr>
+    </table>
+    <div class="src">出处：黑海断供 <a href="index.html#r5">[5]</a><a href="index.html#r6">[6]</a>；出口下修 <a href="index.html#r11">[11]</a><a href="index.html#r1">[1]</a>；单产 <a href="index.html#r7">[7]</a><a href="index.html#r8">[8]</a>；收敛规律 <a href="index.html#r9">[9]</a>；欧盟减产/基金/中国采购 <a href="index.html#r2">[2]</a>；「无单产故事」 <a href="index.html#r9">[9]</a>；中国承诺 <a href="index.html#r13">[13]</a><a href="index.html#r7">[7]</a>。</div>
+    <div class="callout"><b>共同放大器</b>：① 五国小麦缓冲历史低位（见②）；② 厄尔尼诺 2026 Q4 超强概率 95%（<b>情绪/升水放大器，非直接触发</b>，<a href="index.html#r15">[15]</a>）；③ 投机资金——玉米管理基金净多 37.6 万手为 2022-04 来最大、小麦 8/26 盘中触及涨停（<a href="index.html#r2">[2]</a><a href="index.html#r24">[24]</a>）。</div>
+  </div>
+
+  <h2>② 库存专题精华：纸面充足 vs 可得性短缺（本轮定价的底层逻辑）</h2>
+  <div class="panel">
+    <table>
+      <tr><th style="width:22%;">三层库存结构</th><th style="width:30%;">2026/27 规模（USDA PSD）</th><th>能否进入国际市场</th></tr>
+      <tr class="num"><td><b>① 中国储备</b></td><td>小麦 120 Mt（约占全球 44%）/ 玉米 165 Mt（约 59–60%）/ 大豆 44 Mt</td><td><b>不放出来</b>——战略储备内循环；玉米储备正主动去库（S2/S3 双段 0% 分位）</td></tr>
+      <tr class="num"><td><b>② 俄罗斯 + 乌克兰</b></td><td>小麦合计 18.4 Mt——<b>三个历史段全部 100% 分位</b></td><td><b>流量被战争掐断</b>——新粮被动堆入库，「库存升 = 出口堵」的镜像（USDA 8 月上调全球结转，来源正是俄乌国内库存 <a href="index.html#r31">[31]</a>）</td></tr>
+      <tr class="num"><td><b>③ 五国出口国缓冲</b><br>（美+加+欧盟+澳+巴西）</td><td>小麦 42.9 / 玉米 59.1 / 大豆 47.4 Mt</td><td><b>能交易，但小麦缓冲已回危机水平</b>（见下）</td></tr>
+    </table>
+    <h3>分段历史比较（S1 2001–14 / S2 2015–20 / S3 2021–25，段内分位 = 段内低于 2026/27 的年份占比）</h3>
+    <div id="c_seg" style="height:300px;"></div>
+    <table>
+      <tr><th>五国合计（Mt）</th><th>2026/27</th><th>S2 均值 2015–20</th><th>S3 均值 2021–25</th><th>vs S2</th><th>体制判定（分段核心发现）</th></tr>
+      <tr class="num"><td><b>小麦</b></td><td><b>42.9</b></td><td>55.4</td><td>46.5</td><td class="down">−22%</td><td><b>低缓冲体制</b>：低于 2015–20 段<b>每一年</b>（段内 0% 分位）；25 年更低仅 5 年——夹在 2021/22 开战（40.7）与 2007/08 粮食危机（30.6）之间；三段均值 55.4→46.5→42.9 逐段抽薄</td></tr>
+      <tr class="num"><td><b>玉米</b></td><td>59.1</td><td>68.0</td><td>59.7</td><td class="down">−13%</td><td><b>回落体制</b>：总量回中位（vs S3 仅 −1%），紧张在结构——欧盟 5.0 Mt 双段 0% 分位（−35%）</td></tr>
+      <tr class="num"><td><b>大豆</b></td><td>47.4</td><td>42.7</td><td>44.1</td><td class="up">+11%</td><td><b>高位体制</b>：三段逐段抬升、唯一「越涨库存越厚」——巴西 36.9 + 中国 44.3 双双托底 → 与「大豆最抗跌」互证</td></tr>
+    </table>
+    <div class="src">数据：USDA FAS PSD（<a href="index.html#r29">[29]</a>），2026-09-03 官方 API 拉取；分段计算为本报告基于原始序列完成，分国明细见 results/68_psd_exporter_stocks_segments_20260903.csv，完整分析见主报告第七节。</div>
+    <div class="callout"><b>为什么停火也回不到「这一个季度的出口窗口」</b>：俄侧 NKHP 码头官方称修复<b>可能长达 4 个月</b>且损坏含装船栈桥（<a href="index.html#r34">[34]</a>）；乌侧替代路线（多瑙河+铁路）仅 50–60 万吨/月 vs 深水港缺口约 250 万吨/月（<a href="index.html#r32">[32]</a>）；商业侧更根本——6/20–7/20 有 28 艘民用船被毁、保费 0.25–0.3%→约 2%、运费一周 $24→$47/吨，航运专家称这是「新的物流现实」而非一次性中断（<a href="index.html#r32">[32]</a><a href="index.html#r33">[33]</a><a href="index.html#r35">[35]</a>）。停火修复的是<b>预期</b>（溢价收缩最快），实物供给回复以月计。</div>
+  </div>
+
+  <h2>③ 短期可逆性分层（回吐风险从高到低）</h2>
+  <div class="panel">
+    <table>
+      <tr><th style="width:24%;">驱动因素</th><th style="width:20%;">可逆性</th><th>机制与触发器</th></tr>
+      <tr><td><b>① 小麦黑海地缘溢价</b>（上周涨幅主体）</td><td><b>弹性最大</b>（触发概率当前偏低）</td><td>期货定价预期：8/31 仅「土耳其备好通航计划」一条消息，小麦盘中即 <span class="down">−2.5%</span>；俄方 9/2–3 公开拒绝恢复倡议压低短期概率（<a href="index.html#r24">[24]</a><a href="index.html#r23">[23]</a>）。任何外交突破 → 上周涨幅大部分可数日内回吐</td></tr>
+      <tr><td><b>② 拥挤多头仓位</b>（玉米为主）</td><td><b>随时可能</b>的技术性回吐</td><td>玉米基金净多 37.6 万手（2022-04 来最大）；9/11 不及预期/停火信号/中国放缓均可触发程序化平仓——基准是<b>修正而非反转</b>（<a href="index.html#r24">[24]</a><a href="index.html#r22">[22]</a>）</td></tr>
+      <tr><td><b>③ 美玉米「预期差」交易</b></td><td><b>中等（2–6 周）</b>，9/11 见分晓</td><td>7.5 蒲差距历史上收敛、USDA 更接近最终值；9/11 作物产量报告若仅小幅下修 → 预期差部分回吐（<a href="index.html#r9">[9]</a>）</td></tr>
+      <tr><td><b>④ 已落地/已确认项</b>（EPA 决定、欧洲减产、黑海物理损失）</td><td><b>短期不可逆</b></td><td>EPA SRE 8/31 落地且差额 100% 重分配 → 中性偏多；欧盟玉米 5,010 万吨既成事实；97% 能力损失停火前不可逆——<b>不构成回吐来源，反而构成下方支撑</b>（<a href="index.html#r27">[27]</a><a href="index.html#r2">[2]</a><a href="index.html#r5">[5]</a>）</td></tr>
+    </table>
+  </div>
+
+  <h2>④ 观察清单与 09-03 状态</h2>
+  <div class="panel">
+    <table>
+      <tr><th style="width:22%;">证伪/风险点</th><th style="width:44%;">观察信号与时间</th><th>09-03 状态</th></tr>
+      <tr><td><b>黑海停火斡旋</b></td><td>Erdogan–普京后续互动、联合国渠道；码头复工（1–4 个月）与战争险保费回落</td><td>9/1 会谈 1.5 小时无突破；俄副外长明确「无理由恢复」→ 短期降温概率低，但小麦消息敏感度极高（<a href="index.html#r23">[23]</a><a href="index.html#r25">[25]</a>）</td></tr>
+      <tr><td><b>9/11 USDA 作物产量</b></td><td>首个含实地调查的玉米单产验证点；9/30 季度库存接力</td><td>8/31 玉米优良率持平 57%（恶化动能减弱）——边际利多减弱（<a href="index.html#r9">[9]</a><a href="index.html#r22">[22]</a>）</td></tr>
+      <tr><td><b>中国采购节奏</b></td><td>USDA 周度出口销售；9 月中美领导人会晤预期</td><td>涨价中仍在买（9/1 再有 15.9 万吨 flash 售未知目的地）；缺口约 1,250 万吨待补（<a href="index.html#r24">[24]</a><a href="index.html#r13">[13]</a>）</td></tr>
+      <tr><td><b>EPA reallocation 提案</b></td><td>10 月底前正式提案（影响 2026/27 生柴需求）</td><td><b>已落地、中性偏多</b>：34 份 SRE 豁免 17.6 亿 RIN 但 100% 重分配，Bloomberg 称比预期偏多（<a href="index.html#r27">[27]</a><a href="index.html#r28">[28]</a>）</td></tr>
+      <tr><td><b>厄尔尼诺兑现度</b></td><td>CPC/NOAA 月度更新（10 月初关键节点）；9–11 月巴西播种进度</td><td>StoneX 上调巴西 26/27 大豆至创纪录 1.835 亿吨——远期供给逻辑与远期升水对冲（<a href="index.html#r23">[23]</a>）</td></tr>
+    </table>
+    <div class="callout red"><b>行情快照（9/2 结算）</b>：小麦 $7.74 / 玉米 $5.43½ / 大豆 $13.10¼——三品种自高点回吐约 1–3%；9/1 俄拒停火+夜袭敖德萨曾推小麦创 3.5 年新高。<b>品种结论：小麦最脆弱（双向消息市、波动率极高）、玉米次之（9/11 分水岭）、大豆短期最抗跌（回吐需需求端利空触发）</b>（<a href="index.html#r22">[22]</a><a href="index.html#r23">[23]</a>）。</div>
+  </div>
+
+  <div class="footer">
+    <b>出处与口径</b>：正文 [n] 编号与完整版 37 条参考资料一一对应，点击跳转 <a href="index.html">index.html#rN</a> 可逐条溯源。价格为主力/12 月合约媒体口径（Ag Policy &amp; Markets Daily / CNBC），连续合约口径略有差异已在完整版并列；库存数据为 USDA FAS PSD 官方 API（2026-09-03 拉取），百分位与分段统计为本报告基于原始序列计算。本简报为公开资料汇编，不构成投资建议。
+  </div>
+
+</div>
+
+<script>
+(function(){
+  function fallback(boxId){
+    var el = document.getElementById(boxId);
+    if (el) el.innerHTML = '<div style="padding:20px;font-size:13px;color:#57606a;">图表加载失败（无网络时属正常）：五国缓冲分段数据见上方表格。</div>';
+  }
+  if (typeof window.echarts === 'undefined') { fallback('c_seg'); return; }
+
+  var el = document.getElementById('c_seg');
+  var chart = echarts.init(el);
+  var baseTxt = {fontSize:11.5, color:'#57606a'};
+  chart.setOption({
+    title:{text:'五国出口国缓冲分段比较（美+加+欧盟+澳+巴西，期末库存 Mt，USDA PSD）', left:'center', textStyle:{fontSize:13, fontWeight:600}},
+    tooltip:{trigger:'axis', axisPointer:{type:'shadow'}},
+    legend:{top:26, textStyle:baseTxt},
+    grid:{left:50, right:24, top:64, bottom:28},
+    xAxis:{type:'category', data:['小麦','玉米','大豆'], axisLabel:{fontSize:12.5, fontWeight:600}},
+    yAxis:{type:'value', name:'Mt', axisLabel:{fontSize:11.5}, splitLine:{lineStyle:{color:'#eef1f4'}}},
+    series:[
+      {name:'S1 均值 2001–14', type:'bar', data:[48.7,50.9,27.2], itemStyle:{color:'#56B4E9'}, barGap:'10%'},
+      {name:'S2 均值 2015–20', type:'bar', data:[55.4,68.0,42.7], itemStyle:{color:'#0072B2'}},
+      {name:'S3 均值 2021–25', type:'bar', data:[46.5,59.7,44.1], itemStyle:{color:'#009E73'}},
+      {name:'2026/27 预测', type:'bar', data:[42.9,59.1,47.4], itemStyle:{color:'#D55E00'},
+       label:{show:true, position:'top', fontSize:11, fontWeight:700, color:'#333',
+         formatter:function(p){ return p.value; }}}
+    ]
+  });
+  window.addEventListener('resize', function(){ chart.resize(); });
+})();
+</script>
+</body>
+</html>
