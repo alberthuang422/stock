@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PG 宝洁深度分析 · 2026-09-03</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<style>
+  :root{
+    --oi-blue:#0072B2; --oi-orange:#E69F00; --oi-sky:#56B4E9;
+    --oi-vermillion:#D55E00; --oi-purple:#CC79A7; --oi-green:#009E73;
+    --oi-yellow:#F0E442; --ink:#1a2330; --sub:#5a6a7d; --line:#dde4ec;
+    --card:#ffffff; --bg:#f5f7fa;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:"Microsoft YaHei","PingFang SC",sans-serif;background:var(--bg);color:var(--ink);line-height:1.7;}
+  .wrap{max-width:1080px;margin:0 auto;padding:24px 20px 60px;}
+  .hero{background:linear-gradient(135deg,#12365e 0%,#1d5c93 100%);color:#fff;border-radius:12px;padding:30px 34px;margin-bottom:22px;}
+  .hero h1{font-size:26px;margin-bottom:6px;}
+  .hero .meta{font-size:13px;opacity:.85;}
+  .hero .sub{margin-top:10px;font-size:14px;opacity:.92;}
+  .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:26px;}
+  .kcard{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px;}
+  .kcard .lab{font-size:12px;color:var(--sub);margin-bottom:4px;}
+  .kcard .val{font-size:22px;font-weight:700;}
+  .kcard .note{font-size:12px;color:var(--sub);margin-top:4px;}
+  .sev{color:var(--oi-vermillion);}
+  .ok{color:var(--oi-green);}
+  h2{font-size:19px;margin:34px 0 12px;padding-left:12px;border-left:4px solid var(--oi-blue);}
+  h3{font-size:15px;margin:18px 0 8px;color:#12365e;}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px 22px;margin-bottom:16px;}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  table{width:100%;border-collapse:collapse;font-size:13px;background:#fff;}
+  th{background:#eef2f7;color:#12365e;padding:8px 10px;text-align:left;border-bottom:2px solid var(--line);}
+  td{padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top;}
+  tr:last-child td{border-bottom:none;}
+  .num{font-variant-numeric:tabular-nums;}
+  .src{font-size:11px;color:var(--sub);margin-top:6px;}
+  .prob{border-left:4px solid var(--oi-orange);margin-bottom:12px;}
+  .prob.p1{border-left-color:#B2182B;}
+  .prob .tag{display:inline-block;font-size:11px;color:#fff;background:var(--oi-orange);border-radius:4px;padding:1px 8px;margin-left:8px;vertical-align:middle;}
+  .prob.p1 .tag{background:#B2182B;}
+  .toggle{font-size:12px;color:var(--oi-blue);cursor:pointer;user-select:none;margin-bottom:8px;display:inline-block;}
+  .hidden{display:none;}
+  .verdict{background:#fff8ee;border:1px solid #f0d9a8;border-radius:10px;padding:18px 22px;margin-bottom:16px;}
+  ul{padding-left:20px;}
+  li{margin:4px 0;}
+  .footer{margin-top:30px;padding:16px 20px;background:#eef2f7;border-radius:10px;font-size:12px;color:var(--sub);}
+  a{color:var(--oi-blue);}
+  @media(max-width:820px){.cards{grid-template-columns:repeat(2,1fr);}.two{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <h1>PG 宝洁（Procter &amp; Gamble）深度分析</h1>
+    <div class="meta">报告编号 67 ｜ 撰写日期 2026-09-03 ｜ 行情截至 2026-09-02 收盘 ｜ NYSE: PG</div>
+    <div class="sub">结论先行：<b>问题是真实且结构性的，但不是生存危机</b>——现金牛分红回购毫发无损，增长引擎（销量）熄火，FY2027 上半年利润处于下行段。综合严重度：<b>中偏低</b>。</div>
+  </div>
+
+  <div class="cards">
+    <div class="kcard"><div class="lab">FY2026 有机销售额</div><div class="val">+1%</div><div class="note">六年最弱：7→7→4→2→1</div></div>
+    <div class="kcard"><div class="lab">FY2026 Core EPS</div><div class="val">$6.89 <span class="sev" style="font-size:14px;">+1%</span></div><div class="note">汇率中性口径 0 增长</div></div>
+    <div class="kcard"><div class="lab">FY2027 指引（中值）</div><div class="val sev">≈0 增长</div><div class="note">Q1 FY27 EPS 预计同比 −5%</div></div>
+    <div class="kcard"><div class="lab">股息安全垫</div><div class="val ok">充裕</div><div class="note">FCF $15.8B &gt; 分红 $10.2B，70 年连增</div></div>
+  </div>
+
+  <h2>一、公司画像</h2>
+  <div class="panel">
+    <p>宝洁是全球最大日化集团，旗下拥有汰渍（Tide）、帮宝适（Pampers）、吉列、海飞丝、潘婷、SK-II、OLAY、佳洁士、护舒宝等品牌，产品销往约 70 个国家。财年截至每年 6 月底（FY2026 = 2025-07 ~ 2026-06）。<b>商业模式的本质：品牌定价权 + 分销规模 + 相对无弹性的日常需求</b>——买 PG 本质上是在买一张「带 3% 票息、70 年连续加息记录的债券替代品」。</p>
+    <div class="two" style="margin-top:10px;">
+      <div><h3>FY2026 净销售额按业务板块</h3><div id="c_seg" style="height:300px;"></div></div>
+      <div><h3>FY2026 净销售额按地域</h3><div id="c_geo" style="height:300px;"></div></div>
+    </div>
+    <div class="src">来源：宝洁 2026 年报 Financial Highlights（2026-07），占比剔除 Corporate</div>
+  </div>
+
+  <h2>二、FY2026 财报拆解：收入的 +3% 是「装」出来的</h2>
+  <div class="panel">
+    <span class="toggle" id="tg1">［切换查看数据表］</span>
+    <div id="box_chart1"><div id="c_growth" style="height:340px;"></div></div>
+    <div id="box_table1" class="hidden">
+      <table>
+        <tr><th>财年</th><th>净销售额($B)</th><th>营业利润($B)</th><th>归母净利($B)</th><th>Core EPS($)</th><th>摊薄 EPS($)</th><th>股息($/股)</th></tr>
+        <tr class="num"><td>FY2022</td><td>80.2</td><td>17.8</td><td>14.7</td><td>5.81</td><td>5.81</td><td>3.52</td></tr>
+        <tr class="num"><td>FY2023</td><td>82.0</td><td>18.1</td><td>14.7</td><td>5.90</td><td>5.90</td><td>3.68</td></tr>
+        <tr class="num"><td>FY2024</td><td>84.0</td><td>18.5</td><td>14.9</td><td>6.59</td><td>6.02</td><td>3.83</td></tr>
+        <tr class="num"><td>FY2025</td><td>84.3</td><td>20.5</td><td>16.0</td><td>6.83</td><td>6.51</td><td>4.08</td></tr>
+        <tr class="num"><td>FY2026</td><td><b>87.0</b></td><td><b>19.7</b></td><td><b>16.0</b></td><td><b>6.89</b></td><td><b>6.62</b></td><td><b>4.26</b></td></tr>
+      </table>
+    </div>
+    <div class="src">来源：宝洁 2026 年报 Financial Highlights（2026-07）；FY2026 经营现金流 $19.6B、调整后 FCF 生产率 100%、股东回报 $150+ 亿（分红 $102 亿 + 回购 $50 亿）</div>
+  </div>
+
+  <div class="two">
+    <div class="panel">
+      <h3>有机销售额增速逐年滑坡（%）</h3>
+      <div id="c_organic" style="height:280px;"></div>
+      <div class="src">FY2026 为 +1%（SEC 8-K，2026-07-29）；FY22–25 为约数（公司历年年报/媒体综述，需核实原文）</div>
+    </div>
+    <div class="panel">
+      <h3>FY2026 增长结构拆解</h3>
+      <table>
+        <tr><th>净销售额 +3% 的构成</th><th>贡献</th></tr>
+        <tr><td>有利汇率（FX）</td><td class="num">+2pp</td></tr>
+        <tr><td>提价</td><td class="num">+1pp</td></tr>
+        <tr><td><b>销量与产品结构</b></td><td class="num"><b>0pp</b></td></tr>
+        <tr><td>毛利率</td><td class="num sev">−100bp</td></tr>
+        <tr><td>营业利润率</td><td class="num sev">−160bp</td></tr>
+        <tr><td>Q4（4–6月）有机销售</td><td class="num sev">0%（营收 miss 预期）</td></tr>
+        <tr><td>Q4 摊薄 / Core EPS</td><td class="num sev">−15% / −3%</td></tr>
+      </table>
+      <div class="src">来源：SEC 8-K 新闻稿（2026-07-29）；Q4 GAAP EPS −15% 主因重组费用</div>
+    </div>
+  </div>
+
+  <h2>三、当前面临的五个问题（按严重度排序）</h2>
+
+  <div class="panel prob p1">
+    <h3>① FY2027 上半年利润逆风 <span class="tag">最直接利空</span></h3>
+    <p>公司指引 FY27 有机 +1~3%、Core EPS $6.89–7.11（<b>中值 ≈ 零增长</b>）；其中 <b>$0.56/股</b>拖累来自原料/能源/运输涨价（中东地缘冲突推升油价至约 $90）+ 关税 + 净利息 + 汇率，集中在上半年；管理层明示 <b>Q1 FY27 EPS 同比约 −5%</b>。7-29 财报后股价再跌约 3% 即由此触发。</p>
+    <div class="src">来源：公司 FY26 Q4 电话会 / SEC 8-K（2026-07-29）</div>
+  </div>
+
+  <div class="panel prob">
+    <h3>② 提价能力逼近极限</h3>
+    <p>连续多年提价后，FY26 销量已完全不动、全年仅一个季度销量正增长；毛利率 −100bp、营业利润率 −160bp，靠 $28 亿生产率节约硬扛。第三方综述：全球前 50 大「品类×国家」组合中守住/提升份额的从 FY22 的 38 个降至 26 个（<b>需核实原文</b>）。低销量下的利润率收缩是市场真正担心的点。</p>
+  </div>
+
+  <div class="panel prob">
+    <h3>③ 大中华区结构性两极分化（最大长期问题）</h3>
+    <p>大中华区 FY26 有机 +4%、<b>四年首次转正</b>——但全靠 SK-II（Q4 剔除旅游零售 +8%）与高端帮宝适拉动；飘柔/OLAY/佳洁士等大众线仍被国货挤压。CFO Schulten 原话："这不是季度波动，是市场结构性两极分化"，并明确 FY27 不再追求在华高个位数增长。中国是第二大市场（占收入 7%），这块修不好，全球增长天花板就被压着。</p>
+    <div class="src">来源：证券时报（2026-07-29）、每日经济新闻（2026-08-04）</div>
+  </div>
+
+  <div class="panel prob">
+    <h3>④ 重组过渡期的执行风险</h3>
+    <p>新 CEO Jejurikar（首位印度裔 CEO，2025-07 上任，2026-08-01 兼任董事长）主导：裁员约 7000 人、重组费用 $1–1.6B、退出阿根廷/尼日利亚/巴基斯坦、结束 Glad 合资（收益计入 FY26）、<b>约 $3.8B 收购补剂品牌 Thorne</b>。方向对（组合手术 + 降本），但 Q4 GAAP EPS −15% 就是重组费用的账单，且 Thorne 整合存在不确定性。</p>
+  </div>
+
+  <div class="panel prob">
+    <h3>⑤ 防御股跑输牛市的机会成本</h3>
+    <p>过去一年 PG 约 −5.5%（第三方统计，需核实），同期标普 500 约 +20%；2026 年内最大回撤 −16.2%（6-03，TIKR），现价较高点回撤约 13%。绝对问题不大，相对痛苦明显——但近期避险资金回流防御股（9 月议息前），股价已现企稳。</p>
+  </div>
+
+  <h2>四、严重吗？——分层判断</h2>
+  <div class="panel">
+    <table>
+      <tr><th>维度</th><th>判断</th><th>置信度</th><th>依据</th></tr>
+      <tr><td><b>财务安全 / 分红</b></td><td class="ok"><b>不严重</b></td><td>高</td><td>调整后 FCF $15.8B &gt; 分红 $10.2B；派息率 &lt;65%；利息覆盖 &gt;20x；136 年派息、70 年连增（FY26 年报 / 第三方综述需核实）</td></tr>
+      <tr><td><b>短期盈利</b></td><td class="sev"><b>偏严重</b></td><td>高</td><td>FY27 上半年是公司自己承认的下行段，Q1（10 月下旬）EPS 大概率负增长——未来两个月股价主要压力点</td></tr>
+      <tr><td><b>中长期增长</b></td><td><b>真问题，但已部分定价</b></td><td>中</td><td>PE(TTM) 约 22.4x、forward 约 19.8x、EV/EBITDA 约 14.7x，均低于 10 年均值；市场已按"零增长债券替代品"定价，但未到恐慌折价</td></tr>
+      <tr><td><b>竞争格局</b></td><td><b>承压但护城河未破</b></td><td>中</td><td>毛利率 ~51% 仍显著高于多数同业；美国/欧洲自有品牌份额实际在下降（公司 CFO 口径）；中国是真正的失分项</td></tr>
+    </table>
+  </div>
+
+  <h2>五、估值与同业</h2>
+  <div class="panel">
+    <p><b>当前估值反映的预期</b>：现价 $148.07（2026-09-02 收盘，westock）对应 PE(TTM) 22.37x / PB 6.45x / 股息率 2.9%，52 周区间 $134.63–164.77，市值约 $3,439 亿。EV/EBITDA 14.67x、forward PE 19.8x 均低于 10 年均值与 5 年中位——市场定价的是「增速下修 + 利润率压力 + 中国不确定性」，成长预期几乎归零，剩余价值在股息与重组期权上。分析师一致目标价约 $160–161（约 23 家机构，Moderate Buy），多家近期下调目标价。</p>
+    <div class="two" style="margin-top:10px;">
+      <div>
+        <h3>防御性消费同业横向对比</h3>
+        <table>
+          <tr><th>代码</th><th>PE(TTM)</th><th>营收增速</th><th>净利率</th><th>ROE</th></tr>
+          <tr class="num"><td><b>PG</b></td><td><b>22.1x</b></td><td>+1.5%</td><td>18.4%</td><td>30.3%</td></tr>
+          <tr class="num"><td>KO</td><td>26.4x</td><td>+6.7%</td><td>28.6%</td><td>42.1%</td></tr>
+          <tr class="num"><td>PEP</td><td>18.3x</td><td>+6.4%</td><td>10.8%</td><td>51.5%</td></tr>
+          <tr class="num"><td>WMT</td><td>38.4x</td><td>+5.9%</td><td>3.0%</td><td>22.3%</td></tr>
+          <tr class="num"><td>COST</td><td>47.0x</td><td>+21.5%</td><td>3.0%</td><td>29.2%</td></tr>
+        </table>
+        <div class="src">来源：StrongBuyAnalytics（2026-09-01，第三方聚合，需核实）——PG 是同业中增速最慢的一档，但净利率/ROE 仍属第一梯队</div>
+      </div>
+      <div>
+        <h3>重估 / 杀估值的触发因素</h3>
+        <ul>
+          <li><b>杀估值</b>：Q1 FY27 EPS 降幅超 −5% 指引；油价再上行令 $1B 逆风扩大；中国大众线继续失份额；提价引发销量二次恶化</li>
+          <li><b>重估</b>：FY27 下半年成本缓解兑现；重组 $1–1.6B 节约落地超预期；Thorne 打造第二曲线；中国大众品牌止跌；利率下行强化防御股配置</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <h2>六、关键跟踪点与情景框架</h2>
+  <div class="verdict">
+    <h3 style="margin-top:0;">跟踪清单（按时间顺序）</h3>
+    <ul>
+      <li><b>2026-10 下旬</b>：Q1 FY27 财报——验证「EPS −5%」指引兑现度与下半年改善路径是否可信</li>
+      <li><b>持续</b>：油价/能源与运输成本走向（$1B 税后逆风的主体变量）</li>
+      <li><b>持续</b>：中国大众品牌（飘柔/OLAY/佳洁士）份额与 SKU 精简进度——公司选择不打价格战、直接砍通货类产品</li>
+      <li><b>持续</b>：重组降本 $1–1.6B 兑现节奏与 Thorne 整合进展</li>
+    </ul>
+    <h3>一句话总结</h3>
+    <p>这不是 GE 式的衰退，而是宝洁历史上出现过的「增长换挡期」——上一次类似焦虑（2017–2018）靠涨价 + 重组走了出来；区别在于这次多了<b>中国结构性问题</b>与<b>地缘成本逆风</b>两个新变量。当前价格已把"零增长"计入，向下主要风险在 Q1 财报与成本端，向上期权在重组执行与中国修复。</p>
+  </div>
+
+  <div class="footer">
+    <b>数据来源</b>：① 宝洁 FY2026 Q4 及全年业绩新闻稿（SEC 8-K，2026-07-29）；② 宝洁 2026 年报 Financial Highlights；③ 证券时报 2026-07-29《宝洁新CEO上任首份年报》；④ 每日经济新闻 2026-08-04；⑤ TIKR / EveryTicker / StrongBuyAnalytics / MarketBeat（2026-09-01~02，第三方聚合，需核实原文）；⑥ 行情：westock usPG（2026-09-02 收盘）。<br>
+    标注"需核实"的数据为非一手来源引用，未与公司公告逐项核对。财年口径：PG FY2026 = 2025-07-01 ~ 2026-06-30。
+  </div>
+
+  <div class="footer" style="background:#fdf1f1;border:1px solid #e8c8c8;">
+    <b>免责声明</b>：以上内容基于公开数据和量化分析，仅供参考，不构成投资建议。市场有风险，投资需谨慎。任何投资决策应结合个人风险承受能力、资金状况和投资目标独立判断，必要时咨询持牌专业机构。过往表现不预示未来收益。
+  </div>
+
+</div>
+
+<script>
+(function(){
+  var B='#0072B2',O='#E69F00',S='#56B4E9',V='#D55E00',P='#CC79A7',G='#009E73',K='#555555',Y='#F0E442';
+  var FONT={fontFamily:'"Microsoft YaHei","PingFang SC",sans-serif'};
+
+  var seg=echarts.init(document.getElementById('c_seg'));
+  seg.setOption({
+    tooltip:{trigger:'item',formatter:'{b}: {d}%'},
+    legend:{bottom:0,textStyle:FONT,itemWidth:12,itemHeight:12},
+    series:[{
+      type:'pie',radius:['42%','68%'],center:['50%','44%'],
+      label:{formatter:'{b}\n{d}%',fontSize:11},
+      data:[
+        {name:'织物与家居护理 35%',value:35,itemStyle:{color:B}},
+        {name:'婴/女/家庭护理 24%',value:24,itemStyle:{color:O}},
+        {name:'美容 19%',value:19,itemStyle:{color:S}},
+        {name:'健康护理 14%',value:14,itemStyle:{color:V}},
+        {name:'理容 8%',value:8,itemStyle:{color:P}}
+      ]
+    }]
+  });
+
+  var geo=echarts.init(document.getElementById('c_geo'));
+  geo.setOption({
+    tooltip:{trigger:'item',formatter:'{b}: {d}%'},
+    legend:{bottom:0,textStyle:FONT,itemWidth:12,itemHeight:12},
+    series:[{
+      type:'pie',radius:['42%','68%'],center:['50%','44%'],
+      label:{formatter:'{b}\n{d}%',fontSize:11},
+      data:[
+        {name:'北美 51%',value:51,itemStyle:{color:B}},
+        {name:'欧洲 23%',value:23,itemStyle:{color:O}},
+        {name:'拉美 7%',value:7,itemStyle:{color:S}},
+        {name:'大中华区 7%',value:7,itemStyle:{color:V}},
+        {name:'亚太 7%',value:7,itemStyle:{color:P}},
+        {name:'印中东非 5%',value:5,itemStyle:{color:G}}
+      ]
+    }]
+  });
+
+  var gr=echarts.init(document.getElementById('c_growth'));
+  gr.setOption({
+    tooltip:{trigger:'axis'},
+    legend:{data:['净销售额($B)','Core EPS($)','摊薄 EPS($)'],textStyle:FONT},
+    grid:{left:50,right:55,top:40,bottom:30},
+    xAxis:{type:'category',data:['FY2022','FY2023','FY2024','FY2025','FY2026']},
+    yAxis:[
+      {type:'value',name:'净销售额($B)',min:70,max:92},
+      {type:'value',name:'EPS($)',min:4,max:8}
+    ],
+    series:[
+      {name:'净销售额($B)',type:'bar',data:[80.2,82.0,84.0,84.3,87.0],itemStyle:{color:B},barWidth:'38%'},
+      {name:'Core EPS($)',type:'line',yAxisIndex:1,data:[5.81,5.90,6.59,6.83,6.89],itemStyle:{color:O},lineStyle:{width:3},symbolSize:8},
+      {name:'摊薄 EPS($)',type:'line',yAxisIndex:1,data:[5.81,5.90,6.02,6.51,6.62],itemStyle:{color:P},lineStyle:{width:2,type:'dashed'},symbolSize:7}
+    ]
+  });
+
+  var og=echarts.init(document.getElementById('c_organic'));
+  og.setOption({
+    tooltip:{trigger:'axis',formatter:'{b}: {c}%'},
+    grid:{left:40,right:20,top:20,bottom:30},
+    xAxis:{type:'category',data:['FY2022','FY2023','FY2024','FY2025','FY2026']},
+    yAxis:{type:'value',name:'有机增速(%)',max:8},
+    series:[{
+      type:'bar',data:[7,7,4,2,1],barWidth:'45%',
+      itemStyle:{color:function(p){return ['#0072B2','#56B4E9','#E69F00','#D55E00','#B2182B'][p.dataIndex];}},
+      label:{show:true,position:'top',formatter:'{c}%'}
+    }]
+  });
+
+  var tg=document.getElementById('tg1'),bc=document.getElementById('box_chart1'),bt=document.getElementById('box_table1');
+  tg.addEventListener('click',function(){
+    var tHidden=bt.className.indexOf('hidden')>=0;
+    if(tHidden){bt.className='';bc.className='hidden';tg.innerHTML='［切换回图表］';}
+    else{bt.className='hidden';bc.className='';tg.innerHTML='［切换查看数据表］';}
+  });
+})();
+</script>
+</body>
+</html>
