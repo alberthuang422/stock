@@ -384,7 +384,19 @@ for t in tickers:
             rec[f"fwd{N}"] = fw[N]
             rec[f"spy_fwd{N}"] = (df["spy"].iloc[i + N] / df["spy"].iloc[i] - 1) * 100
             rec[f"ex{N}"] = rec[f"fwd{N}"] - rec[f"spy_fwd{N}"]
-        rec["fake10"] = np.nan; rec["mae20"] = np.nan; rec["surv20"] = np.nan; rec["nodes"] = ""
+        for N in FWD:
+            mfe = 0.0; mae = 0.0
+            for j in range(1, N + 1):
+                if i + j >= len(df):
+                    break
+                c2 = df["px"].iloc[i + j]
+                fav = (c2 / px0 - 1) * 100
+                adv = (px0 / max(c2, 1e-9) - 1) * 100
+                mfe = max(mfe, fav)
+                mae = min(mae, -adv)
+            rec[f"mfe{N}"] = mfe
+            rec[f"mae{N}"] = mae
+        rec["fake10"] = np.nan; rec["surv20"] = np.nan; rec["nodes"] = ""
         base_rows.append(rec)
 base_df = pd.DataFrame(base_rows)
 base_df.to_csv(os.path.join(OUT, "choppy_breakout_baseline.csv"), index=False)
