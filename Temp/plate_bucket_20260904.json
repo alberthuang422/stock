@@ -1,0 +1,1171 @@
+{
+ "TSLA": {
+  "plates": [
+   "汽车制造"
+  ],
+  "bucket": "可选消费"
+ },
+ "SPCX": {
+  "plates": [
+   "航空航天与国防"
+  ],
+  "bucket": "军工/航天"
+ },
+ "AVGO": {
+  "plates": [
+   "半导体"
+  ],
+  "bucket": "半导体/AI硬件"
+ },
+ "NVDA": {
+  "plates": [
+   "半导体"
+  ],
+  "bucket": "半导体/AI硬件"
+ },
+ "CRCL": {
+  "plates": [],
+  "bucket": "加密关联"
+ },
+ "HOOD": {
+  "plates": [],
+  "bucket": "金融"
+ },
+ "SNOW": {
+  "plates": [],
+  "bucket": "软件/SaaS"
+ },
+ "MSTR": {
+  "plates": [
+   "应用软件"
+  ],
+  "bucket": "加密关联"
+ },
+ "LULU": {
+  "plates": [
+   "服装零售"
+  ],
+  "bucket": "可选消费"
+ },
+ "INTC": {
+  "plates": [
+   "半导体"
+  ],
+  "bucket": "半导体/AI硬件"
+ },
+ "BE": {
+  "plates": [],
+  "bucket": "工业/机械/运输"
+ },
+ "PLTR": {
+  "plates": [
+   "软件基础设施"
+  ],
+  "bucket": "软件/SaaS"
+ },
+ "GOOG": {
+  "plates": [
+   "互联网内容与信息"
+  ],
+  "bucket": "互联网/电商"
+ },
+ "MRVL": {
+  "plates": [
+   "半导体"
+  ],
+  "bucket": "半导体/AI硬件"
+ },
+ "AAPL": {
+  "plates": [
+   "消费电子产品"
+  ],
+  "bucket": "半导体/AI硬件"
+ },
+ "ORCL": {
+  "plates": [],
+  "bucket": "软件/SaaS"
+ },
+ "COIN": {
+  "plates": [],
+  "bucket": "加密关联"
+ },
+ "NBIS": {
+  "plates": [
+   "互联网内容与信息"
+  ],
+  "bucket": "互联网/电商"
+ },
+ "RKLB": {
+  "plates": [
+   "航空航天与国防"
+  ],
+  "bucket": "航天/太空"
+ },
+ "AMD": {
+  "plates": [
+   "半导体"
+  ],
+  "bucket": "半导体/AI硬件"
+ },
+ "GOOGL": {
+  "plates": [],
+  "bucket": "互联网/电商"
+ },
+ "CRDO": {
+  "plates": [
+   "半导体"
+  ],
+  "bucket": "半导体/AI硬件"
+ },
+ "AMZN": {
+  "plates": [
+   "互联网零售"
+  ],
+  "bucket": "互联网/电商"
+ },
+ "MRNA": {
+  "plates": [
+   "生物技术"
+  ],
+  "bucket": "医药/生物"
+ },
+ "AAOI": {
+  "plates": [
+   "通讯设备"
+  ],
+  "bucket": "半导体/AI硬件"
+ },
+ "MCD": {
+  "plates": [],
+  "bucket": "可选消费"
+ },
+ "CIEN": {
+  "plates": [
+   "通讯设备"
+  ],
+  "bucket": "通信"
+ },
+ "NOW": {
+  "plates": [],
+  "bucket": "软件/SaaS"
+ },
+ "COHR": {
+  "plates": [
+   "科技仪器"
+  ],
+  "bucket": "半导体/AI硬件"
+ },
+ "HPE": {
+  "plates": [],
+  "bucket": "半导体/AI硬件"
+ },
+ "CRWV": {
+  "plates": [],
+  "bucket": "软件/SaaS"
+ },
+ "PL": {
+  "plates": [
+   "航空航天与国防"
+  ],
+  "bucket": "军工/航天"
+ },
+ "CRM": {
+  "plates": [],
+  "bucket": "软件/SaaS"
+ },
+ "TEM": {
+  "plates": [
+   "健康信息服务"
+  ],
+  "bucket": "医药/生物"
+ },
+ "GLW": {
+  "plates": [
+   "电子元件"
+  ],
+  "bucket": "通信"
+ },
+ "BMNR": {
+  "plates": [
+   "资本市场"
+  ],
+  "bucket": "加密关联"
+ },
+ "CBRS": {
+  "plates": [
+   "半导体"
+  ],
+  "bucket": "半导体/AI硬件"
+ },
+ "AMAT": {
+  "plates": [
+   "半导体设备与材料"
+  ],
+  "bucket": "半导体/AI硬件"
+ },
+ "APP": {
+  "plates": [
+   "广告代理"
+  ],
+  "bucket": "互联网/电商"
+ },
+ "VST": {
+  "plates": [
+   "独立电力生产商"
+  ],
+  "bucket": "公用/电力"
+ },
+ "NFLX": {
+  "plates": [
+   "娱乐"
+  ],
+  "bucket": "互联网/电商"
+ },
+ "SMCI": {
+  "plates": [
+   "计算机硬件"
+  ],
+  "bucket": "半导体/AI硬件"
+ },
+ "ASTS": {
+  "plates": [],
+  "bucket": "航天/太空"
+ },
+ "NKE": {
+  "plates": [
+   "鞋类及配饰"
+  ],
+  "bucket": "可选消费"
+ },
+ "VRT": {
+  "plates": [],
+  "bucket": "工业/机械/运输"
+ },
+ "KO": {
+  "plates": [],
+  "bucket": "必选消费"
+ },
+ "FIG": {
+  "plates": [],
+  "bucket": "软件/SaaS"
+ },
+ "NET": {
+  "plates": [],
+  "bucket": "软件/SaaS"
+ },
+ "PYPL": {
+  "plates": [],
+  "bucket": "金融"
+ },
+ "UNH": {
+  "plates": [],
+  "bucket": "医药/生物"
+ },
+ "ALAB": {
+  "plates": [],
+  "bucket": "半导体/AI硬件"
+ },
+ "BA": {
+  "plates": [],
+  "bucket": "军工/航天"
+ },
+ "PFE": {
+  "plates": [],
+  "bucket": "医药/生物"
+ },
+ "AVAV": {
+  "plates": [],
+  "bucket": "军工/航天"
+ },
+ "MP": {
+  "plates": [],
+  "bucket": "工业/机械/运输"
+ },
+ "NTAP": {
+  "plates": [],
+  "bucket": "半导体/AI硬件"
+ },
+ "CIFR": {
+  "plates": [],
+  "bucket": "加密关联"
+ },
+ "RDDT": {
+  "plates": [],
+  "bucket": "互联网/电商"
+ },
+ "HIMS": {
+  "plates": [],
+  "bucket": "医药/生物"
+ },
+ "VSXY": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "TTD": {
+  "plates": [],
+  "bucket": "互联网/电商"
+ },
+ "IBM": {
+  "plates": [],
+  "bucket": "软件/SaaS"
+ },
+ "LRCX": {
+  "plates": [],
+  "bucket": "半导体/AI硬件"
+ },
+ "MDB": {
+  "plates": [],
+  "bucket": "软件/SaaS"
+ },
+ "CEG": {
+  "plates": [],
+  "bucket": "公用/电力"
+ },
+ "DOCU": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "IONQ": {
+  "plates": [],
+  "bucket": "半导体/AI硬件"
+ },
+ "IOT": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "KLAC": {
+  "plates": [],
+  "bucket": "半导体/AI硬件"
+ },
+ "CF": {
+  "plates": [],
+  "bucket": "必选消费"
+ },
+ "DDOG": {
+  "plates": [],
+  "bucket": "软件/SaaS"
+ },
+ "V": {
+  "plates": [],
+  "bucket": "金融"
+ },
+ "MRK": {
+  "plates": [],
+  "bucket": "医药/生物"
+ },
+ "ISRG": {
+  "plates": [],
+  "bucket": "医药/生物"
+ },
+ "XE": {
+  "plates": [],
+  "bucket": "工业/机械/运输"
+ },
+ "CVX": {
+  "plates": [],
+  "bucket": "能源"
+ },
+ "JPM": {
+  "plates": [],
+  "bucket": "金融"
+ },
+ "TTWO": {
+  "plates": [],
+  "bucket": "互联网/电商"
+ },
+ "HPQ": {
+  "plates": [],
+  "bucket": "半导体/AI硬件"
+ },
+ "RBLX": {
+  "plates": [],
+  "bucket": "互联网/电商"
+ },
+ "GME": {
+  "plates": [],
+  "bucket": "可选消费"
+ },
+ "APH": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "DUOL": {
+  "plates": [],
+  "bucket": "软件/SaaS"
+ },
+ "CSCO": {
+  "plates": [],
+  "bucket": "工业/机械/运输"
+ },
+ "OKTA": {
+  "plates": [],
+  "bucket": "软件/SaaS"
+ },
+ "TER": {
+  "plates": [
+   "半导体设备与材料"
+  ],
+  "bucket": "半导体/AI硬件"
+ },
+ "ANET": {
+  "plates": [
+   "计算机硬件"
+  ],
+  "bucket": "半导体/AI硬件"
+ },
+ "BAC": {
+  "plates": [
+   "多元化银行"
+  ],
+  "bucket": "金融"
+ },
+ "JNJ": {
+  "plates": [
+   "一般药品制造商"
+  ],
+  "bucket": "医药/生物"
+ },
+ "APLD": {
+  "plates": [],
+  "bucket": "软件/SaaS"
+ },
+ "BLSH": {
+  "plates": [
+   "软件基础设施"
+  ],
+  "bucket": "加密关联"
+ },
+ "FCX": {
+  "plates": [],
+  "bucket": "材料"
+ },
+ "IBKR": {
+  "plates": [
+   "资本市场"
+  ],
+  "bucket": "金融"
+ },
+ "NEM": {
+  "plates": [
+   "黄金"
+  ],
+  "bucket": "材料"
+ },
+ "GE": {
+  "plates": [],
+  "bucket": "军工/航天"
+ },
+ "AAL": {
+  "plates": [
+   "航空服务"
+  ],
+  "bucket": "工业/机械/运输"
+ },
+ "AMKR": {
+  "plates": [
+   "半导体设备与材料"
+  ],
+  "bucket": "半导体/AI硬件"
+ },
+ "OXY": {
+  "plates": [],
+  "bucket": "能源"
+ },
+ "ETN": {
+  "plates": [
+   "专用工业机械"
+  ],
+  "bucket": "工业/机械/运输"
+ },
+ "ZETA": {
+  "plates": [],
+  "bucket": "软件/SaaS"
+ },
+ "XOM": {
+  "plates": [
+   "综合油气"
+  ],
+  "bucket": "能源"
+ },
+ "ON": {
+  "plates": [],
+  "bucket": "半导体/AI硬件"
+ },
+ "RGTI": {
+  "plates": [
+   "计算机硬件"
+  ],
+  "bucket": "半导体/AI硬件"
+ },
+ "INTU": {
+  "plates": [
+   "应用软件"
+  ],
+  "bucket": "软件/SaaS"
+ },
+ "RIOT": {
+  "plates": [],
+  "bucket": "加密关联"
+ },
+ "ALB": {
+  "plates": [
+   "特殊化工用品"
+  ],
+  "bucket": "工业/机械/运输"
+ },
+ "CPB": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "FRO": {
+  "plates": [
+   "油气中游"
+  ],
+  "bucket": "能源"
+ },
+ "HWM": {
+  "plates": [
+   "航空航天与国防"
+  ],
+  "bucket": "军工/航天"
+ },
+ "SNPS": {
+  "plates": [],
+  "bucket": "软件/SaaS"
+ },
+ "DAL": {
+  "plates": [
+   "航空服务"
+  ],
+  "bucket": "工业/机械/运输"
+ },
+ "MPC": {
+  "plates": [
+   "油气炼制与销售"
+  ],
+  "bucket": "能源"
+ },
+ "FIGR": {
+  "plates": [
+   "资本市场"
+  ],
+  "bucket": "金融"
+ },
+ "FSLR": {
+  "plates": [
+   "太阳能"
+  ],
+  "bucket": "公用/电力"
+ },
+ "JOBY": {
+  "plates": [
+   "机场和航空服务"
+  ],
+  "bucket": "航天/太空"
+ },
+ "F": {
+  "plates": [],
+  "bucket": "可选消费"
+ },
+ "KTOS": {
+  "plates": [],
+  "bucket": "军工/航天"
+ },
+ "FRVO": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "SLB": {
+  "plates": [],
+  "bucket": "能源"
+ },
+ "BWXT": {
+  "plates": [],
+  "bucket": "军工/航天"
+ },
+ "GFS": {
+  "plates": [],
+  "bucket": "半导体/AI硬件"
+ },
+ "RNG": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "PM": {
+  "plates": [],
+  "bucket": "必选消费"
+ },
+ "ZM": {
+  "plates": [],
+  "bucket": "软件/SaaS"
+ },
+ "TWST": {
+  "plates": [],
+  "bucket": "医药/生物"
+ },
+ "HD": {
+  "plates": [],
+  "bucket": "可选消费"
+ },
+ "HON": {
+  "plates": [],
+  "bucket": "工业/机械/运输"
+ },
+ "AFRM": {
+  "plates": [],
+  "bucket": "金融"
+ },
+ "SYM": {
+  "plates": [],
+  "bucket": "工业/机械/运输"
+ },
+ "MO": {
+  "plates": [],
+  "bucket": "必选消费"
+ },
+ "RBRK": {
+  "plates": [],
+  "bucket": "软件/SaaS"
+ },
+ "EL": {
+  "plates": [],
+  "bucket": "可选消费"
+ },
+ "SIMO": {
+  "plates": [],
+  "bucket": "半导体/AI硬件"
+ },
+ "MDT": {
+  "plates": [],
+  "bucket": "医药/生物"
+ },
+ "ABNB": {
+  "plates": [],
+  "bucket": "可选消费"
+ },
+ "LNG": {
+  "plates": [],
+  "bucket": "能源"
+ },
+ "DHR": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "AEM": {
+  "plates": [],
+  "bucket": "材料"
+ },
+ "CB": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "SWKS": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "TGT": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "NVT": {
+  "plates": [],
+  "bucket": "工业/机械/运输"
+ },
+ "ENTG": {
+  "plates": [],
+  "bucket": "半导体/AI硬件"
+ },
+ "FISV": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "VEEV": {
+  "plates": [],
+  "bucket": "医药/生物"
+ },
+ "NCLH": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "NU": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "LUMN": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "ROST": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "SAP": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "NTDOY": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "DECK": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "MMM": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "UAL": {
+  "plates": [],
+  "bucket": "工业/机械/运输"
+ },
+ "VLO": {
+  "plates": [],
+  "bucket": "能源"
+ },
+ "FPS": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "CORZ": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "GM": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "RTX": {
+  "plates": [],
+  "bucket": "军工/航天"
+ },
+ "SBUX": {
+  "plates": [],
+  "bucket": "可选消费"
+ },
+ "HUBS": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "VALE": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "YUMC": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "ATI": {
+  "plates": [],
+  "bucket": "材料"
+ },
+ "ADDYY": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "STRL": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "LEN": {
+  "plates": [],
+  "bucket": "可选消费"
+ },
+ "CAMT": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "AAON": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "KEP": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "DXCM": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "RELX": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "SO": {
+  "plates": [],
+  "bucket": "公用/电力"
+ },
+ "AG": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "RELY": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "DPC": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "IONS": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "TRI": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "LOW": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "ICE": {
+  "plates": [],
+  "bucket": "金融"
+ },
+ "AMKBY": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "RIG": {
+  "plates": [
+   "油气钻探"
+  ],
+  "bucket": "能源"
+ },
+ "BKR": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "CMG": {
+  "plates": [
+   "餐厅"
+  ],
+  "bucket": "可选消费"
+ },
+ "DHI": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "T": {
+  "plates": [
+   "电信服务"
+  ],
+  "bucket": "通信"
+ },
+ "TGTX": {
+  "plates": [
+   "生物技术"
+  ],
+  "bucket": "医药/生物"
+ },
+ "CDNS": {
+  "plates": [
+   "应用软件"
+  ],
+  "bucket": "软件/SaaS"
+ },
+ "CHTR": {
+  "plates": [
+   "电信服务"
+  ],
+  "bucket": "通信"
+ },
+ "Q": {
+  "plates": [
+   "半导体设备与材料"
+  ],
+  "bucket": "半导体/AI硬件"
+ },
+ "SN": {
+  "plates": [
+   "家具、灯具与家电"
+  ],
+  "bucket": "可选消费"
+ },
+ "TRV": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "PGR": {
+  "plates": [
+   "财产和意外伤害保险"
+  ],
+  "bucket": "金融"
+ },
+ "SFD": {
+  "plates": [
+   "包装食品",
+   "农产品"
+  ],
+  "bucket": "必选消费"
+ },
+ "PCAR": {
+  "plates": [
+   "农业和重型机械"
+  ],
+  "bucket": "必选消费"
+ },
+ "CPRT": {
+  "plates": [
+   "专业商务服务"
+  ],
+  "bucket": "其他"
+ },
+ "MFC": {
+  "plates": [
+   "人寿保险"
+  ],
+  "bucket": "金融"
+ },
+ "GFI": {
+  "plates": [
+   "黄金"
+  ],
+  "bucket": "材料"
+ },
+ "BROS": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "VG": {
+  "plates": [
+   "油气中游"
+  ],
+  "bucket": "能源"
+ },
+ "LHX": {
+  "plates": [],
+  "bucket": "军工/航天"
+ },
+ "MTSUY": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "IFNNY": {
+  "plates": [],
+  "bucket": "半导体/AI硬件"
+ },
+ "PSX": {
+  "plates": [
+   "油气炼制与销售"
+  ],
+  "bucket": "能源"
+ },
+ "GSK": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "JBL": {
+  "plates": [
+   "电子元件"
+  ],
+  "bucket": "半导体/AI硬件"
+ },
+ "SHEL": {
+  "plates": [
+   "综合油气"
+  ],
+  "bucket": "能源"
+ },
+ "DPZ": {
+  "plates": [
+   "餐厅"
+  ],
+  "bucket": "可选消费"
+ },
+ "S": {
+  "plates": [],
+  "bucket": "软件/SaaS"
+ },
+ "PAAS": {
+  "plates": [
+   "黄金"
+  ],
+  "bucket": "材料"
+ },
+ "SPXC": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "AME": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "CGNX": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "FIVE": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "HAL": {
+  "plates": [],
+  "bucket": "能源"
+ },
+ "WFC": {
+  "plates": [],
+  "bucket": "金融"
+ },
+ "APGE": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "KR": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "TAK": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "GILD": {
+  "plates": [],
+  "bucket": "医药/生物"
+ },
+ "FLEX": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "ZIJMY": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "DASH": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "BG": {
+  "plates": [],
+  "bucket": "必选消费"
+ },
+ "IBN": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "LIN": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "ECHO": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "MKSI": {
+  "plates": [],
+  "bucket": "半导体/AI硬件"
+ },
+ "DOCN": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "HSY": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "MTRN": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "SCHW": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "ILMN": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "GAP": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "FNMA": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "VIAV": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "EBAY": {
+  "plates": [],
+  "bucket": "互联网/电商"
+ },
+ "AUR": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "W": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "BMO": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "AU": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "GD": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "SSUMY": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "ROP": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "UEC": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "ADP": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "ADSK": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "TJX": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "CROX": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "PINS": {
+  "plates": [],
+  "bucket": "互联网/电商"
+ },
+ "RIO": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "EQNR": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "SQM": {
+  "plates": [],
+  "bucket": "材料"
+ },
+ "MTCH": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "CAKE": {
+  "plates": [],
+  "bucket": "其他"
+ },
+ "CRS": {
+  "plates": [],
+  "bucket": "材料"
+ }
+}
