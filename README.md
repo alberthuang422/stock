@@ -100,6 +100,7 @@
 - **[MCD / SBUX × 道琼斯 / XLY 相关性](reports/51_MCD_SBUX_DJI_XLY_相关性/index.html)** · 两消费股与道指/XLY 的 2×2 相关性
 - **[SOFI / AFRM / UPST 财报交易日涨跌相关性](reports/53_金融科技财报日相关性/index.html)** · 金融科技三股财报日相关性事件研究
 - **[SOFI × AFRM × Block(SQ) 相关性（选举后窗口）](reports/63_SOFI_AFRM_SQ相关性分析/index.html)** · 特朗普当选前1个月至今：全期 r=0.51~0.64 中高相关，60日滚动 0.19~0.91 大幅摆动，近3月收拢（AFRM×Block 0.789）
+- **[UNP × US10Y/QQQ/SOXX/道指 分阶段相关性](reports/69_UNP多基准分阶段相关性/index.html)** · 联合太平洋对四基准的分阶段拆解（合并公告/STB 受理双断点）、方向拆解与超额归因
 
 ---
 
