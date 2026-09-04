@@ -153,6 +153,7 @@
 - **[SBUX 财报与估值研究](reports/07_sbux星巴克/sbux_report.html)** · SBUX 财报与估值分析
 - **[KO vs PEP 相对强弱](reports/28_ko_vs_pep_相对强弱研究.html)** · KO 与百事相对强弱拆解
 - **[PG 宝洁深度分析](reports/67_PG宝洁深度分析/index.html)** · FY2026 财报拆解、五大问题严重度分层、估值与同业对比、跟踪点（67 号）
+- **[UNP 基本面深度分析](reports/71_UNP基本面深度分析/index.html)** · SEC XBRL 财务拆解、现金流/杠杆、UP-NS 合并专题与三情景推演、估值同业对比（71 号）
 
 ### 💳 金融科技
 - **[SOFI × Block × AFRM](reports/sofi_xyz_afrm_report.html)** · 财报对比与 US10Y 敏感性

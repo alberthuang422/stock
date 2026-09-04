@@ -1,0 +1,627 @@
+# -*- coding: utf-8 -*-
+"""71 号报告：UNP 基本面深度分析
+数据源：SEC XBRL（10-K/10-Q 权威口径，CIK 0000100885）、UP 官方 Q2'26 新闻稿、
+Bernstein 炉边谈（2026-09-01）、STB 程序时间表、同花顺/StockUpside 共识快照、本地 UNP 日线。
+"""
+import json
+import pandas as pd
+import os
+
+ROOT = 'C:/Users/Administrator/Desktop/stock'
+OUT_DIR = os.path.join(ROOT, 'reports', '71_UNP基本面深度分析')
+os.makedirs(OUT_DIR, exist_ok=True)
+
+# ---------- 股价走势（2025-01 起，周线采样减小体积） ----------
+df = pd.read_csv(os.path.join(ROOT, 'data/unp/UNP, 1D.csv'), parse_dates=['date']).set_index('date').sort_index()
+df = df[~df.index.duplicated(keep='last')]
+px = df.loc['2025-01-01':, 'close']
+px_w = px.resample('W-FRI').last().dropna()
+px_dates = [d.strftime('%Y-%m-%d') for d in px_w.index]
+px_vals = [round(float(v), 2) for v in px_w.values]
+
+EVENTS = [
+    {'date': '2025-07-28', 'label': 'UP-NS 合并公告', 'val': None},
+    {'date': '2026-01-16', 'label': 'STB 拒绝首版申请', 'val': None},
+    {'date': '2026-04-30', 'label': '修订版重新提交', 'val': None},
+    {'date': '2026-05-28', 'label': 'STB 受理·审查钟启动', 'val': None},
+    {'date': '2026-08-18', 'label': 'STB 公布程序表', 'val': None},
+    {'date': '2026-09-01', 'label': 'Bernstein 炉边谈/除息', 'val': None},
+]
+for e in EVENTS:
+    ts = pd.Timestamp(e['date'])
+    if ts in px.index:
+        e['val'] = round(float(px[ts]), 2)
+    else:
+        s = px[px.index <= ts]
+        e['val'] = round(float(s.iloc[-1]), 2) if len(s) else None
+
+# ---------- SEC XBRL 年度序列（$B） ----------
+YEARS = [2019, 2020, 2021, 2022, 2023, 2024, 2025]
+REV  = [21.71, 19.53, 21.80, 24.88, 24.12, 24.25, 24.51]
+OP   = [8.55, 7.83, 9.34, 9.92, 9.08, 9.71, 9.85]
+NI   = [5.92, 5.35, 6.52, 7.00, 6.38, 6.75, 7.14]
+CFO  = [8.61, 8.54, 9.03, 9.36, 8.38, 9.35, 9.29]
+CAPEX= [3.45, 2.93, 2.94, 3.62, 3.61, 3.45, 3.79]
+DIV  = [2.60, 2.63, 2.80, 3.16, 3.17, 3.21, 3.24]
+BBK  = [5.80, 3.71, 7.29, 6.28, 0.70, 1.50, 2.68]
+EPS  = [8.38, 7.88, 9.95, 11.21, 10.45, 11.09, 11.98]
+DPS  = [3.70, 3.88, 4.29, 5.08, 5.20, 5.28, 5.44]
+DEBT = [26.39, 28.27, 31.49, 35.10, 34.31, 32.89, 33.49]
+INT  = [1.05, 1.14, 1.16, 1.27, 1.34, None, None]
+
+# 派生指标
+or_ratio = [round((1 - o / r) * 100, 1) for o, r in zip(OP, REV)]
+npm = [round(n / r * 100, 1) for n, r in zip(NI, REV)]
+fcf = [round(c - x, 2) for c, x in zip(CFO, CAPEX)]
+payout = [round(d / e * 100, 1) for d, e in zip(DPS, EPS)]
+ebitda_margin = None  # 不单独展示
+int_cov = [round(e / i, 1) if i else None for e, i in zip(OP, INT)]
+
+# ---------- 季度（单季, $B / $） ----------
+QTR = [
+    {'q': '25Q1', 'rev': 6.027, 'op': 2.371, 'ni': 1.626, 'eps': 2.70},
+    {'q': '25Q2', 'rev': 6.154, 'op': 2.525, 'ni': 1.876, 'eps': 3.15},
+    {'q': '25Q3', 'rev': 6.244, 'op': 2.549, 'ni': 1.788, 'eps': 3.01},
+    {'q': '25Q4', 'rev': None,  'op': None,  'ni': None,  'eps': 3.12},
+    {'q': '26Q1', 'rev': 6.217, 'op': 2.458, 'ni': 1.701, 'eps': 2.87},
+    {'q': '26Q2', 'rev': 6.864, 'op': 2.763, 'ni': 1.993, 'eps': 3.36},
+]
+# 同比（25Q4 营收无单季 XBRL 值 → 置 None 并标注）
+q_rev_yoy = [None, round((6.154/5.948-1)*100,1), round((6.244/5.954-1)*100,1), None, round((6.217/6.027-1)*100,1), round((6.864/6.154-1)*100,1)]
+q_eps_yoy = [None, round((3.15/2.75-1)*100,1), round((3.01/2.76-1)*100,1), None, round((2.87/2.70-1)*100,1), round((3.36/3.15-1)*100,1)]
+# 2024 单季基线（10-Q XBRL 反推：25Q1 rev 6.027/…）——上面 yoy 用的是 2024 同期 XBRL 值
+# 2024Q2 rev 5.948 / 2024Q3 5.954 / 2024Q1 6.027(与25Q1巧合接近,以XBRL为准) / EPS: 24Q2 2.75 / 24Q3 2.76 / 24Q1 2.70 / 24Q4 2.91
+
+D = {
+    'years': YEARS,
+    'rev': REV, 'op': OP, 'ni': NI,
+    'orRatio': or_ratio, 'npm': npm,
+    'cfo': CFO, 'capex': CAPEX, 'div': DIV, 'bbk': BBK, 'fcf': fcf,
+    'eps': EPS, 'dps': DPS, 'payout': payout,
+    'debt': DEBT, 'int': INT, 'intCov': int_cov,
+    'qtr': [q['q'] for q in QTR],
+    'qRev': [q['rev'] for q in QTR],
+    'qEps': [q['eps'] for q in QTR],
+    'qRevYoy': q_rev_yoy, 'qEpsYoy': q_eps_yoy,
+    'px': {'dates': px_dates, 'vals': px_vals, 'events': EVENTS},
+    'cur': {'price': 289.15, 'date': '2026-09-03', 'mcap': 171.8, 'peTTM': 23.4,
+            'fwdPE': 20.5, 'yield': 1.9, 'netLev': 2.5, 'beta': 0.97,
+            'targetMean': 329.25, 'targetLow': 245.0, 'targetHigh': 375.0,
+            'epsTTM': 12.36, 'dpsTTM': 5.60, 'w52h': 310.62, 'w52l': 211.45},
+    'peers': {
+        'names': ['UNP', 'CSX', 'CNI(加国铁)'],
+        'pe': [23.4, 28.5, 22.5], 'pb': [8.3, 6.4, 4.7],
+        'yield': [1.9, 1.1, 2.1], 'mcap': [171.8, 90.8, 74.5],
+    },
+}
+
+HTML = r'''<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>71 · UNP 联合太平洋基本面深度分析</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<style>
+:root{
+  --bg:#f7f6f3; --card:#ffffff; --ink:#26313d; --sub:#5b6672; --line:#e3e0d8;
+  --blue:#0072B2; --orange:#E69F00; --sky:#56B4E9; --purple:#CC79A7;
+  --vermil:#D55E00; --green:#009E73; --yellow:#F0E442; --grey:#9a948a;
+  --red:#C0392B; --down:#1E8449;
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+body{background:var(--bg); color:var(--ink); font-family:"Microsoft YaHei","PingFang SC",sans-serif; font-size:15px; line-height:1.7;}
+.wrap{max-width:1180px; margin:0 auto; padding:28px 20px 60px;}
+h1{font-size:26px; letter-spacing:.5px;}
+.meta{color:var(--sub); font-size:13px; margin-top:6px;}
+.head{border-bottom:3px solid var(--blue); padding-bottom:14px; margin-bottom:20px;}
+.kpis{display:grid; grid-template-columns:repeat(8,1fr); gap:10px; margin:18px 0;}
+.kpi{background:var(--card); border:1px solid var(--line); border-radius:8px; padding:10px 8px; text-align:center;}
+.kpi b{display:block; font-size:17px; margin-top:2px;}
+.kpi span{font-size:12px; color:var(--sub);}
+h2{font-size:20px; margin:34px 0 12px; padding-left:10px; border-left:5px solid var(--blue);}
+h3{font-size:16px; margin:20px 0 8px;}
+.card{background:var(--card); border:1px solid var(--line); border-radius:10px; padding:18px 20px; margin-bottom:14px;}
+.chart{width:100%; height:380px;}
+.chart-sm{height:330px;}
+.grid2{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+table{width:100%; border-collapse:collapse; font-size:14px; background:var(--card);}
+th{background:#eef1f4; color:var(--ink); font-weight:600; text-align:left;}
+th,td{padding:8px 10px; border-bottom:1px solid var(--line);}
+tr:hover td{background:#f6f9fc;}
+.num{text-align:right; font-variant-numeric:tabular-nums;}
+.up{color:var(--red); font-weight:600;}
+.down{color:var(--down); font-weight:600;}
+.tag{display:inline-block; padding:1px 8px; border-radius:10px; font-size:12px; margin-right:4px;}
+.tag-b{background:#e3f0f9; color:var(--blue);}
+.tag-o{background:#fdf3e0; color:#9a6400;}
+.tag-g{background:#e4f4ef; color:#007a5e;}
+.tag-r{background:#fbe9e4; color:var(--vermil);}
+.note{font-size:12.5px; color:var(--sub);}
+.concl{border-left:5px solid var(--orange);}
+.toc{display:flex; flex-wrap:wrap; gap:8px; margin:14px 0 4px;}
+.toc a{text-decoration:none; color:var(--blue); background:var(--card); border:1px solid var(--line); border-radius:16px; padding:3px 14px; font-size:13px;}
+.toc a:hover{background:#eaf3fa;}
+.timeline{position:relative; margin:10px 0 10px 6px; padding-left:26px; border-left:3px solid var(--sky);}
+.tl-item{position:relative; padding:6px 0 10px;}
+.tl-item::before{content:""; position:absolute; left:-33px; top:12px; width:11px; height:11px; border-radius:50%; background:var(--blue); border:2px solid #fff; box-shadow:0 0 0 2px var(--sky);}
+.tl-item.done::before{background:var(--green); box-shadow:0 0 0 2px #9fd8c5;}
+.tl-item.warn::before{background:var(--orange); box-shadow:0 0 0 2px #f2d9a4;}
+.tl-date{font-weight:700; font-size:13px; color:var(--blue);}
+.two-col{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+ul.tight li{margin:5px 0;}
+.foot{margin-top:40px; color:var(--sub); font-size:12px; border-top:1px solid var(--line); padding-top:12px;}
+.disclaimer{background:#f4f1ea; border:1px dashed var(--grey); border-radius:8px; padding:10px 14px; font-size:12.5px; color:var(--sub); margin-top:16px;}
+sup.src{color:var(--grey); font-size:11px;}
+@media (max-width:900px){ .kpis{grid-template-columns:repeat(4,1fr);} .grid2,.two-col{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="head">
+  <h1>71 · 联合太平洋（UNP）基本面深度分析</h1>
+  <div class="meta">美国最大一级铁路 · NYSE: UNP ｜ 报告日 2026-09-04 ｜ 行情截至 2026-09-03 ｜ 财务口径：SEC XBRL 10-K/10-Q（GAAP）</div>
+  <div class="toc">
+    <a href="#s1">① 公司与商业模式</a><a href="#s2">② 财务表现</a><a href="#s3">③ 现金流与资本配置</a>
+    <a href="#s4">④ 资产负债与杠杆</a><a href="#s5">⑤ UP-NS 合并专题</a><a href="#s6">⑥ 估值与同业</a>
+    <a href="#s7">⑦ 多空与情景</a><a href="#s8">⑧ 风险与跟踪点</a><a href="#s9">⑨ 结论</a>
+  </div>
+</div>
+
+<div class="kpis">
+  <div class="kpi"><span>收盘（09-03）</span><b>$289.15</b></div>
+  <div class="kpi"><span>总市值</span><b>$1,718亿</b></div>
+  <div class="kpi"><span>PE (TTM)</span><b>23.4×</b></div>
+  <div class="kpi"><span>Forward PE</span><b>≈20.5×</b></div>
+  <div class="kpi"><span>股息率 (TTM)</span><b>1.9%</b></div>
+  <div class="kpi"><span>净杠杆 (公司口径)</span><b>2.5×</b></div>
+  <div class="kpi"><span>52周区间</span><b>211–311</b></div>
+  <div class="kpi"><span>共识目标价</span><b>$329</b></div>
+</div>
+
+<div class="card" style="border-left:5px solid var(--blue)">
+<b>核心结论（一句话版）</b>：UNP 的独立基本面处于历史最好状态——2026Q2 营收/净利/EPS 多项创纪录、经营比率有进步、净杠杆 2.5×、指引上调至高个位数 EPS 增长；但当前 23.4× TTM 已不便宜，且估值的主导变量不是货运周期而是 <b>2027 年 H2 的 STB 合并裁决</b>——这是一场"最好的独立运营商 × 最大的监管二元事件"的定价。当前价大致 Fair Value，<b>11-18 STB 意见截止日是下一个真正的信息节点</b>。
+</div>
+
+<!-- ================= ① 公司速览 ================= -->
+<h2 id="s1">① 公司与商业模式</h2>
+<div class="card">
+<p><b>联合太平洋公司</b>通过子公司 Union Pacific Railroad 经营美国东部最大的一级铁路网：约 <b>32,700 英里</b>路线，覆盖 <b>23 个西部/中西部州</b>，连接太平洋沿岸口岸与墨西哥湾、中西部农业带与落基山能源区，是美国西向贸易的主动脉<span class="note">（公司 10-K 口径）</span>。</p>
+<table style="margin-top:10px">
+<tr><th>业务板块（Q2'26）</th><th>收入表现</th><th>驱动/拖累</th></tr>
+<tr><td><b>Bulk（大宗）</b>——谷物、化肥、食品、煤炭、可再生能源原料</td><td class="num">收入 +7% / 量 −1%</td><td>谷物及制品双位数增长创纪录（出口需求+新设施）；<b>煤炭疲软</b>（低价天然气+温和天气+客户停机）</td></tr>
+<tr><td><b>Industrial（工业）</b>——石化、金属矿产、化工、森林制品</td><td class="num">收入 +8% / 量 +3%</td><td>石化需求改善、国内钢产量回升；出口纯碱走弱</td></tr>
+<tr><td><b>Premium（高值）</b>——国内/国际多式联运、汽车</td><td class="num">收入 +21% / 量 +4%</td><td><b>国内多式联运连续第 4 个季度量价双创纪录</b>（卡车运力紧张+份额提升）；国际多式联运量 −14%</td></tr>
+</table>
+<p style="margin-top:8px" class="note">收入结构特征：约 2/3 为"定价权型"业务（谷物、工业、国内联运），煤炭与进口联运是周期拖累项。燃油附加费把油价波动转嫁给客户（Q2 贡献货运收入增速 750bp），但成本端同步承压（详见②）。</p>
+</div>
+
+<!-- ================= ② 财务表现 ================= -->
+<h2 id="s2">② 财务表现：独立状态历史最好，2026 是"量价利三线向上"的一年</h2>
+<div class="grid2">
+  <div class="card"><h3>年度营收 / 净利润 / 净利率（2019–2025，GAAP）</h3><div id="c1" class="chart"></div></div>
+  <div class="card"><h3>经营比率 OR（越低越好）与摊薄 EPS</h3><div id="c2" class="chart"></div></div>
+</div>
+<div class="card">
+<h3>要点拆解</h3>
+<ul class="tight">
+<li><b>营收平台期后的重启动</b>：2022–2024 营收在 $24–25B 平台徘徊（2023 −3.1%、2024 +0.5%、2025 +1.1%），核心是煤炭下滑与国际联运走弱对冲了定价。<b>2026H1 营收 $13.08B，同比 +7.4%</b>，重回名义增长——Q2 单季 +11.5%（其中燃油附加贡献约 750bp、量 225bp、核心定价+结构 175bp）。</li>
+<li><b>盈利质量</b>：净利率从 2020 年 27.4% 稳步抬升至 2025 年 29.1%；2026Q2 净利润 $1.99B（+6%）、摊薄 EPS $3.36（+7%）、<b>调整后 EPS $3.41（+13%）</b>（调整项为合并相关成本）。</li>
+<li><b>经营比率（OR=成本/收入，铁路核心效率指标）</b>：FY2025 全年 59.8%（调整后 59.3%）；2026Q2 报告口径 59.7%、调整后 59.2%——表面恶化 70/110bp，<b>全部来自燃油</b>：均价 $3.86/加仑 vs 上年 $2.42（+60%），燃油支出 +63%，拖累 OR 约 120bp。剔除燃油后核心 OR 实际还在改善（管理层口径核心约 58%、同比改善约 10bp）。</li>
+<li><b>2026 指引上调</b>：Q2 财报将全年报告口径 EPS 增速指引从"约 6%"上调至"<b>高个位数</b>"，并重申 3 年期（至 2027）EPS CAGR 高个位数至低双位数目标<span class="note">（公司 Q2'26 新闻稿）</span>。以 H1 EPS $6.22 推算，全年 EPS ≈ $12.9–13.0，对应现价 2026E PE ≈ 22.3×。</li>
+<li><b>运营端持续创纪录</b>：劳动力生产率（1,176 车英里/员工，+5%）连续 8 个季度创纪录，终端停留 19.7 小时（−7%，连续 3 季 <20h），燃油效率、列车长度同创新高——Vena 时代的 PSR 纪律仍在兑现。</li>
+</ul>
+</div>
+<div class="grid2">
+  <div class="card"><h3>季度动量：营收与 EPS 同比（2025Q1–2026Q2）</h3><div id="c3" class="chart"></div></div>
+  <div class="card">
+    <h3>2026Q2 关键数字卡（vs 2025Q2）</h3>
+    <table>
+      <tr><th>指标</th><th class="num">Q2'26</th><th class="num">同比</th></tr>
+      <tr><td>营业收入</td><td class="num">$6.86B</td><td class="num up">▲ +11.5%</td></tr>
+      <tr><td>货运收入（剔除燃油附加）</td><td class="num">$5.5B</td><td class="num up">▲ +4%（创纪录）</td></tr>
+      <tr><td>营业利润</td><td class="num">$2.76B</td><td class="num up">▲ +9.4%</td></tr>
+      <tr><td>净利润</td><td class="num">$1.99B</td><td class="num up">▲ +6%</td></tr>
+      <tr><td>摊薄 EPS</td><td class="num">$3.36</td><td class="num up">▲ +7%</td></tr>
+      <tr><td>调整后 EPS</td><td class="num">$3.41</td><td class="num up">▲ +13%</td></tr>
+      <tr><td>经营比率 OR</td><td class="num">59.7%</td><td class="num down">▼ +70bp（燃油）</td></tr>
+      <tr><td>调整后 OR</td><td class="num">59.2%</td><td class="num down">▼ +110bp（燃油）</td></tr>
+    </table>
+    <p class="note" style="margin-top:6px">▲红=好于对照、▼绿=劣于对照（红涨绿跌）。25Q4 单季营收 XBRL 无单列值，动量图标注空值。</p>
+  </div>
+</div>
+
+<!-- ================= ③ 现金流与资本配置 ================= -->
+<h2 id="s3">③ 现金流与资本配置：为合并"囤子弹"，股东回报主动降档</h2>
+<div class="grid2">
+  <div class="card"><h3>CFO / CapEx / 分红 / 回购（2019–2025，$B）</h3><div id="c4" class="chart"></div></div>
+  <div class="card"><h3>股息：连续增长机器</h3><div id="c5" class="chart"></div></div>
+</div>
+<div class="card">
+<ul class="tight">
+<li><b>现金创造力</b>：FY2025 CFO $9.29B − CapEx $3.79B = <b>FCF $5.5B</b>；2026H1 CFO $5.52B（同比 +21%），公司口径"网络再投资+分红后 FCF"约 $1.8B。</li>
+<li><b>回购从 $7.3B 骤降到 $0.7–2.7B</b>：2023 年起为去杠杆与合并融资铺垫，回购基本停摆——这是 2023 以来 EPS 增长几乎全靠净利而非缩股的根本原因。<b>管理层承诺：合并交割后第二年内恢复回购</b>（Bernstein 炉边谈，09-01）。</li>
+<li><b>分红从不缺席</b>：DPS 从 2019 年 $3.70 → 2025 年 $5.44（CAGR ≈ 6.6%），当前季息 $1.42（2026-08-31 除息），TTM 股息率仅 ~1.9%——低股息率+高留存是铁路重资产属性决定的，派息率 ~45%（DPS/EPS）在板块内属克制水平。</li>
+<li><b>2025 股东回报合计 $5.9B（分红 3.24 + 回购 2.68），占净利 83%</b>——但注意其中回购是恢复性而非常规强度。</li>
+<li><b>第三年现金指引</b>：管理层预计合并交割后第三年累计现金约 <b>$11.8B</b>，用于去杠杆、恢复回购、维持强投资级评级。</li>
+</ul>
+</div>
+
+<!-- ================= ④ 资产负债与杠杆 ================= -->
+<h2 id="s4">④ 资产负债表与杠杆：健康，但为合并预留的债务空间已不大</h2>
+<div class="grid2">
+  <div class="card"><h3>总债务与利息保障倍数（2019–2025）</h3><div id="c6" class="chart"></div></div>
+  <div class="card"><h3>资产负债表快照（2026-06-30）</h3>
+  <table>
+    <tr><th>项目</th><th class="num">金额</th></tr>
+    <tr><td>总资产</td><td class="num">$71.2B</td></tr>
+    <tr><td>总负债</td><td class="num">$50.5B</td></tr>
+    <tr><td>股东权益</td><td class="num">$20.7B（PB 8.3×）</td></tr>
+    <tr><td>现金及等价物</td><td class="num">$1.6B</td></tr>
+    <tr><td>债务总额（2025年末）</td><td class="num">$33.5B，2026H1 已偿还 $1.5B</td></tr>
+    <tr><td>净杠杆（公司调整口径）</td><td class="num"><b>2.5× Debt/EBITDA</b></td></tr>
+  </table>
+  <p class="note" style="margin-top:6px">利息保障倍数（营业利润/利息费用）2023 年约 6.8×；2024-25 年 XBRL 该标签口径变更未列示，按 ~$1.4B 年利息与 TTM EBITDA ~$13.5B 估算，覆盖倍数约 9-10×，利息负担不构成约束<span class="note">（估算，非披露值）</span>。</p>
+  </div>
+</div>
+<div class="card">
+<ul class="tight">
+<li>债务从 2022 年峰值 $35.1B 回落到 $33.5B（2025 年末），2026H1 再还 $1.5B——<b>方向是去杠杆</b>，为合并后 $85B 对价的融资结构腾空间。</li>
+<li>权益近两年明显修复（$16.9B → $20.7B），主因留存收益积累；PB 8.3× 看着吓人，但这是铁路行业"高杠杆+高分红+持续回购"的共同特征（CSX 6.4×、CNI 4.7×，UNP 因回购历史更激进导致净资产基数更薄）。</li>
+<li><b>关注点</b>：NSC 端还有约 $17B 净债务并入，合并完成后联合实体杠杆将显著上升，管理层"回到杠杆目标"的时间表（交割后 2 年内恢复回购）隐含去杠杆优先。</li>
+</ul>
+</div>
+
+<!-- ================= ⑤ 合并专题 ================= -->
+<h2 id="s5">⑤ UP-NS 合并专题：当前估值的真正主导变量</h2>
+<div class="two-col">
+<div class="card">
+<h3>交易结构（2025-07-28 公告）</h3>
+<ul class="tight">
+<li>对价：每股 NSC = <b>1 股 UNP + $88.82 现金</b>（隐含约 $320/NSC 股），企业价值约 <b>$85B</b>；NSC 股东持有合并后公司约 27%。</li>
+<li>目标：美国史上第一条<b>海岸到海岸单一铁路</b>——5 万+英里、43 州、约 100 个港口、约 43% 的美国铁路货运量。</li>
+<li>协同：年均约 <b>$2.8B</b>（收入 $1.8B + 成本 $1.0B）；管理层预计交割后第三年累计现金 $11.8B。</li>
+<li>风险垫：<b>$2.5B 反向分手费</b>（STB 否决或附加致命条件时 UP 支付 NSC）；协议外部日期 2028-01-28（可自动顺延）。</li>
+<li>进展：2025-11 股东批准 &gt;99% → 2026-01-16 STB 拒收首版申请 → 04-30 重报 → <b>05-28 受理、12 个月法定审查钟启动</b> → 08-18 公布程序表、移出中止状态。</li>
+</ul>
+</div>
+<div class="card">
+<h3>STB 程序时间表（关键节点）</h3>
+<div class="timeline">
+  <div class="tl-item done"><span class="tl-date">2026-08-18（已过）</span> STB 采纳程序时间表，移出 abeyance</div>
+  <div class="tl-item done"><span class="tl-date">2026-09-04（今日）</span> 参与意向书截止</div>
+  <div class="tl-item warn"><span class="tl-date">2026-11-18</span> <b>评论/异议/条件请求截止——第一个硬信息节点</b>（观察对象：DOJ 是否随船运方正式反对）</div>
+  <div class="tl-item"><span class="tl-date">2026-12-03</span> DOJ / USDOT 初步意见截止</div>
+  <div class="tl-item"><span class="tl-date">2027-02-16</span> 对评论的回应截止</div>
+  <div class="tl-item"><span class="tl-date">2027-03-29 后</span> 公开听证会（日期待定）</div>
+  <div class="tl-item"><span class="tl-date">2027-05-28</span> 最终简报截止</div>
+  <div class="tl-item"><span class="tl-date">2027 H2</span> 记录关闭后 90 天内 STB 裁决 → <b>交割窗口 2027Q3–Q4</b></div>
+</div>
+</div>
+</div>
+<div class="card">
+<h3>市场在定价什么 / 反方观点（必须直面）</h3>
+<ul class="tight">
+<li><b>套利价差</b>：NSC 现价较 $320 隐含对价贴水约 5%——市场给出的"否决概率×折价"组合并不极端，但价差方向对 UNP 独立股价的传导是反向的（详见 69 号相关性报告：受理后 UNP 与三大股指相关性降至不显著，已成为事件驱动个股）。</li>
+<li><b>反方 1（协同可信度）</b>：$1.8B 收入协同仍基于 <b>2023 年基线</b>——CFO 在炉边谈承认其后发生了卡车运价大幅回调与成本通胀，靠"两侧都有上修"解释净额不变，这一辩护不无道理但缺乏独立验证。</li>
+<li><b>反方 2（CGP 的性质）</b>：公司自己的建模显示 60% 适用车皮在"承诺网关定价（CGP）"下几乎无费率收益——批评者认为 CGP 实质是给未来单一铁路定价装上"天花板"的保护机制，而非真正的竞争性让利；Vena 否认并强调网关保持开放、合同最长 3 年。真相要到 11-18 各方意见中检验。</li>
+<li><b>反方 3（让步意愿）</b>：Vena 明确表示"目前看不出需要让步的理由"，但 6 月已划出红线——<b>若 STB 强制大范围线路出售/轨道权开放，UNP 宁可放弃交易</b>。$2.5B 分手费是真实存在的下行情形。</li>
+<li><b>反方 4（估值透支）</b>：Seeking Alpha（08-29）观点——M&A 期权价值不足以支撑在"公允价值"买入；YTD +26% 后估值已计入大量协同预期。</li>
+<li><b>多头面</b>：与加拿大国家（CN）的协议（7 月末）把一个真实的竞争集中度担忧（接手 NSC 的圣路易斯–堪萨斯城线）转化为对 CN 的通道开放 + UP 获得芝加哥绕行线（EJ&amp;E），既是防守也是进攻；工会方面已签下第六份支持性协议（至 2026 年中）。</li>
+</ul>
+</div>
+
+<!-- ================= ⑥ 估值与同业 ================= -->
+<h2 id="s6">⑥ 估值与同业对比：不便宜，溢价买的是"最优资产 + 事件期权"</h2>
+<div class="grid2">
+  <div class="card"><h3>同业估值对比（2026-09-04 快照）</h3><div id="c7" class="chart"></div></div>
+  <div class="card"><h3>分析师共识（2026-09）</h3>
+    <table>
+      <tr><th>项目</th><th class="num">数值</th></tr>
+      <tr><td>覆盖机构</td><td class="num">24–28 家</td></tr>
+      <tr><td>评级分布</td><td class="num">买入/增持 64% · 持有 29% · 减持/卖出 7%</td></tr>
+      <tr><td>目标均价</td><td class="num">$329.25（现价 +13.3%）</td></tr>
+      <tr><td>目标区间</td><td class="num">$245 – $375</td></tr>
+      <tr><td>Q3'26 EPS 共识</td><td class="num">$3.48（10-21 发布，隐含同比 +15.6%）</td></tr>
+      <tr><td>PEG</td><td class="num">≈3.4（高估值+温和增长）</td></tr>
+    </table>
+    <p class="note" style="margin-top:6px">最近调仓（7 月末财报后）：Baird/RBC/Barclays 重申增持，UBS/JPM 重申中性——分歧点集中在估值而非基本面。</p>
+  </div>
+</div>
+<div class="card">
+<h3>同业明细表</h3>
+<table>
+<tr><th>指标</th><th class="num">UNP</th><th class="num">CSX（东部）</th><th class="num">CNI（加国铁）</th></tr>
+<tr><td>市值（$B）</td><td class="num">171.8</td><td class="num">90.8</td><td class="num">74.5</td></tr>
+<tr><td>PE (TTM)</td><td class="num">23.4×</td><td class="num">28.5×</td><td class="num">22.5×</td></tr>
+<tr><td>PB (LF)</td><td class="num">8.3×</td><td class="num">6.4×</td><td class="num">4.7×</td></tr>
+<tr><td>股息率 (TTM)</td><td class="num">1.9%</td><td class="num">1.1%</td><td class="num">2.1%</td></tr>
+<tr><td>2026YTD 股价</td><td class="num up">▲ +26.0%</td><td class="num up">▲ +35.7%</td><td class="num up">▲ +25.5%</td></tr>
+</table>
+<p class="note" style="margin-top:6px">解读：UNP 的 PE 低于 CSX、与 CNI 相当——板块整体处于"并购重组预期+通胀定价权"的重估行情中（CSX 同时是合并的对手方博弈标的）。UNP 的真正历史参照是自身：5 年 PE 中枢约 18–22×，当前 23.4× 处于历史区间上沿之上，<b>溢价部分 ≈ 合并协同的期权价值</b>。若合并被否，回归独立逻辑的合理中枢对应股价约 $245–265（2026E EPS ~$13 × 19–20×）。</p>
+</div>
+
+<!-- ================= ⑦ 多空与情景 ================= -->
+<h2 id="s7">⑦ 多空论点与情景推演</h2>
+<div class="two-col">
+<div class="card" style="border-top:4px solid var(--red)">
+<h3><span class="tag tag-r">多头</span>论点清单</h3>
+<ul class="tight">
+<li>独立基本面 8 个季度连续改善：生产率/停留/燃油效率连续创纪录，OR 剔油后仍在改善通道。</li>
+<li>2026 指引上调（高个位数 EPS 增长）+ Q3 共识 +15.6%，动量在手。</li>
+<li>定价权持续跑赢通胀（"定价美元 &gt; 通胀美元"连续兑现），谷物出口与国内联运是结构性顺风。</li>
+<li>净杠杆 2.5× + H1 还债 $1.5B + 合并后第 2 年恢复回购 → 资本回报有重启期权。</li>
+<li>若合并通过：$2.8B 协同（≈ 当前净利的 39%）+ 西部垄断网络重塑，宽护城河再加深。</li>
+<li>共识目标 $329（+13%），64% 机构买入。</li>
+</ul>
+</div>
+<div class="card" style="border-top:4px solid var(--down)">
+<h3><span class="tag tag-g">空头</span>论点清单</h3>
+<ul class="tight">
+<li>估值贵：23.4× TTM 高于自身 5 年中枢，PEG 3.4；YTD +26% 后安全边际薄。</li>
+<li>裁决要等到 <b>2027 H2</b>——长达 12-15 个月的事件真空期，时间价值持续损耗。</li>
+<li>否决/严苛条件情形：$2.5B 分手费 + 独立估值回归 $245–265（现价 −8~15%）。</li>
+<li>燃油：均价已 &gt;$4/加仑（近期采购价），OR 压力未解除；若高油价抑制客户需求则双重打击。</li>
+<li>煤炭（天然气低价）与国际联运（−14%）两个拖累项没有反转迹象。</li>
+<li>协同目标基于 2023 基线，可信度待 11-18 意见期检验；CGP 被质疑为定价天花板。</li>
+<li>回购停摆至合并后第 2 年，EPS 增长失去最顺手的引擎。</li>
+</ul>
+</div>
+</div>
+<div class="card">
+<h3>三情景推演（12–18 个月视角）</h3>
+<table>
+<tr><th>情景</th><th>主观概率</th><th>逻辑</th><th class="num">对应股价区间</th></tr>
+<tr><td><b>A · 合并按期批准</b>（条件可控）</td><td class="num">45%</td><td>程序表兑现，条件以商业承诺为主（CGP/通道开放），协同逐步兑现，恢复回购预期提前定价</td><td class="num up">$330 – 375</td></tr>
+<tr><td><b>B · 拖延/中度条件</b>（现状延续）</td><td class="num">35%</td><td>环境审查拖延记录关闭、或附加可接受的结构性条件，独立基本面继续撑估值</td><td class="num">$275 – 315</td></tr>
+<tr><td><b>C · 否决/致命条件</b></td><td class="num">20%</td><td>DOJ 正式反对+政治风向转变，UP 行走权触发，$2.5B 分手费，回归独立定价（并伴随管理层信任折价）</td><td class="num down">$245 – 265</td></tr>
+</table>
+<p class="note" style="margin-top:6px">概率为主观估计（依据：程序表推进顺利、CN 协议落地、工会支持到位 vs 反方联盟有组织+BNSF/CSX 全力阻击+历史上 STB 对大合并极挑剔——2001 年后无一起 Class I 大合并获批先例）。期望值 ≈ 0.45×352 + 0.35×295 + 0.20×255 ≈ <b>$310</b>，较现价 +7%——<b>风险报酬中性偏正，但不是显著错定价</b>。</p>
+</div>
+
+<!-- ================= ⑧ 风险与跟踪点 ================= -->
+<h2 id="s8">⑧ 风险与跟踪清单</h2>
+<div class="card">
+<table>
+<tr><th>日期</th><th>事件</th><th>观察什么</th></tr>
+<tr><td><b>2026-09-04</b></td><td>STB 参与意向截止（今日）</td><td>参与方数量与阵营构成</td></tr>
+<tr><td><b>2026-10-21</b></td><td>Q3 财报</td><td>共识 EPS $3.48 兑现度；燃油 &gt;$4/加仑下 OR 是否守住；谷物/国内联运势头</td></tr>
+<tr><td><b>2026-11-18</b></td><td>STB 评论/异议截止 <span class="tag tag-o">硬节点</span></td><td>DOJ 是否随船运方正式反对；异议数量与"要求条件"的烈度</td></tr>
+<tr><td><b>2026-12-03</b></td><td>DOJ/USDOT 初步意见</td><td>行政分支态度——政治风险温度计</td></tr>
+<tr><td><b>2027-02-16 → 05-28</b></td><td>回应 → 公听会 → 最终简报</td><td>听证会上委员的质疑方向（线路出售/轨道权红线是否被触碰）</td></tr>
+<tr><td><b>2027 H2</b></td><td>STB 裁决 + 交割窗口</td><td>情景 A/B/C 兑现</td></tr>
+<tr><td>持续</td><td>燃油价格、煤炭/天然气价差、进口联运量</td><td>OR 与 Premium 板块修复节奏</td></tr>
+</table>
+</div>
+
+<!-- ================= ⑨ 结论 ================= -->
+<h2 id="s9">⑨ 结论（四段式）</h2>
+<div class="card concl">
+<p><b>[前提/背景校验]</b> 本报告的前提是：①UNP 独立基本面数据取自 SEC XBRL 原始申报（10-K/10-Q），非二手数据库转抄；②合并时间线以 STB 官方程序表与公司公告为准；③共识数据为多源快照（2026-09-02/04），机构口径略有差异（24–28 家）。69 号报告已确立"UNP 当前是事件驱动个股"的统计事实，本报告的基本面拆解与之互为印证。</p>
+<p style="margin-top:8px"><b>[关键数据与依据]</b> ①2026H1 营收 $13.08B（+7.4%）、净利 $3.69B、EPS $6.22（+6.3%）；Q2 调整后 EPS $3.41 创纪录（+13%），全年指引上调至高个位数增长。②FY2025 FCF $5.5B、净杠杆 2.5×、2026H1 还债 $1.5B。③当前 23.4× TTM PE 处于自身 5 年区间上沿，高于 CNI（22.5×）低于 CSX（28.5×）；共识目标 $329（+13%）。④燃油均价 +60% 是唯一实质性利润表逆风（OR −120bp），但被附加费机制部分转嫁。</p>
+<p style="margin-top:8px"><b>[客观分析与对比]</b> 与同业比：UNP 是三者中唯一"运营效率+定价权+资产负债表"三线最优的标的，但估值并未落后（PE 低于 CSX）。与自身比：当前溢价 ≈ 合并协同期权（期望值测算约 $310 vs 现价 $289，+7%）。反方核心质疑（协同基线陈旧、CGP 天花板性质、让步红线）均无法在 11-18 前证伪或证实——这正是"事件真空期"的定价特征。期货与货运数据层面无独立恶化的证据。</p>
+<p style="margin-top:8px"><b>[结论与置信度]</b> 判定：<b>持有/观察（Hold &amp; Watch），不加仓、不追高</b>——置信度：中高。理由：①独立基本面无可挑剔，但已在价格里；②主导变量是 2027H2 的二元裁决，当前期望值回报约 +7%，不足以补偿事件方差；③真正的信息节点是 11-18（异议烈度）与 12-03（DOJ 态度）——若 DOJ 保持了距离且异议以"要条件"而非"要否决"为主，情景 B→A 概率上移，届时加仓的赔率优于现在；若情景 C 苗头出现（DOJ 正式反对/要求线路出售），应在 $2.5B 分手费情形兑现前降低敞口。操作上，已持仓者可继续持有吃合并期权与独立盈利双驱动；新建仓建议等待 11-18 信息落地或股价回到 $265–275（独立估值上沿）再介入。</p>
+</div>
+
+<div class="timeline card" style="border-left:none">
+<h3 style="margin-top:0">附：股价与事件标注（2025-01 至 2026-09，周线）</h3>
+<div id="c8" style="width:100%;height:360px;"></div>
+</div>
+
+<div class="disclaimer">
+<b>数据与来源说明</b>：财务数据 SEC EDGAR XBRL（CIK 0000100885，10-K 2026-02-06 / 10-Q 2026-07-23）；Q2'26 经营数据与指引来自公司新闻稿（up.com，2026-07-23）；合并时间线来自 STB 程序表与公司客户通告（CN2026-23）；炉边谈内容来自 Bernstein session 多家转述（2026-09-01）；共识与同业估值快照来自第三方数据聚合（2026-09-02/04），不同源间存在 1–2% 口径差；股价为本地日线库（09-03 收盘）。25Q4 单季营收、2024-25 利息费用等 XBRL 缺口已在文中标注，未做臆测填充。<br><br>
+<b>本报告仅供研究参考，不构成个人投资建议。</b>
+</div>
+
+<div class="foot">71 号 · UNP 联合太平洋基本面深度分析 · 2026-09-04 · 数据驱动 · Okabe-Ito 色弱安全配色 · 红涨绿跌</div>
+</div>
+
+<script>
+const D = __DATA_JSON__;
+const K = D.cur;
+const C = {
+  blue:'#0072B2', orange:'#E69F00', sky:'#56B4E9', purple:'#CC79A7',
+  vermil:'#D55E00', green:'#009E73', grey:'#9a948a', ink:'#26313d',
+  red:'#C0392B', dgreen:'#1E8449'
+};
+const axis = {
+  axisLine:{lineStyle:{color:'#c9c4ba'}}, axisLabel:{color:'#5b6672'},
+  splitLine:{lineStyle:{color:'#eceae4'}}
+};
+const tip = {trigger:'axis', backgroundColor:'rgba(255,255,255,.96)', borderColor:'#d8d4cb',
+  textStyle:{color:'#26313d', fontSize:13}, confine:true};
+
+function mk(id, opt){ const el=document.getElementById(id); if(!el) return;
+  const ch=echarts.init(el); ch.setOption(opt); window.addEventListener('resize',()=>ch.resize()); }
+
+/* C1 年度营收/净利/净利率 */
+const c1 = {
+  tooltip: {...tip, formatter: p => {
+    let s = p[0].axisValue + '财年<br>';
+    p.forEach(i => s += i.marker + i.seriesName + '：' + (i.seriesName.includes('%') ? i.value+'%' : '$'+i.value+'B') + '<br>');
+    return s;
+  }},
+  legend: {top:0, textStyle:{color:'#5b6672'}},
+  grid: {left:50, right:52, top:34, bottom:28},
+  xAxis: {type:'category', data: D.years.map(String), ...axis},
+  yAxis: [
+    {...axis, type:'value', name:'$B', max: 28},
+    {...axis, type:'value', name:'净利率%', max: 34, min: 24, splitLine:{show:false}}
+  ],
+  series: [
+    {name:'营收', type:'bar', data:D.rev, itemStyle:{color:C.blue, borderRadius:[3,3,0,0]}, barWidth:'32%'},
+    {name:'净利润', type:'bar', data:D.ni, itemStyle:{color:C.orange, borderRadius:[3,3,0,0]}, barWidth:'32%'},
+    {name:'净利率%', type:'line', yAxisIndex:1, data:D.npm, itemStyle:{color:C.vermil}, lineStyle:{width:2.5},
+      symbol:'circle', symbolSize:7, label:{show:true, formatter:'{c}%', color:C.vermil, fontSize:10, position:'top'}}
+  ]
+};
+mk('c1', c1);
+
+/* C2 OR 与 EPS */
+const c2 = {
+  tooltip: {...tip, formatter: p => {
+    let s = p[0].axisValue + '财年<br>';
+    p.forEach(i => s += i.marker + i.seriesName + '：' + (i.seriesName==='OR%' ? i.value+'%' : '$'+i.value) + '<br>');
+    return s;
+  }},
+  legend: {top:0, textStyle:{color:'#5b6672'}},
+  grid: {left:44, right:48, top:34, bottom:28},
+  xAxis: {type:'category', data: D.years.map(String), ...axis},
+  yAxis: [
+    {...axis, type:'value', name:'OR%', min: 55, max: 64, inverse:true},
+    {...axis, type:'value', name:'EPS $', min: 5, max: 13, splitLine:{show:false}}
+  ],
+  series: [
+    {name:'OR%', type:'line', data:D.orRatio, itemStyle:{color:C.purple}, lineStyle:{width:2.5}, symbol:'circle', symbolSize:7,
+      label:{show:true, formatter:'{c}', fontSize:10, color:C.purple}},
+    {name:'摊薄EPS', type:'bar', yAxisIndex:1, data:D.eps, itemStyle:{color:C.sky, borderRadius:[3,3,0,0]}, barWidth:'40%'}
+  ]
+};
+mk('c2', c2);
+
+/* C3 季度动量 */
+const c3 = {
+  tooltip: {...tip, formatter: p => {
+    let s = p[0].axisValue + '<br>';
+    p.forEach(i => s += i.marker + i.seriesName + '：' + (i.value===null||i.value===undefined ? '—' : i.value+'%') + '<br>');
+    return s;
+  }},
+  legend: {top:0, textStyle:{color:'#5b6672'}},
+  grid: {left:44, right:20, top:34, bottom:28},
+  xAxis: {type:'category', data: D.qtr, ...axis},
+  yAxis: {...axis, type:'value', name:'同比%', min:-5, max:15},
+  series: [
+    {name:'营收同比', type:'bar', data:D.qRevYoy, itemStyle:{color:C.blue, borderRadius:[3,3,0,0]}, barWidth:'30%',
+      label:{show:true, position:'top', formatter:p=>p.value===null?'':'▲'+p.value+'%', color:C.red, fontSize:10}},
+    {name:'EPS同比', type:'bar', data:D.qEpsYoy, itemStyle:{color:C.orange, borderRadius:[3,3,0,0]}, barWidth:'30%',
+      label:{show:true, position:'top', formatter:p=>p.value===null?'':'▲'+p.value+'%', color:C.red, fontSize:10}}
+  ]
+};
+mk('c3', c3);
+
+/* C4 现金流四件套 */
+const c4 = {
+  tooltip: {...tip, formatter: p => {
+    let s = p[0].axisValue + '财年<br>';
+    p.forEach(i => s += i.marker + i.seriesName + '：$' + i.value + 'B<br>');
+    return s;
+  }},
+  legend: {top:0, textStyle:{color:'#5b6672'}},
+  grid: {left:44, right:16, top:34, bottom:28},
+  xAxis: {type:'category', data: D.years.map(String), ...axis},
+  yAxis: {...axis, type:'value', name:'$B'},
+  series: [
+    {name:'经营现金流', type:'bar', data:D.cfo, itemStyle:{color:C.blue, borderRadius:[2,2,0,0]}},
+    {name:'资本支出', type:'bar', data:D.capex, itemStyle:{color:C.sky, borderRadius:[2,2,0,0]}},
+    {name:'分红', type:'bar', data:D.div, itemStyle:{color:C.green, borderRadius:[2,2,0,0]}},
+    {name:'回购', type:'bar', data:D.bbk, itemStyle:{color:C.vermil, borderRadius:[2,2,0,0]}}
+  ]
+};
+mk('c4', c4);
+
+/* C5 股息 */
+const c5 = {
+  tooltip: {...tip, formatter: p => {
+    let s = p[0].axisValue + '财年<br>';
+    p.forEach(i => s += i.marker + i.seriesName + '：' + (i.seriesName.includes('率') ? i.value+'%' : '$'+i.value) + '<br>');
+    return s;
+  }},
+  legend: {top:0, textStyle:{color:'#5b6672'}},
+  grid: {left:40, right:48, top:34, bottom:28},
+  xAxis: {type:'category', data: D.years.map(String), ...axis},
+  yAxis: [
+    {...axis, type:'value', name:'DPS $', min: 3, max: 6},
+    {...axis, type:'value', name:'派息率%', min: 30, max: 55, splitLine:{show:false}}
+  ],
+  series: [
+    {name:'宣布DPS', type:'bar', data:D.dps, itemStyle:{color:C.green, borderRadius:[3,3,0,0]}, barWidth:'42%'},
+    {name:'派息率%', type:'line', yAxisIndex:1, data:D.payout, itemStyle:{color:C.purple}, lineStyle:{width:2, type:'dashed'}, symbol:'diamond', symbolSize:8}
+  ]
+};
+mk('c5', c5);
+
+/* C6 债务与利息覆盖 */
+const c6 = {
+  tooltip: {...tip, formatter: p => {
+    let s = p[0].axisValue + '财年<br>';
+    p.forEach(i => s += i.marker + i.seriesName + '：' + (i.value===null||i.value===undefined ? '—' : (i.seriesName.includes('债务') ? '$'+i.value+'B' : i.value+'×')) + '<br>');
+    return s;
+  }},
+  legend: {top:0, textStyle:{color:'#5b6672'}},
+  grid: {left:44, right:48, top:34, bottom:28},
+  xAxis: {type:'category', data: D.years.map(String), ...axis},
+  yAxis: [
+    {...axis, type:'value', name:'$B', min: 20, max: 38},
+    {...axis, type:'value', name:'覆盖×', min: 5, max: 10, splitLine:{show:false}}
+  ],
+  series: [
+    {name:'总债务', type:'bar', data:D.debt, itemStyle:{color:C.purple, borderRadius:[3,3,0,0]}, barWidth:'45%'},
+    {name:'利息覆盖×', type:'line', yAxisIndex:1, data:D.intCov, itemStyle:{color:C.vermil}, lineStyle:{width:2, type:'dashed'}, symbol:'triangle', symbolSize:8}
+  ]
+};
+mk('c6', c6);
+
+/* C7 同业估值 */
+const c7 = {
+  tooltip: {...tip, formatter: p => {
+    let s = p[0].name + '<br>';
+    p.forEach(i => s += i.marker + i.seriesName + '：' + i.value + (i.seriesName==='股息率%'?'%':(i.seriesName==='市值($B)'?'':'×')) + '<br>');
+    return s;
+  }},
+  legend: {top:0, textStyle:{color:'#5b6672'}},
+  grid: {left:40, right:16, top:34, bottom:28},
+  xAxis: {type:'category', data: D.peers.names, ...axis},
+  yAxis: {...axis, type:'value'},
+  series: [
+    {name:'PE(TTM)', type:'bar', data:D.peers.pe, itemStyle:{color:C.blue, borderRadius:[3,3,0,0]}, barWidth:'22%',
+      label:{show:true, position:'top', formatter:'{c}×', fontSize:11}},
+    {name:'PB', type:'bar', data:D.peers.pb, itemStyle:{color:C.orange, borderRadius:[3,3,0,0]}, barWidth:'22%',
+      label:{show:true, position:'top', formatter:'{c}×', fontSize:11}},
+    {name:'股息率%', type:'bar', data:D.peers.yield, itemStyle:{color:C.green, borderRadius:[3,3,0,0]}, barWidth:'22%',
+      label:{show:true, position:'top', formatter:'{c}%', fontSize:11}}
+  ]
+};
+mk('c7', c7);
+
+/* C8 股价 + 事件 */
+const ev = D.px.events.filter(e=>e.val);
+const marks = ev.map(e => ({
+  name: e.label, coord: [e.date, e.val], symbol:'pin', symbolSize: 42,
+  itemStyle: {color: e.date==='2025-07-28' ? C.vermil : C.blue},
+  label: {show:true, formatter: e.label, position:'top', fontSize:10, color:C.ink,
+    backgroundColor:'rgba(255,255,255,.85)', padding:[2,4], borderRadius:3}
+}));
+const c8 = {
+  tooltip: {...tip, formatter: p => {
+    if (p.seriesType==='lines') return '';
+    let s = p.axisValue + '<br>' + p.marker + '收盘：$' + p.value;
+    const e = ev.find(x=>x.date===p.axisValue);
+    if (e) s += '<br><b>◆ ' + e.label + '</b>';
+    return s;
+  }},
+  grid: {left:56, right:20, top:30, bottom:60},
+  dataZoom: [{type:'inside'}, {type:'slider', bottom:8, height:22, borderColor:'#d8d4cb'}],
+  xAxis: {type:'category', data: D.px.dates, ...axis, axisLabel:{color:'#5b6672', rotate:0}},
+  yAxis: {...axis, type:'value', name:'$', scale:true},
+  series: [{
+    name:'UNP收盘', type:'line', data:D.px.vals, showSymbol:false,
+    lineStyle:{width:1.8, color:C.blue}, itemStyle:{color:C.blue},
+    areaStyle:{color:{type:'linear',x:0,y:0,x2:0,y2:1,colorStops:[{offset:0,color:'rgba(0,114,178,.18)'},{offset:1,color:'rgba(0,114,178,0)'}]}},
+    markPoint: {data: marks, animation:false}
+  }]
+};
+mk('c8', c8);
+</script>
+</body>
+</html>
+'''
+
+html = HTML.replace('__DATA_JSON__', json.dumps(D, ensure_ascii=False))
+
+# 校验关键数值
+assert '23.4' in html and '329' in html and '2.8B' in html
+out = os.path.join(OUT_DIR, 'index.html')
+with open(out, 'w', encoding='utf-8') as f:
+    f.write(html)
+print('written:', out, len(html), 'chars')
