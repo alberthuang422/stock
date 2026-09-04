@@ -27,7 +27,12 @@ def vol_of(t):
     return "高波动" if a >= 2.0 else ("中波动" if a >= 1.2 else "低波动")
 up_ch["cat"] = up_ch["ticker"].map(cat_of)
 up_ch["vol"] = up_ch["ticker"].map(vol_of)
-detail = up_ch[["ticker", "src", "date", "fwd5", "fwd10", "fwd20", "fwd60", "ex20", "fake10", "surv20", "mae20", "cat", "vol"]].copy()
+dn_ch = main[(main["dir"] == "dn") & main["in_choppy"]].copy()
+dn_ch["cat"] = dn_ch["ticker"].map(cat_of)
+dn_ch["vol"] = dn_ch["ticker"].map(vol_of)
+detail = pd.concat([up_ch.assign(dirn="向上突破"), dn_ch.assign(dirn="向下突破")], ignore_index=True)
+detail = detail[["ticker", "src", "dirn", "date", "fwd5", "fwd10", "fwd20", "fwd60", "ex20", "fake10", "surv20", "mae20", "cat", "vol"]]
+detail = detail.sort_values("date")
 detail["date"] = detail["date"].dt.strftime("%Y-%m-%d")
 detail_json = detail.to_json(orient="records", force_ascii=False)
 
@@ -160,12 +165,13 @@ td.l,th.l{text-align:left;}
 </div>
 
 <div class="tabs">
-<button class="on" onclick="showTab(0,this)">震荡窗向上突破明细（n=623，可筛选）</button>
+<button class="on" onclick="showTab(0,this)">震荡窗突破事件明细（n=3785，可筛选）</button>
 <button onclick="showTab(1,this)">震荡窗口清单（53 窗）</button>
 </div>
 <div class="tabpane on" id="pane0">
 <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-bottom:10px;font-size:13.5px;">
   <b>筛选：</b>
+  <label>方向 <select id="f_dir" onchange="renderDetail()"><option value="all">全部</option><option value="向上突破">向上突破</option><option value="向下突破">向下突破</option></select></label>
   <label>时间 <select id="f_time" onchange="renderDetail()"><option value="all">全部年份</option><option value="2010">2010 年后</option><option value="2015">2015 年后</option><option value="2020">2020 年后</option></select></label>
   <label>类型 <select id="f_type" onchange="renderDetail()"><option value="all">全部</option><option value="tech">科技股</option><option value="blue">蓝筹股</option><option value="hot">热票</option></select></label>
   <label>波动 <select id="f_vol" onchange="renderDetail()"><option value="all">全部</option><option value="高波动">高波动 (ATR≥2%)</option><option value="中波动">中波动</option><option value="低波动">低波动 (ATR&lt;1.2%)</option></select></label>
@@ -251,19 +257,22 @@ const MAIN = __MAIN__;
 
 // 明细表（带筛选）
 function renderDetail(){
+  const fdir = document.getElementById('f_dir').value;
   const ft = document.getElementById('f_time').value;
   const fy = ft==='all' ? 0 : +ft;
   const type = document.getElementById('f_type').value;
   const vol = document.getElementById('f_vol').value;
   const isTech = r => ['Technology','半导体/AI硬件','软件/SaaS','通信'].includes(r.cat);
   const rows = DETAIL.filter(r =>
+    (fdir==='all' || r.dirn===fdir) &&
     (new Date(r.date).getFullYear() >= fy) &&
     (type==='all' || (type==='tech' && isTech(r)) || (type==='blue' && r.src==='bluechip') || (type==='hot' && r.src==='hot50')) &&
     (vol==='all' || r.vol===vol)
   );
-  let h = '<tr><th>代码</th><th>来源</th><th>类别</th><th>波动</th><th>日期</th><th>T+5</th><th>T+10</th><th>T+20</th><th>T+60</th><th>超额T+20</th><th>假突破</th><th>存活</th><th>MAE</th></tr>';
+  let h = '<tr><th>代码</th><th>来源</th><th>方向</th><th>类别</th><th>波动</th><th>日期</th><th>T+5</th><th>T+10</th><th>T+20</th><th>T+60</th><th>超额T+20</th><th>假突破</th><th>存活</th><th>MAE</th></tr>';
   rows.forEach(r=>{
-    h += `<tr><td class="l"><b>${r.ticker}</b></td><td class="mut">${r.src==='hot50'?'热票':'蓝筹'}</td><td class="mut">${r.cat}</td><td class="mut">${r.vol}</td><td>${r.date}</td><td>${sgn(r.fwd5)}</td><td>${sgn(r.fwd10)}</td><td>${sgn(r.fwd20)}</td><td>${sgn(r.fwd60)}</td><td>${sgn(r.ex20)}</td><td>${r.fake10?'<span class="neg">✗ 假</span>':'<span class="pos">✓ 真</span>'}</td><td>${r.surv20?'✓':'✗'}</td><td>${fmt(r.mae20)}</td></tr>`;
+    const dcolor = r.dirn==='向上突破' ? 'var(--red)' : 'var(--green)';
+    h += `<tr><td class="l"><b>${r.ticker}</b></td><td class="mut">${r.src==='hot50'?'热票':'蓝筹'}</td><td style="font-weight:600;color:${dcolor}">${r.dirn}</td><td class="mut">${r.cat}</td><td class="mut">${r.vol}</td><td>${r.date}</td><td>${sgn(r.fwd5)}</td><td>${sgn(r.fwd10)}</td><td>${sgn(r.fwd20)}</td><td>${sgn(r.fwd60)}</td><td>${sgn(r.ex20)}</td><td>${r.fake10?'<span class="neg">✗ 假</span>':'<span class="pos">✓ 真</span>'}</td><td>${r.surv20?'✓':'✗'}</td><td>${fmt(r.mae20)}</td></tr>`;
   });
   document.getElementById('t_detail').innerHTML = h;
   const n = rows.length;
