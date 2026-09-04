@@ -31,7 +31,9 @@ dn_ch = main[(main["dir"] == "dn") & main["in_choppy"]].copy()
 dn_ch["cat"] = dn_ch["ticker"].map(cat_of)
 dn_ch["vol"] = dn_ch["ticker"].map(vol_of)
 detail = pd.concat([up_ch.assign(dirn="向上突破"), dn_ch.assign(dirn="向下突破")], ignore_index=True)
-detail = detail[["ticker", "src", "dirn", "date", "fwd5", "fwd10", "fwd20", "fwd60", "ex20", "fake10", "surv20", "mae20", "cat", "vol"]]
+detail = detail.loc[:, ~detail.columns.duplicated()]
+detail = detail[["ticker", "src", "dirn", "date", "fwd5", "fwd10", "fwd20", "fwd60", "ex20", "fake10", "surv20",
+                 "mfe5", "mae5", "mfe10", "mae10", "mfe20", "mae20", "mfe60", "mae60", "cat", "vol"]]
 detail = detail.sort_values("date")
 detail["date"] = detail["date"].dt.strftime("%Y-%m-%d")
 detail_json = detail.to_json(orient="records", force_ascii=False)
@@ -138,6 +140,12 @@ td.l,th.l{text-align:left;}
 <div class="note"><b>怎么读</b>：向上突破后只有 43.9% 完全不回踩（这部分 T+20 胜率 69.9%、中位 +4.82%，才是真正意义上的"真突破"）；回踩 0-0.5 ADR 的浅回踩尚可（胜率 56.5%）；回踩 0.5-1.5 ADR 的"灰色地带"胜率已跌破 50%；≥1.5 ADR 确认假突破后胜率仅 25.8%。向下突破完全镜像：<b>反向偏离越深（假摔越狠），后续反弹越强</b>——≥1.5 ADR 假摔层 T+20 中位 +9.19%、胜率 86.6%，是全表最强的买入信号；而跌破后毫无回补（未回踩层）胜率仅 35.4%=真下跌中继。操作含义：向上突破"等回踩 0.5 ADR 以内再确认"；向下突破"等反向偏离 0.5-1.5 ADR 的假摔确认后买"。</div>
 </div>
 
+<div class="card">
+<div class="sec-note" style="margin-bottom:8px;">各时间窗的最大有利偏移（MFE，落袋机会）与最大不利偏移（MAE，最大浮亏）——震荡窗事件中位数：</div>
+<table id="t_mfemae"></table>
+<div class="note"><b>盈亏比视角</b>：向上突破 T+5 即有 +2.04% 的中位浮盈机会、浮亏中位仅 −1.74%（盈亏比 1.17）；随窗口拉长机会放大但浮亏同步放大，T+20 盈亏比约 1.0（+5.84% vs −3.97%），T+60 机会 +12.61% 但浮亏中位 −7.83%——<b>震荡市突破适合"小止盈、严止损"而不是长拿</b>。向下突破 T+60 浮亏中位 −11.72% 明显更深，假摔买入必须配更宽的止损或更小的仓位。</div>
+</div>
+
 <h2 class="sec">五、异质性：蓝筹 vs 热票、2010 年前后</h2>
 <div class="card">
 <table id="t_hete"></table>
@@ -229,6 +237,20 @@ const MAIN = __MAIN__;
   document.getElementById('t_hete').innerHTML = h;
 })();
 
+// MFE/MAE 汇总表
+(function(){
+  let h = '<tr><th class="l">窗口</th><th colspan="2">向上突破 ∈ 震荡窗</th><th colspan="2">向下突破 ∈ 震荡窗</th></tr>';
+  h += '<tr><th class="l"></th><th>MFE 中位（浮盈机会）</th><th>MAE 中位（最大浮亏）</th><th>MFE 中位</th><th>MAE 中位</th></tr>';
+  const rows = [
+    ['T+5', '+2.04%', '−1.74%', '+1.59%', '−2.29%'],
+    ['T+10', '+3.64%', '−2.72%', '+2.58%', '−3.61%'],
+    ['T+20', '+5.84%', '−3.97%', '+3.97%', '−5.78%'],
+    ['T+60', '+12.61%', '−7.83%', '+6.70%', '−11.72%'],
+  ];
+  rows.forEach(r=>{ h += `<tr><td class="l"><b>${r[0]}</b></td><td class="pos">${r[1]}</td><td class="neg">${r[2]}</td><td class="pos">${r[3]}</td><td class="neg">${r[4]}</td></tr>`; });
+  document.getElementById('t_mfemae').innerHTML = h;
+})();
+
 // 分层表（回踩深度 × 后续收益）
 (function(){
   let h = '<tr><th class="l">T+10 内最大反向偏离</th><th colspan="3">向上突破 ∈ 震荡窗（n=424）</th><th colspan="3">向下突破 ∈ 震荡窗（n=3097）</th></tr>';
@@ -292,10 +314,16 @@ function renderDetail(){
     (type==='all' || (type==='tech' && isTech(r)) || (type==='blue' && r.src==='bluechip') || (type==='hot' && r.src==='hot50')) &&
     (vol==='all' || r.vol===vol)
   );
-  let h = '<tr><th>代码</th><th>来源</th><th>方向</th><th>类别</th><th>波动</th><th>日期</th><th>T+5</th><th>T+10</th><th>T+20</th><th>T+60</th><th>超额T+20</th><th>假突破</th><th>存活</th><th>MAE</th></tr>';
+  let h = '<tr><th rowspan="2">代码</th><th rowspan="2">来源</th><th rowspan="2">方向</th><th rowspan="2">日期</th><th rowspan="2">类别</th><th rowspan="2">波动</th>'
+    + '<th colspan="3">持有收益%</th><th colspan="3">最大有利MFE%</th><th colspan="3">最大不利MAE%</th><th rowspan="2">假突破</th><th rowspan="2">T+20超额</th></tr>'
+    + '<tr><th>T+10</th><th>T+20</th><th>T+60</th><th>5日</th><th>10日</th><th>20日</th><th>5日</th><th>10日</th><th>20日</th></tr>';
   rows.forEach(r=>{
     const dcolor = r.dirn==='向上突破' ? 'var(--red)' : 'var(--green)';
-    h += `<tr><td class="l"><b>${r.ticker}</b></td><td class="mut">${r.src==='hot50'?'热票':'蓝筹'}</td><td style="font-weight:600;color:${dcolor}">${r.dirn}</td><td class="mut">${r.cat}</td><td class="mut">${r.vol}</td><td>${r.date}</td><td>${sgn(r.fwd5)}</td><td>${sgn(r.fwd10)}</td><td>${sgn(r.fwd20)}</td><td>${sgn(r.fwd60)}</td><td>${sgn(r.ex20)}</td><td>${r.fake10?'<span class="neg">✗ 假</span>':'<span class="pos">✓ 真</span>'}</td><td>${r.surv20?'✓':'✗'}</td><td>${fmt(r.mae20)}</td></tr>`;
+    h += `<tr><td class="l"><b>${r.ticker}</b></td><td class="mut">${r.src==='hot50'?'热票':'蓝筹'}</td><td style="font-weight:600;color:${dcolor}">${r.dirn}</td><td>${r.date}</td><td class="mut">${r.cat}</td><td class="mut">${r.vol}</td>`
+      + `<td>${sgn(r.fwd10)}</td><td>${sgn(r.fwd20)}</td><td>${sgn(r.fwd60)}</td>`
+      + `<td>${fmt(r.mfe5)}</td><td>${fmt(r.mfe10)}</td><td>${fmt(r.mfe20)}</td>`
+      + `<td class="neg">${fmt(r.mae5)}</td><td class="neg">${fmt(r.mae10)}</td><td class="neg">${fmt(r.mae20)}</td>`
+      + `<td>${r.fake10?'<span class="neg">✗ 假</span>':'<span class="pos">✓ 真</span>'}</td><td>${sgn(r.ex20)}</td></tr>`;
   });
   document.getElementById('t_detail').innerHTML = h;
   const n = rows.length;

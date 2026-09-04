@@ -322,6 +322,23 @@ for t in tickers:
                 worst = min(worst, dd)
             rec["mae20"] = worst
             rec["surv20"] = worst > -STOP
+            # 各窗口 MFE/MAE（相对突破日收盘 px0，%）
+            for N in FWD:
+                mfe = 0.0; mae = 0.0
+                for j in range(1, N + 1):
+                    if ti + j >= len(df):
+                        break
+                    c2 = df["px"].iloc[ti + j]
+                    if evd["dir"] == "up":
+                        fav = (c2 / px0 - 1) * 100
+                        adv = (px0 / max(c2, 1e-9) - 1) * 100
+                    else:
+                        fav = (px0 / max(c2, 1e-9) - 1) * 100
+                        adv = (c2 / px0 - 1) * 100
+                    mfe = max(mfe, fav)
+                    mae = min(mae, -adv)
+                rec[f"mfe{N}"] = mfe
+                rec[f"mae{N}"] = mae
             # 节点
             rec["nodes"] = ";".join(node_windows(evd["date"]))
             rows.append(rec)
