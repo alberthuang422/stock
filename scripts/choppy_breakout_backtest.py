@@ -49,6 +49,7 @@ FWD = (5, 10, 20, 60)
 MAE_WIN = 20
 STOP = 5.0            # 存活判定回撤 %
 FAKE_WIN = 10         # 假突破判定窗口
+FAKE_ADR_MULT = 1.5   # 假突破判定：偏离突破位 ≥1.5×ADR(20日平均真实波幅%)
 N_RANDOM = 200        # C组每票抽样
 
 # ---------------- 数据加载 ----------------
@@ -66,7 +67,11 @@ def load_stock(name):
         cols["adj_close"] = "px"
     else:
         cols["close"] = "px"
-    df = df[list(cols.keys())].rename(columns=cols)
+    keep = list(cols.keys())
+    if "high" in df.columns and "low" in df.columns:
+        cols["high"] = "high"; cols["low"] = "low"; cols["close"] = "close"
+        keep = list(dict.fromkeys(keep + ["high", "low", "close"]))
+    df = df[keep].rename(columns=cols)
     df = df.dropna(subset=["px"]).sort_values("date").reset_index(drop=True)
     return df
 
@@ -270,6 +275,12 @@ for t in tickers:
     df["choppy_a"] = df["date"].map(lambda d: spy_map_a.get(np.datetime64(d, "D"), False))
     ret_abs = df["px"].pct_change().abs()
     jumps = set(np.where(ret_abs > 0.40)[0])  # 拆股伪影日（单日跳变>40%）
+    if {"high", "low", "close"}.issubset(df.columns):
+        pc = df["close"].shift(1)
+        tr = pd.concat([df["high"] - df["low"], (df["high"] - pc).abs(), (df["low"] - pc).abs()], axis=1).max(axis=1)
+    else:
+        tr = df["px"].diff().abs()
+    df["adr_pct"] = tr.rolling(20).mean() / df["px"] * 100
     for K_th in (ZIG_K_MAIN, ZIG_K_ALT):
         ev = detect_events(df, K_th, BRK_E_MAIN)
         for evd in ev:
@@ -287,15 +298,19 @@ for t in tickers:
                 rec[f"spy_fwd{N}"] = (df["spy"].iloc[ti + N] / df["spy"].iloc[ti] - 1) * 100 if ti + N < len(df) else None
             for N in FWD:
                 rec[f"ex{N}"] = (rec[f"fwd{N}"] - rec[f"spy_fwd{N}"]) if rec[f"fwd{N}"] is not None else None
-            # 假突破：多头 T+10 内收盘 < ref；空头 T+10 内收盘 > ref
+            # 假突破：T+10 内价格偏离突破位 ≥1.5×ADR%（用户 09-04 修订口径）
             ref = evd["ref"]
+            adr0 = df["adr_pct"].iloc[ti]
             fake = False
-            for j in range(1, FAKE_WIN + 1):
-                if ti + j >= len(df):
-                    break
-                c2 = df["px"].iloc[ti + j]
-                if (evd["dir"] == "up" and c2 < ref) or (evd["dir"] == "dn" and c2 > ref):
-                    fake = True; break
+            if not np.isnan(adr0):
+                th = FAKE_ADR_MULT * adr0
+                for j in range(1, FAKE_WIN + 1):
+                    if ti + j >= len(df):
+                        break
+                    c2 = df["px"].iloc[ti + j]
+                    dev = (ref - c2) / ref * 100 if evd["dir"] == "up" else (c2 - ref) / ref * 100
+                    if dev >= th:
+                        fake = True; break
             rec["fake10"] = fake
             # 存活：T+20 内最大不利偏移 < STOP
             worst = 0.0
