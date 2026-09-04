@@ -13,7 +13,21 @@ wins = pd.DataFrame(d["windows"])
 
 main = ev[ev["K"] == 5.0]
 up_ch = main[(main["dir"] == "up") & main["in_choppy"]].copy()
-detail = up_ch[["ticker", "src", "date", "fwd5", "fwd10", "fwd20", "fwd60", "ex20", "fake10", "surv20", "mae20"]].copy()
+# 分类注入：蓝筹用 GICS 桶、热票用富途 bucket；波动用 20 日 ATR%/价 三档
+blue_df = pd.read_csv(os.path.join(ROOT, "data", "blue_chips.csv"), encoding="utf-8-sig")
+sector = dict(zip(blue_df["ticker"], blue_df["sector"]))
+hot = json.load(open(os.path.join(ROOT, "results", "rsi14_hot_20260904.json"), encoding="utf-8"))
+hotb = {h["code"]: h["bucket"] for h in hot[:50]}
+vol = json.load(open(os.path.join(ROOT, "Temp", "ticker_vol_info.json"), encoding="utf-8"))
+def cat_of(t):
+    return hotb.get(t) or sector.get(t, "其他")
+def vol_of(t):
+    a = vol.get(t, {}).get("atr_pct")
+    if a is None: return "未知"
+    return "高波动" if a >= 2.0 else ("中波动" if a >= 1.2 else "低波动")
+up_ch["cat"] = up_ch["ticker"].map(cat_of)
+up_ch["vol"] = up_ch["ticker"].map(vol_of)
+detail = up_ch[["ticker", "src", "date", "fwd5", "fwd10", "fwd20", "fwd60", "ex20", "fake10", "surv20", "mae20", "cat", "vol"]].copy()
 detail["date"] = detail["date"].dt.strftime("%Y-%m-%d")
 detail_json = detail.to_json(orient="records", force_ascii=False)
 
@@ -146,10 +160,20 @@ td.l,th.l{text-align:left;}
 </div>
 
 <div class="tabs">
-<button class="on" onclick="showTab(0,this)">▲ 震荡窗向上突破明细（n=623）</button>
+<button class="on" onclick="showTab(0,this)">▲ 震荡窗向上突破明细（n=623，可筛选）</button>
 <button onclick="showTab(1,this)">震荡窗口清单（53 窗）</button>
 </div>
-<div class="tabpane on" id="pane0"><div class="scroll"><table id="t_detail"></table></div></div>
+<div class="tabpane on" id="pane0">
+<div style="display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-bottom:10px;font-size:13.5px;">
+  <b>筛选：</b>
+  <label>时间 <select id="f_time" onchange="renderDetail()"><option value="all">全部年份</option><option value="2010">2010 年后</option><option value="2015">2015 年后</option><option value="2020">2020 年后</option></select></label>
+  <label>类型 <select id="f_type" onchange="renderDetail()"><option value="all">全部</option><option value="tech">科技股</option><option value="blue">蓝筹股</option><option value="hot">热票</option></select></label>
+  <label>波动 <select id="f_vol" onchange="renderDetail()"><option value="all">全部</option><option value="高波动">高波动 (ATR≥2%)</option><option value="中波动">中波动</option><option value="低波动">低波动 (ATR&lt;1.2%)</option></select></label>
+  <span id="f_stat" style="margin-left:auto;font-weight:600;"></span>
+</div>
+<div class="scroll"><table id="t_detail"></table></div>
+<div class="note">汇总行动态显示当前筛选集的 T+20 均值/胜率/超额/假突破率。波动档位按每票 20 日 ATR/价格中位数三等分划定（高 ≥2%、中 1.2-2%、低 &lt;1.2%）；"科技股"含半导体/软件/通信及 GICS Technology。</div>
+</div>
 <div class="tabpane" id="pane1"><div class="scroll"><table id="t_wins"></table></div></div>
 
 <div class="foot">70 号报告 · 生成于 2026-09-04 · 口径与脚本：scripts/choppy_breakout_backtest.py · 明细：results/choppy_breakout_events.csv</div>
@@ -225,14 +249,36 @@ const MAIN = __MAIN__;
   document.getElementById('t_rob').innerHTML = h;
 })();
 
-// 明细表
-(function(){
-  let h = '<tr><th>代码</th><th>来源</th><th>日期</th><th>T+5</th><th>T+10</th><th>T+20</th><th>T+60</th><th>超额T+20</th><th>假突破</th><th>存活</th><th>MAE</th></tr>';
-  DETAIL.forEach(r=>{
-    h += `<tr><td class="l"><b>${r.ticker}</b></td><td class="mut">${r.src==='hot50'?'热票':'蓝筹'}</td><td>${r.date}</td><td>${sgn(r.fwd5)}</td><td>${sgn(r.fwd10)}</td><td>${sgn(r.fwd20)}</td><td>${sgn(r.fwd60)}</td><td>${sgn(r.ex20)}</td><td>${r.fake10?'<span class="neg">✗ 假</span>':'<span class="pos">✓ 真</span>'}</td><td>${r.surv20?'✓':'✗'}</td><td>${fmt(r.mae20)}</td></tr>`;
+// 明细表（带筛选）
+function renderDetail(){
+  const ft = document.getElementById('f_time').value;
+  const fy = ft==='all' ? 0 : +ft;
+  const type = document.getElementById('f_type').value;
+  const vol = document.getElementById('f_vol').value;
+  const isTech = r => ['Technology','半导体/AI硬件','软件/SaaS','通信'].includes(r.cat);
+  const rows = DETAIL.filter(r =>
+    (new Date(r.date).getFullYear() >= fy) &&
+    (type==='all' || (type==='tech' && isTech(r)) || (type==='blue' && r.src==='bluechip') || (type==='hot' && r.src==='hot50')) &&
+    (vol==='all' || r.vol===vol)
+  );
+  let h = '<tr><th>代码</th><th>来源</th><th>类别</th><th>波动</th><th>日期</th><th>T+5</th><th>T+10</th><th>T+20</th><th>T+60</th><th>超额T+20</th><th>假突破</th><th>存活</th><th>MAE</th></tr>';
+  rows.forEach(r=>{
+    h += `<tr><td class="l"><b>${r.ticker}</b></td><td class="mut">${r.src==='hot50'?'热票':'蓝筹'}</td><td class="mut">${r.cat}</td><td class="mut">${r.vol}</td><td>${r.date}</td><td>${sgn(r.fwd5)}</td><td>${sgn(r.fwd10)}</td><td>${sgn(r.fwd20)}</td><td>${sgn(r.fwd60)}</td><td>${sgn(r.ex20)}</td><td>${r.fake10?'<span class="neg">✗ 假</span>':'<span class="pos">✓ 真</span>'}</td><td>${r.surv20?'✓':'✗'}</td><td>${fmt(r.mae20)}</td></tr>`;
   });
   document.getElementById('t_detail').innerHTML = h;
-})();
+  const n = rows.length;
+  if(n){
+    const mean = rows.reduce((a,r)=>a+r.fwd20,0)/n;
+    const win = rows.filter(r=>r.fwd20>0).length/n*100;
+    const exm = rows.reduce((a,r)=>a+(r.ex20??0),0)/n;
+    const fake = rows.filter(r=>r.fake10).length/n*100;
+    document.getElementById('f_stat').textContent =
+      `n=${n} ｜ T+20均值 ${mean>0?'+':''}${mean.toFixed(2)}% ｜ 胜率 ${win.toFixed(1)}% ｜ 超额 ${(exm>0?'+':'')}${exm.toFixed(2)}% ｜ 假突破率 ${fake.toFixed(1)}%`;
+  } else {
+    document.getElementById('f_stat').textContent = 'n=0（无匹配样本）';
+  }
+}
+renderDetail();
 
 // 窗口清单
 (function(){
@@ -261,13 +307,15 @@ const mapChart = echarts.init(document.getElementById('c_map'));
     xAxis:{type:'time', ...axStyle},
     yAxis:{type:'value', min:0, max:6, ...axStyle, axisLabel:{formatter:()=>''}, splitLine:{show:false}},
     series:[{type:'custom', renderItem:(params,api)=>{
-        const s = api.coord([api.value(0), api.value(2)]);
-        const e = api.coord([api.value(1), api.value(2)]);
-        const h = api.size([0,1])[1]*0.62;
-        return {type:'rect', shape:{x:s[0], y:s[1]-h/2, width:Math.max(e[0]-s[0],2), height:h},
-          style:{fill: api.value(3)>=150 ? '#e8983f' : '#85b7eb', opacity:0.85}};
+        const s = api.coord([api.value(0), 1]);
+        const e = api.coord([api.value(1), 2]);
+        const top = api.coord([api.value(0), 4])[1];
+        const bot = api.coord([api.value(0), 0])[1];
+        const yy = api.value(2)===0 ? (top+bot)/2 - 14 : (top+bot)/2 + 6;
+        return {type:'rect', shape:{x:s[0], y:yy, width:Math.max(e[0]-s[0],2), height:8},
+          style:{fill: api.value(3)>=150 ? '#e8983f' : '#378ADD', opacity:0.9}};
       },
-      encode:{x:[0,1],y:2}, data: items}]
+      encode:{x:[0,1]}, data: items}]
   });
 })();
 
