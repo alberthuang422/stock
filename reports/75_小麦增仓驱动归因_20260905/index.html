@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>小麦极端增仓驱动归因：故事类型 × 终结方式（2026-09-05）</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f7f7f5;color:#1a1a1a;font-family:-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;line-height:1.7}
+.wrap{max-width:1220px;margin:0 auto;padding:32px 22px 80px}
+h1{font-size:26px;margin:0 0 6px;letter-spacing:-.3px}
+.sub{color:#666;font-size:13px;margin-bottom:4px}
+h2{font-size:19px;margin:40px 0 12px;padding-left:11px;border-left:4px solid #0072B2}
+h3{font-size:15px;margin:24px 0 8px}
+.meta{background:#fff;border:1px solid #e6e4df;border-radius:8px;padding:14px 18px;font-size:12.5px;color:#444;margin:16px 0 6px}
+.meta b{color:#1a1a1a}
+.alert{background:#fffdf5;border:1px solid #e8dcc0;border-left:4px solid #E69F00;border-radius:6px;padding:13px 16px;font-size:13px;margin:14px 0}
+.alert b{color:#7a5c00}
+.kbox{background:#fff;border:1px solid #e6e4df;border-radius:8px;padding:16px 18px;margin:16px 0}
+.chart{width:100%;height:460px;background:#fff;border:1px solid #e6e4df;border-radius:8px;margin:10px 0}
+.chart.tall{height:560px}
+table{border-collapse:collapse;width:100%;background:#fff;font-size:12.1px;margin:10px 0}
+th{background:#f2f1ec;font-weight:600;padding:7px 8px;border:1px solid #e2e0d9;text-align:center;white-space:nowrap}
+td{padding:6px 7px;border:1px solid #eceadf;text-align:center}
+td.l{text-align:left}
+td.r{text-align:right;font-variant-numeric:tabular-nums}
+td.b{font-weight:700}
+.pos{color:#0072B2} .neg{color:#D55E00} .dim{color:#999}
+.tg{font-size:10.5px;padding:1px 7px;border-radius:10px;white-space:nowrap;font-weight:600}
+ul{padding-left:20px;margin:8px 0} li{margin:5px 0}
+.note{font-size:12px;color:#777}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:16px 0}
+.card{background:#fff;border:1px solid #e6e4df;border-radius:8px;padding:13px 15px}
+.card .t{font-size:12px;color:#777;margin-bottom:4px}
+.card .v{font-size:19px;font-weight:700;letter-spacing:-.3px}
+.card .s{font-size:11.5px;color:#888;margin-top:3px}
+.foot{margin-top:44px;padding-top:14px;border-top:1px solid #e6e4df;font-size:12px;color:#888}
+</style></head><body><div class="wrap">
+
+<h1>小麦极端增仓驱动归因：故事类型 × 终结方式</h1>
+<div class="sub">CBOT 小麦（SRW/HRW/HRS 三合约合计，非商业头寸）· 分析日 2026-09-05 · COT 截至 2026-09-01 · 20 个历史事件（2011-07 后单周多头增仓 ≥1.5 万张）</div>
+<div class="meta"><b>本报告回答的问题</b>：每一轮投机暴增是<b>被什么驱动力推上去、又被什么力量打下来的</b>？核心结论：<b>涨靠"故事"，见顶=故事被终结；故事的保质期决定行情长度</b>。归因基础：73 号回测的 20 事件数值 + 逐事件催化剂核实（2015/2016/2017/2024 经 Reuters / Bloomberg / USDA 系信源，2012/2018/2020-21/2022 为公开史实级行情）。</div>
+
+<div class="cards">
+<div class="card"><div class="t">① 供给脉冲型（8 次，剔战争）</div><div class="v" style="color:#D55E00">75% ≤2周即顶</div><div class="s">中位见顶 0.4 周；2012/15/16/17/18 天气市 6 次全部快速终结，仅 2024 两次 14-16 周（净空低位起跳）</div></div>
+<div class="card"><div class="t">② 需求/库存周期型（8 次）</div><div class="v" style="color:#0072B2">8/8 全部续涨</div><div class="s">中位 44 周、到顶中位 +26%；2020-21 牛市清一色</div></div>
+<div class="card"><div class="t">①+② 叠加型（3 次）</div><div class="v" style="color:#CC79A7">全续涨</div><div class="s">牛市中叠加的供给冲击被周期接力（2021-08-03 后 +78.5%）</div></div>
+<div class="card"><div class="t">终结 = 四种武器</div><div class="v">数据/替代/挤出/出尽</div><div class="s">①官方数据证伪 ②替代供给 ③价格挤出需求 ④利多出尽计价——见顶时刻=边际故事断供时刻</div></div>
+</div>
+
+<h2>一、驱动分类：三类故事，保质期不同</h2>
+<div class="kbox">
+<b>① 供给侧脉冲</b>（2012 美旱、2015 洪水、2016 全球旱情、2017 春麦旱、2018 欧洲热浪、2022 战争、2024 俄旱+法大雨）——冲击真实，但<b>作物年度内自我终结</b>：收获季的官方产量报告就是审判日；且小麦是俄/欧/美/加/澳/乌多源供给，单产区减产总被其他产区对冲。<b>保质期：数周到 1 个作物季。</b><br><br>
+<b>② 需求/政策/库存周期</b>（中国采购、俄出口税/限制、全球去库）——<b>自我强化</b>：中国采购持续 6-12 个月、USDA 月月下调库存、俄关税反复加码——利多消息不断生成。<b>保质期：18-24 个月</b>（2020-21 牛市）。<br><br>
+<b>①+② 叠加</b>（2021-04/08 北美旱发生在已去库的牛市里）——供给冲击被周期"接力"，是 ① 中的异类。<br><br>
+一图定位（颜色=故事类型，点大小=事件日→顶涨幅）：</div>
+<div class="chart" id="c1"></div>
+<div class="note">图：20 事件散点。x=事件日期，y=事件后见顶用时（周），0-2 周一带即"即时顶"。橙色=纯供给脉冲（几乎全压在 0-2 周），蓝色=需求/库存周期（全部 29-52 周），紫色=叠加型。点越大=到顶涨幅越高（2021-08 的 +78%、2022-02 的 +52.5% 最大）。虚线=即时顶阈值（2 周）。</div>
+
+<h3>归类结论</h3>
+<table>
+<tr><th>故事类型</th><th>n</th><th>快速见顶 ≤2周</th><th>中位见顶用时</th><th>中位到顶涨幅</th><th>代表事件</th></tr>
+<tr><td style="color:#D55E00;font-weight:700">① 供给侧脉冲（剔战争）</td><td>8</td><td class="b">6/8（75%）</td><td class="b">0.4 周</td><td>+2.0%（多为当天/3天即顶）</td><td>2012/2015/2016/2017/2018×2</td></tr>
+<tr><td style="color:#666666">① 供给侧脉冲（地缘·2022 战争）</td><td>1</td><td>是（1.8 周）</td><td>1.8 周</td><td>+52.5%（极端）</td><td>2022-02-22</td></tr>
+<tr><td style="color:#0072B2;font-weight:700">② 需求/库存周期</td><td>8</td><td class="b neg">0/8</td><td class="b">44 周</td><td class="pos b">+26%</td><td>2019-12 ~ 2021-01 牛市</td></tr>
+<tr><td style="color:#CC79A7;font-weight:700">①+② 叠加</td><td>3</td><td>0/3</td><td>30 周</td><td class="pos b">+76%</td><td>2021-04-27 / 08-03 / 08-17</td></tr>
+</table>
+<div class="note">① 型中唯二的例外是 2024 两次（14-16 周）：净空低位起跳的俄旱/法担忧反弹，但 r52 均回负——中短途、非真牛市。故事类型对见顶用时的预测力远大于净头寸存量（73 号深挖：weeks×net rho≈0）。</div>
+
+<h2>二、见顶的四种终结方式</h2>
+<div class="kbox">终结发生的时刻 = <b>边际故事供给断供的时刻</b>。四种方式（主因归类，9 个有明确终结的非牛市事件；③ 需求挤出在 2017-07-11 作为与①并存的次因出现，无独立持仓属性，主因归 ①，故图表 n=0）：</div>
+<div class="chart" id="c2"></div>
+<div class="note">图：四种终结方式的中位见顶周数（横向条形，n=事件数）。① 官方数据证伪与 ② 替代供给各处置 4 起——合起来解释了 8/9 的快速见顶；③ 需求挤出、④ 计价出尽各 1 起。</div>
+
+<table>
+<tr><th>终结方式</th><th>n</th><th>中位见顶用时</th><th>机制</th><th>代表事件</th><th>事后路径（r13/r52 中位）</th></tr>
+<tr><td class="b" style="color:#D55E00">① 官方数据证伪</td><td>4</td><td>0.1 周</td><td>USDA 产量/库存报告证伪炒作叙事，单次报告即"审判日"</td><td>2015-06-30、2016-06-07、2017-07-11、2024-01-30</td><td>r13 −18.2% / r52 −5.8%</td></tr>
+<tr><td class="b" style="color:#0072B2">② 替代供给</td><td>4</td><td>0.7 周</td><td>其他产区（几乎总是俄罗斯）丰产对冲，减产故事"被分担"</td><td>2012-07、2018-07/08、2024-06-25</td><td>r13 −5.2% / r52 −15.0%</td></tr>
+<tr><td class="b" style="color:#56B4E9">③ 价格挤出需求</td><td>—</td><td>—</td><td>价格涨到美麦无竞争力，买家转向替代产地（埃及弃美买俄）——2017-07-11 与①并存、无独立事件</td><td>2017-07-11（次因）</td><td>—</td></tr>
+<tr><td class="b" style="color:#CC79A7">④ 利多出尽计价</td><td>1</td><td>1.8 周</td><td>冲击一次性计价打满，再涨只剩情绪惯性</td><td>2022-02-22（战争）</td><td>r26 转负、r52 −17.9%</td></tr>
+</table>
+<div class="note">r13/r52 中位统计基于各终结方式分组（①组 r13 −18.2%、②组 r13 −5.2%/r52 −15.0%、④ r52 −17.9%）：被终结的供给脉冲事后普遍再跌 13-18%（一年维度）。2017-07-11 的数据证伪与需求挤出并存，主因归 ①。</div>
+
+<h2>三、2020-21 牛市的共享剧本：没有"哪一次见顶"，只有台阶</h2>
+<div class="kbox">11 个牛市事件（2019-12 ~ 2021-08）的见顶日不是各自独立的——它们沿 <b>2020-10-23 → 2021-05-07 → 2021-11-23 → 2022-03-07（战争顶）</b> 阶梯排列，每个事件后 6-10 个月爬到下一台阶、随后 10-20% 回调再涨。真实终局统一在 <b>2022-03-07 的 $12.94 战争泡沫顶</b>。<b>四股驱动叠加且不断档</b>：中国采购（需求）+ 俄出口关税/限制（政策）+ 全球库存连续两年去化（库存）+ 2021 北美春麦旱（供给）——任何单股被证伪（如 2021-01-05 后 r13 −2.2%）都有其他驱动接力。<b>这就是"持续推动因素"的具象：不是某个利多特别强，而是利多链条不断档。</b></div>
+<div class="chart tall" id="c3"></div>
+<div class="note">图：20 事件的"事件日 → 52 周内顶日"时间线（横条=事件日后见顶周数，最新在上）。橙=供给脉冲（条极短，压在 0-2 周），蓝=周期型与叠加型（条长 27-52 周）；横条末端黑点旁标注=事件日→顶涨幅。可见"短条集中在下、长条集中在上"的时期聚集。</div>
+
+<h2>四、2026-09-01 落点：这次的黑海故事属于哪一类？</h2>
+<div class="alert">
+当前驱动（72 号报告）：<b>黑海断供</b>——俄罗斯 8 月出口创 2010 年来最低、乌克兰出口能力损失 >97%。这属于<b>① 供给脉冲</b>，但两个关键区别决定它可能偏离历史①的"快速见顶"剧本：<br><br>
+<b>· 像 2022 战争，但又不是 2022</b>：2022 是一次性恐慌（3 天计价完毕，顶 1.8 周）；2026 是<b>真实出口能力损失</b>，若黑海约束跨季持续，故事寿命以季计——更接近 2020-21 的"俄出口限制"这一②类成分（正是那轮牛市最重要的驱动之一，2020-09-01 事件即"俄出口限制+中国采购"）。<br>
+<b>· 两种剧本由证伪点决定</b>：<br>
+— <b>替代供给剧本</b>（类 2018/2022/2024）：澳/加/美/乌产量证明能填补（<b>9/11 USDA 是第一个裁判</b>）或黑海停火恢复出口 → 顶在 9-10 月，参照 2024-05 俄旱证伪后 3 周崩 25%。<br>
+— <b>跨季约束剧本</b>（类 2020-21 俄关税）：出口约束无法在数季内解除（<b>乌仓储 11 月初近满、缺口约 1,100 万吨</b> + 俄政策惯性）→ 利多链条延伸，顶不在今年。<br><br>
+<b>观察点就三个</b>：① 9/11 USDA 其他产区对冲程度；② 9 月俄出口船期是否实质恢复；③ 停火谈判进展（8/31 单日 −2.5% 的样板）。事件后 3 日 −6.2% 目前是中性信号——牛市事件 2021-04-27 也曾 r4 −10.4% 仍续涨 +76%。</div>
+
+<h2>五、事件驱动归因总表（20 事件）</h2>
+<table>
+<tr><th>事件日</th><th class="l">上涨驱动（故事）</th><th>类型</th><th class="l">见顶终结方式</th><th>见顶周</th><th>到顶</th><th>后4周</th><th>后13周</th><th>后52周</th><th>事件前净</th><th>Δ多头</th><th class="l">注解</th></tr>
+<tr>
+<td>2012-07-17</td>
+<td class="l">美国世纪干旱（玉米主导，小麦替代跟涨）</td>
+<td><span class="tg" style="background:#D55E0022;color:#D55E00">①供给脉冲</span></td>
+<td class="l">②替代供给（俄丰收+8月降雨，玉米先顶）</td>
+<td class="r b">0.6</td>
+<td class="r pos">+7.4%</td>
+<td class="r neg">-1.6%</td>
+<td class="r neg">-0.8%</td>
+<td class="r neg">−24.1</td>
+<td class="r">85,133</td>
+<td class="r">19,354</td>
+<td class="l note">全球库存高位，脉冲被吸收；高位净多再暴增=情绪顶</td></tr><tr>
+<td>2015-06-30</td>
+<td class="l">玉米带6月洪水，软红麦质量担忧</td>
+<td><span class="tg" style="background:#D55E0022;color:#D55E00">①供给脉冲</span></td>
+<td class="l">①官方数据证伪（7月WASDE上调美麦产量+3300万bu，另中国库存追溯+1200万吨）</td>
+<td class="r b">0.0</td>
+<td class="r dim">+0.0%</td>
+<td class="r neg">-19.8%</td>
+<td class="r neg">-16.1%</td>
+<td class="r neg">−29.1</td>
+<td class="r">-67,984</td>
+<td class="r">29,336</td>
+<td class="l note">深度净空−6.8万一周翻多=空头回补主导，反弹到前高即耗尽；欧/加单产担忧缓解</td></tr><tr>
+<td>2016-06-07</td>
+<td class="l">全球产区旱情担忧（美平原/加/澳/俄）</td>
+<td><span class="tg" style="background:#D55E0022;color:#D55E00">①供给脉冲</span></td>
+<td class="l">①数据证伪+宏观（USDA 5-7月产量上修+2.63亿bu/+10%；6/23脱欧美元暴涨）</td>
+<td class="r b">0.2</td>
+<td class="r pos">+1.6%</td>
+<td class="r neg">-15.9%</td>
+<td class="r neg">-20.4%</td>
+<td class="r neg">−4.2</td>
+<td class="r">-112,517</td>
+<td class="r">15,110</td>
+<td class="l note">USDA连续上修+全球创纪录库存→7月破$4；非商净空−11万仅回补</td></tr><tr>
+<td>2017-07-11</td>
+<td class="l">ND/MT春麦历史干旱（面积1919年来最小）</td>
+<td><span class="tg" style="background:#D55E0022;color:#D55E00">①供给脉冲</span></td>
+<td class="l">①数据证伪+③价格挤出需求（7/12 USDA好于恐慌预期；埃及招标弃美买俄）</td>
+<td class="r b">0.0</td>
+<td class="r dim">+0.0%</td>
+<td class="r neg">-17.1%</td>
+<td class="r neg">-21.3%</td>
+<td class="r neg">−6.9</td>
+<td class="r">96,537</td>
+<td class="r">16,071</td>
+<td class="l note">MGEX盘中$8.685创2013来新高；9月产量4.16亿bu≫恐慌预估3亿——“world awash in wheat”</td></tr><tr>
+<td>2018-07-31</td>
+<td class="l">欧盟热浪减产（真实减1400万吨）</td>
+<td><span class="tg" style="background:#D55E0022;color:#D55E00">①供给脉冲</span></td>
+<td class="l">②替代供给（俄创纪录丰产+美丰收+库存高企）</td>
+<td class="r b">0.8</td>
+<td class="r pos">+7.8%</td>
+<td class="r neg">-5.6%</td>
+<td class="r neg">-9.7%</td>
+<td class="r neg">−9.8</td>
+<td class="r">40,070</td>
+<td class="r">27,337</td>
+<td class="l note">8/1 USDA确认减产但被俄对冲；净多4万天气炒作中段</td></tr><tr>
+<td>2018-08-07</td>
+<td class="l">欧洲热浪余波</td>
+<td><span class="tg" style="background:#D55E0022;color:#D55E00">①供给脉冲</span></td>
+<td class="l">②替代供给（同上）</td>
+<td class="r b">0.2</td>
+<td class="r pos">+0.5%</td>
+<td class="r neg">-11.4%</td>
+<td class="r neg">-13.4%</td>
+<td class="r neg">−20.2</td>
+<td class="r">92,162</td>
+<td class="r">23,825</td>
+<td class="l note">高位净多9.2万再增=情绪顶</td></tr><tr>
+<td>2019-12-17</td>
+<td class="l">全球库存去化周期+中国采购启动</td>
+<td><span class="tg" style="background:#0072B222;color:#0072B2">②需求/库存周期</span></td>
+<td class="l">—无单一终结（牛市台阶）</td>
+<td class="r b">42.8</td>
+<td class="r pos">+14.5%</td>
+<td class="r pos">+2.1%</td>
+<td class="r pos">+1.4%</td>
+<td class="r pos">+15.4</td>
+<td class="r">-12,194</td>
+<td class="r">20,022</td>
+<td class="l note">牛市第一阶段起点；前期深净空</td></tr><tr>
+<td>2020-01-21</td>
+<td class="l">中国采购+库存收紧</td>
+<td><span class="tg" style="background:#0072B222;color:#0072B2">②需求/库存周期</span></td>
+<td class="l">—无单一终结</td>
+<td class="r b">49.8</td>
+<td class="r pos">+15.8%</td>
+<td class="r neg">-2.9%</td>
+<td class="r neg">-6.2%</td>
+<td class="r pos">+10.7</td>
+<td class="r">46,027</td>
+<td class="r">16,408</td>
+<td class="l note">牛市早期</td></tr><tr>
+<td>2020-03-31</td>
+<td class="l">疫情恐慌后需求恢复+采购回流</td>
+<td><span class="tg" style="background:#0072B222;color:#0072B2">②需求/库存周期</span></td>
+<td class="l">—无单一终结</td>
+<td class="r b">45.2</td>
+<td class="r pos">+20.1%</td>
+<td class="r neg">-9.1%</td>
+<td class="r neg">-13.3%</td>
+<td class="r pos">+14.5</td>
+<td class="r">8,340</td>
+<td class="r">26,040</td>
+<td class="l note">低点反弹段，多头新建84%</td></tr><tr>
+<td>2020-07-14</td>
+<td class="l">中国大规模采购潮+俄出口限制传闻</td>
+<td><span class="tg" style="background:#0072B222;color:#0072B2">②需求/库存周期</span></td>
+<td class="l">—无单一终结</td>
+<td class="r b">41.0</td>
+<td class="r pos">+44.6%</td>
+<td class="r neg">-6.2%</td>
+<td class="r pos">+17.4%</td>
+<td class="r pos">+27.8</td>
+<td class="r">-75,827</td>
+<td class="r">16,070</td>
+<td class="l note">净空区翻多，回补64%</td></tr><tr>
+<td>2020-09-01</td>
+<td class="l">俄出口限制落地+黑海供给收缩</td>
+<td><span class="tg" style="background:#0072B222;color:#0072B2">②需求/库存周期</span></td>
+<td class="l">—无单一终结（与2026最像：黑海）</td>
+<td class="r b">34.0</td>
+<td class="r pos">+35.3%</td>
+<td class="r pos">+2.5%</td>
+<td class="r pos">+2.3%</td>
+<td class="r pos">+26.2</td>
+<td class="r">-14,240</td>
+<td class="r">25,017</td>
+<td class="l note">中国采购+俄限制双驱动</td></tr><tr>
+<td>2020-10-06</td>
+<td class="l">全球库存新低预期+采购持续</td>
+<td><span class="tg" style="background:#0072B222;color:#0072B2">②需求/库存周期</span></td>
+<td class="l">—无单一终结</td>
+<td class="r b">29.2</td>
+<td class="r pos">+29.3%</td>
+<td class="r pos">+2.7%</td>
+<td class="r pos">+7.8%</td>
+<td class="r pos">+25.1</td>
+<td class="r">38,018</td>
+<td class="r">18,884</td>
+<td class="l note">USDA月月下调库存，利多不断档</td></tr><tr>
+<td>2020-10-20</td>
+<td class="l">俄关税+中国采购+去库多线并进</td>
+<td><span class="tg" style="background:#0072B222;color:#0072B2">②需求/库存周期</span></td>
+<td class="l">—无单一终结</td>
+<td class="r b">51.6</td>
+<td class="r pos">+22.1%</td>
+<td class="r neg">-6.1%</td>
+<td class="r pos">+2.4%</td>
+<td class="r pos">+26.0</td>
+<td class="r">84,410</td>
+<td class="r">15,297</td>
+<td class="l note">净/OI 10.9%高拥挤仍续涨</td></tr><tr>
+<td>2021-01-05</td>
+<td class="l">USDA库存报告利多</td>
+<td><span class="tg" style="background:#0072B222;color:#0072B2">②需求/库存周期</span></td>
+<td class="l">—无单一终结</td>
+<td class="r b">44.8</td>
+<td class="r pos">+32.9%</td>
+<td class="r neg">-0.8%</td>
+<td class="r neg">-2.2%</td>
+<td class="r pos">+13.7</td>
+<td class="r">95,751</td>
+<td class="r">18,822</td>
+<td class="l note">净多9.6万仍续涨45周+33%</td></tr><tr>
+<td>2021-04-27</td>
+<td class="l">美春麦播种担忧（牛市内供给叠加）</td>
+<td><span class="tg" style="background:#CC79A722;color:#CC79A7">①+②叠加</span></td>
+<td class="l">—无单一终结（接力至2022-03顶）</td>
+<td class="r b">43.4</td>
+<td class="r pos">+76.5%</td>
+<td class="r neg">-10.4%</td>
+<td class="r neg">-3.8%</td>
+<td class="r pos">+51.3</td>
+<td class="r">59,252</td>
+<td class="r">15,430</td>
+<td class="l note">r4−10.4%仍续涨+76.5%</td></tr><tr>
+<td>2021-08-03</td>
+<td class="l">北美旱（牛市后段）</td>
+<td><span class="tg" style="background:#CC79A722;color:#CC79A7">①+②叠加</span></td>
+<td class="l">—无单一终结</td>
+<td class="r b">29.8</td>
+<td class="r pos">+78.5%</td>
+<td class="r neg">-0.1%</td>
+<td class="r pos">+7.8%</td>
+<td class="r pos">+10.3</td>
+<td class="r">64,543</td>
+<td class="r">19,734</td>
+<td class="l note">牛市冲刺段</td></tr><tr>
+<td>2021-08-17</td>
+<td class="l">北美旱余波</td>
+<td><span class="tg" style="background:#CC79A722;color:#CC79A7">①+②叠加</span></td>
+<td class="l">—无单一终结</td>
+<td class="r b">27.8</td>
+<td class="r pos">+76.4%</td>
+<td class="r neg">-3.0%</td>
+<td class="r pos">+12.4%</td>
+<td class="r pos">+14.8</td>
+<td class="r">94,134</td>
+<td class="r">18,639</td>
+<td class="l note">牛市冲刺段</td></tr><tr>
+<td>2022-02-22</td>
+<td class="l">俄乌开战：约30%全球出口悬空</td>
+<td><span class="tg" style="background:#D55E0022;color:#D55E00">①供给脉冲（地缘）</span></td>
+<td class="l">④利多出尽计价完毕（恐慌溢价打满+实际断供<预估）</td>
+<td class="r b">1.8</td>
+<td class="r pos">+52.5%</td>
+<td class="r pos">+32.0%</td>
+<td class="r pos">+35.5%</td>
+<td class="r neg">−17.9</td>
+<td class="r">22,218</td>
+<td class="r">15,209</td>
+<td class="l note">连涨2日+52.5%至$12.94天价；r26才转负、r52−17.9%</td></tr><tr>
+<td>2024-01-30</td>
+<td class="l">俄南部干旱+霜冻（SovEcon砍1300万吨）</td>
+<td><span class="tg" style="background:#D55E0022;color:#D55E00">①供给脉冲</span></td>
+<td class="l">①数据证伪+③需求（土耳其6/6进口禁令+美欧丰产+收获季）</td>
+<td class="r b">16.2</td>
+<td class="r pos">+16.2%</td>
+<td class="r neg">-4.8%</td>
+<td class="r neg">-0.3%</td>
+<td class="r neg">−4.7</td>
+<td class="r">-104,694</td>
+<td class="r">15,100</td>
+<td class="l note">5/28 CBOT顶$7.20后6月崩25%；净空−10.5万低位起跳的中短途反弹</td></tr><tr>
+<td>2024-06-25</td>
+<td class="l">法国小麦评级暴跌（60% vs 上年81%）</td>
+<td><span class="tg" style="background:#D55E0022;color:#D55E00">①供给脉冲</span></td>
+<td class="l">②替代供给（罗/保创纪录+全球宽松）</td>
+<td class="r b">13.8</td>
+<td class="r pos">+9.8%</td>
+<td class="r neg">-2.0%</td>
+<td class="r pos">+4.4%</td>
+<td class="r neg">−0.8</td>
+<td class="r">-70,012</td>
+<td class="r">15,050</td>
+<td class="l note">反弹14周乏力，r52回负</td></tr>
+</table>
+
+<h2>六、口径、来源与限制</h2>
+<ul>
+<li>事件样本：2011-07 后单周非商多头增仓 ≥1.5 万张的 20 个事件（价格窗口=富途 US.ZWmain 2011-07 起；1995-2010 有持仓无价格，未纳入）。</li>
+<li>驱动故事与终结方式为<b>事后归因</b>：数值部分来自 73 号回测（wheat_bt_results.json，口径详见 73 号第六节）；催化剂叙述 2015/2016/2017/2024 已本轮核实（USDA WASDE/面积报告、Reuters、Bloomberg、SovEcon、USW、GFO 等），2012/2018/2020-21/2022 为公开史实级行情。</li>
+<li>多因子事件按主因单标签归类（如 2017-07-11 数据证伪+需求挤出并存，主因记①）；2024-06-25 的 r52 为数据窗口截断值。</li>
+<li>终结统计（第二节）仅覆盖 9 个有明确终结的非牛市事件，n 小，结论为描述性；"无单一终结"的 11 个牛市事件见第三节。</li>
+<li>本节推演为<b>历史模式参照，非预测</b>；最终分叉由 9/11 USDA 与黑海动态决定。</li>
+</ul>
+
+<div class="foot">脚本：Temp/cot/build_report_75.py（本报告）、Temp/cot/wheat_depth.py（存量/位置深挖）｜数据：Temp/cot/wheat_events.csv、wheat_bt_results.json、zw_main_hist.json｜关联：73 号报告（回测方法）、74 号报告（玉米对照）、72 号报告（当期全品种持仓）</div>
+</div>
+
+<script>
+const charts = {}
+function mk(id){ charts[id] = echarts.init(document.getElementById(id)); return charts[id]; }
+
+// 图1 散点
+const c1 = mk('c1')
+c1.setOption({
+  tooltip: {
+    trigger: 'item',
+    formatter: function(p){
+      const d = p.data
+      return '<b>' + d[0] + '</b><br/>类型: ' + d[6] + '<br/>见顶用时: ' + d[1] + ' 周<br/>到顶涨幅: ' + d[2] + '%<br/>Δ多头: +' + d[4].toLocaleString() + '<br/>事件前净: ' + d[5].toLocaleString()
+    }
+  },
+  legend: { data: ['① 供给脉冲（含2022战争）', '② 需求/库存周期', '①+② 叠加'], top: 4 },
+  grid: { left: 46, right: 18, top: 40, bottom: 34 },
+  xAxis: { type: 'category', data: ["2012-07-17", "2015-06-30", "2016-06-07", "2017-07-11", "2018-07-31", "2018-08-07", "2019-12-17", "2020-01-21", "2020-03-31", "2020-07-14", "2020-09-01", "2020-10-06", "2020-10-20", "2021-01-05", "2021-04-27", "2021-08-03", "2021-08-17", "2022-02-22", "2024-01-30", "2024-06-25"], axisLabel: { fontSize: 9.5, color: '#666', rotate: 38 }, axisLine: { lineStyle: { color: '#ccc' } } },
+  yAxis: { type: 'value', name: '见顶用时（周）', nameTextStyle: { fontSize: 10 }, axisLabel: { fontSize: 10, color: '#666' }, splitLine: { lineStyle: { color: '#f0f0f0' } } },
+  series: [{
+    type: 'scatter', data: [["2012-07-17", 0.6, 7.4, "#D55E00", 19354, 85133, "①供给脉冲"], ["2015-06-30", 0.0, 0.0, "#D55E00", 29336, -67984, "①供给脉冲"], ["2016-06-07", 0.2, 1.6, "#D55E00", 15110, -112517, "①供给脉冲"], ["2017-07-11", 0.0, 0.0, "#D55E00", 16071, 96537, "①供给脉冲"], ["2018-07-31", 0.8, 7.8, "#D55E00", 27337, 40070, "①供给脉冲"], ["2018-08-07", 0.2, 0.5, "#D55E00", 23825, 92162, "①供给脉冲"], ["2019-12-17", 42.8, 14.5, "#0072B2", 20022, -12194, "②需求/库存周期"], ["2020-01-21", 49.8, 15.8, "#0072B2", 16408, 46027, "②需求/库存周期"], ["2020-03-31", 45.2, 20.1, "#0072B2", 26040, 8340, "②需求/库存周期"], ["2020-07-14", 41.0, 44.6, "#0072B2", 16070, -75827, "②需求/库存周期"], ["2020-09-01", 34.0, 35.3, "#0072B2", 25017, -14240, "②需求/库存周期"], ["2020-10-06", 29.2, 29.3, "#0072B2", 18884, 38018, "②需求/库存周期"], ["2020-10-20", 51.6, 22.1, "#0072B2", 15297, 84410, "②需求/库存周期"], ["2021-01-05", 44.8, 32.9, "#0072B2", 18822, 95751, "②需求/库存周期"], ["2021-04-27", 43.4, 76.5, "#CC79A7", 15430, 59252, "①+②叠加"], ["2021-08-03", 29.8, 78.5, "#CC79A7", 19734, 64543, "①+②叠加"], ["2021-08-17", 27.8, 76.4, "#CC79A7", 18639, 94134, "①+②叠加"], ["2022-02-22", 1.8, 52.5, "#D55E00", 15209, 22218, "①供给脉冲（地缘）"], ["2024-01-30", 16.2, 16.2, "#D55E00", 15100, -104694, "①供给脉冲"], ["2024-06-25", 13.8, 9.8, "#D55E00", 15050, -70012, "①供给脉冲"]],
+    symbolSize: function(v){ return 9 + Math.min(26, v[2] * 0.28) },
+    itemStyle: { color: function(p){ return p.data[3] }, opacity: 0.88 },
+    markLine: { silent: true, symbol: 'none', lineStyle: { color: '#999', type: 'dashed' }, label: { formatter: '即时顶阈值', fontSize: 10 }, data: [{ yAxis: 2 }] }
+  }]
+})
+
+// 图2 终结方式
+const c2 = mk('c2')
+const tm = [{"t": "①官方数据证伪", "n": 4, "wk": 0.1, "r13": -18.23150852975151, "r52": -5.803490948995882, "cases": "2015-06-30, 2016-06-07, 2017-07-11, 2024-01-30"}, {"t": "②替代供给", "n": 4, "wk": 0.7, "r13": -5.243000454769869, "r52": -14.991582573736444, "cases": "2012-07-17, 2018-07-31, 2018-08-07, 2024-06-25"}, {"t": "③价格挤出需求", "n": 0, "wk": null, "r13": null, "r52": null, "cases": ""}, {"t": "④利多出尽计价", "n": 1, "wk": 1.8, "r13": 35.503830288744844, "r52": -17.85503830288745, "cases": "2022-02-22"}]
+c2.setOption({
+  tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' },
+    formatter: function(ps){ const i = ps[0].dataIndex; const r = tm[i]; return '<b>' + r.t + '</b>（n=' + r.n + '）<br/>中位见顶: ' + (r.wk == null ? '—' : r.wk + ' 周') + '<br/>r13中位: ' + (r.r13==null?'—':r.r13+'%') + '<br/>事件: <b>' + r.cases + '</b>' } },
+  grid: { left: 150, right: 60, top: 16, bottom: 30 },
+  xAxis: { type: 'value', name: '中位见顶周数', nameTextStyle: { fontSize: 10 }, axisLabel: { fontSize: 10 }, splitLine: { lineStyle: { color: '#f0f0f0' } } },
+  yAxis: { type: 'category', data: tm.map(function(r){ return r.t + '（n=' + r.n + '）' }), axisLabel: { fontSize: 11.5, color: '#1a1a1a' } },
+  series: [{
+    type: 'bar', data: tm.map(function(r){ return r.wk == null ? null : r.wk }),
+    barWidth: 22,
+    itemStyle: { color: function(p){ return ['#D55E00', '#0072B2', '#56B4E9', '#CC79A7'][p.dataIndex] || '#999' } },
+    label: { show: true, position: 'right', formatter: function(p){ return p.value == null ? '—' : p.value + ' 周' }, fontSize: 10.5, color: '#1a1a1a' }
+  }]
+})
+
+// 图3 甘特
+const c3 = mk('c3')
+const tl = [{"y": 0, "ev": "2024-06-25", "weeks": 13.8, "ret": 9.753914988814326, "color": "#D55E00", "immed": "续涨"}, {"y": 1, "ev": "2024-01-30", "weeks": 16.2, "ret": 16.205043406366258, "color": "#D55E00", "immed": "续涨"}, {"y": 2, "ev": "2022-02-22", "weeks": 1.8, "ret": 52.504419563936366, "color": "#D55E00", "immed": "即时顶"}, {"y": 3, "ev": "2021-08-17", "weeks": 27.8, "ret": 76.41445126107702, "color": "#CC79A7", "immed": "续涨"}, {"y": 4, "ev": "2021-08-03", "weeks": 29.8, "ret": 78.54432562952742, "color": "#CC79A7", "immed": "续涨"}, {"y": 5, "ev": "2021-04-27", "weeks": 43.4, "ret": 76.4745993862939, "color": "#CC79A7", "immed": "续涨"}, {"y": 6, "ev": "2021-01-05", "weeks": 44.8, "ret": 32.87409108304631, "color": "#0072B2", "immed": "续涨"}, {"y": 7, "ev": "2020-10-20", "weeks": 51.6, "ret": 22.099447513812166, "color": "#0072B2", "immed": "续涨"}, {"y": 8, "ev": "2020-10-06", "weeks": 29.2, "ret": 29.267259635747568, "color": "#0072B2", "immed": "续涨"}, {"y": 9, "ev": "2020-09-01", "weeks": 34.0, "ret": 35.28368794326242, "color": "#0072B2", "immed": "续涨"}, {"y": 10, "ev": "2020-07-14", "weeks": 41.0, "ret": 44.64454976303318, "color": "#0072B2", "immed": "续涨"}, {"y": 11, "ev": "2020-03-31", "weeks": 45.2, "ret": 20.12329370321444, "color": "#0072B2", "immed": "续涨"}, {"y": 12, "ev": "2020-01-21", "weeks": 49.8, "ret": 15.836909871244643, "color": "#0072B2", "immed": "续涨"}, {"y": 13, "ev": "2019-12-17", "weeks": 42.8, "ret": 14.530685920577625, "color": "#0072B2", "immed": "续涨"}, {"y": 14, "ev": "2018-08-07", "weeks": 0.2, "ret": 0.4666949512091678, "color": "#D55E00", "immed": "即时顶"}, {"y": 15, "ev": "2018-07-31", "weeks": 0.8, "ret": 7.758231844835373, "color": "#D55E00", "immed": "即时顶"}, {"y": 16, "ev": "2017-07-11", "weeks": 0.0, "ret": 0.0, "color": "#D55E00", "immed": "即时顶"}, {"y": 17, "ev": "2016-06-07", "weeks": 0.2, "ret": 1.6224188790560534, "color": "#D55E00", "immed": "即时顶"}, {"y": 18, "ev": "2015-06-30", "weeks": 0.0, "ret": 0.0, "color": "#D55E00", "immed": "即时顶"}, {"y": 19, "ev": "2012-07-17", "weeks": 0.6, "ret": 7.4023303632625215, "color": "#D55E00", "immed": "即时顶"}]
+const lab = tl.map(function(r){ return r.ev })
+c3.setOption({
+  tooltip: { formatter: function(p){ const r = tl[p.dataIndex]; return '<b>' + r.ev + '</b><br/>' + r.immed + '：' + r.weeks + ' 周见顶' + (r.ret>0 ? '（+' + r.ret + '%）' : '') } },
+  grid: { left: 96, right: 80, top: 10, bottom: 30 },
+  xAxis: { type: 'value', name: '事件日后周数', nameTextStyle: { fontSize: 10 }, min: 0, max: 56, axisLabel: { fontSize: 10, color: '#666' }, splitLine: { lineStyle: { color: '#f0f0f0' } } },
+  yAxis: { type: 'category', data: lab, axisLabel: { fontSize: 9.5, color: '#555' } },
+  series: tl.map(function(r, i){
+    return {
+      name: r.ev, type: 'line',
+      data: [[0, i], [Math.min(56, r.weeks), i]],
+      showSymbol: false, lineStyle: { width: 7, color: r.color, opacity: 0.85 },
+      markPoint: {
+        data: [{ coord: [Math.min(56, r.weeks), i], symbol: 'circle', symbolSize: 9, itemStyle: { color: '#1a1a1a' },
+                  label: { position: 'right', fontSize: 9.5, color: '#333', formatter: r.ret > 0 ? ('+' + r.ret + '%') : '' } }]
+      }
+    }
+  })
+})
+window.addEventListener('resize', function(){ Object.values(charts).forEach(c => c.resize()) })
+</script>
+</body></html>

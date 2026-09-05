@@ -1,0 +1,308 @@
+{
+ "AAOI": {
+  "atr_pct": 3.41
+ },
+ "AAPL": {
+  "atr_pct": 1.12
+ },
+ "ABT": {
+  "atr_pct": 1.02
+ },
+ "ACN": {
+  "atr_pct": 1.08
+ },
+ "AJG": {
+  "atr_pct": 0.88
+ },
+ "AMD": {
+  "atr_pct": 2.36
+ },
+ "AMZN": {
+  "atr_pct": 1.29
+ },
+ "AON": {
+  "atr_pct": 0.95
+ },
+ "APP": {
+  "atr_pct": 3.07
+ },
+ "ASTS": {
+  "atr_pct": 4.41
+ },
+ "AVGO": {
+  "atr_pct": 1.55
+ },
+ "AWK": {
+  "atr_pct": 0.89
+ },
+ "AXP": {
+  "atr_pct": 1.17
+ },
+ "BAC": {
+  "atr_pct": 1.21
+ },
+ "BDX": {
+  "atr_pct": 0.97
+ },
+ "BE": {
+  "atr_pct": 3.77
+ },
+ "BKNG": {
+  "atr_pct": 1.55
+ },
+ "BLK": {
+  "atr_pct": 1.17
+ },
+ "BRK.B": {
+  "atr_pct": 0.77
+ },
+ "CIEN": {
+  "atr_pct": 1.56
+ },
+ "CL": {
+  "atr_pct": 0.86
+ },
+ "CMG": {
+  "atr_pct": 1.43
+ },
+ "COHR": {
+  "atr_pct": 2.71
+ },
+ "COIN": {
+  "atr_pct": 3.76
+ },
+ "COST": {
+  "atr_pct": 1.11
+ },
+ "CPRT": {
+  "atr_pct": 1.24
+ },
+ "CRCL": {
+  "atr_pct": 4.53
+ },
+ "CRDO": {
+  "atr_pct": 3.1
+ },
+ "CRM": {
+  "atr_pct": 1.34
+ },
+ "CSCO": {
+  "atr_pct": 1.41
+ },
+ "DE": {
+  "atr_pct": 1.3
+ },
+ "DHR": {
+  "atr_pct": 1.07
+ },
+ "DUK": {
+  "atr_pct": 0.81
+ },
+ "ETN": {
+  "atr_pct": 1.14
+ },
+ "FDX": {
+  "atr_pct": 1.27
+ },
+ "FIG": {
+  "atr_pct": 4.28
+ },
+ "GE": {
+  "atr_pct": 1.03
+ },
+ "GIS": {
+  "atr_pct": 0.86
+ },
+ "GLW": {
+  "atr_pct": 1.21
+ },
+ "GOOG": {
+  "atr_pct": 1.18
+ },
+ "GOOGL": {
+  "atr_pct": 1.19
+ },
+ "HD": {
+  "atr_pct": 1.12
+ },
+ "HON": {
+  "atr_pct": 1.05
+ },
+ "HOOD": {
+  "atr_pct": 2.86
+ },
+ "HPE": {
+  "atr_pct": 1.45
+ },
+ "HSY": {
+  "atr_pct": 0.89
+ },
+ "IBM": {
+  "atr_pct": 1.01
+ },
+ "ICE": {
+  "atr_pct": 1.06
+ },
+ "INTC": {
+  "atr_pct": 1.57
+ },
+ "ISRG": {
+  "atr_pct": 1.51
+ },
+ "JNJ": {
+  "atr_pct": 0.77
+ },
+ "JPM": {
+  "atr_pct": 1.15
+ },
+ "KMB": {
+  "atr_pct": 0.86
+ },
+ "KO": {
+  "atr_pct": 0.68
+ },
+ "LLY": {
+  "atr_pct": 1.16
+ },
+ "LMT": {
+  "atr_pct": 0.95
+ },
+ "LOW": {
+  "atr_pct": 1.35
+ },
+ "LULU": {
+  "atr_pct": 1.55
+ },
+ "MA": {
+  "atr_pct": 1.11
+ },
+ "MAR": {
+  "atr_pct": 1.25
+ },
+ "MCD": {
+  "atr_pct": 0.76
+ },
+ "MCK": {
+  "atr_pct": 1.12
+ },
+ "MDLZ": {
+  "atr_pct": 0.84
+ },
+ "MRNA": {
+  "atr_pct": 3.1
+ },
+ "MRVL": {
+  "atr_pct": 1.91
+ },
+ "MSTR": {
+  "atr_pct": 2.4
+ },
+ "NEE": {
+  "atr_pct": 1.02
+ },
+ "NET": {
+  "atr_pct": 2.7
+ },
+ "NFLX": {
+  "atr_pct": 1.57
+ },
+ "NKE": {
+  "atr_pct": 1.18
+ },
+ "NOW": {
+  "atr_pct": 1.56
+ },
+ "NVDA": {
+  "atr_pct": 1.83
+ },
+ "NVO": {
+  "atr_pct": 1.14
+ },
+ "ORLY": {
+  "atr_pct": 1.14
+ },
+ "PCAR": {
+  "atr_pct": 1.29
+ },
+ "PEP": {
+  "atr_pct": 0.84
+ },
+ "PG": {
+  "atr_pct": 0.79
+ },
+ "PH": {
+  "atr_pct": 1.22
+ },
+ "PLTR": {
+  "atr_pct": 2.75
+ },
+ "PYPL": {
+  "atr_pct": 1.51
+ },
+ "QCOM": {
+  "atr_pct": 1.73
+ },
+ "REGN": {
+  "atr_pct": 1.38
+ },
+ "RKLB": {
+  "atr_pct": 3.46
+ },
+ "ROK": {
+  "atr_pct": 1.27
+ },
+ "RSG": {
+  "atr_pct": 0.86
+ },
+ "SBUX": {
+  "atr_pct": 1.38
+ },
+ "SMCI": {
+  "atr_pct": 2.39
+ },
+ "SNOW": {
+  "atr_pct": 2.42
+ },
+ "SO": {
+  "atr_pct": 0.79
+ },
+ "SPGI": {
+  "atr_pct": 0.98
+ },
+ "SYK": {
+  "atr_pct": 1.18
+ },
+ "TDG": {
+  "atr_pct": 1.13
+ },
+ "TJX": {
+  "atr_pct": 1.25
+ },
+ "TMO": {
+  "atr_pct": 1.13
+ },
+ "TSLA": {
+  "atr_pct": 2.31
+ },
+ "TXN": {
+  "atr_pct": 1.54
+ },
+ "UNH": {
+  "atr_pct": 1.07
+ },
+ "UPS": {
+  "atr_pct": 0.89
+ },
+ "V": {
+  "atr_pct": 1.0
+ },
+ "VRTX": {
+  "atr_pct": 1.33
+ },
+ "VST": {
+  "atr_pct": 1.49
+ },
+ "WM": {
+  "atr_pct": 1.0
+ }
+}
