@@ -19,3 +19,8 @@
 [15:10:33]   plate 100/278
 [15:11:01]   plate 150/278
 [15:11:33]   plate 200/278
+[15:12:01]   plate 250/278
+[15:12:17] 板块归并完成，其他=103
+[15:12:17] HTML 已生成: hot_rsi_eval_20260906.html + hot_rsi_latest.html
+[15:12:18] git commit OK
+[15:12:18] ALL DONE n=278 (fail 142), 中位RSI=49.9, 超卖<30:3, 超买>=70:9, 耗时12min, 报告: reports/hot_rsi_eval_20260906.html
