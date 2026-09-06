@@ -1,0 +1,506 @@
+[
+ {
+  "date": "2022-Jan",
+  "lng_export": 11.41,
+  "pipe_export": 8.29,
+  "net_import": -10.15,
+  "dry_prod": 95.19
+ },
+ {
+  "date": "2022-Feb",
+  "lng_export": 11.31,
+  "pipe_export": 8.2,
+  "net_import": -10.3,
+  "dry_prod": 96.1
+ },
+ {
+  "date": "2022-Mar",
+  "lng_export": 11.75,
+  "pipe_export": 8.87,
+  "net_import": -12.24,
+  "dry_prod": 97.68
+ },
+ {
+  "date": "2022-Apr",
+  "lng_export": 11.02,
+  "pipe_export": 8.56,
+  "net_import": -11.41,
+  "dry_prod": 98.64
+ },
+ {
+  "date": "2022-May",
+  "lng_export": 11.34,
+  "pipe_export": 8.56,
+  "net_import": -12.44,
+  "dry_prod": 98.71
+ },
+ {
+  "date": "2022-Jun",
+  "lng_export": 10.02,
+  "pipe_export": 8.44,
+  "net_import": -10.83,
+  "dry_prod": 99.0
+ },
+ {
+  "date": "2022-Jul",
+  "lng_export": 9.69,
+  "pipe_export": 8.37,
+  "net_import": -9.76,
+  "dry_prod": 99.79
+ },
+ {
+  "date": "2022-Aug",
+  "lng_export": 9.68,
+  "pipe_export": 8.32,
+  "net_import": -10.39,
+  "dry_prod": 100.44
+ },
+ {
+  "date": "2022-Sep",
+  "lng_export": 9.85,
+  "pipe_export": 7.7,
+  "net_import": -9.75,
+  "dry_prod": 102.0
+ },
+ {
+  "date": "2022-Oct",
+  "lng_export": 9.99,
+  "pipe_export": 7.89,
+  "net_import": -10.16,
+  "dry_prod": 101.81
+ },
+ {
+  "date": "2022-Nov",
+  "lng_export": 10.09,
+  "pipe_export": 8.41,
+  "net_import": -10.29,
+  "dry_prod": 101.94
+ },
+ {
+  "date": "2022-Dec",
+  "lng_export": 10.97,
+  "pipe_export": 8.34,
+  "net_import": -9.86,
+  "dry_prod": 100.48
+ },
+ {
+  "date": "2023-Jan",
+  "lng_export": 10.88,
+  "pipe_export": 8.76,
+  "net_import": -10.75,
+  "dry_prod": 102.05
+ },
+ {
+  "date": "2023-Feb",
+  "lng_export": 11.65,
+  "pipe_export": 8.88,
+  "net_import": -11.82,
+  "dry_prod": 101.65
+ },
+ {
+  "date": "2023-Mar",
+  "lng_export": 11.82,
+  "pipe_export": 9.16,
+  "net_import": -12.93,
+  "dry_prod": 103.11
+ },
+ {
+  "date": "2023-Apr",
+  "lng_export": 12.53,
+  "pipe_export": 8.16,
+  "net_import": -13.35,
+  "dry_prod": 102.25
+ },
+ {
+  "date": "2023-May",
+  "lng_export": 11.83,
+  "pipe_export": 8.76,
+  "net_import": -13.62,
+  "dry_prod": 103.1
+ },
+ {
+  "date": "2023-Jun",
+  "lng_export": 10.93,
+  "pipe_export": 9.32,
+  "net_import": -12.53,
+  "dry_prod": 101.9
+ },
+ {
+  "date": "2023-Jul",
+  "lng_export": 11.27,
+  "pipe_export": 9.2,
+  "net_import": -12.21,
+  "dry_prod": 102.68
+ },
+ {
+  "date": "2023-Aug",
+  "lng_export": 11.39,
+  "pipe_export": 9.08,
+  "net_import": -12.52,
+  "dry_prod": 103.31
+ },
+ {
+  "date": "2023-Sep",
+  "lng_export": 11.55,
+  "pipe_export": 9.3,
+  "net_import": -13.19,
+  "dry_prod": 103.52
+ },
+ {
+  "date": "2023-Oct",
+  "lng_export": 12.4,
+  "pipe_export": 8.63,
+  "net_import": -13.58,
+  "dry_prod": 103.62
+ },
+ {
+  "date": "2023-Nov",
+  "lng_export": 12.88,
+  "pipe_export": 8.93,
+  "net_import": -13.44,
+  "dry_prod": 105.2
+ },
+ {
+  "date": "2023-Dec",
+  "lng_export": 13.64,
+  "pipe_export": 9.22,
+  "net_import": -13.94,
+  "dry_prod": 105.35
+ },
+ {
+  "date": "2024-Jan",
+  "lng_export": 12.78,
+  "pipe_export": 8.96,
+  "net_import": -11.32,
+  "dry_prod": 101.76
+ },
+ {
+  "date": "2024-Feb",
+  "lng_export": 12.4,
+  "pipe_export": 9.79,
+  "net_import": -13.28,
+  "dry_prod": 104.57
+ },
+ {
+  "date": "2024-Mar",
+  "lng_export": 11.93,
+  "pipe_export": 9.62,
+  "net_import": -13.7,
+  "dry_prod": 102.31
+ },
+ {
+  "date": "2024-Apr",
+  "lng_export": 10.13,
+  "pipe_export": 8.78,
+  "net_import": -11.51,
+  "dry_prod": 101.35
+ },
+ {
+  "date": "2024-May",
+  "lng_export": 11.86,
+  "pipe_export": 8.99,
+  "net_import": -13.16,
+  "dry_prod": 101.51
+ },
+ {
+  "date": "2024-Jun",
+  "lng_export": 11.88,
+  "pipe_export": 9.01,
+  "net_import": -12.67,
+  "dry_prod": 102.73
+ },
+ {
+  "date": "2024-Jul",
+  "lng_export": 10.45,
+  "pipe_export": 9.17,
+  "net_import": -10.86,
+  "dry_prod": 104.03
+ },
+ {
+  "date": "2024-Aug",
+  "lng_export": 11.73,
+  "pipe_export": 9.25,
+  "net_import": -12.56,
+  "dry_prod": 103.07
+ },
+ {
+  "date": "2024-Sep",
+  "lng_export": 12.1,
+  "pipe_export": 9.18,
+  "net_import": -13.06,
+  "dry_prod": 102.34
+ },
+ {
+  "date": "2024-Oct",
+  "lng_export": 12.14,
+  "pipe_export": 8.81,
+  "net_import": -12.75,
+  "dry_prod": 103.77
+ },
+ {
+  "date": "2024-Nov",
+  "lng_export": 12.54,
+  "pipe_export": 8.77,
+  "net_import": -12.29,
+  "dry_prod": 103.79
+ },
+ {
+  "date": "2024-Dec",
+  "lng_export": 13.25,
+  "pipe_export": 9.18,
+  "net_import": -12.45,
+  "dry_prod": 105.68
+ },
+ {
+  "date": "2025-Jan",
+  "lng_export": 13.39,
+  "pipe_export": 9.01,
+  "net_import": -11.57,
+  "dry_prod": 104.28
+ },
+ {
+  "date": "2025-Feb",
+  "lng_export": 14.62,
+  "pipe_export": 9.79,
+  "net_import": -13.85,
+  "dry_prod": 104.87
+ },
+ {
+  "date": "2025-Mar",
+  "lng_export": 14.76,
+  "pipe_export": 9.53,
+  "net_import": -15.8,
+  "dry_prod": 107.31
+ },
+ {
+  "date": "2025-Apr",
+  "lng_export": 14.94,
+  "pipe_export": 9.23,
+  "net_import": -16.3,
+  "dry_prod": 106.86
+ },
+ {
+  "date": "2025-May",
+  "lng_export": 14.04,
+  "pipe_export": 9.69,
+  "net_import": -15.97,
+  "dry_prod": 106.51
+ },
+ {
+  "date": "2025-Jun",
+  "lng_export": 13.53,
+  "pipe_export": 9.53,
+  "net_import": -14.85,
+  "dry_prod": 107.49
+ },
+ {
+  "date": "2025-Jul",
+  "lng_export": 14.09,
+  "pipe_export": 9.16,
+  "net_import": -14.93,
+  "dry_prod": 108.0
+ },
+ {
+  "date": "2025-Aug",
+  "lng_export": 14.55,
+  "pipe_export": 10.02,
+  "net_import": -16.9,
+  "dry_prod": 108.65
+ },
+ {
+  "date": "2025-Sep",
+  "lng_export": 15.06,
+  "pipe_export": 9.24,
+  "net_import": -16.78,
+  "dry_prod": 108.26
+ },
+ {
+  "date": "2025-Oct",
+  "lng_export": 16.24,
+  "pipe_export": 9.03,
+  "net_import": -17.77,
+  "dry_prod": 107.33
+ },
+ {
+  "date": "2025-Nov",
+  "lng_export": 17.5,
+  "pipe_export": 9.38,
+  "net_import": -18.08,
+  "dry_prod": 110.28
+ },
+ {
+  "date": "2025-Dec",
+  "lng_export": 18.36,
+  "pipe_export": 10.05,
+  "net_import": -17.83,
+  "dry_prod": 111.63
+ },
+ {
+  "date": "2026-Jan",
+  "lng_export": 17.39,
+  "pipe_export": 9.49,
+  "net_import": -15.93,
+  "dry_prod": 108.76
+ },
+ {
+  "date": "2026-Feb",
+  "lng_export": 17.63,
+  "pipe_export": 10.36,
+  "net_import": -18.12,
+  "dry_prod": 110.67
+ },
+ {
+  "date": "2026-Mar",
+  "lng_export": 18.49,
+  "pipe_export": 10.23,
+  "net_import": -21.01,
+  "dry_prod": 110.74
+ },
+ {
+  "date": "2026-Apr",
+  "lng_export": 17.93,
+  "pipe_export": 8.99,
+  "net_import": -19.69,
+  "dry_prod": 110.93
+ },
+ {
+  "date": "2026-May",
+  "lng_export": 16.22,
+  "pipe_export": 10.12,
+  "net_import": -19.12,
+  "dry_prod": 110.27
+ },
+ {
+  "date": "2026-Jun",
+  "lng_export": 17.5,
+  "pipe_export": 9.47,
+  "net_import": -19.4,
+  "dry_prod": 110.03
+ },
+ {
+  "date": "2026-Jul",
+  "lng_export": 16.56,
+  "pipe_export": 9.47,
+  "net_import": -18.01,
+  "dry_prod": 110.82
+ },
+ {
+  "date": "2026-Aug",
+  "lng_export": 16.42,
+  "pipe_export": 9.55,
+  "net_import": -18.22,
+  "dry_prod": 111.26
+ },
+ {
+  "date": "2026-Sep",
+  "lng_export": 16.56,
+  "pipe_export": 9.67,
+  "net_import": -18.73,
+  "dry_prod": 111.69
+ },
+ {
+  "date": "2026-Oct",
+  "lng_export": 16.96,
+  "pipe_export": 9.4,
+  "net_import": -18.92,
+  "dry_prod": 112.22
+ },
+ {
+  "date": "2026-Nov",
+  "lng_export": 17.87,
+  "pipe_export": 9.4,
+  "net_import": -19.38,
+  "dry_prod": 112.93
+ },
+ {
+  "date": "2026-Dec",
+  "lng_export": 19.05,
+  "pipe_export": 9.46,
+  "net_import": -19.72,
+  "dry_prod": 113.89
+ },
+ {
+  "date": "2027-Jan",
+  "lng_export": 18.78,
+  "pipe_export": 9.41,
+  "net_import": -18.11,
+  "dry_prod": 114.15
+ },
+ {
+  "date": "2027-Feb",
+  "lng_export": 18.17,
+  "pipe_export": 10.25,
+  "net_import": -19.47,
+  "dry_prod": 113.02
+ },
+ {
+  "date": "2027-Mar",
+  "lng_export": 19.17,
+  "pipe_export": 10.42,
+  "net_import": -21.54,
+  "dry_prod": 114.91
+ },
+ {
+  "date": "2027-Apr",
+  "lng_export": 18.59,
+  "pipe_export": 10.18,
+  "net_import": -21.28,
+  "dry_prod": 115.17
+ },
+ {
+  "date": "2027-May",
+  "lng_export": 19.0,
+  "pipe_export": 10.18,
+  "net_import": -21.9,
+  "dry_prod": 115.54
+ },
+ {
+  "date": "2027-Jun",
+  "lng_export": 18.14,
+  "pipe_export": 10.17,
+  "net_import": -20.7,
+  "dry_prod": 115.96
+ },
+ {
+  "date": "2027-Jul",
+  "lng_export": 16.64,
+  "pipe_export": 10.14,
+  "net_import": -18.73,
+  "dry_prod": 116.37
+ },
+ {
+  "date": "2027-Aug",
+  "lng_export": 18.06,
+  "pipe_export": 10.07,
+  "net_import": -20.36,
+  "dry_prod": 116.61
+ },
+ {
+  "date": "2027-Sep",
+  "lng_export": 18.1,
+  "pipe_export": 10.14,
+  "net_import": -20.73,
+  "dry_prod": 116.87
+ },
+ {
+  "date": "2027-Oct",
+  "lng_export": 18.27,
+  "pipe_export": 9.85,
+  "net_import": -20.66,
+  "dry_prod": 117.32
+ },
+ {
+  "date": "2027-Nov",
+  "lng_export": 19.39,
+  "pipe_export": 9.82,
+  "net_import": -21.31,
+  "dry_prod": 117.88
+ },
+ {
+  "date": "2027-Dec",
+  "lng_export": 21.02,
+  "pipe_export": 9.72,
+  "net_import": -21.94,
+  "dry_prod": 118.5
+ }
+]
