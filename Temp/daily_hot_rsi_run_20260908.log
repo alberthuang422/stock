@@ -1,0 +1,28 @@
+[15:00:22] token 剩余 -1320 min
+[15:00:22] accessToken 过期，尝试 refresh…
+[15:00:23] refresh OK，新 token 有效 7200s
+[15:00:33] screen 第1页: 300 条
+[15:00:34] screen 第2页: 300 条
+[15:00:34] screen 第3页: 300 条
+[15:00:35] screen 第4页: 300 条
+[15:00:35] 热门榜合并: 500 只
+[15:00:35] 过滤后 410 只 (剔除: {'price>500': 32, '中概': 23, 'ADR': 35})
+[15:01:09]   RSI 50/410 | 34s
+[15:02:00]   RSI 100/410 | 85s
+[15:04:16]   RSI 250/410 | 221s
+[15:05:06]   RSI 300/410 | 271s
+[15:07:29]   RSI 400/410 | 414s
+[15:07:38] RSI 完成 229 ok / 181 fail (423s)
+[15:07:38] 失败重试…
+[15:10:21] 重试后仍失败 98: UBER,PL,BLTE,TTWO,IONQ,DIS,IBM,MRK,UNH,GE,MP,CRWD,NET,SFTBY,WMT,CVX,XOM,DDOG,TTMI,TTD,CSCO,PFE,SNPS,JPM,PYPL,NXPI,IOT,T,ADM,FORM,DUOL,AA,MS,KHC,GFS,HUT,BSX,CORZ,M,AAL,CPNG,SPGI,SNAP,JBL,PAYP,AG,BAC,VG,CAMT,EBAY,BSP,SHECY,PBF,AWK,EXC,GWRE,MNST,TMUS,FSLR,XYZ,KT,TKO,NE,ALBKY,ASCCY,TTC,AME,CNQ,EQNR,FPS,ABNB,AGX,AZN,ZTS,ADSK,LIN,FTNT,KTOS,RVMD,AUR,EXPE,HMY,CDNS,AMKBY,TPR,RL,AACAY,DOCU,YUMC,LNVGY,TEVA,SYK,BX,FTI,AU,PMRTY,DANOY,NSRGY
+[15:10:21] 结果已存: rsi14_hot_20260908.json/csv (312 行)
+[15:10:51]   plate 50/312
+[15:11:18]   plate 100/312
+[15:11:53]   plate 150/312
+[15:12:19]   plate 200/312
+[15:12:51]   plate 250/312
+[15:13:21]   plate 300/312
+[15:13:27] 板块归并完成，其他=120
+[15:13:27] HTML 已生成: hot_rsi_eval_20260908.html + hot_rsi_latest.html
+[15:13:27] git commit OK
+[15:13:27] ALL DONE n=312 (fail 98), 中位RSI=50.9, 超卖<30:5, 超买>=70:13, 耗时13min, 报告: reports/hot_rsi_eval_20260908.html
