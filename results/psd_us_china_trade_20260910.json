@@ -1,0 +1,368 @@
+{
+ "wheat": {
+  "2015": {
+   "ch_imp": 3476.0,
+   "us_exp": 21168.0,
+   "br_exp": 1059.0,
+   "ar_exp": 9600.0,
+   "world_exp": 172972.0,
+   "us_share": 12.237818837730963,
+   "ch_prod": 132555.0,
+   "ch_share_world_imp": null
+  },
+  "2016": {
+   "ch_imp": 4410.0,
+   "us_exp": 28600.0,
+   "br_exp": 619.0,
+   "ar_exp": 13825.0,
+   "world_exp": 186778.0,
+   "us_share": 15.31229588067117,
+   "ch_prod": 133188.0,
+   "ch_share_world_imp": null
+  },
+  "2017": {
+   "ch_imp": 3937.0,
+   "us_exp": 24658.0,
+   "br_exp": 230.0,
+   "ar_exp": 12730.0,
+   "world_exp": 185449.0,
+   "us_share": 13.29637797992979,
+   "ch_prod": 134241.0,
+   "ch_share_world_imp": null
+  },
+  "2018": {
+   "ch_imp": 3145.0,
+   "us_exp": 25503.0,
+   "br_exp": 602.0,
+   "ar_exp": 12188.0,
+   "world_exp": 176237.0,
+   "us_share": 14.470854587856124,
+   "ch_prod": 131441.0,
+   "ch_share_world_imp": null
+  },
+  "2019": {
+   "ch_imp": 5376.0,
+   "us_exp": 26373.0,
+   "br_exp": 425.0,
+   "ar_exp": 12785.0,
+   "world_exp": 194592.0,
+   "us_share": 13.552972372964971,
+   "ch_prod": 133600.0,
+   "ch_share_world_imp": null
+  },
+  "2020": {
+   "ch_imp": 10618.0,
+   "us_exp": 27048.0,
+   "br_exp": 925.0,
+   "ar_exp": 11531.0,
+   "world_exp": 203541.0,
+   "us_share": 13.288723156513921,
+   "ch_prod": 134250.0,
+   "ch_share_world_imp": null
+  },
+  "2021": {
+   "ch_imp": 9568.0,
+   "us_exp": 21656.0,
+   "br_exp": 3070.0,
+   "ar_exp": 16000.0,
+   "world_exp": 203728.0,
+   "us_share": 10.629859420403676,
+   "ch_prod": 136946.0,
+   "ch_share_world_imp": null
+  },
+  "2022": {
+   "ch_imp": 13282.0,
+   "us_exp": 20700.0,
+   "br_exp": 2687.0,
+   "ar_exp": 3662.0,
+   "world_exp": 221970.0,
+   "us_share": 9.325584538451142,
+   "ch_prod": 137723.0,
+   "ch_share_world_imp": null
+  },
+  "2023": {
+   "ch_imp": 13627.0,
+   "us_exp": 19212.0,
+   "br_exp": 2812.0,
+   "ar_exp": 8234.0,
+   "world_exp": 221437.0,
+   "us_share": 8.676056846868411,
+   "ch_prod": 136590.0,
+   "ch_share_world_imp": null
+  },
+  "2024": {
+   "ch_imp": 4169.0,
+   "us_exp": 22557.0,
+   "br_exp": 1894.0,
+   "ar_exp": 13309.0,
+   "world_exp": 210544.0,
+   "us_share": 10.713675051295692,
+   "ch_prod": 140099.0,
+   "ch_share_world_imp": null
+  },
+  "2025": {
+   "ch_imp": 5457.0,
+   "us_exp": 24706.0,
+   "br_exp": 1840.0,
+   "ar_exp": 19100.0,
+   "world_exp": 227402.0,
+   "us_share": 10.864460294984212,
+   "ch_prod": 140070.0,
+   "ch_share_world_imp": null
+  },
+  "2026": {
+   "ch_imp": 6000.0,
+   "us_exp": 21092.0,
+   "br_exp": 1900.0,
+   "ar_exp": 15000.0,
+   "world_exp": 212707.0,
+   "us_share": 9.915987720197267,
+   "ch_prod": 141000.0,
+   "ch_share_world_imp": null
+  }
+ },
+ "corn": {
+  "2015": {
+   "ch_imp": 3174.0,
+   "us_exp": 48228.0,
+   "br_exp": 13996.0,
+   "ar_exp": 21643.0,
+   "world_exp": 120680.0,
+   "us_share": 39.96353994033808,
+   "ch_prod": 264992.0,
+   "ch_share_world_imp": null
+  },
+  "2016": {
+   "ch_imp": 2464.0,
+   "us_exp": 58313.0,
+   "br_exp": 31604.0,
+   "ar_exp": 25987.0,
+   "world_exp": 161767.0,
+   "us_share": 36.04752514418886,
+   "ch_prod": 263613.0,
+   "ch_share_world_imp": null
+  },
+  "2017": {
+   "ch_imp": 3456.0,
+   "us_exp": 61906.0,
+   "br_exp": 24120.0,
+   "ar_exp": 22475.0,
+   "world_exp": 149508.0,
+   "us_share": 41.406479920806916,
+   "ch_prod": 259071.0,
+   "ch_share_world_imp": null
+  },
+  "2018": {
+   "ch_imp": 4483.0,
+   "us_exp": 52538.0,
+   "br_exp": 39663.0,
+   "ar_exp": 37244.0,
+   "world_exp": 182771.0,
+   "us_share": 28.745260462546028,
+   "ch_prod": 257174.0,
+   "ch_share_world_imp": null
+  },
+  "2019": {
+   "ch_imp": 7580.0,
+   "us_exp": 45175.0,
+   "br_exp": 35139.0,
+   "ar_exp": 36273.0,
+   "world_exp": 172770.0,
+   "us_share": 26.14747930775019,
+   "ch_prod": 260779.0,
+   "ch_share_world_imp": null
+  },
+  "2020": {
+   "ch_imp": 29512.0,
+   "us_exp": 69775.0,
+   "br_exp": 20846.0,
+   "ar_exp": 40942.0,
+   "world_exp": 182979.0,
+   "us_share": 38.13279119461796,
+   "ch_prod": 260670.0,
+   "ch_share_world_imp": null
+  },
+  "2021": {
+   "ch_imp": 21884.0,
+   "us_exp": 62802.0,
+   "br_exp": 48183.0,
+   "ar_exp": 34692.0,
+   "world_exp": 206985.0,
+   "us_share": 30.341329081817527,
+   "ch_prod": 272552.0,
+   "ch_share_world_imp": null
+  },
+  "2022": {
+   "ch_imp": 18694.0,
+   "us_exp": 42214.0,
+   "br_exp": 54196.0,
+   "ar_exp": 25241.0,
+   "world_exp": 180393.0,
+   "us_share": 23.401129755589185,
+   "ch_prod": 277200.0,
+   "ch_share_world_imp": null
+  },
+  "2023": {
+   "ch_imp": 23330.0,
+   "us_exp": 57275.0,
+   "br_exp": 38240.0,
+   "ar_exp": 36257.0,
+   "world_exp": 192745.0,
+   "us_share": 29.715427118732002,
+   "ch_prod": 288842.0,
+   "ch_share_world_imp": null
+  },
+  "2024": {
+   "ch_imp": 1823.0,
+   "us_exp": 72966.0,
+   "br_exp": 42011.0,
+   "ar_exp": 29065.0,
+   "world_exp": 187583.0,
+   "us_share": 38.89798116033969,
+   "ch_prod": 294917.0,
+   "ch_share_world_imp": null
+  },
+  "2025": {
+   "ch_imp": 4000.0,
+   "us_exp": 86364.0,
+   "br_exp": 42000.0,
+   "ar_exp": 45000.0,
+   "world_exp": 220728.0,
+   "us_share": 39.12688920300098,
+   "ch_prod": 301240.0,
+   "ch_share_world_imp": null
+  },
+  "2026": {
+   "ch_imp": 5000.0,
+   "us_exp": 83189.0,
+   "br_exp": 44000.0,
+   "ar_exp": 38000.0,
+   "world_exp": 210484.0,
+   "us_share": 39.522719066532375,
+   "ch_prod": 307000.0,
+   "ch_share_world_imp": null
+  }
+ },
+ "soybean": {
+  "2015": {
+   "ch_imp": 83230.0,
+   "us_exp": 52869.0,
+   "br_exp": 54383.0,
+   "ar_exp": 9922.0,
+   "world_exp": 132837.0,
+   "us_share": 39.79990514690937,
+   "ch_prod": 12367.0,
+   "ch_share_world_imp": null
+  },
+  "2016": {
+   "ch_imp": 93495.0,
+   "us_exp": 58964.0,
+   "br_exp": 63137.0,
+   "ar_exp": 7025.0,
+   "world_exp": 147736.0,
+   "us_share": 39.91173444522662,
+   "ch_prod": 13596.0,
+   "ch_share_world_imp": null
+  },
+  "2017": {
+   "ch_imp": 94093.0,
+   "us_exp": 58071.0,
+   "br_exp": 76136.0,
+   "ar_exp": 2132.0,
+   "world_exp": 153403.0,
+   "us_share": 37.855191880210945,
+   "ch_prod": 15283.0,
+   "ch_share_world_imp": null
+  },
+  "2018": {
+   "ch_imp": 82537.0,
+   "us_exp": 47721.0,
+   "br_exp": 74887.0,
+   "ar_exp": 9104.0,
+   "world_exp": 149222.0,
+   "us_share": 31.97986892013242,
+   "ch_prod": 15967.0,
+   "ch_share_world_imp": null
+  },
+  "2019": {
+   "ch_imp": 98532.0,
+   "us_exp": 45800.0,
+   "br_exp": 92135.0,
+   "ar_exp": 10004.0,
+   "world_exp": 165823.0,
+   "us_share": 27.61981148574082,
+   "ch_prod": 18092.0,
+   "ch_share_world_imp": null
+  },
+  "2020": {
+   "ch_imp": 99740.0,
+   "us_exp": 61664.0,
+   "br_exp": 81650.0,
+   "ar_exp": 5195.0,
+   "world_exp": 165176.0,
+   "us_share": 37.332300092023054,
+   "ch_prod": 19602.0,
+   "ch_share_world_imp": null
+  },
+  "2021": {
+   "ch_imp": 90297.0,
+   "us_exp": 58570.0,
+   "br_exp": 79063.0,
+   "ar_exp": 2861.0,
+   "world_exp": 154422.0,
+   "us_share": 37.928533499112824,
+   "ch_prod": 16395.0,
+   "ch_share_world_imp": null
+  },
+  "2022": {
+   "ch_imp": 104500.0,
+   "us_exp": 53864.0,
+   "br_exp": 95504.0,
+   "ar_exp": 4185.0,
+   "world_exp": 171758.0,
+   "us_share": 31.36040242667008,
+   "ch_prod": 20284.0,
+   "ch_share_world_imp": null
+  },
+  "2023": {
+   "ch_imp": 112000.0,
+   "us_exp": 46350.0,
+   "br_exp": 104170.0,
+   "ar_exp": 5114.0,
+   "world_exp": 177846.0,
+   "us_share": 26.06187375594616,
+   "ch_prod": 20840.0,
+   "ch_share_world_imp": null
+  },
+  "2024": {
+   "ch_imp": 108000.0,
+   "us_exp": 51495.0,
+   "br_exp": 103142.0,
+   "ar_exp": 7874.0,
+   "world_exp": 184330.0,
+   "us_share": 27.93630987902132,
+   "ch_prod": 20650.0,
+   "ch_share_world_imp": null
+  },
+  "2025": {
+   "ch_imp": 113000.0,
+   "us_exp": 41368.0,
+   "br_exp": 115000.0,
+   "ar_exp": 9000.0,
+   "world_exp": 187186.0,
+   "us_share": 22.099943371833362,
+   "ch_prod": 20900.0,
+   "ch_share_world_imp": null
+  },
+  "2026": {
+   "ch_imp": 115000.0,
+   "us_exp": 45178.0,
+   "br_exp": 118000.0,
+   "ar_exp": 6450.0,
+   "world_exp": 190409.0,
+   "us_share": 23.726819635626466,
+   "ch_prod": 21000.0,
+   "ch_share_world_imp": null
+  }
+ }
+}

@@ -1,0 +1,540 @@
+{
+ "tickers": [
+  "CANE",
+  "NIB",
+  "JO",
+  "WEAT",
+  "CORN",
+  "SOYB",
+  "DBA"
+ ],
+ "names": {
+  "CANE": "白糖(ETN)",
+  "NIB": "可可(ETN)",
+  "JO": "咖啡(ETN)",
+  "WEAT": "小麦(ETN)",
+  "CORN": "玉米(ETN)",
+  "SOYB": "大豆(ETN)",
+  "DBA": "农业综合(ETN)"
+ },
+ "el_events_all": [
+  {
+   "onset": "1951-06",
+   "end": "1952-01",
+   "peak": 1.03,
+   "peak_ym": "1951-10",
+   "len": 8
+  },
+  {
+   "onset": "1953-04",
+   "end": "1953-12",
+   "peak": 0.78,
+   "peak_ym": "1953-10",
+   "len": 9
+  },
+  {
+   "onset": "1957-04",
+   "end": "1958-05",
+   "peak": 1.69,
+   "peak_ym": "1958-01",
+   "len": 14
+  },
+  {
+   "onset": "1963-07",
+   "end": "1964-02",
+   "peak": 1.19,
+   "peak_ym": "1963-11",
+   "len": 8
+  },
+  {
+   "onset": "1965-06",
+   "end": "1966-03",
+   "peak": 1.82,
+   "peak_ym": "1965-11",
+   "len": 10
+  },
+  {
+   "onset": "1968-10",
+   "end": "1969-05",
+   "peak": 0.98,
+   "peak_ym": "1969-01",
+   "len": 8
+  },
+  {
+   "onset": "1972-06",
+   "end": "1973-03",
+   "peak": 1.84,
+   "peak_ym": "1972-11",
+   "len": 10
+  },
+  {
+   "onset": "1976-09",
+   "end": "1977-02",
+   "peak": 0.84,
+   "peak_ym": "1976-12",
+   "len": 6
+  },
+  {
+   "onset": "1977-10",
+   "end": "1978-02",
+   "peak": 0.84,
+   "peak_ym": "1977-11",
+   "len": 5
+  },
+  {
+   "onset": "1982-05",
+   "end": "1983-06",
+   "peak": 2.14,
+   "peak_ym": "1983-01",
+   "len": 14
+  },
+  {
+   "onset": "1986-09",
+   "end": "1988-01",
+   "peak": 1.49,
+   "peak_ym": "1987-09",
+   "len": 17
+  },
+  {
+   "onset": "1991-06",
+   "end": "1992-06",
+   "peak": 1.54,
+   "peak_ym": "1992-01",
+   "len": 13
+  },
+  {
+   "onset": "1994-10",
+   "end": "1995-02",
+   "peak": 0.97,
+   "peak_ym": "1994-12",
+   "len": 5
+  },
+  {
+   "onset": "1997-05",
+   "end": "1998-04",
+   "peak": 2.37,
+   "peak_ym": "1997-12",
+   "len": 12
+  },
+  {
+   "onset": "2002-07",
+   "end": "2003-02",
+   "peak": 1.19,
+   "peak_ym": "2002-11",
+   "len": 8
+  },
+  {
+   "onset": "2004-08",
+   "end": "2005-02",
+   "peak": 0.71,
+   "peak_ym": "2004-12",
+   "len": 7
+  },
+  {
+   "onset": "2006-09",
+   "end": "2007-01",
+   "peak": 0.88,
+   "peak_ym": "2006-11",
+   "len": 5
+  },
+  {
+   "onset": "2009-07",
+   "end": "2010-03",
+   "peak": 1.5,
+   "peak_ym": "2009-12",
+   "len": 9
+  },
+  {
+   "onset": "2014-10",
+   "end": "2016-05",
+   "peak": 2.59,
+   "peak_ym": "2015-12",
+   "len": 20
+  },
+  {
+   "onset": "2018-09",
+   "end": "2019-06",
+   "peak": 1.05,
+   "peak_ym": "2018-12",
+   "len": 10
+  },
+  {
+   "onset": "2019-10",
+   "end": "2020-03",
+   "peak": 0.75,
+   "peak_ym": "2019-12",
+   "len": 6
+  },
+  {
+   "onset": "2023-06",
+   "end": "2024-04",
+   "peak": 1.99,
+   "peak_ym": "2023-12",
+   "len": 11
+  }
+ ],
+ "current_event": {
+  "onset": "2026-04",
+  "oni_tail": "MJJ 2026 +1.39",
+  "cpc_20260813": "El Nino Advisory; >90% very strong for fall/winter 2026-27; 69% chance OND2026 RONI>=+2.5 historic"
+ },
+ "coverage": {
+  "CANE": {
+   "start": "2011-09-19",
+   "end": "2026-09-09",
+   "n": 3742
+  },
+  "NIB": {
+   "start": "2008-06-25",
+   "end": "2023-06-08",
+   "n": 3734
+  },
+  "JO": {
+   "start": "2018-01-22",
+   "end": "2023-06-08",
+   "n": 1354
+  },
+  "WEAT": {
+   "start": "2011-09-19",
+   "end": "2026-09-09",
+   "n": 3764
+  },
+  "CORN": {
+   "start": "2010-06-09",
+   "end": "2026-09-09",
+   "n": 4087
+  },
+  "SOYB": {
+   "start": "2011-09-19",
+   "end": "2026-09-09",
+   "n": 3764
+  },
+  "DBA": {
+   "start": "2007-01-05",
+   "end": "2026-09-09",
+   "n": 4949
+  }
+ },
+ "result": {
+  "CANE": {
+   "name": "白糖(ETN)",
+   "events": [
+    {
+     "onset": "2014-10",
+     "peak": 2.59,
+     "peak_ym": "2015-12",
+     "A_forecast_to_peak3": -25.7,
+     "B_onset_to_12m": -25.7
+    },
+    {
+     "onset": "2018-09",
+     "peak": 1.05,
+     "peak_ym": "2018-12",
+     "A_forecast_to_peak3": -4.0,
+     "B_onset_to_12m": 0.6
+    },
+    {
+     "onset": "2019-10",
+     "peak": 0.75,
+     "peak_ym": "2019-12",
+     "A_forecast_to_peak3": -21.6,
+     "B_onset_to_12m": -7.6
+    },
+    {
+     "onset": "2023-06",
+     "peak": 1.99,
+     "peak_ym": "2023-12",
+     "A_forecast_to_peak3": 18.5,
+     "B_onset_to_12m": -4.4
+    }
+   ],
+   "ytd2026": 19.0,
+   "avg_A": -8.2,
+   "med_A": -12.8,
+   "win_A": 25,
+   "n_A": 4,
+   "avg_B": -9.3,
+   "med_B": -6.0,
+   "win_B": 25,
+   "n_B": 4,
+   "last": {
+    "date": "2026-09-09",
+    "close": 11.61
+   }
+  },
+  "NIB": {
+   "name": "可可(ETN)",
+   "events": [
+    {
+     "onset": "2009-07",
+     "peak": 1.5,
+     "peak_ym": "2009-12",
+     "A_forecast_to_peak3": 16.9,
+     "B_onset_to_12m": -0.1
+    },
+    {
+     "onset": "2014-10",
+     "peak": 2.59,
+     "peak_ym": "2015-12",
+     "A_forecast_to_peak3": -11.3,
+     "B_onset_to_12m": 11.2
+    },
+    {
+     "onset": "2018-09",
+     "peak": 1.05,
+     "peak_ym": "2018-12",
+     "A_forecast_to_peak3": -13.2,
+     "B_onset_to_12m": 18.1
+    },
+    {
+     "onset": "2019-10",
+     "peak": 0.75,
+     "peak_ym": "2019-12",
+     "A_forecast_to_peak3": -3.1,
+     "B_onset_to_12m": -0.5
+    }
+   ],
+   "ytd2026": 0.0,
+   "avg_A": -2.7,
+   "med_A": -7.2,
+   "win_A": 25,
+   "n_A": 4,
+   "avg_B": 7.2,
+   "med_B": 5.5,
+   "win_B": 50,
+   "n_B": 4,
+   "last": {
+    "date": "2023-06-08",
+    "close": 36.29
+   }
+  },
+  "JO": {
+   "name": "咖啡(ETN)",
+   "events": [
+    {
+     "onset": "2018-09",
+     "peak": 1.05,
+     "peak_ym": "2018-12",
+     "A_forecast_to_peak3": -23.7,
+     "B_onset_to_12m": -13.6
+    },
+    {
+     "onset": "2019-10",
+     "peak": 0.75,
+     "peak_ym": "2019-12",
+     "A_forecast_to_peak3": 10.4,
+     "B_onset_to_12m": -7.2
+    }
+   ],
+   "ytd2026": 0.0,
+   "avg_A": -6.6,
+   "med_A": -6.6,
+   "win_A": 50,
+   "n_A": 2,
+   "avg_B": -10.4,
+   "med_B": -10.4,
+   "win_B": 0,
+   "n_B": 2,
+   "last": {
+    "date": "2023-06-08",
+    "close": 54.0
+   }
+  },
+  "WEAT": {
+   "name": "小麦(ETN)",
+   "events": [
+    {
+     "onset": "2014-10",
+     "peak": 2.59,
+     "peak_ym": "2015-12",
+     "A_forecast_to_peak3": -29.2,
+     "B_onset_to_12m": -14.8
+    },
+    {
+     "onset": "2018-09",
+     "peak": 1.05,
+     "peak_ym": "2018-12",
+     "A_forecast_to_peak3": -17.1,
+     "B_onset_to_12m": -15.2
+    },
+    {
+     "onset": "2019-10",
+     "peak": 0.75,
+     "peak_ym": "2019-12",
+     "A_forecast_to_peak3": 9.2,
+     "B_onset_to_12m": 7.0
+    },
+    {
+     "onset": "2023-06",
+     "peak": 1.99,
+     "peak_ym": "2023-12",
+     "A_forecast_to_peak3": -23.4,
+     "B_onset_to_12m": -17.5
+    }
+   ],
+   "ytd2026": 31.6,
+   "avg_A": -15.1,
+   "med_A": -20.2,
+   "win_A": 25,
+   "n_A": 4,
+   "avg_B": -10.1,
+   "med_B": -15.0,
+   "win_B": 25,
+   "n_B": 4,
+   "last": {
+    "date": "2026-09-09",
+    "close": 26.28
+   }
+  },
+  "CORN": {
+   "name": "玉米(ETN)",
+   "events": [
+    {
+     "onset": "2014-10",
+     "peak": 2.59,
+     "peak_ym": "2015-12",
+     "A_forecast_to_peak3": -22.6,
+     "B_onset_to_12m": -12.1
+    },
+    {
+     "onset": "2018-09",
+     "peak": 1.05,
+     "peak_ym": "2018-12",
+     "A_forecast_to_peak3": -7.4,
+     "B_onset_to_12m": -4.3
+    },
+    {
+     "onset": "2019-10",
+     "peak": 0.75,
+     "peak_ym": "2019-12",
+     "A_forecast_to_peak3": -18.3,
+     "B_onset_to_12m": -12.0
+    },
+    {
+     "onset": "2023-06",
+     "peak": 1.99,
+     "peak_ym": "2023-12",
+     "A_forecast_to_peak3": -20.0,
+     "B_onset_to_12m": -17.5
+    }
+   ],
+   "ytd2026": 11.8,
+   "avg_A": -17.1,
+   "med_A": -19.1,
+   "win_A": 0,
+   "n_A": 4,
+   "avg_B": -11.5,
+   "med_B": -12.1,
+   "win_B": 0,
+   "n_B": 4,
+   "last": {
+    "date": "2026-09-09",
+    "close": 19.83
+   }
+  },
+  "SOYB": {
+   "name": "大豆(ETN)",
+   "events": [
+    {
+     "onset": "2014-10",
+     "peak": 2.59,
+     "peak_ym": "2015-12",
+     "A_forecast_to_peak3": -20.5,
+     "B_onset_to_12m": -16.6
+    },
+    {
+     "onset": "2018-09",
+     "peak": 1.05,
+     "peak_ym": "2018-12",
+     "A_forecast_to_peak3": -3.0,
+     "B_onset_to_12m": -2.1
+    },
+    {
+     "onset": "2019-10",
+     "peak": 0.75,
+     "peak_ym": "2019-12",
+     "A_forecast_to_peak3": -7.3,
+     "B_onset_to_12m": 2.6
+    },
+    {
+     "onset": "2023-06",
+     "peak": 1.99,
+     "peak_ym": "2023-12",
+     "A_forecast_to_peak3": -7.1,
+     "B_onset_to_12m": -13.4
+    }
+   ],
+   "ytd2026": 26.5,
+   "avg_A": -9.5,
+   "med_A": -7.2,
+   "win_A": 0,
+   "n_A": 4,
+   "avg_B": -7.4,
+   "med_B": -7.8,
+   "win_B": 25,
+   "n_B": 4,
+   "last": {
+    "date": "2026-09-09",
+    "close": 27.66
+   }
+  },
+  "DBA": {
+   "name": "农业综合(ETN)",
+   "events": [
+    {
+     "onset": "2009-07",
+     "peak": 1.5,
+     "peak_ym": "2009-12",
+     "A_forecast_to_peak3": -4.2,
+     "B_onset_to_12m": 2.4
+    },
+    {
+     "onset": "2014-10",
+     "peak": 2.59,
+     "peak_ym": "2015-12",
+     "A_forecast_to_peak3": -23.2,
+     "B_onset_to_12m": -17.1
+    },
+    {
+     "onset": "2018-09",
+     "peak": 1.05,
+     "peak_ym": "2018-12",
+     "A_forecast_to_peak3": -8.7,
+     "B_onset_to_12m": -6.2
+    },
+    {
+     "onset": "2019-10",
+     "peak": 0.75,
+     "peak_ym": "2019-12",
+     "A_forecast_to_peak3": -11.7,
+     "B_onset_to_12m": -8.7
+    },
+    {
+     "onset": "2023-06",
+     "peak": 1.99,
+     "peak_ym": "2023-12",
+     "A_forecast_to_peak3": 21.2,
+     "B_onset_to_12m": 13.0
+    }
+   ],
+   "ytd2026": 13.6,
+   "avg_A": -5.3,
+   "med_A": -8.7,
+   "win_A": 20,
+   "n_A": 5,
+   "avg_B": -3.3,
+   "med_B": -6.2,
+   "win_B": 40,
+   "n_B": 5,
+   "last": {
+    "date": "2026-09-09",
+    "close": 29.0
+   }
+  }
+ },
+ "meta": {
+  "source": "Sina US daily (unadjusted, ETN no dividend)",
+  "window_A": "onset-3m -> peak+3m",
+  "window_B": "onset -> +12m"
+ }
+}

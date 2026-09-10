@@ -1,0 +1,196 @@
+{
+ "sample": {
+  "corn_soy": "2011-09-02~2026-09-08",
+  "wheat": "2016-09-05~2026-09-08",
+  "spy_bench": "SPY adj_close, 回撤≥10% peak→trough"
+ },
+ "episodes": [
+  {
+   "peak": "2015-07-20",
+   "trough": "2016-02-11",
+   "days": 206,
+   "spy_ret": -13.0,
+   "qqq_ret": -14.8,
+   "corn": -13.3,
+   "soy": -12.7,
+   "wheat": null
+  },
+  {
+   "peak": "2018-01-26",
+   "trough": "2018-02-08",
+   "days": 13,
+   "spy_ret": -10.1,
+   "qqq_ret": -10.2,
+   "corn": 2.5,
+   "soy": 0.2,
+   "wheat": 3.3
+  },
+  {
+   "peak": "2018-09-20",
+   "trough": "2018-12-24",
+   "days": 95,
+   "spy_ret": -19.3,
+   "qqq_ret": -22.0,
+   "corn": 7.2,
+   "soy": 6.1,
+   "wheat": -1.0
+  },
+  {
+   "peak": "2020-02-19",
+   "trough": "2020-03-23",
+   "days": 33,
+   "spy_ret": -33.7,
+   "qqq_ret": -27.9,
+   "corn": -10.0,
+   "soy": -1.6,
+   "wheat": -0.7
+  },
+  {
+   "peak": "2022-01-03",
+   "trough": "2022-10-12",
+   "days": 282,
+   "spy_ret": -24.5,
+   "qqq_ret": -34.3,
+   "corn": 17.5,
+   "soy": 2.9,
+   "wheat": 16.6
+  },
+  {
+   "peak": "2025-02-19",
+   "trough": "2025-04-08",
+   "days": 48,
+   "spy_ret": -18.8,
+   "qqq_ret": -22.8,
+   "corn": -5.8,
+   "soy": -3.9,
+   "wheat": -11.0
+  }
+ ],
+ "day_stats": {
+  "corn": {
+   "n_leg": 474,
+   "n_out": 3280,
+   "leg_mean_bp": -0.43,
+   "out_mean_bp": 0.53,
+   "leg_pos_rate": 51.5,
+   "out_pos_rate": 48.6,
+   "corr_spy_leg": 0.042,
+   "corr_spy_out": 0.04,
+   "corr_spy_all": 0.039
+  },
+  "soy": {
+   "n_leg": 474,
+   "n_out": 3280,
+   "leg_mean_bp": -0.57,
+   "out_mean_bp": 0.91,
+   "leg_pos_rate": 51.1,
+   "out_pos_rate": 49.8,
+   "corr_spy_leg": 0.097,
+   "corr_spy_out": 0.104,
+   "corr_spy_all": 0.099
+  },
+  "wheat": {
+   "n_leg": 330,
+   "n_out": 2178,
+   "leg_mean_bp": 4.94,
+   "out_mean_bp": 4.59,
+   "leg_pos_rate": 46.1,
+   "out_pos_rate": 48.8,
+   "corr_spy_leg": -0.03,
+   "corr_spy_out": 0.023,
+   "corr_spy_all": 0.006
+  }
+ },
+ "roll60": {
+  "corn": {
+   "buckets": {
+    "spy60<-8%": {
+     "n": 168,
+     "agri_mean": -2.5,
+     "agri_median": -1.3,
+     "pos_rate": 44.0
+    },
+    "-8%~-2%": {
+     "n": 400,
+     "agri_mean": 2.2,
+     "agri_median": 0.9,
+     "pos_rate": 54.8
+    },
+    "-2%~+2%": {
+     "n": 596,
+     "agri_mean": 0.2,
+     "agri_median": -0.9,
+     "pos_rate": 46.0
+    },
+    ">+2%": {
+     "n": 2531,
+     "agri_mean": 0.0,
+     "agri_median": -0.7,
+     "pos_rate": 47.2
+    }
+   },
+   "corr60_all": 0.021,
+   "corr60_deep": 0.426
+  },
+  "soy": {
+   "buckets": {
+    "spy60<-8%": {
+     "n": 168,
+     "agri_mean": -1.4,
+     "agri_median": -1.5,
+     "pos_rate": 41.7
+    },
+    "-8%~-2%": {
+     "n": 402,
+     "agri_mean": 2.5,
+     "agri_median": 1.8,
+     "pos_rate": 59.7
+    },
+    "-2%~+2%": {
+     "n": 594,
+     "agri_mean": -0.7,
+     "agri_median": -0.4,
+     "pos_rate": 47.8
+    },
+    ">+2%": {
+     "n": 2531,
+     "agri_mean": 0.5,
+     "agri_median": 0.0,
+     "pos_rate": 50.0
+    }
+   },
+   "corr60_all": 0.073,
+   "corr60_deep": 0.381
+  },
+  "wheat": {
+   "buckets": {
+    "spy60<-8%": {
+     "n": 148,
+     "agri_mean": 1.6,
+     "agri_median": -1.4,
+     "pos_rate": 39.2
+    },
+    "-8%~-2%": {
+     "n": 276,
+     "agri_mean": 3.6,
+     "agri_median": 0.3,
+     "pos_rate": 50.4
+    },
+    "-2%~+2%": {
+     "n": 300,
+     "agri_mean": 1.1,
+     "agri_median": 1.4,
+     "pos_rate": 53.3
+    },
+    ">+2%": {
+     "n": 1726,
+     "agri_mean": 1.6,
+     "agri_median": 2.3,
+     "pos_rate": 59.3
+    }
+   },
+   "corr60_all": -0.038,
+   "corr60_deep": 0.284
+  }
+ }
+}
