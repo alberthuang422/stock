@@ -1,0 +1,447 @@
+{
+ "generated": "2026-09-10 18:39",
+ "source": "futu MCP quote_history_kline (ktype=2 日线 / ktype=15 240分钟)",
+ "legs": [
+  {
+   "slot": "M1",
+   "code": "CL2610",
+   "month": "OCT26"
+  },
+  {
+   "slot": "M2",
+   "code": "CL2611",
+   "month": "NOV26"
+  },
+  {
+   "slot": "M3",
+   "code": "CL2612",
+   "month": "DEC26"
+  },
+  {
+   "slot": "M4",
+   "code": "CL2701",
+   "month": "JAN27"
+  },
+  {
+   "slot": "M5",
+   "code": "CL2702",
+   "month": "FEB27"
+  },
+  {
+   "slot": "M6",
+   "code": "CL2703",
+   "month": "MAR27"
+  }
+ ],
+ "combos": {
+  "+1": [
+   "OCT26_NOV26",
+   "NOV26_DEC26",
+   "DEC26_JAN27",
+   "JAN27_FEB27",
+   "FEB27_MAR27"
+  ],
+  "+2": [
+   "OCT26_DEC26",
+   "NOV26_JAN27",
+   "DEC26_FEB27",
+   "JAN27_MAR27"
+  ],
+  "+3": [
+   "OCT26_JAN27",
+   "NOV26_FEB27",
+   "DEC26_MAR27"
+  ]
+ },
+ "convention": "abs = 近月-远月 (USD/bbl)；pm = abs/跨月数 (USD/月)",
+ "stats": {
+  "daily": {
+   "abs1_OCT26_NOV26": {
+    "last": 3.61,
+    "mean": 1.731,
+    "min": 0.05,
+    "max": 4.08,
+    "pctile": 98.4,
+    "n": 128
+   },
+   "abs1_NOV26_DEC26": {
+    "last": 3.9,
+    "mean": 1.491,
+    "min": 0.05,
+    "max": 3.9,
+    "pctile": 100.0,
+    "n": 128
+   },
+   "abs1_DEC26_JAN27": {
+    "last": 3.27,
+    "mean": 1.27,
+    "min": 0.08,
+    "max": 3.27,
+    "pctile": 100.0,
+    "n": 128
+   },
+   "abs1_JAN27_FEB27": {
+    "last": 2.84,
+    "mean": 1.052,
+    "min": 0.13,
+    "max": 2.84,
+    "pctile": 100.0,
+    "n": 128
+   },
+   "abs1_FEB27_MAR27": {
+    "last": 2.39,
+    "mean": 0.832,
+    "min": -0.15,
+    "max": 2.39,
+    "pctile": 100.0,
+    "n": 128
+   },
+   "abs2_OCT26_DEC26": {
+    "last": 7.51,
+    "mean": 3.222,
+    "min": 0.1,
+    "max": 7.51,
+    "pctile": 100.0,
+    "n": 128
+   },
+   "abs2_NOV26_JAN27": {
+    "last": 7.17,
+    "mean": 2.761,
+    "min": 0.13,
+    "max": 7.17,
+    "pctile": 100.0,
+    "n": 128
+   },
+   "abs2_DEC26_FEB27": {
+    "last": 6.11,
+    "mean": 2.321,
+    "min": 0.23,
+    "max": 6.11,
+    "pctile": 100.0,
+    "n": 128
+   },
+   "abs2_JAN27_MAR27": {
+    "last": 5.23,
+    "mean": 1.883,
+    "min": 0.31,
+    "max": 5.23,
+    "pctile": 100.0,
+    "n": 128
+   },
+   "abs3_OCT26_JAN27": {
+    "last": 10.78,
+    "mean": 4.492,
+    "min": 0.18,
+    "max": 10.78,
+    "pctile": 100.0,
+    "n": 128
+   },
+   "abs3_NOV26_FEB27": {
+    "last": 10.01,
+    "mean": 3.813,
+    "min": 0.28,
+    "max": 10.01,
+    "pctile": 100.0,
+    "n": 128
+   },
+   "abs3_DEC26_MAR27": {
+    "last": 8.5,
+    "mean": 3.153,
+    "min": 0.4,
+    "max": 8.5,
+    "pctile": 100.0,
+    "n": 128
+   },
+   "pm1_OCT26_NOV26": {
+    "last": 3.61,
+    "mean": 1.731,
+    "min": 0.05,
+    "max": 4.08,
+    "pctile": 98.4,
+    "n": 128
+   },
+   "pm1_NOV26_DEC26": {
+    "last": 3.9,
+    "mean": 1.491,
+    "min": 0.05,
+    "max": 3.9,
+    "pctile": 100.0,
+    "n": 128
+   },
+   "pm1_DEC26_JAN27": {
+    "last": 3.27,
+    "mean": 1.27,
+    "min": 0.08,
+    "max": 3.27,
+    "pctile": 100.0,
+    "n": 128
+   },
+   "pm1_JAN27_FEB27": {
+    "last": 2.84,
+    "mean": 1.052,
+    "min": 0.13,
+    "max": 2.84,
+    "pctile": 100.0,
+    "n": 128
+   },
+   "pm1_FEB27_MAR27": {
+    "last": 2.39,
+    "mean": 0.832,
+    "min": -0.15,
+    "max": 2.39,
+    "pctile": 100.0,
+    "n": 128
+   },
+   "pm2_OCT26_DEC26": {
+    "last": 3.755,
+    "mean": 1.611,
+    "min": 0.05,
+    "max": 3.755,
+    "pctile": 100.0,
+    "n": 128
+   },
+   "pm2_NOV26_JAN27": {
+    "last": 3.585,
+    "mean": 1.38,
+    "min": 0.065,
+    "max": 3.585,
+    "pctile": 100.0,
+    "n": 128
+   },
+   "pm2_DEC26_FEB27": {
+    "last": 3.055,
+    "mean": 1.161,
+    "min": 0.115,
+    "max": 3.055,
+    "pctile": 100.0,
+    "n": 128
+   },
+   "pm2_JAN27_MAR27": {
+    "last": 2.615,
+    "mean": 0.942,
+    "min": 0.155,
+    "max": 2.615,
+    "pctile": 100.0,
+    "n": 128
+   },
+   "pm3_OCT26_JAN27": {
+    "last": 3.593,
+    "mean": 1.497,
+    "min": 0.06,
+    "max": 3.593,
+    "pctile": 100.0,
+    "n": 128
+   },
+   "pm3_NOV26_FEB27": {
+    "last": 3.337,
+    "mean": 1.271,
+    "min": 0.093,
+    "max": 3.337,
+    "pctile": 100.0,
+    "n": 128
+   },
+   "pm3_DEC26_MAR27": {
+    "last": 2.833,
+    "mean": 1.051,
+    "min": 0.133,
+    "max": 2.833,
+    "pctile": 100.0,
+    "n": 128
+   }
+  },
+  "4h": {
+   "abs1_OCT26_NOV26": {
+    "last": 3.4,
+    "mean": 1.708,
+    "min": 0.05,
+    "max": 4.19,
+    "pctile": 98.1,
+    "n": 770
+   },
+   "abs1_NOV26_DEC26": {
+    "last": 3.67,
+    "mean": 1.471,
+    "min": -0.02,
+    "max": 3.67,
+    "pctile": 100.0,
+    "n": 770
+   },
+   "abs1_DEC26_JAN27": {
+    "last": 3.14,
+    "mean": 1.24,
+    "min": 0.07,
+    "max": 3.14,
+    "pctile": 100.0,
+    "n": 770
+   },
+   "abs1_JAN27_FEB27": {
+    "last": 2.72,
+    "mean": 1.037,
+    "min": -0.25,
+    "max": 2.87,
+    "pctile": 99.7,
+    "n": 770
+   },
+   "abs1_FEB27_MAR27": {
+    "last": 2.41,
+    "mean": 0.818,
+    "min": -1.63,
+    "max": 2.41,
+    "pctile": 100.0,
+    "n": 770
+   },
+   "abs2_OCT26_DEC26": {
+    "last": 7.07,
+    "mean": 3.179,
+    "min": 0.1,
+    "max": 7.08,
+    "pctile": 99.9,
+    "n": 770
+   },
+   "abs2_NOV26_JAN27": {
+    "last": 6.81,
+    "mean": 2.711,
+    "min": 0.13,
+    "max": 6.81,
+    "pctile": 100.0,
+    "n": 770
+   },
+   "abs2_DEC26_FEB27": {
+    "last": 5.86,
+    "mean": 2.277,
+    "min": 0.23,
+    "max": 5.86,
+    "pctile": 100.0,
+    "n": 770
+   },
+   "abs2_JAN27_MAR27": {
+    "last": 5.13,
+    "mean": 1.856,
+    "min": 0.2,
+    "max": 5.13,
+    "pctile": 100.0,
+    "n": 770
+   },
+   "abs3_OCT26_JAN27": {
+    "last": 10.21,
+    "mean": 4.419,
+    "min": 0.18,
+    "max": 10.21,
+    "pctile": 100.0,
+    "n": 770
+   },
+   "abs3_NOV26_FEB27": {
+    "last": 9.53,
+    "mean": 3.749,
+    "min": 0.28,
+    "max": 9.53,
+    "pctile": 100.0,
+    "n": 770
+   },
+   "abs3_DEC26_MAR27": {
+    "last": 8.27,
+    "mean": 3.096,
+    "min": 0.36,
+    "max": 8.27,
+    "pctile": 100.0,
+    "n": 770
+   },
+   "pm1_OCT26_NOV26": {
+    "last": 3.4,
+    "mean": 1.708,
+    "min": 0.05,
+    "max": 4.19,
+    "pctile": 98.1,
+    "n": 770
+   },
+   "pm1_NOV26_DEC26": {
+    "last": 3.67,
+    "mean": 1.471,
+    "min": -0.02,
+    "max": 3.67,
+    "pctile": 100.0,
+    "n": 770
+   },
+   "pm1_DEC26_JAN27": {
+    "last": 3.14,
+    "mean": 1.24,
+    "min": 0.07,
+    "max": 3.14,
+    "pctile": 100.0,
+    "n": 770
+   },
+   "pm1_JAN27_FEB27": {
+    "last": 2.72,
+    "mean": 1.037,
+    "min": -0.25,
+    "max": 2.87,
+    "pctile": 99.7,
+    "n": 770
+   },
+   "pm1_FEB27_MAR27": {
+    "last": 2.41,
+    "mean": 0.818,
+    "min": -1.63,
+    "max": 2.41,
+    "pctile": 100.0,
+    "n": 770
+   },
+   "pm2_OCT26_DEC26": {
+    "last": 3.535,
+    "mean": 1.59,
+    "min": 0.05,
+    "max": 3.54,
+    "pctile": 99.9,
+    "n": 770
+   },
+   "pm2_NOV26_JAN27": {
+    "last": 3.405,
+    "mean": 1.356,
+    "min": 0.065,
+    "max": 3.405,
+    "pctile": 100.0,
+    "n": 770
+   },
+   "pm2_DEC26_FEB27": {
+    "last": 2.93,
+    "mean": 1.139,
+    "min": 0.115,
+    "max": 2.93,
+    "pctile": 100.0,
+    "n": 770
+   },
+   "pm2_JAN27_MAR27": {
+    "last": 2.565,
+    "mean": 0.928,
+    "min": 0.1,
+    "max": 2.565,
+    "pctile": 100.0,
+    "n": 770
+   },
+   "pm3_OCT26_JAN27": {
+    "last": 3.403,
+    "mean": 1.473,
+    "min": 0.06,
+    "max": 3.403,
+    "pctile": 100.0,
+    "n": 770
+   },
+   "pm3_NOV26_FEB27": {
+    "last": 3.177,
+    "mean": 1.25,
+    "min": 0.093,
+    "max": 3.177,
+    "pctile": 100.0,
+    "n": 770
+   },
+   "pm3_DEC26_MAR27": {
+    "last": 2.757,
+    "mean": 1.032,
+    "min": 0.12,
+    "max": 2.757,
+    "pctile": 100.0,
+    "n": 770
+   }
+  }
+ }
+}
