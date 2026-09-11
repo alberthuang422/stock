@@ -1,0 +1,2205 @@
+{
+ "meta": {
+  "subject": "KMI (Kinder Morgan) 条件收益研究 · 主口径 KMI 绝对收益 %",
+  "kmi_range": [
+   "2011-02-11",
+   "2026-09-04"
+  ],
+  "kmi_last": 31.4,
+  "kmi_rows": 3912,
+  "price_col": "close",
+  "adj_close_vs_close_maxdiff": 0.0,
+  "horizons_days": [
+   5,
+   20,
+   60
+  ],
+  "notes": [
+   "主口径 = KMI 自身绝对收益（未扣股息；KMI 年化股息率 ~4%，日均 drag ≈ -0.016%/日）",
+   "SPY 列为市场背景参照，非主结论",
+   "事件样本已按间隔 ≥20 交易日去重",
+   "fwd 基准率用全样本同长度窗口（存在重叠，仅作水平参照）"
+  ],
+  "generated": "2026-09-11 11:08:58.755188+08:00"
+ },
+ "A_vix": {
+  "sample": {
+   "n": 3909,
+   "range": [
+    "2011-02-11",
+    "2026-09-01"
+   ]
+  },
+  "by_daily_change": [
+   {
+    "bucket": "VIX 大跌 ≤-5",
+    "d_vix_range": [
+     null,
+     -5
+    ],
+    "kmi_same_day": {
+     "n": 25,
+     "mean": 2.447,
+     "median": 2.852,
+     "win": 68.0,
+     "sd": 3.47,
+     "t": 3.52,
+     "p": 0.0017,
+     "reliable": false,
+     "wilcoxon_p": 0.0051
+    },
+    "spy_same_day": {
+     "n": 25,
+     "mean": 2.878,
+     "median": 2.235,
+     "win": 96.0,
+     "sd": 2.89,
+     "t": 4.98,
+     "p": 0.0,
+     "reliable": false,
+     "wilcoxon_p": 0.0
+    }
+   },
+   {
+    "bucket": "VIX 跌 -5~-2",
+    "d_vix_range": [
+     -5,
+     -2
+    ],
+    "kmi_same_day": {
+     "n": 227,
+     "mean": 1.128,
+     "median": 1.02,
+     "win": 75.3,
+     "sd": 2.33,
+     "t": 7.31,
+     "p": 0.0,
+     "reliable": true,
+     "wilcoxon_p": 0.0
+    },
+    "spy_same_day": {
+     "n": 227,
+     "mean": 1.473,
+     "median": 1.442,
+     "win": 95.6,
+     "sd": 0.99,
+     "t": 22.47,
+     "p": 0.0,
+     "reliable": true,
+     "wilcoxon_p": 0.0
+    }
+   },
+   {
+    "bucket": "VIX 微跌 -2~0",
+    "d_vix_range": [
+     -2,
+     0
+    ],
+    "kmi_same_day": {
+     "n": 1892,
+     "mean": 0.32,
+     "median": 0.241,
+     "win": 57.9,
+     "sd": 1.5,
+     "t": 9.3,
+     "p": 0.0,
+     "reliable": true,
+     "wilcoxon_p": 0.0
+    },
+    "spy_same_day": {
+     "n": 1893,
+     "mean": 0.432,
+     "median": 0.365,
+     "win": 78.6,
+     "sd": 0.61,
+     "t": 30.82,
+     "p": 0.0,
+     "reliable": true,
+     "wilcoxon_p": 0.0
+    }
+   },
+   {
+    "bucket": "VIX 微涨 0~+2",
+    "d_vix_range": [
+     0,
+     2
+    ],
+    "kmi_same_day": {
+     "n": 1470,
+     "mean": -0.251,
+     "median": -0.239,
+     "win": 40.5,
+     "sd": 1.57,
+     "t": -6.13,
+     "p": 0.0,
+     "reliable": true,
+     "wilcoxon_p": 0.0
+    },
+    "spy_same_day": {
+     "n": 1470,
+     "mean": -0.313,
+     "median": -0.262,
+     "win": 27.7,
+     "sd": 0.66,
+     "t": -18.27,
+     "p": 0.0,
+     "reliable": true,
+     "wilcoxon_p": 0.0
+    }
+   },
+   {
+    "bucket": "VIX 涨 +2~+5",
+    "d_vix_range": [
+     2,
+     5
+    ],
+    "kmi_same_day": {
+     "n": 245,
+     "mean": -1.312,
+     "median": -1.166,
+     "win": 18.0,
+     "sd": 1.97,
+     "t": -10.43,
+     "p": 0.0,
+     "reliable": true,
+     "wilcoxon_p": 0.0
+    },
+    "spy_same_day": {
+     "n": 245,
+     "mean": -1.594,
+     "median": -1.524,
+     "win": 0.8,
+     "sd": 0.79,
+     "t": -31.63,
+     "p": 0.0,
+     "reliable": true,
+     "wilcoxon_p": 0.0
+    }
+   },
+   {
+    "bucket": "VIX 大涨 >+5",
+    "d_vix_range": [
+     5,
+     null
+    ],
+    "kmi_same_day": {
+     "n": 49,
+     "mean": -3.385,
+     "median": -2.753,
+     "win": 10.2,
+     "sd": 3.65,
+     "t": -6.49,
+     "p": 0.0,
+     "reliable": true,
+     "wilcoxon_p": 0.0
+    },
+    "spy_same_day": {
+     "n": 49,
+     "mean": -3.638,
+     "median": -3.166,
+     "win": 0.0,
+     "sd": 1.92,
+     "t": -13.27,
+     "p": 0.0,
+     "reliable": true,
+     "wilcoxon_p": 0.0
+    }
+   }
+  ],
+  "corr_dvix_kmi": {
+   "r": -0.429,
+   "n": 3908,
+   "p": 0.0
+  },
+  "events_up5": [
+   {
+    "kmi_fwd": {
+     "5": {
+      "n": 100,
+      "mean": 0.952,
+      "median": 0.742,
+      "win": 58.0,
+      "sd": 4.48,
+      "t": 2.12,
+      "p": 0.0362,
+      "reliable": true,
+      "wilcoxon_p": 0.0382
+     },
+     "20": {
+      "n": 100,
+      "mean": 1.397,
+      "median": 1.118,
+      "win": 58.0,
+      "sd": 9.29,
+      "t": 1.5,
+      "p": 0.1356,
+      "reliable": true,
+      "wilcoxon_p": 0.0577
+     },
+     "60": {
+      "n": 99,
+      "mean": 2.117,
+      "median": 2.608,
+      "win": 60.6,
+      "sd": 13.86,
+      "t": 1.52,
+      "p": 0.1319,
+      "reliable": true,
+      "wilcoxon_p": 0.0366
+     }
+    },
+    "spy_fwd": {
+     "5": {
+      "n": 100,
+      "mean": 0.559,
+      "median": 0.817,
+      "win": 64.0,
+      "sd": 2.5,
+      "t": 2.24,
+      "p": 0.0276,
+      "reliable": true,
+      "wilcoxon_p": 0.0052
+     },
+     "20": {
+      "n": 100,
+      "mean": 1.311,
+      "median": 1.955,
+      "win": 68.0,
+      "sd": 4.61,
+      "t": 2.84,
+      "p": 0.0054,
+      "reliable": true,
+      "wilcoxon_p": 0.0002
+     },
+     "60": {
+      "n": 99,
+      "mean": 3.645,
+      "median": 5.153,
+      "win": 74.7,
+      "sd": 6.48,
+      "t": 5.6,
+      "p": 0.0,
+      "reliable": true,
+      "wilcoxon_p": 0.0
+     }
+    },
+    "baseline": {
+     "5": {
+      "n": 3904,
+      "mean": 0.086,
+      "median": 0.129,
+      "win": 51.5,
+      "sd": 4.0,
+      "t": 1.35,
+      "p": 0.1783,
+      "reliable": true,
+      "wilcoxon_p": 0.029
+     },
+     "20": {
+      "n": 3889,
+      "mean": 0.318,
+      "median": 0.279,
+      "win": 52.0,
+      "sd": 7.5,
+      "t": 2.64,
+      "p": 0.0083,
+      "reliable": true,
+      "wilcoxon_p": 0.0
+     },
+     "60": {
+      "n": 3849,
+      "mean": 0.995,
+      "median": 0.97,
+      "win": 53.9,
+      "sd": 12.63,
+      "t": 4.89,
+      "p": 0.0,
+      "reliable": true,
+      "wilcoxon_p": 0.0
+     }
+    },
+    "baseline_spy": {
+     "5": {
+      "n": 3904,
+      "mean": 0.249,
+      "median": 0.396,
+      "win": 60.2,
+      "sd": 2.23,
+      "t": 6.98,
+      "p": 0.0,
+      "reliable": true,
+      "wilcoxon_p": 0.0
+     },
+     "20": {
+      "n": 3889,
+      "mean": 0.999,
+      "median": 1.53,
+      "win": 67.1,
+      "sd": 4.17,
+      "t": 14.94,
+      "p": 0.0,
+      "reliable": true,
+      "wilcoxon_p": 0.0
+     },
+     "60": {
+      "n": 3849,
+      "mean": 2.952,
+      "median": 3.612,
+      "win": 75.1,
+      "sd": 6.39,
+      "t": 28.64,
+      "p": 0.0,
+      "reliable": true,
+      "wilcoxon_p": 0.0
+     }
+    },
+    "excess_vs_baseline": {
+     "5": 0.613,
+     "20": 0.839,
+     "60": 1.638
+    },
+    "trigger": "VIX 5 日累计涨幅 ≥ +20%",
+    "n_raw": 391,
+    "n_dedup": 100
+   },
+   {
+    "kmi_fwd": {
+     "5": {
+      "n": 64,
+      "mean": -0.023,
+      "median": 0.131,
+      "win": 51.6,
+      "sd": 3.81,
+      "t": -0.05,
+      "p": 0.962,
+      "reliable": true,
+      "wilcoxon_p": 0.7632
+     },
+     "20": {
+      "n": 64,
+      "mean": 0.522,
+      "median": -0.014,
+      "win": 50.0,
+      "sd": 10.33,
+      "t": 0.4,
+      "p": 0.6875,
+      "reliable": true,
+      "wilcoxon_p": 0.4223
+     },
+     "60": {
+      "n": 64,
+      "mean": 1.237,
+      "median": 2.725,
+      "win": 60.9,
+      "sd": 15.12,
+      "t": 0.65,
+      "p": 0.5154,
+      "reliable": true,
+      "wilcoxon_p": 0.1811
+     }
+    },
+    "spy_fwd": {
+     "5": {
+      "n": 64,
+      "mean": 0.574,
+      "median": 0.867,
+      "win": 59.4,
+      "sd": 2.43,
+      "t": 1.89,
+      "p": 0.0634,
+      "reliable": true,
+      "wilcoxon_p": 0.0549
+     },
+     "20": {
+      "n": 64,
+      "mean": 1.249,
+      "median": 2.009,
+      "win": 71.9,
+      "sd": 5.12,
+      "t": 1.95,
+      "p": 0.0553,
+      "reliable": true,
+      "wilcoxon_p": 0.0039
+     },
+     "60": {
+      "n": 64,
+      "mean": 3.655,
+      "median": 5.125,
+      "win": 73.4,
+      "sd": 6.86,
+      "t": 4.26,
+      "p": 0.0001,
+      "reliable": true,
+      "wilcoxon_p": 0.0001
+     }
+    },
+    "baseline": {
+     "5": {
+      "n": 3904,
+      "mean": 0.086,
+      "median": 0.129,
+      "win": 51.5,
+      "sd": 4.0,
+      "t": 1.35,
+      "p": 0.1783,
+      "reliable": true,
+      "wilcoxon_p": 0.029
+     },
+     "20": {
+      "n": 3889,
+      "mean": 0.318,
+      "median": 0.279,
+      "win": 52.0,
+      "sd": 7.5,
+      "t": 2.64,
+      "p": 0.0083,
+      "reliable": true,
+      "wilcoxon_p": 0.0
+     },
+     "60": {
+      "n": 3849,
+      "mean": 0.995,
+      "median": 0.97,
+      "win": 53.9,
+      "sd": 12.63,
+      "t": 4.89,
+      "p": 0.0,
+      "reliable": true,
+      "wilcoxon_p": 0.0
+     }
+    },
+    "baseline_spy": {
+     "5": {
+      "n": 3904,
+      "mean": 0.249,
+      "median": 0.396,
+      "win": 60.2,
+      "sd": 2.23,
+      "t": 6.98,
+      "p": 0.0,
+      "reliable": true,
+      "wilcoxon_p": 0.0
+     },
+     "20": {
+      "n": 3889,
+      "mean": 0.999,
+      "median": 1.53,
+      "win": 67.1,
+      "sd": 4.17,
+      "t": 14.94,
+      "p": 0.0,
+      "reliable": true,
+      "wilcoxon_p": 0.0
+     },
+     "60": {
+      "n": 3849,
+      "mean": 2.952,
+      "median": 3.612,
+      "win": 75.1,
+      "sd": 6.39,
+      "t": 28.64,
+      "p": 0.0,
+      "reliable": true,
+      "wilcoxon_p": 0.0
+     }
+    },
+    "excess_vs_baseline": {
+     "5": 0.002,
+     "20": -0.293,
+     "60": 1.755
+    },
+    "trigger": "VIX 5 日累计涨幅 ≥ +30%",
+    "n_raw": 189,
+    "n_dedup": 64
+   },
+   {
+    "kmi_fwd": {
+     "5": {
+      "n": 26,
+      "mean": 0.16,
+      "median": -0.023,
+      "win": 50.0,
+      "sd": 4.91,
+      "t": 0.17,
+      "p": 0.869,
+      "reliable": false,
+      "wilcoxon_p": 0.9801
+     },
+     "20": {
+      "n": 26,
+      "mean": -0.932,
+      "median": -1.233,
+      "win": 42.3,
+      "sd": 11.06,
+      "t": -0.43,
+      "p": 0.6711,
+      "reliable": false,
+      "wilcoxon_p": 0.9801
+     },
+     "60": {
+      "n": 26,
+      "mean": 0.809,
+      "median": 1.144,
+      "win": 53.8,
+      "sd": 15.72,
+      "t": 0.26,
+      "p": 0.7952,
+      "reliable": false,
+      "wilcoxon_p": 0.7265
+     }
+    },
+    "spy_fwd": {
+     "5": {
+      "n": 26,
+      "mean": 0.765,
+      "median": 1.013,
+      "win": 65.4,
+      "sd": 2.46,
+      "t": 1.59,
+      "p": 0.1255,
+      "reliable": false,
+      "wilcoxon_p": 0.0709
+     },
+     "20": {
+      "n": 26,
+      "mean": 0.875,
+      "median": 2.253,
+      "win": 69.2,
+      "sd": 5.78,
+      "t": 0.77,
+      "p": 0.4477,
+      "reliable": false,
+      "wilcoxon_p": 0.0594
+     },
+     "60": {
+      "n": 26,
+      "mean": 2.825,
+      "median": 4.476,
+      "win": 65.4,
+      "sd": 7.72,
+      "t": 1.87,
+      "p": 0.0738,
+      "reliable": false,
+      "wilcoxon_p": 0.0751
+     }
+    },
+    "baseline": {
+     "5": {
+      "n": 3904,
+      "mean": 0.086,
+      "median": 0.129,
+      "win": 51.5,
+      "sd": 4.0,
+      "t": 1.35,
+      "p": 0.1783,
+      "reliable": true,
+      "wilcoxon_p": 0.029
+     },
+     "20": {
+      "n": 3889,
+      "mean": 0.318,
+      "median": 0.279,
+      "win": 52.0,
+      "sd": 7.5,
+      "t": 2.64,
+      "p": 0.0083,
+      "reliable": true,
+      "wilcoxon_p": 0.0
+     },
+     "60": {
+      "n": 3849,
+      "mean": 0.995,
+      "median": 0.97,
+      "win": 53.9,
+      "sd": 12.63,
+      "t": 4.89,
+      "p": 0.0,
+      "reliable": true,
+      "wilcoxon_p": 0.0
+     }
+    },
+    "baseline_spy": {
+     "5": {
+      "n": 3904,
+      "mean": 0.249,
+      "median": 0.396,
+      "win": 60.2,
+      "sd": 2.23,
+      "t": 6.98,
+      "p": 0.0,
+      "reliable": true,
+      "wilcoxon_p": 0.0
+     },
+     "20": {
+      "n": 3889,
+      "mean": 0.999,
+      "median": 1.53,
+      "win": 67.1,
+      "sd": 4.17,
+      "t": 14.94,
+      "p": 0.0,
+      "reliable": true,
+      "wilcoxon_p": 0.0
+     },
+     "60": {
+      "n": 3849,
+      "mean": 2.952,
+      "median": 3.612,
+      "win": 75.1,
+      "sd": 6.39,
+      "t": 28.64,
+      "p": 0.0,
+      "reliable": true,
+      "wilcoxon_p": 0.0
+     }
+    },
+    "excess_vs_baseline": {
+     "5": -0.152,
+     "20": -1.512,
+     "60": 0.174
+    },
+    "trigger": "VIX 5 日累计涨幅 ≥ +50%",
+    "n_raw": 60,
+    "n_dedup": 26
+   }
+  ],
+  "by_vix_level": [
+   {
+    "bucket": "VIX 0-15",
+    "kmi_same_day": {
+     "n": 1449,
+     "mean": 0.068,
+     "median": 0.046,
+     "win": 50.7,
+     "sd": 1.3,
+     "t": 1.99,
+     "p": 0.0466,
+     "reliable": true,
+     "wilcoxon_p": 0.0671
+    },
+    "kmi_fwd20": {
+     "n": 1441,
+     "mean": -0.332,
+     "median": 0.057,
+     "win": 50.2,
+     "sd": 5.82,
+     "t": -2.16,
+     "p": 0.0306,
+     "reliable": true,
+     "wilcoxon_p": 0.5699
+    },
+    "spy_fwd20": {
+     "n": 1441,
+     "mean": 0.51,
+     "median": 1.068,
+     "win": 65.0,
+     "sd": 3.09,
+     "t": 6.27,
+     "p": 0.0,
+     "reliable": true,
+     "wilcoxon_p": 0.0
+    }
+   },
+   {
+    "bucket": "VIX 15-20",
+    "kmi_same_day": {
+     "n": 1405,
+     "mean": 0.04,
+     "median": 0.053,
+     "win": 51.0,
+     "sd": 1.49,
+     "t": 1.01,
+     "p": 0.3137,
+     "reliable": true,
+     "wilcoxon_p": 0.0826
+    },
+    "kmi_fwd20": {
+     "n": 1394,
+     "mean": -0.287,
+     "median": -0.292,
+     "win": 48.1,
+     "sd": 7.75,
+     "t": -1.38,
+     "p": 0.1677,
+     "reliable": true,
+     "wilcoxon_p": 0.8334
+    },
+    "spy_fwd20": {
+     "n": 1394,
+     "mean": 0.732,
+     "median": 1.547,
+     "win": 67.4,
+     "sd": 3.86,
+     "t": 7.08,
+     "p": 0.0,
+     "reliable": true,
+     "wilcoxon_p": 0.0
+    }
+   },
+   {
+    "bucket": "VIX 20-25",
+    "kmi_same_day": {
+     "n": 564,
+     "mean": 0.059,
+     "median": -0.072,
+     "win": 46.6,
+     "sd": 1.93,
+     "t": 0.73,
+     "p": 0.4643,
+     "reliable": true,
+     "wilcoxon_p": 0.8021
+    },
+    "kmi_fwd20": {
+     "n": 564,
+     "mean": 1.617,
+     "median": 0.968,
+     "win": 56.2,
+     "sd": 7.23,
+     "t": 5.32,
+     "p": 0.0,
+     "reliable": true,
+     "wilcoxon_p": 0.0
+    },
+    "spy_fwd20": {
+     "n": 564,
+     "mean": 1.257,
+     "median": 2.084,
+     "win": 66.5,
+     "sd": 4.59,
+     "t": 6.5,
+     "p": 0.0,
+     "reliable": true,
+     "wilcoxon_p": 0.0
+    }
+   },
+   {
+    "bucket": "VIX 25-30",
+    "kmi_same_day": {
+     "n": 257,
+     "mean": -0.147,
+     "median": -0.288,
+     "win": 43.2,
+     "sd": 2.44,
+     "t": -0.96,
+     "p": 0.3356,
+     "reliable": true,
+     "wilcoxon_p": 0.1124
+    },
+    "kmi_fwd20": {
+     "n": 257,
+     "mean": 1.325,
+     "median": 1.016,
+     "win": 53.3,
+     "sd": 10.8,
+     "t": 1.97,
+     "p": 0.0502,
+     "reliable": true,
+     "wilcoxon_p": 0.0382
+    },
+    "spy_fwd20": {
+     "n": 257,
+     "mean": 1.738,
+     "median": 2.928,
+     "win": 68.5,
+     "sd": 5.9,
+     "t": 4.72,
+     "p": 0.0,
+     "reliable": true,
+     "wilcoxon_p": 0.0
+    }
+   },
+   {
+    "bucket": "VIX 30-100",
+    "kmi_same_day": {
+     "n": 233,
+     "mean": -0.358,
+     "median": -0.252,
+     "win": 44.6,
+     "sd": 3.86,
+     "t": -1.41,
+     "p": 0.1588,
+     "reliable": true,
+     "wilcoxon_p": 0.1485
+    },
+    "kmi_fwd20": {
+     "n": 233,
+     "mean": 3.693,
+     "median": 5.135,
+     "win": 75.1,
+     "sd": 9.77,
+     "t": 5.77,
+     "p": 0.0,
+     "reliable": true,
+     "wilcoxon_p": 0.0
+    },
+    "spy_fwd20": {
+     "n": 233,
+     "mean": 4.174,
+     "median": 4.738,
+     "win": 77.7,
+     "sd": 6.36,
+     "t": 10.02,
+     "p": 0.0,
+     "reliable": true,
+     "wilcoxon_p": 0.0
+    }
+   }
+  ],
+  "current": {
+   "vix": 16.34,
+   "date": "2026-09-01",
+   "vix_20d_low": 14.25,
+   "rise_from_20d_low_pct": 14.7,
+   "vix_chg5_pct": 5.8
+  }
+ },
+ "C_y10": {
+  "sample": {
+   "n": 3882,
+   "range": [
+    "2011-02-11",
+    "2026-09-02"
+   ]
+  },
+  "by_daily_change": [
+   {
+    "bucket": "10Y 大降 ≤-10bp",
+    "kmi_same_day": {
+     "n": 115,
+     "mean": -0.843,
+     "median": -0.573,
+     "win": 41.7,
+     "sd": 3.34,
+     "t": -2.71,
+     "p": 0.0078,
+     "reliable": true,
+     "wilcoxon_p": 0.0018
+    },
+    "spy_same_day": {
+     "n": 115,
+     "mean": -0.847,
+     "median": -0.763,
+     "win": 34.8,
+     "sd": 2.18,
+     "t": -4.16,
+     "p": 0.0001,
+     "reliable": true,
+     "wilcoxon_p": 0.0
+    }
+   },
+   {
+    "bucket": "10Y 降 -10~-5bp",
+    "kmi_same_day": {
+     "n": 423,
+     "mean": -0.483,
+     "median": -0.398,
+     "win": 38.3,
+     "sd": 2.04,
+     "t": -4.88,
+     "p": 0.0,
+     "reliable": true,
+     "wilcoxon_p": 0.0
+    },
+    "spy_same_day": {
+     "n": 424,
+     "mean": -0.402,
+     "median": -0.265,
+     "win": 36.8,
+     "sd": 1.17,
+     "t": -7.07,
+     "p": 0.0,
+     "reliable": true,
+     "wilcoxon_p": 0.0
+    }
+   },
+   {
+    "bucket": "10Y 微降 -5~0bp",
+    "kmi_same_day": {
+     "n": 1588,
+     "mean": -0.029,
+     "median": -0.056,
+     "win": 47.0,
+     "sd": 1.5,
+     "t": -0.78,
+     "p": 0.4367,
+     "reliable": true,
+     "wilcoxon_p": 0.3612
+    },
+    "spy_same_day": {
+     "n": 1587,
+     "mean": 0.009,
+     "median": 0.024,
+     "win": 51.9,
+     "sd": 0.84,
+     "t": 0.43,
+     "p": 0.6663,
+     "reliable": true,
+     "wilcoxon_p": 0.1021
+    }
+   },
+   {
+    "bucket": "10Y 微升 0~+5bp",
+    "kmi_same_day": {
+     "n": 1194,
+     "mean": 0.233,
+     "median": 0.175,
+     "win": 55.0,
+     "sd": 1.65,
+     "t": 4.89,
+     "p": 0.0,
+     "reliable": true,
+     "wilcoxon_p": 0.0
+    },
+    "spy_same_day": {
+     "n": 1194,
+     "mean": 0.234,
+     "median": 0.2,
+     "win": 64.7,
+     "sd": 0.82,
+     "t": 9.91,
+     "p": 0.0,
+     "reliable": true,
+     "wilcoxon_p": 0.0
+    }
+   },
+   {
+    "bucket": "10Y 升 +5~+10bp",
+    "kmi_same_day": {
+     "n": 439,
+     "mean": 0.366,
+     "median": 0.186,
+     "win": 56.0,
+     "sd": 1.84,
+     "t": 4.17,
+     "p": 0.0,
+     "reliable": true,
+     "wilcoxon_p": 0.0
+    },
+    "spy_same_day": {
+     "n": 439,
+     "mean": 0.325,
+     "median": 0.212,
+     "win": 60.8,
+     "sd": 1.46,
+     "t": 4.66,
+     "p": 0.0,
+     "reliable": true,
+     "wilcoxon_p": 0.0
+    }
+   },
+   {
+    "bucket": "10Y 大升 >+10bp",
+    "kmi_same_day": {
+     "n": 122,
+     "mean": -0.176,
+     "median": -0.345,
+     "win": 45.1,
+     "sd": 2.85,
+     "t": -0.68,
+     "p": 0.4964,
+     "reliable": true,
+     "wilcoxon_p": 0.2466
+    },
+    "spy_same_day": {
+     "n": 122,
+     "mean": 0.16,
+     "median": 0.042,
+     "win": 50.8,
+     "sd": 1.53,
+     "t": 1.16,
+     "p": 0.2489,
+     "reliable": true,
+     "wilcoxon_p": 0.2873
+    }
+   }
+  ],
+  "corr_db10_kmi": {
+   "r": 0.125,
+   "n": 3881,
+   "p": 0.0
+  },
+  "events": [
+   {
+    "kmi_fwd": {
+     "5": {
+      "n": 56,
+      "mean": -0.218,
+      "median": 0.251,
+      "win": 55.4,
+      "sd": 4.13,
+      "t": -0.4,
+      "p": 0.6941,
+      "reliable": true,
+      "wilcoxon_p": 0.9285
+     },
+     "20": {
+      "n": 56,
+      "mean": -1.189,
+      "median": -0.239,
+      "win": 46.4,
+      "sd": 6.86,
+      "t": -1.3,
+      "p": 0.2002,
+      "reliable": true,
+      "wilcoxon_p": 0.4481
+     },
+     "60": {
+      "n": 55,
+      "mean": -1.503,
+      "median": -1.63,
+      "win": 43.6,
+      "sd": 11.39,
+      "t": -0.98,
+      "p": 0.3321,
+      "reliable": true,
+      "wilcoxon_p": 0.3395
+     }
+    },
+    "spy_fwd": {
+     "5": {
+      "n": 56,
+      "mean": -0.393,
+      "median": 0.176,
+      "win": 55.4,
+      "sd": 2.46,
+      "t": -1.2,
+      "p": 0.2369,
+      "reliable": true,
+      "wilcoxon_p": 0.6954
+     },
+     "20": {
+      "n": 56,
+      "mean": 0.608,
+      "median": 0.512,
+      "win": 57.1,
+      "sd": 3.88,
+      "t": 1.17,
+      "p": 0.2459,
+      "reliable": true,
+      "wilcoxon_p": 0.1582
+     },
+     "60": {
+      "n": 55,
+      "mean": 1.993,
+      "median": 3.354,
+      "win": 72.7,
+      "sd": 6.77,
+      "t": 2.18,
+      "p": 0.0334,
+      "reliable": true,
+      "wilcoxon_p": 0.0117
+     }
+    },
+    "baseline": {
+     "5": {
+      "n": 3877,
+      "mean": 0.087,
+      "median": 0.116,
+      "win": 51.4,
+      "sd": 4.03,
+      "t": 1.35,
+      "p": 0.1778,
+      "reliable": true,
+      "wilcoxon_p": 0.0332
+     },
+     "20": {
+      "n": 3862,
+      "mean": 0.321,
+      "median": 0.285,
+      "win": 52.1,
+      "sd": 7.53,
+      "t": 2.65,
+      "p": 0.0081,
+      "reliable": true,
+      "wilcoxon_p": 0.0
+     },
+     "60": {
+      "n": 3822,
+      "mean": 1.004,
+      "median": 0.958,
+      "win": 53.8,
+      "sd": 12.68,
+      "t": 4.9,
+      "p": 0.0,
+      "reliable": true,
+      "wilcoxon_p": 0.0
+     }
+    },
+    "baseline_spy": {
+     "5": {
+      "n": 3876,
+      "mean": 0.251,
+      "median": 0.396,
+      "win": 60.2,
+      "sd": 2.24,
+      "t": 6.99,
+      "p": 0.0,
+      "reliable": true,
+      "wilcoxon_p": 0.0
+     },
+     "20": {
+      "n": 3861,
+      "mean": 1.006,
+      "median": 1.53,
+      "win": 67.1,
+      "sd": 4.18,
+      "t": 14.94,
+      "p": 0.0,
+      "reliable": true,
+      "wilcoxon_p": 0.0
+     },
+     "60": {
+      "n": 3821,
+      "mean": 2.973,
+      "median": 3.606,
+      "win": 75.1,
+      "sd": 6.41,
+      "t": 28.67,
+      "p": 0.0,
+      "reliable": true,
+      "wilcoxon_p": 0.0
+     }
+    },
+    "excess_vs_baseline": {
+     "5": 0.135,
+     "20": -0.524,
+     "60": -2.588
+    },
+    "trigger": "20 日累计 10Y +25bp 以上",
+    "n_raw": 498,
+    "n_dedup": 56
+   },
+   {
+    "kmi_fwd": {
+     "5": {
+      "n": 16,
+      "mean": 0.518,
+      "median": 0.287,
+      "win": 62.5,
+      "sd": 4.16,
+      "t": 0.5,
+      "p": 0.6253,
+      "reliable": false,
+      "wilcoxon_p": 0.4954
+     },
+     "20": {
+      "n": 16,
+      "mean": 0.078,
+      "median": -0.552,
+      "win": 43.8,
+      "sd": 6.7,
+      "t": 0.05,
+      "p": 0.9634,
+      "reliable": false,
+      "wilcoxon_p": 0.8209
+     },
+     "60": {
+      "n": 16,
+      "mean": 2.719,
+      "median": -1.094,
+      "win": 43.8,
+      "sd": 11.32,
+      "t": 0.96,
+      "p": 0.352,
+      "reliable": false,
+      "wilcoxon_p": 0.5619
+     }
+    },
+    "spy_fwd": {
+     "5": {
+      "n": 16,
+      "mean": 0.369,
+      "median": 0.416,
+      "win": 75.0,
+      "sd": 2.05,
+      "t": 0.72,
+      "p": 0.4827,
+      "reliable": false,
+      "wilcoxon_p": 0.3225
+     },
+     "20": {
+      "n": 16,
+      "mean": 0.084,
+      "median": 1.704,
+      "win": 62.5,
+      "sd": 4.33,
+      "t": 0.08,
+      "p": 0.9391,
+      "reliable": false,
+      "wilcoxon_p": 0.9399
+     },
+     "60": {
+      "n": 16,
+      "mean": 1.975,
+      "median": 5.435,
+      "win": 75.0,
+      "sd": 8.4,
+      "t": 0.94,
+      "p": 0.3618,
+      "reliable": false,
+      "wilcoxon_p": 0.2312
+     }
+    },
+    "baseline": {
+     "5": {
+      "n": 3877,
+      "mean": 0.087,
+      "median": 0.116,
+      "win": 51.4,
+      "sd": 4.03,
+      "t": 1.35,
+      "p": 0.1778,
+      "reliable": true,
+      "wilcoxon_p": 0.0332
+     },
+     "20": {
+      "n": 3862,
+      "mean": 0.321,
+      "median": 0.285,
+      "win": 52.1,
+      "sd": 7.53,
+      "t": 2.65,
+      "p": 0.0081,
+      "reliable": true,
+      "wilcoxon_p": 0.0
+     },
+     "60": {
+      "n": 3822,
+      "mean": 1.004,
+      "median": 0.958,
+      "win": 53.8,
+      "sd": 12.68,
+      "t": 4.9,
+      "p": 0.0,
+      "reliable": true,
+      "wilcoxon_p": 0.0
+     }
+    },
+    "baseline_spy": {
+     "5": {
+      "n": 3876,
+      "mean": 0.251,
+      "median": 0.396,
+      "win": 60.2,
+      "sd": 2.24,
+      "t": 6.99,
+      "p": 0.0,
+      "reliable": true,
+      "wilcoxon_p": 0.0
+     },
+     "20": {
+      "n": 3861,
+      "mean": 1.006,
+      "median": 1.53,
+      "win": 67.1,
+      "sd": 4.18,
+      "t": 14.94,
+      "p": 0.0,
+      "reliable": true,
+      "wilcoxon_p": 0.0
+     },
+     "60": {
+      "n": 3821,
+      "mean": 2.973,
+      "median": 3.606,
+      "win": 75.1,
+      "sd": 6.41,
+      "t": 28.67,
+      "p": 0.0,
+      "reliable": true,
+      "wilcoxon_p": 0.0
+     }
+    },
+    "excess_vs_baseline": {
+     "5": 0.171,
+     "20": -0.837,
+     "60": -2.052
+    },
+    "trigger": "20 日累计 10Y +50bp 以上",
+    "n_raw": 90,
+    "n_dedup": 16
+   },
+   {
+    "kmi_fwd": {
+     "5": {
+      "n": 32,
+      "mean": 0.617,
+      "median": 0.379,
+      "win": 56.2,
+      "sd": 3.4,
+      "t": 1.03,
+      "p": 0.3121,
+      "reliable": true,
+      "wilcoxon_p": 0.5119
+     },
+     "20": {
+      "n": 32,
+      "mean": 0.429,
+      "median": 0.876,
+      "win": 53.1,
+      "sd": 6.76,
+      "t": 0.36,
+      "p": 0.7218,
+      "reliable": true,
+      "wilcoxon_p": 0.678
+     },
+     "60": {
+      "n": 32,
+      "mean": 0.672,
+      "median": -0.217,
+      "win": 50.0,
+      "sd": 9.84,
+      "t": 0.39,
+      "p": 0.7017,
+      "reliable": true,
+      "wilcoxon_p": 0.9485
+     }
+    },
+    "spy_fwd": {
+     "5": {
+      "n": 32,
+      "mean": 0.326,
+      "median": 0.145,
+      "win": 56.2,
+      "sd": 2.43,
+      "t": 0.76,
+      "p": 0.4531,
+      "reliable": true,
+      "wilcoxon_p": 0.5608
+     },
+     "20": {
+      "n": 32,
+      "mean": 0.57,
+      "median": 0.047,
+      "win": 53.1,
+      "sd": 4.23,
+      "t": 0.76,
+      "p": 0.4516,
+      "reliable": true,
+      "wilcoxon_p": 0.3896
+     },
+     "60": {
+      "n": 32,
+      "mean": 2.151,
+      "median": 4.14,
+      "win": 71.9,
+      "sd": 6.87,
+      "t": 1.77,
+      "p": 0.0865,
+      "reliable": true,
+      "wilcoxon_p": 0.0454
+     }
+    },
+    "baseline": {
+     "5": {
+      "n": 3877,
+      "mean": 0.087,
+      "median": 0.116,
+      "win": 51.4,
+      "sd": 4.03,
+      "t": 1.35,
+      "p": 0.1778,
+      "reliable": true,
+      "wilcoxon_p": 0.0332
+     },
+     "20": {
+      "n": 3862,
+      "mean": 0.321,
+      "median": 0.285,
+      "win": 52.1,
+      "sd": 7.53,
+      "t": 2.65,
+      "p": 0.0081,
+      "reliable": true,
+      "wilcoxon_p": 0.0
+     },
+     "60": {
+      "n": 3822,
+      "mean": 1.004,
+      "median": 0.958,
+      "win": 53.8,
+      "sd": 12.68,
+      "t": 4.9,
+      "p": 0.0,
+      "reliable": true,
+      "wilcoxon_p": 0.0
+     }
+    },
+    "baseline_spy": {
+     "5": {
+      "n": 3876,
+      "mean": 0.251,
+      "median": 0.396,
+      "win": 60.2,
+      "sd": 2.24,
+      "t": 6.99,
+      "p": 0.0,
+      "reliable": true,
+      "wilcoxon_p": 0.0
+     },
+     "20": {
+      "n": 3861,
+      "mean": 1.006,
+      "median": 1.53,
+      "win": 67.1,
+      "sd": 4.18,
+      "t": 14.94,
+      "p": 0.0,
+      "reliable": true,
+      "wilcoxon_p": 0.0
+     },
+     "60": {
+      "n": 3821,
+      "mean": 2.973,
+      "median": 3.606,
+      "win": 75.1,
+      "sd": 6.41,
+      "t": 28.67,
+      "p": 0.0,
+      "reliable": true,
+      "wilcoxon_p": 0.0
+     }
+    },
+    "excess_vs_baseline": {
+     "5": 0.263,
+     "20": 0.591,
+     "60": -1.175
+    },
+    "trigger": "60 日累计 10Y +50bp 以上",
+    "n_raw": 448,
+    "n_dedup": 32
+   },
+   {
+    "kmi_fwd": {
+     "5": {
+      "n": 6,
+      "mean": 2.605,
+      "median": 4.019,
+      "win": 83.3,
+      "sd": 6.0,
+      "t": 1.06,
+      "p": 0.3363,
+      "reliable": false
+     },
+     "20": {
+      "n": 6,
+      "mean": 1.854,
+      "median": 3.799,
+      "win": 66.7,
+      "sd": 6.68,
+      "t": 0.68,
+      "p": 0.527,
+      "reliable": false
+     },
+     "60": {
+      "n": 6,
+      "mean": 1.238,
+      "median": 1.755,
+      "win": 50.0,
+      "sd": 9.08,
+      "t": 0.33,
+      "p": 0.7519,
+      "reliable": false
+     }
+    },
+    "spy_fwd": {
+     "5": {
+      "n": 6,
+      "mean": 1.192,
+      "median": 1.339,
+      "win": 83.3,
+      "sd": 2.0,
+      "t": 1.46,
+      "p": 0.205,
+      "reliable": false
+     },
+     "20": {
+      "n": 6,
+      "mean": 1.11,
+      "median": 2.236,
+      "win": 83.3,
+      "sd": 5.4,
+      "t": 0.5,
+      "p": 0.636,
+      "reliable": false
+     },
+     "60": {
+      "n": 6,
+      "mean": 2.947,
+      "median": 5.086,
+      "win": 83.3,
+      "sd": 7.37,
+      "t": 0.98,
+      "p": 0.3723,
+      "reliable": false
+     }
+    },
+    "baseline": {
+     "5": {
+      "n": 3877,
+      "mean": 0.087,
+      "median": 0.116,
+      "win": 51.4,
+      "sd": 4.03,
+      "t": 1.35,
+      "p": 0.1778,
+      "reliable": true,
+      "wilcoxon_p": 0.0332
+     },
+     "20": {
+      "n": 3862,
+      "mean": 0.321,
+      "median": 0.285,
+      "win": 52.1,
+      "sd": 7.53,
+      "t": 2.65,
+      "p": 0.0081,
+      "reliable": true,
+      "wilcoxon_p": 0.0
+     },
+     "60": {
+      "n": 3822,
+      "mean": 1.004,
+      "median": 0.958,
+      "win": 53.8,
+      "sd": 12.68,
+      "t": 4.9,
+      "p": 0.0,
+      "reliable": true,
+      "wilcoxon_p": 0.0
+     }
+    },
+    "baseline_spy": {
+     "5": {
+      "n": 3876,
+      "mean": 0.251,
+      "median": 0.396,
+      "win": 60.2,
+      "sd": 2.24,
+      "t": 6.99,
+      "p": 0.0,
+      "reliable": true,
+      "wilcoxon_p": 0.0
+     },
+     "20": {
+      "n": 3861,
+      "mean": 1.006,
+      "median": 1.53,
+      "win": 67.1,
+      "sd": 4.18,
+      "t": 14.94,
+      "p": 0.0,
+      "reliable": true,
+      "wilcoxon_p": 0.0
+     },
+     "60": {
+      "n": 3821,
+      "mean": 2.973,
+      "median": 3.606,
+      "win": 75.1,
+      "sd": 6.41,
+      "t": 28.67,
+      "p": 0.0,
+      "reliable": true,
+      "wilcoxon_p": 0.0
+     }
+    },
+    "excess_vs_baseline": {
+     "5": 3.903,
+     "20": 3.514,
+     "60": 0.797
+    },
+    "trigger": "60 日累计 10Y +100bp 以上",
+    "n_raw": 53,
+    "n_dedup": 6
+   }
+  ],
+  "by_y10_level": [
+   {
+    "bucket": "10Y 0-2%",
+    "kmi_same_day": {
+     "n": 1235,
+     "mean": 0.07,
+     "median": 0.0,
+     "win": 49.7,
+     "sd": 2.18,
+     "t": 1.13,
+     "p": 0.2598,
+     "reliable": true,
+     "wilcoxon_p": 0.2372
+    },
+    "kmi_fwd20": {
+     "n": 1235,
+     "mean": 1.256,
+     "median": 0.845,
+     "win": 56.2,
+     "sd": 8.55,
+     "t": 5.16,
+     "p": 0.0,
+     "reliable": true,
+     "wilcoxon_p": 0.0
+    },
+    "spy_fwd20": {
+     "n": 1235,
+     "mean": 1.671,
+     "median": 2.205,
+     "win": 74.3,
+     "sd": 4.69,
+     "t": 12.54,
+     "p": 0.0,
+     "reliable": true,
+     "wilcoxon_p": 0.0
+    }
+   },
+   {
+    "bucket": "10Y 2-3%",
+    "kmi_same_day": {
+     "n": 1464,
+     "mean": -0.031,
+     "median": -0.048,
+     "win": 47.7,
+     "sd": 1.74,
+     "t": -0.67,
+     "p": 0.5004,
+     "reliable": true,
+     "wilcoxon_p": 0.3559
+    },
+    "kmi_fwd20": {
+     "n": 1464,
+     "mean": -0.802,
+     "median": -0.399,
+     "win": 47.3,
+     "sd": 7.85,
+     "t": -3.91,
+     "p": 0.0001,
+     "reliable": true,
+     "wilcoxon_p": 0.0155
+    },
+    "spy_fwd20": {
+     "n": 1464,
+     "mean": 0.478,
+     "median": 0.993,
+     "win": 62.4,
+     "sd": 3.66,
+     "t": 5.0,
+     "p": 0.0,
+     "reliable": true,
+     "wilcoxon_p": 0.0
+    }
+   },
+   {
+    "bucket": "10Y 3-4%",
+    "kmi_same_day": {
+     "n": 460,
+     "mean": -0.043,
+     "median": 0.0,
+     "win": 49.1,
+     "sd": 1.37,
+     "t": -0.67,
+     "p": 0.5026,
+     "reliable": true,
+     "wilcoxon_p": 0.7343
+    },
+    "kmi_fwd20": {
+     "n": 461,
+     "mean": -0.543,
+     "median": -1.083,
+     "win": 43.8,
+     "sd": 5.68,
+     "t": -2.05,
+     "p": 0.0407,
+     "reliable": true,
+     "wilcoxon_p": 0.0077
+    },
+    "spy_fwd20": {
+     "n": 461,
+     "mean": 0.052,
+     "median": 1.021,
+     "win": 56.8,
+     "sd": 4.44,
+     "t": 0.25,
+     "p": 0.8027,
+     "reliable": true,
+     "wilcoxon_p": 0.1989
+    }
+   },
+   {
+    "bucket": "10Y 4-4.5%",
+    "kmi_same_day": {
+     "n": 573,
+     "mean": 0.061,
+     "median": 0.11,
+     "win": 52.7,
+     "sd": 1.36,
+     "t": 1.07,
+     "p": 0.286,
+     "reliable": true,
+     "wilcoxon_p": 0.0423
+    },
+    "kmi_fwd20": {
+     "n": 573,
+     "mean": 1.897,
+     "median": 1.723,
+     "win": 61.8,
+     "sd": 5.17,
+     "t": 8.79,
+     "p": 0.0,
+     "reliable": true,
+     "wilcoxon_p": 0.0
+    },
+    "spy_fwd20": {
+     "n": 573,
+     "mean": 1.422,
+     "median": 1.633,
+     "win": 68.6,
+     "sd": 3.83,
+     "t": 8.88,
+     "p": 0.0,
+     "reliable": true,
+     "wilcoxon_p": 0.0
+    }
+   },
+   {
+    "bucket": "10Y 4.5-10%",
+    "kmi_same_day": {
+     "n": 149,
+     "mean": 0.086,
+     "median": 0.06,
+     "win": 50.3,
+     "sd": 1.52,
+     "t": 0.69,
+     "p": 0.4884,
+     "reliable": true,
+     "wilcoxon_p": 0.3146
+    },
+    "kmi_fwd20": {
+     "n": 129,
+     "mean": 0.212,
+     "median": 0.476,
+     "win": 54.3,
+     "sd": 5.34,
+     "t": 0.45,
+     "p": 0.6528,
+     "reliable": true,
+     "wilcoxon_p": 0.4289
+    },
+    "spy_fwd20": {
+     "n": 128,
+     "mean": 2.197,
+     "median": 2.859,
+     "win": 81.2,
+     "sd": 3.66,
+     "t": 6.8,
+     "p": 0.0,
+     "reliable": true,
+     "wilcoxon_p": 0.0
+    }
+   }
+  ],
+  "current": {
+   "y10": 4.79,
+   "date": "2026-09-02",
+   "bp20": 16.0,
+   "bp60": 23.0
+  }
+ },
+ "B_midterm": {
+  "midterm_events": [
+   {
+    "year": 2014,
+    "date": "2014-11-04",
+    "w20": {
+     "event_date": "2014-11-04",
+     "D": 936,
+     "pre": -2.0653594771241846,
+     "post": 11.66577682861718,
+     "total": 9.359477124182991
+    },
+    "w60": {
+     "event_date": "2014-11-04",
+     "D": 936,
+     "pre": -4.851409702819398,
+     "post": 11.105178857447928,
+     "total": 5.715011430022865
+    }
+   },
+   {
+    "year": 2018,
+    "date": "2018-11-06",
+    "w20": {
+     "event_date": "2018-11-06",
+     "D": 1945,
+     "pre": -6.031233171782446,
+     "post": -5.673352435530077,
+     "total": -11.362412493268714
+    },
+    "w60": {
+     "event_date": "2018-11-06",
+     "D": 1945,
+     "pre": -2.1860986547085237,
+     "post": 5.845272206303731,
+     "total": 3.5313901345291443
+    }
+   },
+   {
+    "year": 2022,
+    "date": "2022-11-08",
+    "w20": {
+     "event_date": "2022-11-08",
+     "D": 2953,
+     "pre": 6.701631701631694,
+     "post": -1.4746040415073658,
+     "total": 5.128205128205132
+    },
+    "w60": {
+     "event_date": "2022-11-08",
+     "D": 2953,
+     "pre": -1.4001077005923568,
+     "post": -0.7646095030038103,
+     "total": -2.1540118470651515
+    }
+   }
+  ],
+  "windows": {
+   "midterm": {
+    "n": 3,
+    "pre20": {
+     "n": 3,
+     "mean": -0.465,
+     "median": -2.065,
+     "win": 33.3,
+     "sd": 6.52,
+     "t": -0.12,
+     "p": 0.9129,
+     "reliable": false
+    },
+    "post20": {
+     "n": 3,
+     "mean": 1.506,
+     "median": -1.475,
+     "win": 33.3,
+     "sd": 9.05,
+     "t": 0.29,
+     "p": 0.8002,
+     "reliable": false
+    },
+    "pre60": {
+     "n": 3,
+     "mean": -2.813,
+     "median": -2.186,
+     "win": 0.0,
+     "sd": 1.81,
+     "t": -2.69,
+     "p": 0.1147,
+     "reliable": false
+    },
+    "post60": {
+     "n": 3,
+     "mean": 5.395,
+     "median": 5.845,
+     "win": 66.7,
+     "sd": 5.95,
+     "t": 1.57,
+     "p": 0.2567,
+     "reliable": false
+    },
+    "rows20": [
+     {
+      "year": 2014,
+      "event_date": "2014-11-04",
+      "pre": -2.0653594771241846,
+      "post": 11.66577682861718,
+      "total": 9.359477124182991
+     },
+     {
+      "year": 2018,
+      "event_date": "2018-11-06",
+      "pre": -6.031233171782446,
+      "post": -5.673352435530077,
+      "total": -11.362412493268714
+     },
+     {
+      "year": 2022,
+      "event_date": "2022-11-08",
+      "pre": 6.701631701631694,
+      "post": -1.4746040415073658,
+      "total": 5.128205128205132
+     }
+    ],
+    "rows60": [
+     {
+      "year": 2014,
+      "event_date": "2014-11-04",
+      "pre": -4.851409702819398,
+      "post": 11.105178857447928,
+      "total": 5.715011430022865
+     },
+     {
+      "year": 2018,
+      "event_date": "2018-11-06",
+      "pre": -2.1860986547085237,
+      "post": 5.845272206303731,
+      "total": 3.5313901345291443
+     },
+     {
+      "year": 2022,
+      "event_date": "2022-11-08",
+      "pre": -1.4001077005923568,
+      "post": -0.7646095030038103,
+      "total": -2.1540118470651515
+     }
+    ]
+   },
+   "control_other_nov": {
+    "n": 12,
+    "pre20": {
+     "n": 12,
+     "mean": -1.831,
+     "median": -1.787,
+     "win": 41.7,
+     "sd": 5.48,
+     "t": -1.16,
+     "p": 0.2715,
+     "reliable": false,
+     "wilcoxon_p": 0.3804
+    },
+    "post20": {
+     "n": 12,
+     "mean": 0.181,
+     "median": 1.673,
+     "win": 50.0,
+     "sd": 11.49,
+     "t": 0.05,
+     "p": 0.9574,
+     "reliable": false,
+     "wilcoxon_p": 0.9097
+    },
+    "pre60": {
+     "n": 12,
+     "mean": -3.397,
+     "median": -4.393,
+     "win": 25.0,
+     "sd": 9.09,
+     "t": -1.29,
+     "p": 0.2219,
+     "reliable": false,
+     "wilcoxon_p": 0.1099
+    },
+    "post60": {
+     "n": 12,
+     "mean": 1.799,
+     "median": 4.25,
+     "win": 75.0,
+     "sd": 16.62,
+     "t": 0.37,
+     "p": 0.7148,
+     "reliable": false,
+     "wilcoxon_p": 0.1763
+    },
+    "rows20": [
+     {
+      "year": 2011,
+      "event_date": "2011-11-08",
+      "pre": 4.8417132216014735,
+      "post": 8.063943161634125,
+      "total": 13.296089385474863
+     },
+     {
+      "year": 2012,
+      "event_date": "2012-11-06",
+      "pre": -5.216426193118762,
+      "post": -0.9660421545667375,
+      "total": -6.132075471698117
+     },
+     {
+      "year": 2013,
+      "event_date": "2013-11-05",
+      "pre": 1.5033246603064265,
+      "post": -4.784961549416122,
+      "total": -3.3535703960682395
+     },
+     {
+      "year": 2015,
+      "event_date": "2015-11-03",
+      "pre": -13.436123348017615,
+      "post": -24.90003635041803,
+      "total": -34.99056010069226
+     },
+     {
+      "year": 2016,
+      "event_date": "2016-11-08",
+      "pre": -1.9692603266090347,
+      "post": 4.311611954924044,
+      "total": 2.2574447646493745
+     },
+     {
+      "year": 2017,
+      "event_date": "2017-11-07",
+      "pre": -4.802110817941951,
+      "post": -5.155210643015518,
+      "total": -9.709762532981525
+     },
+     {
+      "year": 2019,
+      "event_date": "2019-11-05",
+      "pre": 2.5487256371814038,
+      "post": -5.9454191033138315,
+      "total": -3.5482258870564776
+     },
+     {
+      "year": 2020,
+      "event_date": "2020-11-03",
+      "pre": -2.281988590057049,
+      "post": 19.599666388657223,
+      "total": 16.870415647921753
+     },
+     {
+      "year": 2021,
+      "event_date": "2021-11-02",
+      "pre": 0.23640661938533203,
+      "post": -9.964622641509447,
+      "total": -9.751773049645408
+     },
+     {
+      "year": 2023,
+      "event_date": "2023-11-07",
+      "pre": -1.6052318668252075,
+      "post": 5.921450151057406,
+      "total": 4.221165279429262
+     },
+     {
+      "year": 2024,
+      "event_date": "2024-11-05",
+      "pre": 5.960548885077199,
+      "post": 10.845811412383654,
+      "total": 17.452830188679247
+     },
+     {
+      "year": 2025,
+      "event_date": "2025-11-04",
+      "pre": -7.747233131024645,
+      "post": 5.147058823529416,
+      "total": -2.9989289539450237
+     }
+    ],
+    "rows60": [
+     {
+      "year": 2011,
+      "event_date": "2011-11-08",
+      "pre": 3.9512555391432835,
+      "post": 14.600355239786843,
+      "total": 19.128508124076802
+     },
+     {
+      "year": 2012,
+      "event_date": "2012-11-06",
+      "pre": -4.6076514939961015,
+      "post": 7.084309133489475,
+      "total": 2.1502373638648375
+     },
+     {
+      "year": 2013,
+      "event_date": "2013-11-05",
+      "pre": -6.12299465240641,
+      "post": -5.098262603246939,
+      "total": -10.909090909090901
+     },
+     {
+      "year": 2015,
+      "event_date": "2015-11-03",
+      "pre": -15.35384615384615,
+      "post": -44.783715012722645,
+      "total": -53.26153846153847
+     },
+     {
+      "year": 2016,
+      "event_date": "2016-11-08",
+      "pre": -4.178403755868542,
+      "post": 10.240078392944628,
+      "total": 5.633802816901401
+     },
+     {
+      "year": 2017,
+      "event_date": "2017-11-07",
+      "pre": -5.202312138728338,
+      "post": -6.818181818181824,
+      "total": -11.665790856542312
+     },
+     {
+      "year": 2019,
+      "event_date": "2019-11-05",
+      "pre": 0.8849557522123908,
+      "post": 1.4132553606237774,
+      "total": 2.310717797443451
+     },
+     {
+      "year": 2020,
+      "event_date": "2020-11-03",
+      "pre": -17.537826685006873,
+      "post": 16.930775646371977,
+      "total": -3.576341127922966
+     },
+     {
+      "year": 2021,
+      "event_date": "2021-11-02",
+      "pre": -0.46948356807510194,
+      "post": 1.4150943396226356,
+      "total": 0.9389671361502261
+     },
+     {
+      "year": 2023,
+      "event_date": "2023-11-07",
+      "pre": -6.338426711941148,
+      "post": 0.7250755287009136,
+      "total": -5.659309564233162
+     },
+     {
+      "year": 2024,
+      "event_date": "2024-11-05",
+      "pre": 18.116634799235175,
+      "post": 11.290975313638207,
+      "total": 31.453154875717004
+     },
+     {
+      "year": 2025,
+      "event_date": "2025-11-04",
+      "pre": -3.9047973224246912,
+      "post": 14.589783281733748,
+      "total": 10.115284492376354
+     }
+    ]
+   }
+  },
+  "midterm_vs_control": {
+   "pre20": {
+    "t": 0.33,
+    "p": 0.7617,
+    "n_a": 3,
+    "n_b": 12
+   },
+   "post20": {
+    "t": 0.21,
+    "p": 0.8414,
+    "n_a": 3,
+    "n_b": 12
+   },
+   "pre60": {
+    "t": 0.21,
+    "p": 0.8392,
+    "n_a": 3,
+    "n_b": 12
+   },
+   "post60": {
+    "t": 0.61,
+    "p": 0.5554,
+    "n_a": 3,
+    "n_b": 12
+   }
+  },
+  "pending_2026": {
+   "date": "2026-11-03",
+   "days_to": 60,
+   "trading_days_to": 42
+  }
+ }
+}
