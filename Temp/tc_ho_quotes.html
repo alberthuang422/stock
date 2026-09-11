@@ -1,0 +1,1521 @@
+﻿
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" >
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Heating Oil Futures Prices / Heating Oil Quotes : NYMEX</title>
+
+<script>
+function getCookie(sName){
+    var pattern = RegExp(sName + "=.[^;]*")
+    var matched = document.cookie.match(pattern)
+    if(matched){
+        var cookie = matched[0].split('=')
+        return cookie[1]
+    }
+    return false
+}
+
+function setCookie(sName, sValue, iExpDays) {
+        var date = new Date();
+        date.setTime(date.getTime() + (iExpDays * 24 * 60 * 60 * 1000));
+        var expires = "expires=" + date.toUTCString();
+        document.cookie = sName + "=" + sValue + "; " + expires + "; path=/; domain=tradingcharts.com";
+}
+
+var gsTC_UUID; // set in refreshTC_UUID. Providing global scope with this declaration
+
+function refreshTC_UUID(){
+// Update TCUUID stored in both cookie and localstorage with the best value -- cookie takes priority over session storage
+    var sCookieVal = getCookie('TC_UUID');
+    gsTC_UUID = sCookieVal ? sCookieVal :  localStorage.getItem('TC_UUID');
+    if(gsTC_UUID){
+        localStorage.setItem('TC_UUID',gsTC_UUID);
+        setCookie('TC_UUID',gsTC_UUID,180);
+    }
+}
+
+refreshTC_UUID();
+
+</script>
+<script>
+
+const loadLogRockJS = (callback) => {
+  const existingScript = document.getElementById('logRockScript');
+  if (!existingScript) {
+    const script = document.createElement('script');
+    script.src = 'https://cdn.lr-in-prod.com/LogRocket.min.js';
+    script.crossOrigin = 'anonymous';
+    script.id = 'logRockScript';
+    document.head.appendChild(script);
+    script.onload = () => {
+      console.log('LR enabled. TC_UUID=' + gsTC_UUID);
+      window.LogRocket && window.LogRocket.init('gwa6bo/tradingcharts');
+      if(gsTC_UUID){
+        window.LogRocket.identify(gsTC_UUID);
+      }
+      if (callback) callback();
+    };
+  }
+  if (existingScript && callback) callback();
+}
+
+function chooseLogRockCohort(){  var flLREnabled=false; // Presumed guilt here.
+  if (sessionStorage.getItem('flLREnabled')){
+    flLREnabled = sessionStorage.getItem('flLREnabled') == '1';
+  }else{
+    var iNonSubscriberLRProbability = 3; // Chance out of 1000 to be included in LR testing
+    var iSubscriberLRProbability = 300; //
+//    var flTCPSUser = getCookie('TCPSUser');
+    var iLRProbability = (getCookie('TCPSUser')) ? iSubscriberLRProbability : iNonSubscriberLRProbability;
+    if( iLRProbability >= (Math.random() * 1000)){
+      flLREnabled=true;
+      sessionStorage.setItem('flLREnabled','1');
+    }else{
+      flLREnabled=false;
+      sessionStorage.setItem('flLREnabled','0');
+    }
+  }
+  return(flLREnabled);
+}
+
+if(chooseLogRockCohort()){
+  loadLogRockJS();
+}
+</script><meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="description" content="Free intra-day Heating Oil Futures Prices / Heating Oil Quotes. Commodity futures prices / quotes and market snapshots that are updated continuously during trading hours." />
+<meta name="keywords" content="Heating Oil futures, Heating Oil prices, Heating Oil, Oil/Energy quotes, Oil/Energy, Heating Oil quotes, quotes, futures, commodities, commodity, prices, quotations, realtime, real-time, delayed, snapshot quotes, commodity futures" />
+<meta name="viewport" content="width=device-width">
+<link rel="preconnect" href="https://uat5-a.investingchannel.com">
+<link rel="preconnect" href="https://u5.investingchannel.com">
+<link rel="preconnect" href="https://securepubads.g.doubleclick.net" >
+<link rel="preconnect" href="https://ondemand.websol.barchart.com" >
+<link rel="preconnect" href="https://iclnd.investingchannel.com" >
+<script type="text/javascript">
+/* <![CDATA[ */
+var enc_bc_apik='MmQ4YjNiODAzNTk0YjEzZTAyYTdkYzgyN2Y0YTYzZjg=';
+if (typeof enc_bc_apik == 'string' && enc_bc_apik) {
+    var bc_timezone_offset = Number(-5);
+    var bc_api_base_url='//ondemand.websol.barchart.com';
+    var bc_apik=atob(enc_bc_apik);
+}
+
+/**
+* Barchart API call
+* 
+* parameters
+* var r - resource path ex. getQuote.json, getHistory.json
+* var p - API parameters in query string format ex. symbols=GCZ22
+* var cs - callback function to be called when the api call is completed
+* 
+* return object - XMLHttpRequest
+*/
+
+function bc_fetch_object(r,p,cs,t){
+    var u=bc_api_base_url+'/'+r;
+    var xhr=new XMLHttpRequest();
+    p="apikey="+bc_apik + "&" + p;
+    xhr.onload=function(){
+        try {
+            var data = [];
+            if (this.status == 200) {
+                var response = JSON.parse(this.responseText);
+                if (response.results && Array.isArray(response.results)) {
+                    data = response.results;
+                }
+                cs(data);
+            } else {
+                throw (this.responseText);
+            }
+        } catch (err) {
+            var error = (err.message) ? err.message : err;
+            if (this.responseText && error !== this.responseText) {
+                error = this.responseText;
+            }
+            console.error(error);
+            cs(error);
+        }
+    };
+    xhr.onerror = function(e) {
+        var error = 'API URL not found.';
+        console.error(error);
+        cs(error);
+    };
+    xhr.ontimeout = function(e) {
+        var error = 'API call timeout.';
+        console.error(error);
+        cs(error);
+    }
+    xhr.timeout = (t ? t : 10000); // time in milliseconds
+    xhr.open("post",u,true);
+    xhr.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+    xhr.send(p);
+    return xhr
+}
+
+/**
+* convert unitCode to decimal places, unitCode is from the quote returned by Barchart getQuote.json
+* 
+* parameters
+* var uc - unitCode value from quote results 
+* 
+* return int - decimal places
+*/
+function bc_unitcode_to_decimal_places(uc) {
+    if (Number(uc) < 0) {
+        var aDecimalPlaces = [0, 3, 4, 5, 6, 7, 8];
+        var decimalPlaces = aDecimalPlaces[Math.abs(uc)];
+        if (decimalPlaces > 0) {
+            return decimalPlaces;
+        }
+        return 5;
+    }
+    return Number(uc);
+}
+/* ]]> */
+</script>
+<script type="text/javascript">
+/* <![CDATA[ */
+// fetch extremes data
+var barchartStickyFooterData = false;
+function barchart_fetch_stickyfooter() {
+    var strSymbols = "CL*0,NG*0,ZC*0,CT*0,GC*0,HG*0,E6*0,DX*0,ES*0,YM*0";
+    var params = ["only=symbol,name,lastPrice,netChange,tradeTimestamp","symbols="+strSymbols].join("&");
+    bc_fetch_object("getQuote.json", params, function(data) {
+        barchartStickyFooterData = data;
+        if (typeof displayFooterQuotes == 'function' && !document.getElementById('divStickyFooterQuotess')) {
+            displayFooterQuotes();
+            barchartStickyFooterData = false;
+        }
+        //console.log(['bc_fetch_object/extremesLeadersData', extremesLeadersData]);
+    });
+}
+barchart_fetch_stickyfooter();
+/* ]]> */
+</script><!-- Google Tag Manager -->
+<script>
+var InResponsiveTest2020 = 'Yes'; // for use in GTM/GA to ID if user is in the futures responsive test.
+(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TR7J3SC');</script>
+<!-- End Google Tag Manager -->
+
+<script async src="https://u5.investingchannel.com/static/uat.js"></script>
+<script>
+        var ic_page;
+        InvestingChannelQueue = window.InvestingChannelQueue || [];
+        InvestingChannelQueue.push(function() {
+            ic_page = InvestingChannel.UAT.Run("ed86d328-8322-4490-a1d6-82e0c361e8dd");
+        });
+        InvestingChannelQueue.push(function() {
+            ic_page.setKval({'beta': '1'});
+        });
+</script><script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+function getCookie(sName){
+    var pattern = RegExp(sName + "=.[^;]*")
+    var matched = document.cookie.match(pattern)
+    if(matched){
+        var cookie = matched[0].split('=')
+        return cookie[1]
+    }
+    return false
+}
+
+function setCookie(sName, sValue, iExpDays) {
+        var date = new Date();
+        date.setTime(date.getTime() + (iExpDays * 24 * 60 * 60 * 1000));
+        var expires = "expires=" + date.toUTCString();
+        document.cookie = sName + "=" + sValue + "; " + expires + "; path=/; domain=tradingcharts.com";
+}
+
+var gsTC_UUID; // set in refreshTC_UUID. Providing global scope with this declaration
+
+function refreshTC_UUID(){
+// Update TCUUID stored in both cookie and localstorage with the best value -- cookie takes priority over session storage
+    var sCookieVal = getCookie('TC_UUID');
+    gsTC_UUID = sCookieVal ? sCookieVal :  localStorage.getItem('TC_UUID');
+    if(gsTC_UUID){
+        localStorage.setItem('TC_UUID',gsTC_UUID);
+        setCookie('TC_UUID',gsTC_UUID,180);
+    }
+}
+
+refreshTC_UUID();
+
+</script>
+
+<link rel="stylesheet" type="text/css" media="(min-width: 768px)" href="//cdn2.tradingcharts.com/v2025060902/css/mqV5.css">
+<link rel="stylesheet" type="text/css" media="(max-width: 767px)" href="//cdn2.tradingcharts.com/v2025060902/css/mqV4_mobile.css" class="mobile_css">
+
+<link rel="canonical" href="https://futures.tradingcharts.com/futures/quotes/HO.html" />
+
+<script type="text/javascript" language="javascript">
+sLastQuoteSymbol='HO'; // used to generate tcps links in menuframe
+</script>
+<!--[if lt IE 7]>
+<style>
+.mq_page_wrapper {width:1027px;}
+.fe_nav_bar {margin-left:-2px;}
+</style>
+<![endif]--><link rel="stylesheet" type="text/css" media="(min-width: 768px)" href="//cdn2.tradingcharts.com/v2025060902/css/feV7.css" />
+<link rel="stylesheet" type="text/css" media="(max-width: 767px)" href="//cdn2.tradingcharts.com/v2025060902/css/feV7_mobile.css"  id="linkMobileCSS"/>
+
+<script>
+// GA settings. ga.js loaded async in footer
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-4733565-2']);
+  _gaq.push(['_addIgnoredRef', 'futures.tradingcharts.com']);
+  _gaq.push(['_addIgnoredRef', 'tradingcharts.com']);
+  _gaq.push(['_setDomainName', '.tradingcharts.com']);
+  _gaq.push(['_setAllowHash', false]);
+  _gaq.push(['_setCustomVar',1,'UserType','FE_Standard',1]);
+  _gaq.push(['_setCustomVar',2,'ResponsiveTest','Using_Responsive',1]);
+  _gaq.push(['_trackPageview']);
+</script>
+
+<!-- Start of code/css added to handle toggling of mobile display preferences -->
+<script>
+	// set css display preference for mobile browsers
+	var sDesktopCSSHref = '//cdn2.tradingcharts.com/v2025060902/css/feV7.css';
+	var sMobileCSSHref = '//cdn2.tradingcharts.com/v2025060902/css/feV7_mobile.css';
+
+	var sMobileDisplayPrefFlagName = 'MobileDisplayPref'; //localStorage var name
+	var refMobileCSS = document.getElementById("linkMobileCSS");
+	if(localStorage.getItem(sMobileDisplayPrefFlagName) === 'desktop'){ // switch style sheet to desktop if user saved preference for desktop view.
+		refMobileCSS.href = sDesktopCSSHref;
+        _gaq.push(['_trackEvent', 'CSSSwitched', 'FromLocalStorage', 'MobileToDesktop']);
+    }
+
+    function toggle_desktop_css(){
+	    if(localStorage.getItem(sMobileDisplayPrefFlagName) === 'desktop'){ // currently set to prefer desktop css. Now switch back to standard Mobile CSS
+		    localStorage.setItem(sMobileDisplayPrefFlagName, 'mobile');
+		    refMobileCSS.href = sMobileCSSHref;
+		    document.getElementById("toggle_desktop_layout_atag").innerText = "Switch to desktop layout";
+            _gaq.push(['_trackEvent', 'CSSSwitched', 'UserClick', 'DesktopToMobile']);
+	    }else{ // switch to Desktop CSS
+		    localStorage.setItem(sMobileDisplayPrefFlagName, "desktop");
+		    refMobileCSS.href = sDesktopCSSHref;
+		    document.getElementById("toggle_desktop_layout_atag").innerText = "Switch to mobile layout";
+             _gaq.push(['_trackEvent', 'CSSSwitched', 'UserClick', 'MobileToDesktop']);
+	    }
+    }
+
+    function update_mobile_css() {
+        if (Math.min(window.screen.width, document.body.offsetWidth) <= 767) {
+            if (localStorage.getItem(sMobileDisplayPrefFlagName) === 'desktop') {
+                $('link[type="text/css"]').each(function(){
+                    if (this.media)
+                        this.setAttribute('data-media', this.media);
+                    if (this.href.indexOf('_mobile.css')>=0)
+                        this.disabled = true;
+                    else
+                        this.media = '';
+                });
+            }
+            $('#toggle_desktop_css_link').show();
+        }
+    }
+    $( document ).ready(function() {
+        update_mobile_css();
+    });
+</script>
+<style type="text/css" media="(min-width: 768px)">
+	    #toggle_desktop_css_link{display:none; } /* Hide link to toggle mobile/desktop style on desktop devices */
+</style>
+<!-- End of code added to handle toggling of mobile display preferences -->
+
+</head>
+<body class="page_marketquotes">
+
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TR7J3SC"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<!--UdmComment-->
+	<table border="0" align="center" cellpadding="0" cellspacing="0" id="header" style="margin:auto;">
+	  <tr class="fe_header_outerwrapper">
+	   <td>
+	   <div class="fe_header">
+     <div class="fm_nav_hamburger"><span></span>
+     <a href="/menu.html">CHARTS</a>
+     <a href="/marketquotes/">QUOTES</a>
+     <a href="/custom_menu.php">MY MENU</a>
+     </div>
+	   		<table>
+				<tr>
+					<td><a href="/" id="logo"><span>Futures</span><br><img src="//cdn2.tradingcharts.com/v2025060902/fe_graphics/logo_blue.png" alt="TradingCharts / TFC Commodity Charts" /></a><br> <a href="/marketquotes/">Free Quotes</a> <span>&amp;</span> <a href="/menu.html">Charts for Commodities / Futures</a></td>
+					<td><div class="MRIC_leaderboard_header">
+<!-- Site: TradingCharts, Zone: options, Size 728x90, Multiple sizes: N/A -->
+<div id="ic_728x90_1">
+</div>
+</div>
+</td>
+				</tr>
+			</table>
+       <div class="fm_nav_toggler"><span></span></div>
+	   </div>
+	   </td>
+	  </tr>
+	  <tr>
+	   <td>
+	   <div class="fe_nav_bar  fm_nav_bar">
+       <div id="ic_1x1_oop">
+</div>
+       <div id="MRIC_searchformheader">
+	<form action="/search.php" method="GET" id="frmMenuBarSearch">
+		<input type="text" name="keywords" placeholder="Search" />
+        <input type="hidden" value="1" name="futures">
+		<img src="//cdn2.tradingcharts.com/v2025060902/graphics/search.png" width="16" height="16" alt="Search" class="searchbutton" onclick="document.getElementById('frmMenuBarSearch').submit();" />
+        		<div id="MRIC_searchad">
+        <div id="ic_search88x31_1">
+                </div>
+        </div>
+        	</form>
+</div>
+<a href="/">HOME</a><span>|</span><a href="/menu.html">COMMODITY CHARTS</a><span>|</span><a href="/marketquotes/" id="nav_bar_active">COMMODITY QUOTES</a><span>|</span><a href="/custom_menu.php">MY MENU</a><span>|</span><a href="/news/">FUTURES NEWS</a><span>|</span><a href="/premium_subscriber/">PREMIUM FEATURES</a> <span id="tcps_login_link"><a href="/premium_subscriber/login_subscribe.php">[ Login / Join ]</a></span><span>|</span><a href="//forex.tradingcharts.com/">FOREX</a><span>|</span><a href="//stocks.tradingcharts.com/">STOCKS</a>
+
+ <style type="text/css" media="(min-width: 768px)">
+.mobile_login {display:none; } /* Hide link to toggle mobile/desktop style on desktop devices */
+</style>
+     <div class="mobile_login"></div>
+
+<!-- Start of link/script/css to dispay link to swtich mobile/desktop views. Display to mobile devices  only -->
+<style type="text/css" media="(min-width: 768px)">
+#toggle_desktop_css_link{display:none; } /* Hide link to toggle mobile/desktop style on desktop devices */
+</style>
+<p id="toggle_desktop_css_link"><a href="" onclick="toggle_desktop_css()" id="toggle_desktop_layout_atag_mobile">Toggle desktop layout</a></p>
+<script>
+document.getElementById("toggle_desktop_layout_atag_mobile").innerText = (localStorage.getItem(sMobileDisplayPrefFlagName) === 'desktop') ? "Switch to mobile layout" : "Switch to desktop layout";
+</script>
+<!-- end of link/script/css to dispay link to swtich mobile/desktop views -->
+
+     </div>
+	   </td>
+	  </tr>
+	</table>
+<table width="1024" border="0" align="center" cellpadding="0" cellspacing="0" class="fe_main_table">
+  <tr>
+   <td>
+
+   <table align="left" bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="1024">
+    <tr>
+     <td valign="top" bgcolor="#333333" class="fm_chart_sidecol">
+	<div class="fm_chart_sidecol_toggle"><span class="m-lbl-mquotes">Markets</span></div>
+    		<script type="text/javascript">
+            function setLastQuoteSymbol(linkRef) { // called onclick: sets var in parent frame which is used to create tcps links
+                var href=linkRef.getAttribute("href");
+                var filename = href.substring(href.lastIndexOf('/') + 1);
+                parent.sLastQuoteSymbol=filename.substring(0,filename.lastIndexOf('.'));
+            }
+            function fe_toggleMenuBlock(market){
+                try {
+                    var elBody=document.getElementById(market+'_body');
+                    var elHeading=document.getElementById(market+'_heading');
+                    var elContainer=document.getElementById(market+'_c');
+
+                    if ( elBody.style.display != 'none' ){ // div is hidden, "open" the menu block
+                        elBody.style.display = 'none';
+                        elHeading.className = 'fe_nav_smc_c';
+
+                        if (elContainer!=null) {
+                            elContainer.style.display='none';
+                        }
+                    } else {  // menu block is visible, hide it.
+                        elBody.style.display = '';
+                        elHeading.className = 'fe_nav_smc_o';
+                        if (elContainer!=null) {
+                            elContainer.style.display='';
+                        }
+                    }
+                } catch(err) {
+                    return true;
+                }
+                return false;
+
+
+            }
+		</script>
+	<div class="iframe_body fe_iframe_nav_body">
+		<div class="fe_nav" id="main_menu_div">
+			<h3 class="fe_heading" align="center">Oil Futures Prices</h3>
+			<hr class="fe_hr" width="185" />
+			<div style="position:relative; color:#FFF;" class="f-market-viewby">
+				<div style="float:left; height:30px;" class="f-market-viewby-label">View By:</div>
+				<div style="margin-left:55px;" class="m-hidden">
+
+					<label class=""><input name="viewby" id="sector" type="radio" value="1" checked onclick="document.location.href='/marketquotes/HO.html';"/><span>Sector</span></label>
+					<label class=""><input name="viewby" id="exchange" type="radio" value="2"  onclick="document.location.href='/marketquotes/HO.html?exchange';"/><span>Exchange</span></label>
+				</div>
+
+			</div>
+			<hr class="fe_hr m-hide" width="185" />
+            <div name="treeview foo" id="treeview_id">
+<a href="cattle.html" id="CATTLE_HOGS_heading" name="CATTLE_HOGS" onclick="return fe_toggleMenuBlock('CATTLE_HOGS')" class="fe_nav_link">CATTLE / HOGS</a><br>
+<div class="fe_nav_sm" id="CATTLE_HOGS_body" style="display:none;">
+<a id="mp_CATTLE_HOGS_heading" name="mp_CATTLE_HOGS" class="fe_nav_smc_o" onclick="fe_toggleMenuBlock('mp_CATTLE_HOGS')">Popular Markets</a><br>
+<div class="fe_nav_sm" id="mp_CATTLE_HOGS_body">
+<a href="/marketquotes/GF.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Feeder Cattle (e) <span>CME</span></a><br>
+<a href="/marketquotes/HE.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Lean Hogs (e) <span>CME</span></a><br>
+<a href="/marketquotes/LE.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Live Cattle (e) <span>CME</span></a><br>
+</div>
+<a id="af_CATTLE_HOGS_heading" name="af_CATTLE_HOGS" class="fe_nav_smc_o" onclick="fe_toggleMenuBlock('af_CATTLE_HOGS')">Less Popular</a><br>
+<div class="fe_nav_sm" id="af_CATTLE_HOGS_body">
+</div>
+</div>
+<a href="currency.html" id="CURRENCY_heading" name="CURRENCY" onclick="return fe_toggleMenuBlock('CURRENCY')" class="fe_nav_link">CURRENCY</a><br>
+<div class="fe_nav_sm" id="CURRENCY_body" style="display:none;">
+<a id="mp_CURRENCY_heading" name="mp_CURRENCY" class="fe_nav_smc_o" onclick="fe_toggleMenuBlock('mp_CURRENCY')">Popular Markets</a><br>
+<div class="fe_nav_sm" id="mp_CURRENCY_body">
+<a href="/marketquotes/A6.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Australian Dollar (e) <span>CME</span></a><br>
+<a href="/marketquotes/BT.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Bitcoin (e) <span>CME</span></a><br>
+<a href="/marketquotes/B6.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">British Pound (e) <span>CME</span></a><br>
+<a href="/marketquotes/D6.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Canadian Dollar (e) <span>CME</span></a><br>
+<a href="/marketquotes/TA.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Ether (e) <span>CME</span></a><br>
+<a href="/marketquotes/E6.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Euro (e) <span>CME</span></a><br>
+<a href="/marketquotes/J6.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Japanese Yen (e) <span>CME</span></a><br>
+<a href="/marketquotes/BA.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Micro Bitcoin (e) <span>CME</span></a><br>
+<a href="/marketquotes/N6.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">New Zealand Dollar (e) <span>CME</span></a><br>
+<a href="/marketquotes/S6.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Swiss Franc (e) <span>CME</span></a><br>
+<a href="/marketquotes/DX.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">U.S. Dollar Index <span>ICE Futures</span></a><br>
+</div>
+<a id="af_CURRENCY_heading" name="af_CURRENCY" class="fe_nav_smc_o" onclick="fe_toggleMenuBlock('af_CURRENCY')">Less Popular</a><br>
+<div class="fe_nav_sm" id="af_CURRENCY_body">
+<a href="/marketquotes/H4.html" onclick="setLastQuoteSymbol(this); return true;" target="_top"> <span>CME</span></a><br>
+<a href="/marketquotes/AU.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Australian Dollar <span>ICE Futures</span></a><br>
+<a href="/marketquotes/YP.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">British Pound <span>ICE Futures</span></a><br>
+<a href="/marketquotes/QT.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Chinese Ren (e) <span>CME</span></a><br>
+<a href="/marketquotes/H6.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">E-Micro USD/CNH <span>CME</span></a><br>
+<a href="/marketquotes/EJ.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Euro / J. Yen <span>ICE Futures</span></a><br>
+<a href="/marketquotes/RK.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Euro / Swed Krona <span>ICE Futures</span></a><br>
+<a href="/marketquotes/RZ.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Euro / Swiss Fran <span>ICE Futures</span></a><br>
+<a href="/marketquotes/E7.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Euro Emini (e) <span>CME</span></a><br>
+<a href="/marketquotes/EO.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Euro Sm <span>ICE Futures</span></a><br>
+<a href="/marketquotes/H3.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Indian Rupee <span>CME</span></a><br>
+<a href="/marketquotes/J7.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Japanese Yen Emini (e) <span>CME</span></a><br>
+<a href="/marketquotes/M6.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Mexican Peso (e) <span>CME</span></a><br>
+<a href="/marketquotes/SS.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Sw Franc / Pound <span>ICE Futures</span></a><br>
+<a href="/marketquotes/KU.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Swedish Krona <span>ICE Futures</span></a><br>
+</div>
+</div>
+<a href="softs.html" id="FOOD_FIBER_heading" name="FOOD_FIBER" onclick="return fe_toggleMenuBlock('FOOD_FIBER')" class="fe_nav_link">FOOD / FIBER</a><br>
+<div class="fe_nav_sm" id="FOOD_FIBER_body" style="display:none;">
+<a id="mp_FOOD_FIBER_heading" name="mp_FOOD_FIBER" class="fe_nav_smc_o" onclick="fe_toggleMenuBlock('mp_FOOD_FIBER')">Popular Markets</a><br>
+<div class="fe_nav_sm" id="mp_FOOD_FIBER_body">
+<a href="/marketquotes/CC.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Cocoa Fut <span>ICE Futures</span></a><br>
+<a href="/marketquotes/KC.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Coffee <span>ICE Futures</span></a><br>
+<a href="/marketquotes/CT.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Cotton #2 <span>ICE Futures</span></a><br>
+<a href="/marketquotes/LB.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Lumber - Physical <span>CME</span></a><br>
+<a href="/marketquotes/LS.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Lumber - Random (e) <span>CME</span></a><br>
+<a href="/marketquotes/DF.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Nonfat Dry Milk <span>CME</span></a><br>
+<a href="/marketquotes/OJ.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Orange Juice <span>ICE Futures</span></a><br>
+<a href="/marketquotes/SB.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Sugar #11 <span>ICE Futures</span></a><br>
+</div>
+<a id="af_FOOD_FIBER_heading" name="af_FOOD_FIBER" class="fe_nav_smc_o" onclick="fe_toggleMenuBlock('af_FOOD_FIBER')">Less Popular</a><br>
+<div class="fe_nav_sm" id="af_FOOD_FIBER_body">
+<a href="/marketquotes/DL.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Milk BFP (e) <span>CME</span></a><br>
+<a href="/marketquotes/SD.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Sugar #16 <span>ICE Futures</span></a><br>
+</div>
+</div>
+<a href="grain.html" id="GRAIN_OILSEED_heading" name="GRAIN_OILSEED" onclick="return fe_toggleMenuBlock('GRAIN_OILSEED')" class="fe_nav_link">GRAIN / OILSEED</a><br>
+<div class="fe_nav_sm" id="GRAIN_OILSEED_body" style="display:none;">
+<a id="mp_GRAIN_OILSEED_heading" name="mp_GRAIN_OILSEED" class="fe_nav_smc_o" onclick="fe_toggleMenuBlock('mp_GRAIN_OILSEED')">Popular Markets</a><br>
+<div class="fe_nav_sm" id="mp_GRAIN_OILSEED_body">
+<a href="/marketquotes/RS.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Canola <span>ICE Futr. CA</span></a><br>
+<a href="/marketquotes/ZC.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Corn (e) <span>CBOT</span></a><br>
+<a href="/marketquotes/MW.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Hrd Rd Spring Wheat (e) <span>MGE</span></a><br>
+<a href="/marketquotes/ZO.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Oats (e) <span>CBOT</span></a><br>
+<a href="/marketquotes/ZR.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Rough Rice (e) <span>CBOT</span></a><br>
+<a href="/marketquotes/ZM.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Soybean Meal (e) <span>CBOT</span></a><br>
+<a href="/marketquotes/ZL.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Soybean Oil (e) <span>CBOT</span></a><br>
+<a href="/marketquotes/ZS.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Soybeans (e) <span>CBOT</span></a><br>
+<a href="/marketquotes/ZW.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Wheat (e) <span>CBOT</span></a><br>
+<a href="/marketquotes/KE.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Wheat (Kansas) (e) <span>KCBT</span></a><br>
+</div>
+<a id="af_GRAIN_OILSEED_heading" name="af_GRAIN_OILSEED" class="fe_nav_smc_o" onclick="fe_toggleMenuBlock('af_GRAIN_OILSEED')">Less Popular</a><br>
+<div class="fe_nav_sm" id="af_GRAIN_OILSEED_body">
+<a href="/marketquotes/XN.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Corn Mini (e) <span>CBOT</span></a><br>
+<a href="/marketquotes/IH.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Hrd Rd Spr Wheat Indx (e) <span>MGE</span></a><br>
+<a href="/marketquotes/IP.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Hrd Rd Spr Wheat Ndx (e) <span>MGE</span></a><br>
+<a href="/marketquotes/MA.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Milling Wheat <span>ICE Futr. CA</span></a><br>
+<a href="/marketquotes/IS.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Nat Soybean Index (e) <span>MGE</span></a><br>
+<a href="/marketquotes/IC.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">National Corn Index (e) <span>MGE</span></a><br>
+<a href="/marketquotes/IW.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Sft Rd Spr Wheat Ndx (e) <span>MGE</span></a><br>
+<a href="/marketquotes/XK.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Soybeans Mini (e) <span>CBOT</span></a><br>
+<a href="/marketquotes/KW.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Wheat (Kansas) (p) <span>KCBT</span></a><br>
+<a href="/marketquotes/XW.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Wheat Mini (e) <span>CBOT</span></a><br>
+</div>
+</div>
+<a href="indices.html" id="INDEX_heading" name="INDEX" onclick="return fe_toggleMenuBlock('INDEX')" class="fe_nav_link">INDEX</a><br>
+<div class="fe_nav_sm" id="INDEX_body" style="display:none;">
+<a id="mp_INDEX_heading" name="mp_INDEX" class="fe_nav_smc_o" onclick="fe_toggleMenuBlock('mp_INDEX')">Popular Markets</a><br>
+<div class="fe_nav_sm" id="mp_INDEX_body">
+<a href="/marketquotes/YM.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Dow Jones Mini (e) <span>CBOT</span></a><br>
+<a href="/marketquotes/NQ.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Nasdaq 100 Emini (e) <span>CME</span></a><br>
+<a href="/marketquotes/NL.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Nikkei 225 Yen (e) <span>CME</span></a><br>
+<a href="/marketquotes/QR.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Russell 2000 Ind Mini <span>ICE Futures</span></a><br>
+<a href="/marketquotes/ES.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">S&P 500 Emini (e) <span>CME</span></a><br>
+<a href="/marketquotes/ET.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">S&P500 E-Micro <span>CME</span></a><br>
+</div>
+<a id="af_INDEX_heading" name="af_INDEX" class="fe_nav_smc_o" onclick="fe_toggleMenuBlock('af_INDEX')">Less Popular</a><br>
+<div class="fe_nav_sm" id="af_INDEX_body">
+<a href="/marketquotes/AH.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Bloomberg Comm Index <span>CBOT</span></a><br>
+<a href="/marketquotes/DH.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">DJ Real Estate Index <span>CBOT</span></a><br>
+<a href="/marketquotes/GD.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Goldman Sachs (e) <span>CME</span></a><br>
+<a href="/marketquotes/ND_.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Nasdaq 100 Index (e) <span>CME</span></a><br>
+<a href="/marketquotes/RI.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Russell 1000 Index <span>ICE Futures</span></a><br>
+<a href="/marketquotes/BL.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">S&P Consumer Staples <span>CME</span></a><br>
+<a href="/marketquotes/BM.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">S&P Energy <span>CME</span></a><br>
+<a href="/marketquotes/MD_.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">S&P Midcap 400 (e) <span>CME</span></a><br>
+<a href="/marketquotes/EW.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">S&P Midcap 400 Emini (e) <span>CME</span></a><br>
+</div>
+</div>
+<a href="interest.html" id="INTEREST_heading" name="INTEREST" onclick="return fe_toggleMenuBlock('INTEREST')" class="fe_nav_link">INTEREST</a><br>
+<div class="fe_nav_sm" id="INTEREST_body" style="display:none;">
+<a id="mp_INTEREST_heading" name="mp_INTEREST" class="fe_nav_smc_o" onclick="fe_toggleMenuBlock('mp_INTEREST')">Popular Markets</a><br>
+<div class="fe_nav_sm" id="mp_INTEREST_body">
+<a href="/marketquotes/GE.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Eurodollar (e) <span>CME</span></a><br>
+<a href="/marketquotes/ZQ.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Fed Funds 30-day (e) <span>CBOT</span></a><br>
+<a href="/marketquotes/SQ.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">SOFR 3 Mo <span>CME</span></a><br>
+<a href="/marketquotes/ZB.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">T-Bond 30 Yr (e) <span>CBOT</span></a><br>
+<a href="/marketquotes/ZN.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">T-Note 10 Yr (e) <span>CBOT</span></a><br>
+<a href="/marketquotes/ZT.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">T-Note 2 Yr (e) <span>CBOT</span></a><br>
+<a href="/marketquotes/ZF.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">T-Note 5 Yr (e) <span>CBOT</span></a><br>
+</div>
+<a id="af_INTEREST_heading" name="af_INTEREST" class="fe_nav_smc_o" onclick="fe_toggleMenuBlock('af_INTEREST')">Less Popular</a><br>
+<div class="fe_nav_sm" id="af_INTEREST_body">
+<a href="/marketquotes/RQ.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">10Yr USD MAC Swap <span>CBOT</span></a><br>
+<a href="/marketquotes/GH.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Libor  (e) <span>CME</span></a><br>
+<a href="/marketquotes/SL.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">SOFR 1 Mo <span>CME</span></a><br>
+</div>
+</div>
+<a href="metals.html" id="METAL_heading" name="METAL" onclick="return fe_toggleMenuBlock('METAL')" class="fe_nav_link">METAL</a><br>
+<div class="fe_nav_sm" id="METAL_body" style="display:none;">
+<a id="mp_METAL_heading" name="mp_METAL" class="fe_nav_smc_o" onclick="fe_toggleMenuBlock('mp_METAL')">Popular Markets</a><br>
+<div class="fe_nav_sm" id="mp_METAL_body">
+<a href="/marketquotes/HG_.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Copper (e) <span>COMEX</span></a><br>
+<a href="/marketquotes/GC_.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Gold (e) <span>COMEX</span></a><br>
+<a href="/marketquotes/PA_.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Palladium (e) <span>NYMEX</span></a><br>
+<a href="/marketquotes/PL_.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Platinum (e) <span>NYMEX</span></a><br>
+<a href="/marketquotes/SI_.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Silver (e) <span>COMEX</span></a><br>
+</div>
+<a id="af_METAL_heading" name="af_METAL" class="fe_nav_smc_o" onclick="fe_toggleMenuBlock('af_METAL')">Less Popular</a><br>
+<div class="fe_nav_sm" id="af_METAL_body">
+<a href="/marketquotes/QC.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Copper miNY (e) <span>COMEX</span></a><br>
+<a href="/marketquotes/GC.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Gold (p) <span>COMEX</span></a><br>
+<a href="/marketquotes/QO.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Gold miNY (e) <span>COMEX</span></a><br>
+<a href="/marketquotes/SI.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Silver (p) <span>COMEX</span></a><br>
+<a href="/marketquotes/QI.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Silver miNY (e) <span>COMEX</span></a><br>
+</div>
+</div>
+<a href="bysector.html" id="OIL_ENERGY_heading" name="OIL_ENERGY" onclick="return fe_toggleMenuBlock('OIL_ENERGY')" class="fe_nav_link fe_nav_smc_o">OIL / ENERGY</a><br>
+<div class="fe_nav_sm " id="OIL_ENERGY_body">
+<a id="mp_OIL_ENERGY_heading" name="mp_OIL_ENERGY" class="fe_nav_smc_o" onclick="fe_toggleMenuBlock('mp_OIL_ENERGY')">Popular Markets</a><br>
+<div class="fe_nav_sm" id="mp_OIL_ENERGY_body">
+<a href="/marketquotes/QA.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Brent Crude LD <span>NYMEX</span></a><br>
+<a href="/marketquotes/CL.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Crude Oil <span>NYMEX</span></a><br>
+<a href="/marketquotes/HO_.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Heating Oil (e) <span>NYMEX</span></a><br>
+<a href="/marketquotes/NG_.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Natural Gas  (e) <span>NYMEX</span></a><br>
+<a href="/marketquotes/RB_.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">NYH RBOB Gas (e) <span>NYMEX</span></a><br>
+</div>
+<a id="af_OIL_ENERGY_heading" name="af_OIL_ENERGY" class="fe_nav_smc_o" onclick="fe_toggleMenuBlock('af_OIL_ENERGY')">Less Popular</a><br>
+<div class="fe_nav_sm" id="af_OIL_ENERGY_body">
+<a href="/marketquotes/SC.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Brent Crude Oil (p) <span>NYMEX</span></a><br>
+<a href="/marketquotes/QL.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Coal (p) <span>NYMEX</span></a><br>
+<a href="/marketquotes/WS.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Crude Oil Fin (e) <span>NYMEX</span></a><br>
+<a href="/marketquotes/QM.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Crude Oil miNY (e) <span>NYMEX</span></a><br>
+<a href="/marketquotes/ZK.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Ethanol (e) <span>CBOT</span></a><br>
+<a href="/marketquotes/BH.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Heating Oil Fin (e) <span>NYMEX</span></a><br>
+<a href="/marketquotes/QH.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Heating Oil miNY (e) <span>NYMEX</span></a><br>
+<a href="/marketquotes/HP.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Natural Gas Fin (e) <span>NYMEX</span></a><br>
+<a href="/marketquotes/QG.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Natural Gas miNY (e) <span>NYMEX</span></a><br>
+<a href="/marketquotes/RB.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">NYH RBOB Gas (p) <span>NYMEX</span></a><br>
+<a href="/marketquotes/RT.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">NYH RBOB Gas Fin (e) <span>NYMEX</span></a><br>
+<a href="/marketquotes/QU.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">NYH RBOB Gas miNY (e) <span>NYMEX</span></a><br>
+<a href="/marketquotes/JM.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">PJM Electricity (p) <span>NYMEX</span></a><br>
+<a href="/marketquotes/UX.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">Uranium (e) <span>NYMEX</span></a><br>
+<a href="/marketquotes/CL_.html" onclick="setLastQuoteSymbol(this); return true;" target="_top">WTI Crude Oil <span>NYMEX</span></a><br>
+</div>
+</div>
+</div>
+			<hr class="fe_hr m-hide" />
+<style>
+.MRIC_rail125x { width:100%; margin-top:10px; text-align:center;} */
+</style>
+<div class="MRIC_rail125x m-hide">
+<div id="ic_125x125_1">
+</div>
+</div>
+    <hr class="fe_hr" />
+    <div style="margin-left:15px;" class="fm_quicklinks">
+	<h3 class="fe_heading">Quick Links</h3>
+	<div class="m-hidden">
+    <a href="/menu.html" target="_top" style="color:#FFFFFF;">Chart/Quote Menu</a><br />
+	<a href="/custom_menu.php" target="_top" style="color:#FFFFFF;">My Chart/Quote Menu</a><br />
+
+</div>
+</div>
+<div class="fm_premiumfeats">
+	<b style="margin-top: 6px;">Premium Features:</b>
+	<div class="m-hidden">
+<a href='/premium_subscriber/markets_at_a_glance.php' target='_top' style='color:#FFFFFF;'>Markets at a Glance</a>
+<a href='#' onclick="window.top.location='/premium_subscriber/advanced_charts.php?BaseSymbol='+parent.sLastQuoteSymbol; return false;" style='color:#FFFFFF;'>Advanced Analytical Charts</a>
+<a href='#' onclick="window.top.location='/premium_subscriber/live_charts.php?BaseSymbol='+parent.sLastQuoteSymbol; return false;" style='color:#FFFFFF;'>Dynamic Intraday Charts</a>
+<a href='/premium_subscriber/spreadcharts.php' target='_top' style='color:#FFFFFF;'>Spread Charts</a>
+<a href='/premium_subscriber/eod_downloader.php' target='_top' style='color:#FFFFFF;'>Download EOD Data</a>
+</div></div>
+<div class="MRIC_btnsleftrail">
+<div id="ic_160x600_1">
+</div>
+</div>
+</div>
+		</div>
+  
+     </td>
+     <td valign="top" class="fm_chart_middle">
+                     <div class="fe_content" id="quote_content" height="20000px">
+
+<table width="768" border="0" cellspacing="0" cellpadding="0" class="fm_quoteslayout_inner">
+<tr>
+<td valign="top" class="m-cellblock m-padding">
+  <div class="main_info" style="margin-bottom:0px;">
+    <div class="fe_refresh">
+      <a href="javascript:QRFRestart()"><img src="//cdn2.tradingcharts.com/v2025060902/fe_graphics/refresh2.gif" alt="Refresh Data" width="18" height="20" border="0" style="display:block; margin:0px auto 9px;" />REFRESH<br />DATA</a>
+      </div>
+    <div class="fe_quotes_header" style="padding-bottom:0px;">
+    <h3 class="fe_heading">Commodity Futures Price Quotes For</h3>
+<h1 class="fe_heading2">Heating Oil <font size='-1'>(NYMEX)</font></h1>
+    </div>
+    <div style="font-size:10px; margin:0px;">(Price quotes for NYMEX Heating Oil delayed at least 10 minutes as per exchange requirements)</div>
+
+ <div style="font-size:11px; padding:4px 0px;">Also available: <strong><a href="/marketquotes/HO_.html">electronic Session Quotes</a></strong>
+</div><div class="MRCI_trade_now" style="clear:both; float:none;margin-top: 5px;">
+    <div id="ic_tradenow88x31_1"></div>
+</div>    <div id="divOptExpiryDate">&nbsp;</div>
+  </div>
+<div id='IC_NM_300x250_1'></div>
+                  <div class="tblQuote_wrapper">
+                    <table border="0" cellspacing="1" cellpadding="0" class="fe_quotes" id="tblQuote">
+                     <tfoot>
+                        <tr><td colspan="12" class="loading-quote"><span>Loading...</span></td></tr>
+                     </tfoot>
+                     <tr class="fe_quotes_head">
+                       <td rowspan="2"><div style="font-size:9px;">Click for<br>Chart</div></td>
+                       <td colspan="8" class="qsepdk">Current Session</td>
+                       <td colspan="2" class="qsepdk">Prior Day</td>
+                       <td rowspan="2" class="qsepdk">Opt's</td>
+                     </tr>
+                     <tr>
+                       <td class="fe_quotes_head_light qsepdk">Open</td>
+                       <td class="fe_quotes_head_light">High</td>
+                       <td class="fe_quotes_head_light">Low</td>
+                       <td class="fe_quotes_head_light">Last</td>
+                       <td class="fe_quotes_head_light">Time</td>
+                       <td class="fe_quotes_head_light">Set</td>
+                       <td class="fe_quotes_head_light">Chg</td>
+                       <td class="fe_quotes_head_light">Vol</td>
+                       <td class="fe_quotes_head_light qsepdk">Set</td>
+                       <td class="fe_quotes_head_light">Op&nbsp;Int</td>
+                       </tr>
+                       <tr class="qdata qdata0"><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td><small>-<br>-</small></td><td><center>-</center></td><td>-</td><td><center>-</center></td><td>-</td><td><center>-</center></td><td><small>-</small></td></tr>
+                       <tr class="qdata qdata1"><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td><small>-<br>-</small></td><td><center>-</center></td><td>-</td><td><center>-</center></td><td>-</td><td><center>-</center></td><td><small>-</small></td></tr>
+                       <tr class="qdata qdata2"><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td><small>-<br>-</small></td><td><center>-</center></td><td>-</td><td><center>-</center></td><td>-</td><td><center>-</center></td><td><small>-</small></td></tr>
+                       <tr class="qdata qdata3"><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td><small>-<br>-</small></td><td><center>-</center></td><td>-</td><td><center>-</center></td><td>-</td><td><center>-</center></td><td><small>-</small></td></tr>
+                       <tr class="qdata qdata4"><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td><small>-<br>-</small></td><td><center>-</center></td><td>-</td><td><center>-</center></td><td>-</td><td><center>-</center></td><td><small>-</small></td></tr>
+                       <tr class="qdata qdata5"><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td><small>-<br>-</small></td><td><center>-</center></td><td>-</td><td><center>-</center></td><td>-</td><td><center>-</center></td><td><small>-</small></td></tr>
+                       <tr class="qdata qdata6"><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td><small>-<br>-</small></td><td><center>-</center></td><td>-</td><td><center>-</center></td><td>-</td><td><center>-</center></td><td><small>-</small></td></tr>
+                       <tr class="qdata qdata7"><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td><small>-<br>-</small></td><td><center>-</center></td><td>-</td><td><center>-</center></td><td>-</td><td><center>-</center></td><td><small>-</small></td></tr>
+                       <tr class="qdata qdata8"><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td><small>-<br>-</small></td><td><center>-</center></td><td>-</td><td><center>-</center></td><td>-</td><td><center>-</center></td><td><small>-</small></td></tr>
+                       <tr class="qdata qdata9"><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td><small>-<br>-</small></td><td><center>-</center></td><td>-</td><td><center>-</center></td><td>-</td><td><center>-</center></td><td><small>-</small></td></tr>
+                       <tr class="qdata qdata10"><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td><small>-<br>-</small></td><td><center>-</center></td><td>-</td><td><center>-</center></td><td>-</td><td><center>-</center></td><td><small>-</small></td></tr>
+                       <tr class="qdata qdata11"><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td><small>-<br>-</small></td><td><center>-</center></td><td>-</td><td><center>-</center></td><td>-</td><td><center>-</center></td><td><small>-</small></td></tr></table></div>
+<p align="left">Times displayed are in Central Time zone.<br />Settlement flags: p - preliminary settlement, s - final settlement, * - prices are from prior session</p>
+<div id='IC_NM_3x7_1'></div>
+
+<div id='IC_M_300x250_1'>
+</div>
+<div id='IC_ND_728x90_1' style='min-height: 300px;'></div>
+<div class="quotenoframe">
+    <div class="quotenoframe_label">Quick access to other futures quotes and charts from TradingCharts:</div>
+    <div class="quotenoframe_select" onclick>
+    <ul>
+        <li>
+            <span class="quotenoframe_select_label">Choose a Sector</span>
+            <ul class="quotenoframe_select_dropdown">
+                <li><a href="/currency_futures.html" target="_top">Currencies</a></li>
+                <li><a href="/petroleum_futures.html" target="_top">Energy &amp; Oil</a></li>
+                <li><a href="/grains_oilseeds.html" target="_top">Oilseed &amp; Grain</a></li>
+                <li><a href="/index_futures.html" target="_top">Stock Index</a></li>
+                <li><a href="/interest_bonds.html" target="_top">Interest Rate &amp; Bond</a></li>
+                <li><a href="/metals.html" target="_top">Metals</a></li>
+                <li><a href="/cattle_pork.html" target="_top">Livestock &amp; Meats</a></li>
+                <li><a href="/food_fiber.html" target="_top">Softs</a></li>
+            </ul>
+        </li>
+    </ul>
+    </div>
+</div>
+
+  <div id="ic_193_750_1">
+    </div>
+  <table border=0 cellpadding=6 cellspacing="0" width="633" class="fe_border"><tr><td align='left'>
+<form action='/news/search.php' target='_top'>
+<b>All Futures News</b>&nbsp;&nbsp;&nbsp; 
+<font size="-1"><span class="m-nowrap">[ <a href="/news/" target="_top">All Futures News</a> ]</span> &nbsp;&nbsp; <span class="m-searchnews"><span class="m-searchnews-label">Search News:</span>
+<span class="m-searchnews-inputs"><input type="text" name="key_include" size="16">
+<input type=submit name=Submit value=Search></span></span></font></form>
+<div class="fe_headlines">
+<ul>
+
+
+<!-- cachefile=/usr/www/users/tcweb2/futures/futures_2019/news/headlinecache/charts/HO -->
+
+
+<!-- Query=Select HeadLine, HeadLineCache.TransmissionId as TransmissionId, HeadLineCache.DateAndTime as DateAndTime, SubHeadLine, StoryLength, DATE_FORMAT(HeadLineCache.DateAndTime,'%b %D, %Y, %H:%i') as DateTime, HeadLineCache.SourceCode as SourceCode, NewsService from HeadLineCache, NewsStories WHERE HeadLineCache.Category='Oil' and HeadLineCache.TransmissionId=NewsStories.TransmissionId and HeadLineCache.Disable="0" ORDER BY HeadLineCache.DateAndTime DESC LIMIT 10  -->
+<li ><a href="/news/futures/Provincial_Economies_Poised_for_Growth_Despite_Tariff_Turbulence_492380238.html" target="_top">Provincial Economies Poised for Growth Despite Tariff Turbulence</a>&nbsp;<font size=1 face='Arial, Helvetica'><span>Sep 10th, 2026, 08:00 - CNW (Length: 5059)</span></font></li>
+<li ><a href="/news/futures/Fuelled_Announces_Exclusive_Mandate_to_Market_Bridger_Swan_Ranch_and_Cheyenne_Rail_Hub__an_Integrated_Crude_Oil_Storage_and_Rail_Terminal_Complex_in_Wyoming_492378190.html" target="_top">Fuelled Announces Exclusive Mandate to Market Bridger Swan Ranch and Cheyenne Rail Hub, an Integrated Crude Oil Storage and Rail Terminal Complex in Wyoming</a>&nbsp;<font size=1 face='Arial, Helvetica'><span>Sep 10th, 2026, 07:13 - CNW (Length: 3762)</span></font></li>
+<li ><a href="/news/futures/Responsive_Playbooks_and_the_CRAK_Inflection_492372392.html" target="_top">Responsive Playbooks and the CRAK Inflection</a>&nbsp;<font size=1 face='Arial, Helvetica'><span>Sep 10th, 2026, 04:58 - SRD (Length: 6909)</span></font></li>
+<li ><a href="/news/futures/_BNO__as_a_Liquidity_Pulse_for_Institutional_Tactics_492346767.html" target="_top">(BNO) as a Liquidity Pulse for Institutional Tactics</a>&nbsp;<font size=1 face='Arial, Helvetica'><span>Sep 9th, 2026, 20:12 - SRD (Length: 6815)</span></font></li>
+<li ><a href="/news/futures/Enbridge_to_Acquire_Tallgrass__Crude_Transportation_Business__Expanding_Its_Leading_North_American_Crude_Oil_Franchise_492337715.html" target="_top">Enbridge to Acquire Tallgrass' Crude Transportation Business, Expanding Its Leading North American Crude Oil Franchise</a>&nbsp;<font size=1 face='Arial, Helvetica'><span>Sep 9th, 2026, 16:14 - CNX (Length: 15813)</span></font></li>
+<li ><a href="/news/futures/Enbridge_to_Acquire_Tallgrass__Crude_Transportation_Business__Expanding_Its_Leading_North_American_Crude_Oil_Franchise_492337723.html" target="_top">Enbridge to Acquire Tallgrass' Crude Transportation Business, Expanding Its Leading North American Crude Oil Franchise</a>&nbsp;<font size=1 face='Arial, Helvetica'><span>Sep 9th, 2026, 16:14 - CNW (Length: 12425)</span></font></li>
+<li ><a href="/news/futures/Building_our_way_to_net_zero__Canada_breaks_ground_on_nation_s_largest_carbon_capture_and_storage_project_492331376.html" target="_top">Building our way to net zero: Canada breaks ground on nation's largest carbon capture and storage project</a>&nbsp;<font size=1 face='Arial, Helvetica'><span>Sep 9th, 2026, 13:31 - CNW (Length: 5838)</span></font></li>
+<li ><a href="/news/futures/BioLargo_Canada_and_Tu_Nipi_Form_Indigenous_Led_Partnership_to_Treat_Oil_Sands_Process_Water_and_More_492329021.html" target="_top">BioLargo Canada and Tu Nipi Form Indigenous-Led Partnership to Treat Oil Sands Process Water and More</a>&nbsp;<font size=1 face='Arial, Helvetica'><span>Sep 9th, 2026, 12:34 - CNW (Length: 8153)</span></font></li>
+<li ><a href="/news/futures/Rock_Tech_Lithium_and_Thunder_Bay_Pulp_and_Paper_Receive_2026_Northern_Innovators_Award_492325573.html" target="_top">Rock Tech Lithium and Thunder Bay Pulp and Paper Receive 2026 Northern Innovators Award</a>&nbsp;<font size=1 face='Arial, Helvetica'><span>Sep 9th, 2026, 11:45 - CNX (Length: 10593)</span></font></li>
+<li ><a href="/news/futures/Brent_Crude_Tops__100_as_US_Iran_Escalation_Chokes_the_Strait_of_Hormuz_492321273.html" target="_top">Brent Crude Tops $100 as US-Iran Escalation Chokes the Strait of Hormuz</a>&nbsp;<font size=1 face='Arial, Helvetica'><span>Sep 9th, 2026, 10:29 - PRS (Length: 8811)</span></font></li>
+</ul>
+</div>
+<font face="Arial" size="-1">[ <a href="/news/headlines/Oil.html" target="_top">More Oil News</a> ]</font>
+</td></tr></table>
+
+<div id='IC_M_300x250_2'>
+</div>
+<br />&nbsp;<br>
+<div class="MRIC_videoad">
+<div id="ic_185_750video_1">
+
+
+
+
+  </div>
+</div>
+<td class="rightcol m-cellblock m-padding">
+
+<div class="MRIC_adbox1">
+<!-- Site: TradingCharts, Zone: options, Size 300x250, Multiple sizes: Yes -->
+<div style="min-height:250px;" id="ic_300x250_1">
+</div>
+</div>
+  <div id="ic-newsletter-signup"></div>
+    <script type="text/javascript" src="//iclnd.investingchannel.com/nl/ads/tradingcharts-email/tradingcharts-emailsignup.js"></script><br />
+  <div id="ic_dianomi_1">
+  </div>
+<script type="text/javascript">
+/* <![CDATA[ */
+// fetch extremes data
+var extremesLeadersData = false;
+function fetch_extremes_leaders(type, target_id) {
+    var params = ["assetType=FUT","type="+type,"maxRecords=6","exchanges=GBLX,CBOT,ICEUS,WCE"].join("&");
+    bc_fetch_object("getLeaders.json", params, function(data) {
+        extremesLeadersData = data;
+        if (typeof get_extremes_leaders == 'function') {
+            get_extremes_leaders(type,target_id);
+        }
+        //console.log(['bc_fetch_object/extremesLeadersData', extremesLeadersData]);
+    });
+}
+fetch_extremes_leaders('hot_daily','top_movers');
+/* ]]> */
+</script><script type="text/javascript">
+<!--
+function extmMM_showHideLayers() { //v9.0
+    var i,p,v,obj,args=extmMM_showHideLayers.arguments;
+    for (i=0; i<(args.length-2); i+=3)
+        with (document)
+            if (getElementById && ((obj=getElementById(args[i]))!=null)) {
+                v=args[i+2];
+                if (obj.style) {
+                    obj=obj.style;
+                    v=(v=='show')?'visible':(v=='hide')?'hidden':v;
+                }
+                obj.display = (v=='visible') ? 'block' : 'none';
+                if (v=='visible') {
+                    var cont = document.getElementById(args[i]);
+                    if (leaderType=cont.getAttribute('data-leader-type')) {
+                        fetch_extremes_leaders(leaderType,cont.id);
+                    }
+                }
+                obj.visibility=v;
+            }
+}
+//-->
+</script>
+<script type="text/javascript">
+function get_extremes_leaders(type, target_id,refresh) {
+    //console.log(['document/ready/get_extremes_leaders', extremesLeadersData]);
+    var container = $('#'+target_id);
+    if (container.attr('data-loaded') == 'true') return;
+    var tmpl_1 = $('.extremes_tmpl_1');
+    var tmpl_2 = $('.extremes_tmpl_2');
+    
+    if (extremesLeadersData && container.length) {
+        var leaders = extremesLeadersData;
+        for(var i=0; i<leaders.length; i++) {
+            var leader = leaders[i];
+            //load_extremes_minichart(leader.symbol,target_id+(i+1),'#'+(i+1)+' '+leader.symbolName);
+            var tr1 = $(tmpl_1).clone();
+            var tr2 = $(tmpl_2).clone();
+
+            $('.extremes_desc a',tr1).html(leader.symbolName).attr('href','/intraday/'+leader.symbol);
+            $('.extremes_chg',tr1).html(leader.pricePercentChange+'%');
+            $('.extremes_sym a',tr2).html(leader.symbol).attr('href','/intraday/'+leader.symbol);
+            $('.extremes_val',tr2).html(leader.lastPrice);
+            $('.extremes_vol',tr2).html(leader.volume);
+
+            if (leader.priceNetChange>0) {
+                $('.extremes_dn', tr1).each(function(){
+                   $('img', this).attr('src','//cdn2.tradingcharts.com/v2025060902/fe_graphics/extremes_up.png');
+                   $(this).removeClass('extremes_dn').addClass('extremes_up');
+                });
+            } else {
+                $('.extremes_up', tr1).each(function(){
+                   $('img', this).attr('src','//cdn2.tradingcharts.com/v2025060902/fe_graphics/extremes_dn.png');
+                   $(this).removeClass('extremes_up').addClass('extremes_dn');
+                });
+            }
+
+
+            tr1.removeClass('extremes_tmpl_1').show();
+            tr2.removeClass('extremes_tmpl_2').show();
+
+            $('.extremes_list table tbody', container).append(tr1);
+            $('.extremes_list table tbody', container).append(tr2);
+        }
+
+        $('.extremes_loading', container).hide();
+        container.attr('data-loaded', true);
+    }
+}
+
+$( document ).ready(function() {
+    if (extremesLeadersData) {
+        get_extremes_leaders('hot_daily','top_movers');
+    }
+});
+</script>
+
+<!-- media="(min-width: 501px)" -->
+<link rel="stylesheet" type="text/css" media="(min-width: 768px)" href="//cdn2.tradingcharts.com/v2025060902/css/fe_mini_charts_300x.css" />
+<link rel="stylesheet" type="text/css" media="(max-width: 767px)" href="//cdn2.tradingcharts.com/v2025060902/css/fe_mini_charts_300x_mobile.css" class="mobile_css" />
+
+<div id="extremes" style="height:312px;">
+<!--================ Top (was Movers) Hottest Div Starts ====================-->
+<div id="top_movers" style="visibility:visible; position:absolute; margin:0;" data-leader-type="hot_daily">
+<table cellpadding="0" cellspacing="0">
+    <tr>
+    <td colspan="3"><div class="extremes_head">Extreme Futures: Movers &amp; Shakers</div></td>
+    </tr>
+  <tr>
+        <td><p class="charts_nav_movers_active" onClick="extmMM_showHideLayers('top_movers','','show','top_shakers','','hide','populars','','hide')"><a href="javascript:;" class="charts_nav_movers_active">Hottest</a></p></td>
+        <td><p class="charts_nav_shakers_ma" onClick="extmMM_showHideLayers('top_movers','','hide','top_shakers','','show','populars','','hide')"><a href="javascript:;" class="charts_nav_shakers_ma">Actives</a></p></td>
+        <td><p class="charts_nav_populars" onClick="extmMM_showHideLayers('top_movers','','hide','top_shakers','','hide','populars','','show')"><a href="javascript:;" class="charts_nav_populars">Gainers</a></p></td>
+    </tr>
+      <tr>
+        <td colspan="3" class="charts_nav_quotebox"><i>Today's Hottest Futures</i></td>
+      </tr>
+
+      <tr>
+        <td colspan="3">
+            <div class="extremes_list" id="extremes_movers">
+                <table cellpadding="0" cellspacing="0" width="287">
+                    <tbody>
+                        <tr>
+                            <th colspan="2">Market</th>
+                            <th>Last</th>
+                            <th>Vol</th>
+                            <th>%&nbsp;Chg</th>
+                        </tr>
+                        <tr class="extremes_loading">
+                            <td colspan="5">Loading...</td>
+                        </tr>
+                        <tr style="display: none;"><td></td></tr>
+                        <!-- item begin -->
+                        <tr class="extremes_tmpl_1" style="display:none;">
+                            <td class="extremes_up" rowspan="2"><img src="//cdn2.tradingcharts.com/v2025060902/fe_graphics/extremes_up.png" width="15" height="20" alt="down"></td>
+                            <td colspan="3" class="extremes_desc"><a href="#"></a></td>
+                            <td class="extremes_chg extremes_up" rowspan="2">-3.24%</td>
+                        </tr>
+                        <tr class="extremes_tmpl_2" style="display:none;">
+                            <td class="extremes_sym"><a href="#"></a></td>
+                            <td class="extremes_val"></td>
+                            <td class="extremes_vol"></td>
+                        </tr>
+                        <!-- item end -->
+                    </tbody>
+                </table>
+            </div>
+        </td>
+     </tr>
+  </table>
+</div>
+<!--===================== Top (was: Movers) Hottest Div Ends ==================-->
+<!--===================== Top (was: Shakers) Active Div Starts ==================-->
+<div id="top_shakers" style="visibility:hidden; position:absolute; margin:0;" data-leader-type="active">
+    <table cellpadding="0" cellspacing="0">
+    <tr>
+    <td colspan="3"><div class="extremes_head">Extreme Futures: Movers &amp; Shakers</div></td>
+    </tr>
+      <tr>
+        <td><p class="charts_nav_movers_sa" onClick="extmMM_showHideLayers('top_movers','','show','top_shakers','','hide','populars','','hide')"><a href="javascript:;" class="charts_nav_movers_sa">Hottest</a></p></td>
+        <td><p class="charts_nav_shakers_active" onClick="extmMM_showHideLayers('top_movers','','hide','top_shakers','','show','populars','','hide')"><a href="javascript:;" class="charts_nav_shakers_active">Actives</a></p></td>
+        <td><p class="charts_nav_populars_sa" onClick="extmMM_showHideLayers('top_movers','','hide','top_shakers','','hide','populars','','show')"><a href="javascript:;" class="charts_nav_populars_sa">Gainers</a></p></td>
+      </tr>
+      <tr>
+        <td colspan="3" class="charts_nav_quotebox"><i>Futures Activity Leaders</i></td>
+      </tr>
+      <tr>
+        <td colspan="3">
+            <div class="extremes_list" id="extremes_shakers">
+                <table cellpadding="0" cellspacing="0" width="287">
+                    <tbody>
+                        <tr>
+                            <th colspan="2">Market</th>
+                            <th>Last</th>
+                            <th>Vol</th>
+                            <th>%&nbsp;Chg</th>
+                        </tr>
+                        <tr class="extremes_loading">
+                            <td colspan="5">Loading...</td>
+                        </tr>
+                        <tr style="display: none;"><td></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </td>
+     </tr>
+    </table>
+  </div>
+<!--===================== Top (was: Shakers) Active Div Ends ==================-->
+<!--===================== (was: Populars) Gainers Div Starts ==================-->
+<div id="populars" style="visibility:hidden; position:absolute; margin:0;" data-leader-type="gainers">
+<table cellpadding="0" cellspacing="0">
+    <tr>
+    <td colspan="3"><div class="extremes_head">Extreme Futures: Movers &amp; Shakers</div></td>
+    </tr>
+      <tr>
+        <td><p class="charts_nav_movers" onClick="extmMM_showHideLayers('top_movers','','show','top_shakers','','hide','populars','','hide')"><a href="javascript:;" class="charts_nav_movers">Hottest</a></p></td>
+        <td><p class="charts_nav_shakers" onClick="extmMM_showHideLayers('top_movers','','hide','top_shakers','','show','populars','','hide')"><a href="javascript:;" class="charts_nav_shakers">Actives</a></p></td>
+        <td><p class="charts_nav_populars_active" onClick="extmMM_showHideLayers('top_movers','','hide','top_shakers','','hide','populars','','show')"><a href="javascript:;" class="charts_nav_populars_active">Gainers</a></p></td>
+      </tr>
+      <tr>
+        <td colspan="3" class="charts_nav_quotebox"><i>Top Price Gainers</i></td>
+      </tr>
+      <tr>
+        <td colspan="3">
+            <div class="extremes_list" id="extremes_movers">
+                <table cellpadding="0" cellspacing="0" width="287">
+                    <tbody>
+                        <tr>
+                            <th colspan="2">Market</th>
+                            <th>Last</th>
+                            <th>Vol</th>
+                            <th>%&nbsp;Chg</th>
+                        </tr>
+                        <tr class="extremes_loading">
+                            <td colspan="5">Loading...</td>
+                        </tr>
+                        <tr style="display: none;"><td></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </td>
+      </tr>
+  </table>
+</div>
+<!--===================== Gaines (was: Populars) Div Ends ==================-->
+</div><br />
+<div class="MRIC_adbox2" id="MRIC_adbox2">
+<div id="ic_300x250_2">
+<!-- Site: TradingCharts, Zone: futures, Size 300x250, Multiple sizes: No -->
+</div>
+</div>
+
+</td>
+    </tr>
+    <tr>
+        <td colspan="2" valign="top">
+
+<div id='IC_M_300x250_3'>
+</div>
+        </td>
+    </tr>
+</table>
+</div>
+<!-- GA -->
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-4733565-2']);
+  _gaq.push(['_addIgnoredRef', 'futures.tradingcharts.com']);
+  _gaq.push(['_addIgnoredRef', 'tradingcharts.com']);
+  _gaq.push(['_setDomainName', '.tradingcharts.com']);
+  _gaq.push(['_setAllowHash', false]);
+  _gaq.push(['_setCustomVar',1,'UserType','FE_Standard',1]);
+  _gaq.push(['_setCustomVar',2,'ResponsiveTest','Using_Responsive',1]);
+  _gaq.push(['_trackPageview']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+<!-- END GA -->
+
+<script type="text/javascript">
+var Market='HO';
+var metadataSymbol = {"HoursOffsetFromCT":"1","Name":"Heating Oil","ddf_sessionid":"R","Shortname":"NYMEX","Longname":"New York Mercantile Exchange","HasOptions":"1","Notice":"These pages &copy; TradingCharts.com, Inc. All rights reserved. Market data delivered to TradingCharts.com, Inc. by DDF Plus. Tradingcharts.com, Inc and DDF Plus make no claims concerning the validity of the information provided herein, and will not be held liable for any use thereof. Data is provided and intended for direct display in Internet browser of end user only, and only in the format provided. Automated capture, reverse engineering, or other unintended use of pages or incorporated data is not permitted.","Delay":"10","ChartSymbol":"HO","NewsCategory":"Oil","StrikeDivisor_4DDF":"1","CashValueMultiplier":"4200000","ForexChartSymbol":"","ForexCurrencyName":"","OtherSessionQuoteSymbol":"HO_","SessionType":"1","Product":"HEATING OIL","exchangeid":"J","DecimalPlaces":"4"};
+metadataSymbol.chart_base_url = '/intraday';
+metadataSymbol.marketquotes_base_url = '/marketquotes';
+var optionType = '';
+var full_symbol = ''
+var full_symbol = '';
+var tempBaseSymbol = 'HO';
+</script>
+<script src="//cdn2.tradingcharts.com/v2025060902/js/marketquotes-quote.js?v20250502"></script>
+<script src="//cdn2.tradingcharts.com/v2025060902/js/quotefunc3.js"></script>
+<style type="text/css">
+#quote_content {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+}
+</style>
+         </td>
+    </tr>
+    </table>
+    </td>
+    </tr>
+</table>
+
+<div id='IC_M_300x250_3'>
+</div>
+<!-- WGT footer start -->
+<table border="0" cellspacing="0" cellpadding="0" align="center" class="footer_links" style="margin:auto;">
+  <tr>
+    <td style="padding-left:0px;">
+    <table width="100%" border="0" cellpadding="0" cellspacing="0">
+      <tr class="fm_flexrow">
+        <td class="fe_footer_links_l_col">
+        <span class="fe_footer_links_head">Futures Market Sectors</span>
+        <table class="fe_footer_links_content" width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td>
+            <a href="/currency_futures.html">Currency Futures</a><br />
+            <a href="/petroleum_futures.html">Energy / Oil Futures</a><br />
+            <a href="/grains_oilseeds.html">Grains &amp; Oilseed</a><br />
+            <a href="/index_futures.html">Index Futures</a>
+            </td>
+            <td>
+            <a href="/interest_bonds.html">Interest Rate &amp; Bond</a><br />
+            <a href="/metals.html">Metals Futures</a><br />
+            <a href="/cattle_pork.html">Meats, Cattle / Pork</a><br />
+            <a href="/food_fiber.html">Softs Commodities</a>
+            </td>
+          </tr>
+        </table>
+        </td>
+        <td class="fe_footer_links_mid_col">
+        <span class="fe_footer_links_head">Major Forex Currency Pairs</span>
+        <table class="fe_footer_links_content footer_3col" width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td>
+            <a href="//forex.tradingcharts.com/chart/Euro_US%20Dollar.html">EUR/USD</a><br>
+            <a href="//forex.tradingcharts.com/chart/US%20Dollar_Japanese%20Yen.html">USD/JPY</a><br>
+            <a href="//forex.tradingcharts.com/chart/Pound%20Sterling%20%28British%20Pound%29_US%20Dollar.html">GBP/USD</a><br>
+            <a href="//forex.tradingcharts.com/chart/US%20Dollar_Swiss%20Franc.html">USD/CHF</a><br>
+            </td>
+            <td>
+            <a href="//forex.tradingcharts.com/chart/Euro_Pound%20Sterling%20%28British%20Pound%29.html">EUR/GBP</a><br>
+            <a href="//forex.tradingcharts.com/chart/Euro_Japanese%20Yen.html">EUR/JPY</a><br>
+            <a href="//forex.tradingcharts.com/chart/US%20Dollar_Swiss%20Franc.html">EUR/CHF</a><br>
+            </td>
+            <td>
+            <a href="//forex.tradingcharts.com/chart/Australian%20Dollar_US%20Dollar.html">AUD/USD</a><br>
+            <a href="//forex.tradingcharts.com/chart/US%20Dollar_Canadian%20Dollar.html">USD/CAD</a><br>
+
+            <a href="//forex.tradingcharts.com/chart/New%20Zealand%20Dollar_US%20Dollar.html">NZD/USD</a>
+            </td>
+          </tr>
+        </table>
+        </td>
+       <td>
+        <span class="fe_footer_links_head">Resources for Traders</span>
+        <div>
+			<a href="/educational_resources.php">Learn to Trade Futures</a><br />
+			<a href="/brokers.php">Commodity Brokers Directory</a><br />
+			<a href="/specs/">Contract Specifications</a>
+        </div>
+        </td>
+
+      </tr>
+    </table>
+	</td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" class="fe_main_table fe_footer" style="margin:auto;">
+  <tr>
+   <td align="left" colspan="3">
+     <div id="contact_links">
+
+<!-- Start of link/script/css to dispay link to switch mobile/desktop views. Display to mobile devices  only -->
+<style type="text/css" media="(min-width: 768px)">  #toggle_desktop_css_link{display:none; } /* Hide link to toggle mobile/desktop style on desktop devices */ </style>
+<p id="toggle_desktop_css_link"><a href="" onclick="toggle_desktop_css()" id="toggle_desktop_layout_atag">Toggle desktop layout</a></p>
+
+<script>
+
+document.getElementById("toggle_desktop_layout_atag").innerText = (localStorage.getItem(sMobileDisplayPrefFlagName) === 'desktop') ? "Switch to mobile layout" : "Switch to desktop layout";
+
+</script>
+
+<!-- end of link/script/css to dispay link to swtich mobile/desktop views -->
+     <p><a href="//tradingcharts.com/advertise/index.php">Advertise with Us</a>&nbsp; | &nbsp;<a href="/premium_subscriber/login_subscribe.php?premium_link">Subscriber Login</a>&nbsp; | &nbsp;<a href="/suggestions.php">Contact Us</a></p>
+     </div>
+</td>
+</tr>
+<tr class="fm_flexrow m-padding">
+<td class="fm_ice_footer">
+<a target="theice" href="https://www.theice.com/index"><img src="//cdn2.tradingcharts.com/v2025060902/graphics/ICEsprites2-2x_logo_white.png" loading="lazy" border="0" width="77" height="77"></a>
+</td>
+<td class="fm_copyright_footer">
+
+     <p><font size="-2">Copyright &copy; 2026.</font></p>
+     <p><font size="-2">All <a style="text-decoration: underline" href="https://www.barchartmarketdata.com/" target="_blank" rel="nofollow">market data</a> is provided by Barchart Solutions. Futures: at least 10 minute delayed. Information is provided &quot;as is&quot; and solely for informational purposes, not for trading purposes or advice.
+     <br>To see all exchange delays and terms of use, please see <a style="text-decoration: underline" href="https://www.barchartmarketdata.com/terms" target="terms" rel="nofollow">disclaimer.</a></font></p>
+     <p><font size="-2">Concerned about privacy? See <a href="/privacy_statement.php">TradingCharts' Privacy Statement</a></font></p>
+     <p><font size="-2"><a href="/privacy_statement.php#IC_CCPA_Application">Do not sell my personal information</a></font></p>
+
+</td>
+<td class="fm_cme_footer">
+<a target="cmegroup" href="https://www.cmegroup.com/"><img src="//cdn2.tradingcharts.com/v2025060902/graphics/cmegroup-logo-2xinvers181x.png" loading="lazy" border="0" width="181" height="28"></a>
+</td>
+</tr>
+<tr>
+<td colspan="3">
+
+     <script type="text/javascript">
+        $(document).ready(function(){
+          generateTCPSLink();
+        });
+
+        function generateTCPSLink(){
+          var root = location.protocol + '//' + location.host;
+
+          var url_param = {
+            action:'tcps_logged_in',
+            timestamp: (new Date()).getTime()
+          };
+
+          $.getJSON(root+'/widgets/footer_ajax/footer_common_functions.php?'+$.param(url_param),function(data){
+            if(data.logged_in){
+              $('span#tcps_login_link').html("<a href='"+root+"/premium_subscriber/tcps_logout.php"+"'>[ Logout ]</a>");
+              $('.mobile_login').html("Premium Subscriber:<a href='"+root+"/premium_subscriber/tcps_logout.php"+"'>Logout</a><br>");
+
+            }else{
+              $('span#tcps_login_link').html("<a href='"+root+"/premium_subscriber/login_subscribe.php?menubar"+"'>[ Login / Join ]</a>");
+              $('.mobile_login').html("Premium Subscriber:<a href='"+root+"/premium_subscriber/login_subscribe.php?premium_link"+"'>Login</a><br>");
+
+            }
+          });
+        }
+     </script>
+
+
+
+
+
+   </td>
+  </tr>
+</table>
+
+<!-- GA -->
+<script>
+// ga.js loaded async. GA settings in header
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+<script>
+$( document ).ready(function() {
+    $('.fm_nav_hamburger span').bind('click', function(e){
+          e.stopPropagation();
+          $(this).toggleClass("active");
+          $(".fm_nav_bar").toggleClass("show");
+          $(".fm_chart_sidecol_toggle").toggleClass("active");
+          $(".fm_chart_sidecol").removeClass('show');
+          mobile_overlap($(".fm_nav_bar").hasClass('show'));
+    });
+
+    $('.fm_chart_sidecol_toggle').bind('click', function(e){
+          e.stopPropagation();
+                    $(".fm_nav_hamburger span").removeClass("active");
+          $(".fm_chart_sidecol").toggleClass('show');
+           $(".fm_nav_bar").removeClass("show");
+          mobile_overlap($(".fm_chart_sidecol").hasClass('show'));
+    });
+
+            $('.f-chart-term b, .f-chart-format b, .f-chart-format #advancedcharts_session_select_label, .m-chart-insights b, .fm_quicklinks h3, .fm_premiumfeats b, .f-market-viewby .f-market-viewby-label, .m-news-section strong').click(function() {
+                console.log('click');
+                $(this).toggleClass('m-fullwidth');
+                $(this).next('div').toggleClass('m-hidden');
+                $(this).next('ul').toggleClass('m-hidden');
+                $(this).next('div').children('label').toggleClass('open');
+                $(this).next('ul').children('li').toggleClass('open');
+            });
+            $('.f-chart-profile > b, .m-chart-trendline > b, .education_section > strong').click(function() {
+                console.log('click');
+                $(this).parent('div').toggleClass('open');
+            });
+            $('.m-chart-insights > div.m-hidden').click(function() {
+                console.log('click');
+                $(this).prev('b').toggleClass('m-fullwidth');
+                $(this).removeClass('m-hidden');
+                $(this).children('label').toggleClass('open');
+            });
+});
+
+function mobile_overlap(show) {
+    if (show === false) {
+        $('#m-overlap').remove();
+        return;
+    }
+
+    if ($('#m-overlap').length) return;
+
+    var $div = $('<div />').appendTo('body');
+    $div.attr('id', 'm-overlap');
+
+    $div.bind('click', function(e){
+          e.stopPropagation();
+          console.log('click');
+          closeMenus();
+    });
+}
+
+function closeMenus() {
+          $(".fm_nav_hamburger span").removeClass("active");
+        $(".fm_chart_sidecol").removeClass("show");
+        $(".fm_chart_sidecol_toggle").removeClass("active");
+        $(".fm_nav_bar").removeClass("show");
+        $(".fm_nav_hamburger").removeClass("active");
+        $('#m-overlap').remove();
+}
+
+</script>
+
+<style>
+/*Footer Close State */
+#dmgfooterclosestate {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    margin-left: 468px;
+    width: 20px;
+    padding: 3px;
+}
+/*Footer Open State */
+#dmgfooter {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    margin-left: -490px;
+    width: 980px;
+    padding: 3px;
+}
+/*Set Properties of Footer */
+.dmgfooterProp {
+    /*Set Fonts and Colors */
+    font-family: Helvetica, Arial, san-serif;
+    font-size: 12px;
+    line-height: 18px;
+    /*Set Curve Radius */
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+    border: 1px solid #666; border-bottom: none;
+    /*Set Shadow */
+    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.80);
+    -moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.80);
+    -webkit-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.80);
+    /*Set Background Gradient */
+    background: #ffffff; /* Old browsers */
+    background: -moz-linear-gradient(top,  #ffffff 0%, #d0d0d0 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#d0d0d0)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #ffffff 0%,#d0d0d0 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #ffffff 0%,#d0d0d0 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #ffffff 0%,#d0d0d0 100%); /* IE10+ */
+    background: linear-gradient(top,  #ffffff 0%,#d0d0d0 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#d0d0d0',GradientType=0 ); /* IE6-9 */
+    /* Clearfix (all browsers) */
+    #dmgfooter:after {content: ".";display: block;height: 0;clear: both;visibility: hidden;}/* IE6 */ * html #dmgfooter {height: 1%;}/* IE7 */*:first-child+html #dmgfooter {min-height: 1px;}
+}
+
+/* Quote Sections */
+.ftsection {
+    padding: 5px;
+    border-left: 1px solid #FFF;
+    border-right: 1px solid #CCC;
+    float: left;
+    text-align: left;
+}
+.ftfirst {border-left: none;}
+.ftlast {border-right: none; float: right;}
+.ftpositive {color: #006600;}
+.ftnegative {color: #CC0000;}
+.ftqt {font-weight: normal; color: #666;}
+.ftqt a{color: #0066CB; text-decoration: none;}
+.ftqt a:hover{text-decoration: underline;}
+.ftad {margin-top: -3px; margin-bottom: -3px;}
+.ftnewsltter {border-right: none;}
+</style>
+
+<!--UdmComment-->
+<div class="stickyfooter201609"></div>
+<!--[if IE 6]>
+    <style>#dmgfooter {display: none;}</style>
+<![endif]-->
+
+<!-- Footer Open/Close Function -->
+<script type="text/javascript">
+$(document).ready(function(){
+    displayFooterQuotes();
+
+    $(".ftclosefunction").click(function () {
+        $("#dmgfooter").slideToggle("fast");
+        $("#dmgfooterclosestate").slideToggle("fast");
+    });
+});
+
+
+
+function displayFooterQuotes() {
+    if (!barchartStickyFooterData) return;
+
+    var fLtCrudePrice;
+    var fNatGasPrice;
+    var fCornPrice;
+    var fCottonPrice;
+    var fGoldPrice;
+    var fCopperPrice;
+    var fEuroPrice;
+    var fUSDPrice;
+    var fSPMiniPrice;
+    var fDJIAPrice;
+
+    var sLtCrudeClass;
+    var sNatGasClass;
+    var sCornClass;
+    var sCottonClass;
+    var sGoldClass;
+    var sCopperClass;
+    var sEuorClass;
+    var sUSDClass;
+    var sSPMiniClass;
+    var sDJIAClass;
+
+    if (barchartStickyFooterData) {
+        dataTicker = barchartStickyFooterData;
+
+        $.each(dataTicker, function(key,value) {
+            var baseSymbol = value.symbol.substr(0, 2);
+
+            if (baseSymbol=='CL') {
+                fLtCrudePrice = (value.lastPrice==0 ? "<center>-</center>" : value.lastPrice);
+                sLtCrudeClass = (value.netChange >= 0 ? "ftpositive" : "ftnegative");
+            }
+            if (baseSymbol=='NG') {
+                fNatGasPrice = (value.lastPrice==0 ? "<center>-</center>" : value.lastPrice);
+                sNatGasClass = (value.netChange >= 0 ? "ftpositive" : "ftnegative");
+            }
+            if (baseSymbol=='ZC') {
+                fCornPrice = (value.lastPrice==0 ? "<center>-</center>" : value.lastPrice);
+                sCornClass = (value.netChange >= 0 ? "ftpositive" : "ftnegative");
+            }
+            if (baseSymbol=='CT') {
+                fCottonPrice = (value.lastPrice==0 ? "<center>-</center>" : value.lastPrice);
+                sCottonClass = (value.netChange >= 0 ? "ftpositive" : "ftnegative");
+            }
+            if (baseSymbol=='GC') {
+                fGoldPrice = (value.lastPrice==0 ? "<center>-</center>" : value.lastPrice);
+                sGoldClass = (value.netChange >= 0 ? "ftpositive" : "ftnegative");
+            }
+            if (baseSymbol=='HG') {
+                fCopperPrice = (value.lastPrice==0 ? "<center>-</center>" : value.lastPrice);
+                sCopperClass = (value.netChange >= 0 ? "ftpositive" : "ftnegative");
+            }
+            if (baseSymbol=='E6') {
+                fEuroPrice = (value.lastPrice==0 ? "<center>-</center>" : value.lastPrice);
+                sEuroClass = (value.netChange >= 0 ? "ftpositive" : "ftnegative");
+            }
+            if (baseSymbol=='DX') {
+                fUSDPrice = (value.lastPrice==0 ? "<center>-</center>" : value.lastPrice);
+                sUSDClass = (value.netChange >= 0 ? "ftpositive" : "ftnegative");
+            }
+            if (baseSymbol=='ES') {
+                fSPMiniPrice = (value.lastPrice==0 ? "<center>-</center>" : value.lastPrice);
+                sSPMiniClass = (value.netChange >= 0 ? "ftpositive" : "ftnegative");
+            }
+            if (baseSymbol=='YM') {
+                fDJIAPrice = (value.lastPrice==0 ? "<center>-</center>" : value.lastPrice);
+                sDJIAClass = (value.netChange >= 0 ? "ftpositive" : "ftnegative");
+            }
+        });
+
+        var sHTML = '';
+        sHTML += '<div class="ftsection">';
+        sHTML += '<span class="ftqt"><a href="/marketquotes/CL_.html">Lt Crude</a></span> <span class="'+sLtCrudeClass+'">'+fLtCrudePrice+'</span><br />';
+        sHTML += '<span class="ftqt"><a href="/marketquotes/NG_.html">Nat Gas</a></span> <span class="'+sNatGasClass+'">'+fNatGasPrice+'</span></div>';
+        sHTML += '<div class="ftsection">';
+        sHTML += '<span class="ftqt"><a href="/marketquotes/C.html">Corn</a></span> <span class="'+sCornClass+'">'+fCornPrice+'</span><br />';
+        sHTML += '<span class="ftqt"><a href="/marketquotes/CT.html">Cotton #2</a></span> <span class="'+sCottonClass+'">'+fCottonPrice+'</span></div>';
+        sHTML += '<div class="ftsection">';
+        sHTML += '<span class="ftqt"><a href="/marketquotes/GC_.html">Gold</a></span> <span class="'+sGoldClass+'">'+fGoldPrice+'</span><br />';
+        sHTML += '<span class="ftqt"><a href="/marketquotes/HG_.html">Copper</a></span> <span class="'+sCopperClass+'">'+fCopperPrice+'</span></div>';
+        sHTML += '<div class="ftsection">';
+        sHTML += '<span class="ftqt"><a href="/marketquotes/E6.html">Euro</a></span> <span class="'+sEuroClass+'">'+fEuroPrice+'</span><br />';
+        sHTML += '<span class="ftqt"><a href="/marketquotes/DX.html">USD Index</a></span> <span class="'+sUSDClass+'">'+fUSDPrice+'</span></div>';
+        sHTML += '<div class="ftsection">';
+        sHTML += '<span class="ftqt"><a href="/marketquotes/ES.html">SP500 E-mini</a></span> <span class="'+sSPMiniClass+'">'+fSPMiniPrice+'</span><br />';
+        sHTML += '<span class="ftqt"><a href="/marketquotes/YM.html">DJIA E-mini</a></span> <span class="'+sDJIAClass+'">'+fDJIAPrice+'</span></div>';
+
+        document.getElementById('divStickyFooterQuotes').innerHTML = sHTML;
+    }
+}
+</script>
+
+<!-- Sticky Footer Code -->
+<div id="dmgfooter" class="dmgfooterProp" style="z-index: 20 !important">
+    <div class="ftsection ftad ftfirst">
+<!-- slot for ad -->
+    </div>
+    <!-- begin quotes -->
+    <div id="divStickyFooterQuotes"></div>
+        <!-- end quotes -->
+    <div class="ftsection fitad ftnewsltter" style="margin-left:50px; border-left:0px">
+<div id="ic_300x50_bts">
+</div>
+    </div>
+    <div class="ftsection ftlast"><a href="#footerclose" class="ftclosefunction"><img src="//cdn2.tradingcharts.com/v2025060902/graphics/close_icon_stickyfooter.gif" alt="close_icon" width="16" height="35" border="0" /></a></div>
+</div>
+
+<div id="dmgfooterclosestate" class="dmgfooterProp" style="z-index: 20 !important">
+    <a href="#footeropen" class="ftclosefunction"><img src="//cdn2.tradingcharts.com/v2025060902/graphics/open_icon_stickyfooter.gif" alt="open_icon" width="16" height="15" border="0" /></a>
+</div>
+<!--/UdmComment-->
+<!-- End Sticky Footer Code -->
+
+</body>
+</html>
