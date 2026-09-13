@@ -20,7 +20,11 @@ import subprocess
 
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(BASE, "data", "ho_contracts")
-CRED = r"C:/Users/Administrator/.workbuddy/connectors/2e7b65ad-3a22-424a-a190-5066a615e2dc/.credentials.v3.json"
+_CRED_CANDIDATES = [
+    os.path.expanduser("~/.workbuddy/futu_credentials.json"),   # Mac 授权落地文件（2026-09-11）
+    r"C:/Users/Administrator/.workbuddy/connectors/2e7b65ad-3a22-424a-a190-5066a615e2dc/.credentials.v3.json",
+]
+CRED = next((p for p in _CRED_CANDIDATES if os.path.exists(p)), _CRED_CANDIDATES[0])
 
 SPECIFIC = ["US.HO26{:02d}".format(m) for m in (10, 11, 12)] + \
            ["US.HO27{:02d}".format(m) for m in range(1, 11)]      # 2610..2710 = 13 腿
@@ -33,7 +37,7 @@ FORCE = True
 
 def get_token():
     cred = json.load(open(CRED, encoding="utf-8"))
-    key = "futu-mcp|e818c1846070ff2a"
+    key = next(iter(cred.get("mcpOAuth", {})), "futu-mcp|e818c1846070ff2a")
     oa = cred["mcpOAuth"][key]
     now_ms = int(time.time() * 1000)
     exp = oa.get("expiresAt") or 0

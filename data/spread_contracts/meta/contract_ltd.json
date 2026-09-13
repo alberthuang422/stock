@@ -1,0 +1,47 @@
+{
+ "generated": "2026-09-11 20:06",
+ "source_dir": "/Users/alberthuang/Downloads",
+ "timezone_note": "raw=+08:00 bar起始；norm=ET",
+ "contracts": [
+  {
+   "file_raw": "NYMEX_DL_CLX2026, 60.csv",
+   "file_norm": "CLX26_60.csv",
+   "product": "CL",
+   "code": "X2026",
+   "delivery_month": "2026-11",
+   "granularity": "60m",
+   "rows": 2587,
+   "first": "2026-04-06 16:00",
+   "last": "2026-09-11 07:00",
+   "last_bar_et": "2026-09-11",
+   "note": "时间戳为 bar 起始时刻；无 volume 字段"
+  },
+  {
+   "file_raw": "NYMEX_DL_HOX2026, 60.csv",
+   "file_norm": "HOX26_60.csv",
+   "product": "HO",
+   "code": "X2026",
+   "delivery_month": "2026-11",
+   "granularity": "60m",
+   "rows": 2587,
+   "first": "2026-03-17 11:00",
+   "last": "2026-09-11 07:00",
+   "last_bar_et": "2026-09-11",
+   "note": "时间戳为 bar 起始时刻；无 volume 字段"
+  },
+  {
+   "file_raw": "NYMEX_DL_RBV2026, 60.csv",
+   "file_norm": "RBV26_60.csv",
+   "product": "RB",
+   "code": "V2026",
+   "delivery_month": "2026-10",
+   "granularity": "60m",
+   "rows": 2603,
+   "first": "2026-03-25 04:00",
+   "last": "2026-09-11 07:00",
+   "last_bar_et": "2026-09-11",
+   "note": "时间戳为 bar 起始时刻；无 volume 字段"
+  }
+ ],
+ "pairs": []
+}

@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CVS Health（CVS）公司研究 · 2026-09</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<style>
+:root{
+  --bg:#f7f8fa; --card:#ffffff; --ink:#1a1d24; --ink2:#4a5260; --ink3:#7a8290;
+  --line:#e3e7ed; --accent:#1f5fbf; --accent-soft:#eaf1fc;
+  --up:#c0392b; --down:#1e8449; --warn:#b9770e; --warn-soft:#fdf5e3;
+  --danger:#a93226; --danger-soft:#fdecea; --ok-soft:#eaf5ee;
+}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue","Microsoft YaHei",sans-serif;
+  font-size:15px;line-height:1.75;-webkit-font-smoothing:antialiased;}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px 72px;}
+header{background:linear-gradient(135deg,#1f5fbf 0%,#2d7a5f 100%);color:#fff;padding:38px 0 30px;margin-bottom:26px;}
+header .wrap{padding-bottom:0;}
+h1{margin:0 0 8px;font-size:29px;font-weight:700;letter-spacing:.5px;}
+.sub{opacity:.92;font-size:14px;}
+.sub b{font-weight:600;}
+h2{font-size:21px;margin:44px 0 16px;padding-left:12px;border-left:4px solid var(--accent);line-height:1.3;}
+h3{font-size:16.5px;margin:26px 0 10px;color:var(--ink);}
+p{margin:10px 0;color:var(--ink2);}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:20px 22px;margin:14px 0;}
+.tldr{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--accent);
+  border-radius:10px;padding:22px 24px;margin-bottom:8px;}
+.tldr h2{margin:0 0 12px;border:none;padding:0;font-size:19px;color:var(--accent);}
+.tldr ul{margin:8px 0 0;padding-left:20px;}
+.tldr li{margin:9px 0;color:var(--ink2);}
+.grid{display:grid;gap:12px;}
+.g5{grid-template-columns:repeat(5,1fr);}
+.g4{grid-template-columns:repeat(4,1fr);}
+.g3{grid-template-columns:repeat(3,1fr);}
+.g2{grid-template-columns:repeat(2,1fr);}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;}
+.kpi .k{font-size:12.5px;color:var(--ink3);margin-bottom:6px;}
+.kpi .v{font-size:23px;font-weight:700;line-height:1.25;}
+.kpi .n{font-size:11.5px;color:var(--ink3);margin-top:4px;}
+.up{color:var(--up);} .down{color:var(--down);}
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:8px 0;}
+th,td{padding:9px 11px;text-align:right;border-bottom:1px solid var(--line);}
+th{background:#f0f3f7;color:var(--ink2);font-weight:600;white-space:nowrap;}
+td:first-child,th:first-child{text-align:left;}
+tbody tr:hover{background:#fafbfd;}
+.chart{width:100%;height:340px;}
+.src{font-size:12px;color:var(--ink3);margin-top:8px;}
+.note{font-size:13px;color:var(--ink3);background:#f4f6f9;border-radius:6px;padding:9px 12px;margin:10px 0;}
+.tag{display:inline-block;font-size:11.5px;padding:2px 9px;border-radius:20px;margin-right:6px;font-weight:600;vertical-align:middle;}
+.t-good{background:var(--ok-soft);color:#1e7a45;}
+.t-bad{background:var(--danger-soft);color:var(--danger);}
+.t-mid{background:var(--warn-soft);color:var(--warn);}
+.t-info{background:var(--accent-soft);color:var(--accent);}
+/* 术语悬停浮窗 */
+.term{border-bottom:1px dotted var(--accent);color:var(--accent);cursor:help;position:relative;font-weight:500;}
+.term:hover .tip{visibility:visible;opacity:1;transform:translateY(0);}
+.tip{visibility:hidden;opacity:0;position:absolute;bottom:130%;left:50%;transform:translateX(-50%) translateY(4px);
+  width:280px;background:#232833;color:#eef1f5;font-size:12.5px;line-height:1.65;padding:11px 13px;
+  border-radius:7px;z-index:99;transition:opacity .16s,transform .16s;box-shadow:0 6px 22px rgba(0,0,0,.22);font-weight:400;}
+.tip::after{content:"";position:absolute;top:100%;left:50%;margin-left:-6px;border:6px solid transparent;border-top-color:#232833;}
+/* 一体化飞轮 */
+.flywheel{display:flex;align-items:stretch;gap:0;flex-wrap:wrap;margin:16px 0;}
+.fw{flex:1;min-width:170px;background:#fff;border:1px solid var(--line);border-radius:9px;padding:14px;text-align:center;position:relative;}
+.fw .ic{font-size:12px;font-weight:700;color:#fff;background:var(--accent);border-radius:20px;padding:2px 10px;display:inline-block;margin-bottom:8px;}
+.fw h4{margin:6px 0 6px;font-size:14.5px;}
+.fw p{font-size:12.5px;margin:4px 0;line-height:1.6;}
+.fw .meta{font-size:12px;color:var(--ink3);border-top:1px dashed var(--line);margin-top:9px;padding-top:8px;}
+.arrow{display:flex;align-items:center;padding:0 8px;color:var(--accent);font-size:20px;font-weight:700;}
+.timeline{list-style:none;padding:0;margin:14px 0;}
+.timeline li{position:relative;padding:0 0 18px 26px;border-left:2px solid var(--line);}
+.timeline li:last-child{border-left-color:transparent;padding-bottom:0;}
+.timeline li::before{content:"";position:absolute;left:-6px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--accent);}
+.timeline li.bad::before{background:var(--danger);}
+.timeline li.good::before{background:#1e7a45;}
+.timeline .d{font-size:12.5px;color:var(--ink3);font-weight:600;}
+.timeline .c{font-size:14px;color:var(--ink2);}
+.scen{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0;}
+.sc{border:1px solid var(--line);border-radius:9px;padding:15px;background:#fff;}
+.sc.bear{border-top:3px solid var(--down);}
+.sc.base{border-top:3px solid var(--accent);}
+.sc.bull{border-top:3px solid var(--up);}
+.sc h4{margin:0 0 6px;font-size:15px;}
+.sc .big{font-size:20px;font-weight:700;margin:6px 0;}
+.sc p{font-size:12.5px;margin:5px 0;}
+.disc{background:#f4f6f9;border:1px solid var(--line);border-radius:8px;padding:14px 18px;margin-top:34px;font-size:13px;color:var(--ink2);}
+.legend{font-size:12.5px;color:var(--ink3);margin:6px 0 12px;padding:8px 12px;background:#f4f6f9;border-radius:6px;}
+@media(max-width:860px){.g5,.g4,.g3,.g2,.scen{grid-template-columns:repeat(2,1fr);}.arrow{transform:rotate(90deg);margin:6px auto;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <h1>CVS Health（NYSE: CVS）· 西维斯健康</h1>
+    <div class="sub">
+      <b>公司研究</b> ｜ 行情截至 2026-09-01 收盘（美东） ｜ 财报截至 FY2026 Q2（2026-06-30，2026-08-05 披露）
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="tldr">
+    <h2>核心结论（TL;DR）</h2>
+    <ul>
+      <li><b>CVS 不是一家"药店公司"，而是一家被药店外表包裹的医疗保险公司。</b>2025 年营收里零售药房只占 23%，保险（Aetna）35.6%、PBM（Caremark）40.9%；而 2026 年利润增量里 <b>绝大部分来自 Aetna 的赔付率修复</b>，不是卖药。</li>
+      <li><b>它刚经历了一次教科书级的"戴维斯双击前半段"。</b>2025 年因 Oak Street Health 计提 <b>57 亿美元商誉减值</b>，单季净亏 39.9 亿美元；2026 年 Aetna 医疗赔付率（MBR）从 89.9% 压到 <b>87.4%</b>，Q2 归母净利同比 +192%，全年调整后 EPS 指引上调至 <b>$7.90–8.10</b>。</li>
+      <li><b>PE(TTM) 25.75 倍是"假贵"。</b>分母被 2025 年那笔减值砸出了坑。按 2026 年调整后 EPS 指引中值 $8.00 算，<b>前瞻 PE 仅约 12.2 倍</b>，在管理式医疗三巨头里只比信诺（CI，TTM PE 11.7 倍）略高，远低于联合健康（UNH，25.5 倍）。</li>
+      <li><b>但市场已经把 2026 年的修复定价进去了，分歧全在 2027。</b>管理层自己在 Q2 电话会上预警两道逆风：<span class="term">340B<span class="tip">美国联邦药品折扣计划，要求药企向特定安全网医院/诊所大幅折扣供药。CVS 作为 PBM 管理这些合约药房，合约数量与分成规则变化会直接冲击其收入。</span></span> 计划承压 + Caremark PBM 会员流失。财报当天股价一度跌近 10%，正是这个原因——<b>不是这季不好，是下一年不好说</b>。</li>
+      <li><b>一句话本质：买 CVS 本质上是在买 Aetna 保险业务的赔付率修复周期能延续几个季度，同时赌 PBM 的商业模式改造不会把利润率打回去。</b>前者是周期，后者是结构，两者风险等级完全不同。</li>
+    </ul>
+  </div>
+
+  <div class="grid g5" style="margin-top:16px;">
+    <div class="kpi"><div class="k">最新收盘价</div><div class="v">$97.60</div><div class="n">当日 +3.93% · 盘后 97.46</div></div>
+    <div class="kpi"><div class="k">总市值</div><div class="v">1,248 <span style="font-size:14px;font-weight:400;">亿美元</span></div><div class="n">流通市值 1,239 亿</div></div>
+    <div class="kpi"><div class="k">PE（TTM）</div><div class="v">25.75<span style="font-size:14px;font-weight:400;">×</span></div><div class="n">受 2025 减值扭曲，见第四节</div></div>
+    <div class="kpi"><div class="k">前瞻 PE（2026E）</div><div class="v" style="color:var(--accent);">12.2<span style="font-size:14px;font-weight:400;">×</span></div><div class="n">按调整后 EPS 中值 $8.00</div></div>
+    <div class="kpi"><div class="k">PB（TTM）</div><div class="v">1.57<span style="font-size:14px;font-weight:400;">×</span></div><div class="n">股息率 2.73% · 连派 56 年</div></div>
+  </div>
+  <div class="grid g5">
+    <div class="kpi"><div class="k">年初至今</div><div class="v up">+25.87%</div><div class="n">2026 YTD</div></div>
+    <div class="kpi"><div class="k">近 20 日</div><div class="v down">−6.53%</div><div class="n">财报后回调</div></div>
+    <div class="kpi"><div class="k">近 60 日</div><div class="v up">+2.38%</div><div class="n">高位震荡</div></div>
+    <div class="kpi"><div class="k">52 周区间</div><div class="v" style="font-size:17px;">62.52 – 110.68</div><div class="n">现价位于区间 73% 分位</div></div>
+    <div class="kpi"><div class="k">资产负债率</div><div class="v" style="font-size:21px;">68.5%</div><div class="n">2026Q2，较年初 71% 回落</div></div>
+  </div>
+  <div class="src">数据来源：行情与估值来自 westock 数据接口（2026-09-01 收盘）；财务来自 CVS Health Q2 2026 财报（2026-08-05 披露，SEC Form 8-K/10-Q）及公司 2026 全年指引。</div>
+
+  <h2>一、这家公司到底靠什么赚钱</h2>
+
+  <p>理解 CVS 的关键，是把它看成一台<b>三层纵向打通的机器</b>：街边药店负责"抓客流"，PBM（药品福利管理）负责"赚通道费"，保险公司（Aetna）负责"承担风险并留存利润"。三次并购造就了这个结构——1996 年 Caremark（进 PBM）、2018 年 Aetna（进保险）、2023 年 Oak Street Health（进初级保健）。</p>
+
+  <div class="flywheel">
+    <div class="fw">
+      <span class="ic">① 触达</span>
+      <h4>零售药房 / PCW</h4>
+      <p>约 9,000 家门店 + MinuteClinic 便捷诊所，是全美最大的处方入口之一</p>
+      <div class="meta">2025 营收 937 亿 · 占 23.3%</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="fw">
+      <span class="ic">② 通道</span>
+      <h4>PBM / Health Services</h4>
+      <p>Caremark 做药品福利管理：替保险公司和雇主谈药价、管处方目录、处理理赔</p>
+      <div class="meta">年处理约 20 亿份理赔 · 2025 营收 1,646 亿 · 占 40.9%</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="fw">
+      <span class="ic">③ 留存</span>
+      <h4>健康保险 / Aetna</h4>
+      <p>约 2,700 万医疗会员，收保费、付赔款，赚的是"保费 − 医疗成本"的价差</p>
+      <div class="meta">2025 营收 1,432 亿 · 占 35.6%</div>
+    </div>
+  </div>
+  <p class="note"><b>飞轮逻辑：</b>门店把患者留在体系内 → Caremark 拿到庞大的处方流量去和药企议价 → 议价能力又让 Aetna 的医疗成本更低、保费更有竞争力 → 更多会员 → 更多流量回到自家药房。理论上每一环都在给下一环喂流量。<b>但这个飞轮现在有两个齿轮卡住了</b>：一是 PBM 那层正被行业"去返利化"改造（第四节详述），二是初级保健（Oak Street）已被证明是买贵了。</p>
+
+  <div class="grid g2">
+    <div>
+      <h3>2025 全年营收结构</h3>
+      <div id="c1" class="chart" style="height:300px;"></div>
+      <div class="src">来源：公司年报披露分部数据（neodata），FY2025，美元</div>
+    </div>
+    <div>
+      <h3>Q2 2026 各分部营收 vs 调整后营业利润</h3>
+      <div id="c2" class="chart" style="height:300px;"></div>
+      <div class="src">来源：CVS Health Q2 2026 Earnings Release（2026-08-05）</div>
+    </div>
+  </div>
+
+  <h3>分部明细表</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>分部</th><th>FY2025 营收（亿美元）</th><th>占比</th><th>同比</th><th>Q2'26 营收（亿）</th><th>Q2'26 调整后营业利润（亿）</th><th>利润同比</th><th>角色</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><b>Health Services</b>（Caremark PBM / 特药 / 初级保健）</td>
+        <td>1,646.2</td><td>40.9%</td><td class="up">+3.99%</td><td>518</td><td>17.3</td><td class="up">+10.0%</td>
+        <td><span class="tag t-info">现金牛</span>监管压力最大</td>
+      </tr>
+      <tr>
+        <td><b>Health Care Benefits</b>（Aetna 保险）</td>
+        <td>1,432.4</td><td>35.6%</td><td class="up">+9.68%</td><td>375</td><td>24.3</td><td class="up">+85.5%</td>
+        <td><span class="tag t-good">利润引擎</span>本轮修复主角</td>
+      </tr>
+      <tr>
+        <td><b>Pharmacy &amp; Consumer Wellness</b>（零售药房）</td>
+        <td>937.2</td><td>23.3%</td><td class="up">+12.29%</td><td>338</td><td>14.8</td><td class="up">+10.2%</td>
+        <td><span class="tag t-mid">流量入口</span>低毛利</td>
+      </tr>
+      <tr>
+        <td>Corporate / Other</td>
+        <td>4.8</td><td>0.1%</td><td class="up">+7.32%</td><td>—</td><td>—</td><td>—</td>
+        <td>—</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="src">来源：FY2025 分部数据取自公司年报（neodata）；Q2 2026 分部数据取自 2026-08-05 财报新闻稿。注意：Q2 分部营收口径与年度分部口径的收入计入方式不完全一致，不可直接年化对比。</div>
+
+  <h2>二、2025–2026：从商誉减记到利润爆发，发生了什么</h2>
+
+  <p>这是理解 CVS 当前估值最重要的一段。它解释了<b>为什么 PE(TTM) 会失真，以及这轮利润增长里有多少是"真修复"、多少是"低基数"</b>。</p>
+
+  <ul class="timeline">
+    <li class="bad">
+      <div class="d">2023 年 · 埋雷</div>
+      <div class="c">以约 <b>106 亿美元</b>（50% 溢价）全现金收购初级保健连锁 Oak Street Health，押注"价值医疗 + Aetna 协同"。其核心服务人群是 Medicare 参保人中的高风险群体。</div>
+    </li>
+    <li class="bad">
+      <div class="d">2024–2025 上半年 · 爆雷</div>
+      <div class="c">全行业医疗利用率高企，Aetna 的 <span class="term">MBR<span class="tip">Medical Benefit Ratio，医疗赔付率 = 医疗赔付支出 ÷ 保费收入。数值越低，保险公司留存越多。管理式医疗公司正常区间约 85%–90%，超过 92% 通常意味着承保亏损。</span></span> 一度冲到 <b>95% 以上</b>（意味着每收 100 元保费要赔掉 95 元以上）。CVS 启动 20 亿美元成本削减，市场一度传言分拆。</div>
+    </li>
+    <li class="bad">
+      <div class="d">2025-10-29 · 计提</div>
+      <div class="c">因下调 Oak Street 扩张计划（2026 年起减少新开诊所、关闭 16 家），CVS 对医疗服务分部计提 <b>57 亿美元商誉减值</b>。Q3 单季净亏损 <b>39.9 亿美元</b>（EPS −$3.13），而同期调整后 EPS 其实是 $1.60、营收创纪录。同时宣布 Aetna 将退出 ACA 交易所市场、削减 34 个州共 90 个 Medicare Advantage 计划。</div>
+    </li>
+    <li class="good">
+      <div class="d">2026 上半年 · 反转</div>
+      <div class="c">Aetna 的 MBR 从上年同期 89.9% 压到 <b>87.4%</b>，Health Care Benefits 分部调整后营业利润同比 <b>+85.5%</b>。Q2 归母净利 29.8 亿美元（同比 +192%），调整后 EPS $2.58（共识约 $1.86，超预期 $0.72）。全年调整后 EPS 指引从 $7.30–7.50 上调至 <b>$7.90–8.10</b>，经营现金流指引从 ≥95 亿上调至 <b>≥115 亿</b>。</div>
+    </li>
+    <li>
+      <div class="d">2026-08-05 · 预期转折</div>
+      <div class="c">业绩大超预期，但管理层在电话会上提示 <b>2027 年两道逆风</b>：340B 业务持续承压、Caremark 会员流失（部分健康计划退出 + 行业转向透明成本加成定价）。股价当日盘中一度跌近 10%。此后一个月累计回调约 6.5%。</div>
+    </li>
+  </ul>
+  <div class="src">来源：CVS Health 2025 Q3 / 2026 Q2 财报新闻稿与电话会；Morningstar / MarketWatch（2025-10-29）、Modern Healthcare、财新网 Latitude Health 关于减值与关店的报道。媒体报道属非一手来源，具体金额以公司公告为准。</div>
+
+  <h3>季度营收与归母净利润（近 4 个季度）</h3>
+  <div id="c3" class="chart"></div>
+  <div class="src">来源：CVS Health 季报（westock finance 接口 / SEC 10-Q），单位：亿美元。2025Q3 净利润为负系 57 亿美元商誉减值所致，非经营性亏损。</div>
+
+  <h3>Aetna 医疗赔付率（MBR）的修复轨迹</h3>
+  <div id="c4" class="chart" style="height:300px;"></div>
+  <div class="note"><b>口径说明：</b>MBR 有强季节性，只能做<b>同期同比</b>比较，不能跨季度连线。左为 Q2 同比（2025Q2 → 2026Q2，改善 2.5pp），右为 Q3 同比（2024Q3 → 2025Q3，改善 2.4pp）。作为参照，UNH 在 2026Q2 的 MCR 为 86.7%（同比改善 2.7pp）——<b>CVS 的修复幅度是行业性的，不是它独有的</b>；同时也意味着继续压缩的空间已经不多了。</div>
+  <div class="src">来源：CVS Health 各季财报披露（Q2 数据：2026-08-05；Q3 数据：2025-10-29）；UNH 数据来自其 2026 Q2 财报。</div>
+
+  <h2>三、横向对比：三巨头里 CVS 站在哪个位置</h2>
+
+  <table>
+    <thead>
+      <tr><th>指标（2026-09-01）</th><th>CVS 西维斯健康（CVS）</th><th>UNH 联合健康（UNH）</th><th>CI 信诺（CI）</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>收盘价</td><td>$97.60</td><td>$396.30</td><td>$283.06</td></tr>
+      <tr><td>总市值</td><td>1,248 亿美元</td><td>3,557 亿美元</td><td>748 亿美元</td></tr>
+      <tr><td>PE（TTM）</td><td>25.75×</td><td>25.47×</td><td><b>11.71×</b></td></tr>
+      <tr><td>PB（TTM）</td><td>1.57×</td><td>3.61×</td><td>1.75×</td></tr>
+      <tr><td>股息率（TTM）</td><td>2.73%</td><td>2.29%</td><td>2.19%</td></tr>
+      <tr><td>年初至今</td><td class="up">+25.87%</td><td class="up">+21.68%</td><td class="up">+4.02%</td></tr>
+      <tr><td>Q2 营业收入</td><td>1,061.1 亿美元（+7.3%）</td><td>1,120.3 亿美元（+0.4%）</td><td>716.0 亿美元（+6~7%）</td></tr>
+      <tr><td>Q2 归母净利润</td><td>29.8 亿美元（+191.8%）</td><td>54.8 亿美元（+61%）</td><td>16.6 亿美元（+8.4%）</td></tr>
+      <tr><td>净利率 / 营业利润率</td><td>2.8% / 4.5%</td><td><b>4.9% / 7.1%</b></td><td>2.3% / 3.7%</td></tr>
+      <tr><td>ROE</td><td>6.2%</td><td>14.6%</td><td><b>15.5%</b></td></tr>
+      <tr><td>资产负债率</td><td>68.5%</td><td>65.8%</td><td>72.0%</td></tr>
+      <tr><td>Q2 经营现金流</td><td>63.5 亿美元</td><td>110.5 亿美元</td><td>−4.2 亿美元（季节性）</td></tr>
+    </tbody>
+  </table>
+  <div class="src">来源：行情与估值 westock（2026-09-01 收盘，TTM 口径）；财务为各公司 FY2026 Q2 财报（截至 2026-06-30）。</div>
+
+  <div class="grid g2">
+    <div>
+      <h3>估值倍数对比</h3>
+      <div id="c5" class="chart" style="height:300px;"></div>
+      <div class="src">来源：westock（2026-09-01，TTM 口径）</div>
+    </div>
+    <div>
+      <h3>年初至今涨跌幅</h3>
+      <div id="c6" class="chart" style="height:300px;"></div>
+      <div class="src">来源：westock（2026-09-01）。红涨绿跌口径。</div>
+    </div>
+  </div>
+
+  <p><b>横向读出来的三点：</b></p>
+  <ul>
+    <li><b>CVS 的 PE(TTM) 和 UNH 几乎一样（25.75 vs 25.47），但质量完全不是一回事。</b>UNH 的 PB 3.61 倍、ROE 14.6%，是高盈利质量撑起的高估值；CVS 的 PB 只有 1.57 倍、ROE 6.2%，高 PE 纯属分母（净利润）被减值砸出来的。<b>用 PE(TTM) 说"CVS 和 UNH 一样贵"是误读。</b></li>
+    <li><b>CI（信诺）才是真正的便宜货，但便宜有便宜的理由。</b>PE 仅 11.7 倍，因为它同样在做 PBM 转型——其 Evernorth 旗下 PBM 业务 Q2 税前利润同比 <b>暴跌 27%</b>（大客户续约 + 转向"无返利"模式的前期投入），且宣布 2027 年完全退出 ACA 交易所。<b>CI 的今天，就是市场担心 CVS 的明天</b>——这是 CVS 最值得警惕的一面镜子。</li>
+    <li><b>CVS 是三者中利润弹性最大、也最脆弱的。</b>净利率只有 2.8%，意味着 MBR 每变动 1pp，对利润的放大倍数极高；反过来，一旦医疗成本回升，利润回吐也最快。</li>
+  </ul>
+
+  <h2>四、估值：25.75 倍是假象，真正的锚在前瞻 12 倍</h2>
+
+  <p>CVS 属于<b>"困境反转 + 周期修复"型公司</b>，用 PE(TTM) 估值必然失真——TTM 窗口里装着 2025Q3 那笔 57 亿减值。正确的框架是<b>用正常化盈利（调整后 EPS）做前瞻 PE，再用 PB 做下限验证</b>。</p>
+
+  <h3>估值口径拆解</h3>
+  <div id="c7" class="chart" style="height:320px;"></div>
+  <div class="note"><b>怎么读这张图：</b>最左边那根 25.75 倍是账面上的 PE(TTM)，它被一次性减值严重推高；按 2026 年管理层给出的调整后 EPS 指引中值计算，前瞻 PE 只有 12.2 倍；按管理层预告的 2027 年 EPS 下限 $8.44，进一步降到 11.6 倍。作为参照，UNH 的 TTM PE 是 25.5 倍、CI 是 11.7 倍。</div>
+  <div class="src">前瞻 PE = 2026-09-01 收盘价 $97.60 ÷ 对应 EPS 情景，属本报告测算；EPS 指引来自 CVS Health 2026-08-05 财报。同业 PE 为 westock TTM 口径（2026-09-01）。</div>
+
+  <h3>三情景框架（估值区间，非目标价）</h3>
+  <div class="scen">
+    <div class="sc bear">
+      <h4>悲观：2027 逆风兑现</h4>
+      <div class="big down">PE 回到 9–10×</div>
+      <p>340B 收入加速下滑、Caremark 会员净流失超预期、医疗成本二次抬头使 MBR 反弹回 89%+。若 2027 EPS 下修至 $7.0–7.5，按 9–10 倍给，对应股价约 <b>$63–75</b>。</p>
+      <p><b>触发信号：</b>Q3/Q4 MBR 环比回升、340B 诉讼败诉或扩大、年报下调 2027 指引。</p>
+    </div>
+    <div class="sc base">
+      <h4>中性：修复延续但降速</h4>
+      <div class="big" style="color:var(--accent);">PE 11–13×</div>
+      <p>Aetna 利润率企稳在 87% 附近，PBM 转型以"利润换份额"方式平滑推进，2027 EPS 落在 $8.4–8.8。对应股价约 <b>$92–114</b>，与当前价基本相当至温和上行。</p>
+      <p><b>触发信号：</b>季度 MBR 维持在 87–88%、Caremark 会员流失被特药增长抵消。</p>
+    </div>
+    <div class="sc bull">
+      <h4>乐观：一体化重估</h4>
+      <div class="big up">PE 14–16×</div>
+      <p>管理层 2025–2028 调整后 EPS 十位数中段复合增长目标兑现，GLP-1 与特药成为新增长极，PBM 透明化反而扩大份额。若 2028 EPS 达 $10+，按 14–16 倍贴现，对应 <b>$130 以上</b>。</p>
+      <p><b>触发信号：</b>连续 4 个季度 MBR 稳定在 87% 以下、特药营收占比持续提升、340B 诉讼和解。</p>
+    </div>
+  </div>
+  <p class="note"><b>估值判断：当前股价（$97.60）大致落在中性情景的中枢附近，估值本身不贵，但也没有明显折价。</b>真正的变量不在"现在便宜不便宜"，而在"2027 年的 E 会不会被下修"。市场目前的分歧就在这里——这也是为什么财报大超预期股价反而跌。<b>这一笔赚的是业绩钱（EPS 修复），不是估值钱。</b></p>
+
+  <h2>五、商业模式的脆弱点：飞轮在哪一环会失守</h2>
+
+  <div class="grid g2">
+    <div class="card">
+      <h3 style="margin-top:0;"><span class="tag t-bad">结构性</span>PBM 正在被行业"去返利化"</h3>
+      <p>Caremark 的传统利润来自"与药企谈判返利（rebate）后留存价差"。但行业正集体转向<b>透明成本加成模式</b>（如 CVS 自己的 TrueCost、CI 的"无返利 Signature 模式"），加上各州 PBM 透明度立法（新泽西等）持续推进。</p>
+      <p><b>这不是 CVS 一家的问题，是整条赛道在重定价。</b>直接的证据是：CI 的 PBM 业务 Q2 税前利润已同比 −27%。CVS 目前靠"采购经济性改善和药房结构优化"顶住了（Health Services 利润仍 +10%），但这是<b>时间差，不是免疫</b>。</p>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0;"><span class="tag t-bad">法律</span>340B 计划：逆风 + 集体诉讼</h3>
+      <p>2026 年 5 月，密歇根大学医院、堪萨斯大学医院管理局、Mount Sinai 等多个医疗系统在联邦法院起诉 CVS 及其关联主体（CaremarkPCS、CVS Specialty、WellPartner 等），指控其 2020–2025 年间通过"暗中价差"占用约 <b>2.5 亿美元</b>的 340B 项目节省资金（由 Frier Levitt 律所代理）。</p>
+      <p>叠加 340B 规则改革、药企限制折扣药分销的外部压力，这一块既有<b>直接的收入逆风</b>，也有<b>诉讼/审计/丢合约的尾部风险</b>。<span class="term">诉讼金额与进展需以法院文件与公司披露为准，媒体报道属非一手来源。<span class="tip">本条信息来源为公开媒体报道，未经一手法院文件核实，请谨慎采信。</span></span></p>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0;"><span class="tag t-mid">周期性</span>MBR 的压缩空间已经不多</h3>
+      <p>87.4% 已经接近 UNH 的 86.7%，而管理式医疗 MBR 低于 85% 在 Medicare Advantage 业务中是很难长期维持的。管理层自己也在财报里说下半年 MBR 预计回升、医疗成本"仍高于历史常态"。</p>
+      <p><b>换句话说，2026 年最甜的那一口已经吃到了。</b>后续利润增长必须切换到营收驱动（特药、GLP-1），而那部分增速远慢于利润率修复。</p>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0;"><span class="tag t-bad">历史教训</span>Oak Street：106 亿买、57 亿减</h3>
+      <p>2023 年 50% 溢价收购，2025 年减记过半并关闭 16 家诊所。核心问题是商业模式本身：<b>风险共担会员越多、营收越大，亏损反而越大</b>（收购前风险共担会员数涨近 5 倍，运营亏损同步从 −0.76 亿扩大到 −4.75 亿美元）。</p>
+      <p>这直接证伪了"纵向一体化每一环都天然产生协同"的假设。<b>剩余商誉是否还有二次减值风险，是资产负债表上最需要盯的科目。</b></p>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0;"><span class="tag t-mid">财务</span>高杠杆 + 低净利率放大波动</h3>
+      <p>资产负债率 68.5%，长期债务 724 亿美元 + 短期借款 38.7 亿。净利率只有 2.8%——<b>意味着营收端 1% 的成本恶化就能吃掉三分之一的利润</b>。好消息是有息债务规模（约 763 亿）远低于总负债（1,739 亿），且经营现金流强劲（上半年 106 亿），短期偿债无虞。</p>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0;"><span class="tag t-info">新变量</span>GLP-1 与技术投入：期权价值</h3>
+      <p>减重药布局是目前的<b>期权而非现金牛</b>：推出 $29 MinuteClinic 线上减重问诊、加入 CMS 的 Medicare GLP-1 Bridge 项目，与礼来、诺和诺德建立制造商合作。科技侧承诺十年 200 亿美元以上投入，已产生 10 亿美元以上运营成本节约，并推出基于 Google Cloud 的 Health100 平台。</p>
+      <p><b>判断：这些目前还不足以改变估值中枢，但决定了 2028 年之后的增长叙事能不能接上。</b></p>
+    </div>
+  </div>
+
+  <h2>六、最该跟踪的三个变量</h2>
+  <table>
+    <thead>
+      <tr><th style="width:22%;">变量</th><th style="width:26%;">为什么它是关键</th><th style="width:26%;">怎么验证</th><th style="width:26%;">失效信号</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><b>① Aetna 季度 MBR</b></td>
+        <td>这是 2026 年全部利润增量的来源。MBR 每 1pp 的变动，对仅 2.8% 净利率的 CVS 都是利润层面的数量级冲击。</td>
+        <td>每季财报的 Health Care Benefits 分部披露；对照 UNH 的 MCR 判断是行业性还是公司性。</td>
+        <td>连续两个季度环比回升，且幅度超过季节性；或全年 MBR 指引被上调至 88.5% 以上。</td>
+      </tr>
+      <tr>
+        <td><b>② Caremark 会员数与 PBM 单位经济性</b></td>
+        <td>决定 2027 年盈利会不会被下修。这是管理层自己点名的逆风，也是股价当天下跌的直接原因。</td>
+        <td>季报中 Health Services 分部的理赔量、客户续约与新增合约披露；关注蓝筹雇主/健康计划的合约流失公告。</td>
+        <td>会员净流失连续两季为负，同时调整后营业利润率同步下滑（说明不是主动选择性收缩，而是被动丢单）。</td>
+      </tr>
+      <tr>
+        <td><b>③ 340B 诉讼与监管进展</b></td>
+        <td>既有收入端逆风，也有诉讼尾部风险，且是 2027 年指引最不确定的部分。</td>
+        <td>季度财报风险披露、PACER 法院文书、CMS/HRSA 关于 340B 的规则更新。</td>
+        <td>集体诉讼扩大（原告数量/索赔金额显著上升）、或出现败诉先例，触发其他医疗系统跟进索赔。</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>七、总结：一句话概括 CVS</h2>
+  <div class="card" style="border-left:5px solid var(--accent);">
+    <p style="font-size:16px;line-height:1.9;color:var(--ink);">
+      CVS 是一家<b>用零售药房的外壳，做着医疗保险公司生意</b>的纵向一体化巨头。它刚从 2025 年"高医疗成本 + 57 亿商誉减值"的双重打击中走出来，靠 Aetna 赔付率修复打了一个漂亮的翻身仗——2026 年利润翻倍、指引上调、现金流充沛，而股价对应前瞻 PE 仅约 12 倍、PB 1.57 倍、股息率 2.7%，<b>估值层面确实不贵</b>。
+    </p>
+    <p style="font-size:16px;line-height:1.9;color:var(--ink);">
+      但<b>便宜的原因也很清楚</b>：这轮盈利修复里，周期性成分（MBR 从 89.9% 压到 87.4%）远大于结构性成分，而压缩空间已接近同业下限；同时它最赚钱的那块业务（PBM）正被全行业的"去返利化"改造重新定价，2027 年还叠加 340B 逆风与会员流失。<b>市场不是不知道 CVS 便宜，而是在等 2027 年的盈利预测会不会被下修。</b>
+    </p>
+    <p style="font-size:16px;line-height:1.9;color:var(--ink);">
+      所以这笔投资的性质是：<b>赚业绩修复的钱，估值扩张的空间有限</b>。它适合能接受"利润高波动 + PBM 监管不确定性"、愿意以 12 倍前瞻 PE 押一个已经走完一半的修复周期的价值型视角；不适合把它当成稳定复利的防御性品种——2.8% 的净利率和 68.5% 的资产负债率，决定了它的容错空间比 UNH 小得多。
+    </p>
+  </div>
+
+  <div class="disc">
+    <b>数据来源汇总：</b>行情、估值与财务数据取自 westock 数据接口（2026-09-01 收盘 / FY2026 Q2 财报）；分部与指引数据取自 CVS Health 2025 年报与 2026-08-05 Q2 财报新闻稿、电话会纪要（SEC Form 8-K / 10-Q）；Oak Street Health 减值与关店细节来自 Morningstar/MarketWatch（2025-10-29）、Modern Healthcare、财新网 Latitude Health；340B 诉讼信息来自公开媒体报道，<b>属非一手来源，需以法院文件与公司披露核实</b>。前瞻 PE 与三情景估值为本报告基于公开指引的测算，非公司或第三方机构预测。
+  </div>
+
+  <div class="disc" style="background:#fdecea;border-color:#f5c6c0;">
+    <b>免责声明</b>：以上内容基于公开数据和量化分析，仅供参考，不构成投资建议。市场有风险，投资需谨慎。任何投资决策应结合个人风险承受能力、资金状况和投资目标独立判断，必要时咨询持牌专业机构。过往表现不预示未来收益。
+  </div>
+
+</div>
+
+<script>
+var AXIS = { color: '#4a5260', fontSize: 12 };
+var SPLIT = { lineStyle: { color: '#e3e7ed' } };
+
+var c1 = echarts.init(document.getElementById('c1'));
+c1.setOption({
+  tooltip: { trigger: 'item', formatter: '{b}: {c} 亿美元 ({d}%)' },
+  legend: { bottom: 0, textStyle: AXIS, itemWidth: 12, itemHeight: 12 },
+  series: [{
+    type: 'pie',
+    radius: ['42%', '68%'],
+    center: ['50%', '44%'],
+    label: { formatter: '{d}%', color: '#4a5260', fontSize: 12 },
+    data: [
+      { name: 'Health Services\n(PBM/特药)', value: 1646.23, itemStyle: { color: '#1f5fbf' } },
+      { name: 'Health Care Benefits\n(Aetna 保险)', value: 1432.36, itemStyle: { color: '#2d7a5f' } },
+      { name: 'Pharmacy & Consumer\nWellness (零售药房)', value: 937.24, itemStyle: { color: '#e08a2e' } },
+      { name: 'Corporate', value: 4.84, itemStyle: { color: '#a8b2c0' } }
+    ]
+  }]
+});
+
+var c2 = echarts.init(document.getElementById('c2'));
+c2.setOption({
+  tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+  legend: { data: ['分部营收', '调整后营业利润'], bottom: 0, textStyle: AXIS, itemWidth: 12, itemHeight: 12 },
+  grid: { left: 60, right: 60, top: 30, bottom: 52 },
+  xAxis: { type: 'category', data: ['Health Services', 'Health Care\nBenefits', 'Pharmacy &\nConsumer Wellness'], axisLabel: AXIS, axisLine: { lineStyle: { color: '#d5dae1' } } },
+  yAxis: [
+    { type: 'value', name: '营收(亿美元)', nameTextStyle: AXIS, axisLabel: AXIS, splitLine: SPLIT },
+    { type: 'value', name: '营业利润(亿美元)', nameTextStyle: AXIS, axisLabel: AXIS, splitLine: { show: false } }
+  ],
+  series: [
+    { name: '分部营收', type: 'bar', barWidth: '38%', data: [518, 375, 338], itemStyle: { color: '#9dbde5' }, label: { show: true, position: 'top', color: '#4a5260', fontSize: 11 } },
+    { name: '调整后营业利润', type: 'bar', barWidth: '38%', yAxisIndex: 1, data: [17.3, 24.3, 14.8], itemStyle: { color: '#2d7a5f' }, label: { show: true, position: 'top', color: '#2d7a5f', fontSize: 11 } }
+  ]
+});
+
+var c3 = echarts.init(document.getElementById('c3'));
+c3.setOption({
+  tooltip: { trigger: 'axis', axisPointer: { type: 'cross' } },
+  legend: { data: ['营业收入', '归母净利润'], bottom: 0, textStyle: AXIS, itemWidth: 12, itemHeight: 12 },
+  grid: { left: 70, right: 70, top: 30, bottom: 52 },
+  xAxis: { type: 'category', data: ['2025Q3', '2025Q4', '2026Q1', '2026Q2'], axisLabel: AXIS, axisLine: { lineStyle: { color: '#d5dae1' } } },
+  yAxis: [
+    { type: 'value', name: '营收(亿美元)', nameTextStyle: AXIS, min: 900, max: 1100, axisLabel: AXIS, splitLine: SPLIT },
+    { type: 'value', name: '净利(亿美元)', nameTextStyle: AXIS, min: -60, max: 60, axisLabel: AXIS, splitLine: { show: false } }
+  ],
+  series: [
+    { name: '营业收入', type: 'bar', barWidth: '34%', data: [1028.8, 1056.8, 1004.4, 1061.1], itemStyle: { color: '#9dbde5' }, label: { show: true, position: 'top', color: '#4a5260', fontSize: 11 } },
+    { name: '归母净利润', type: 'line', yAxisIndex: 1, symbolSize: 9, lineStyle: { width: 3 }, data: [-39.8, 29.4, 29.4, 29.8], itemStyle: { color: '#c0392b' }, label: { show: true, color: '#c0392b', fontSize: 11, formatter: '{c}' } }
+  ]
+});
+
+var c4 = echarts.init(document.getElementById('c4'));
+c4.setOption({
+  tooltip: { trigger: 'axis', valueFormatter: function (v) { return v + '%'; } },
+  legend: { data: ['前期（同比基期）', '后期（报告期）'], bottom: 0, textStyle: AXIS, itemWidth: 12, itemHeight: 12 },
+  grid: { left: 70, right: 40, top: 30, bottom: 52 },
+  xAxis: { type: 'category', data: ['Q2 同比\n(2025Q2 → 2026Q2)', 'Q3 同比\n(2024Q3 → 2025Q3)'], axisLabel: AXIS, axisLine: { lineStyle: { color: '#d5dae1' } } },
+  yAxis: { type: 'value', name: 'MBR (%)', nameTextStyle: AXIS, min: 84, max: 96, axisLabel: { formatter: '{value}%', color: '#4a5260', fontSize: 12 }, splitLine: SPLIT },
+  series: [
+    { name: '前期（同比基期）', type: 'bar', barWidth: '30%', data: [89.9, 95.2], itemStyle: { color: '#c0392b' }, label: { show: true, position: 'top', formatter: '{c}%', color: '#c0392b', fontSize: 12 } },
+    { name: '后期（报告期）', type: 'bar', barWidth: '30%', data: [87.4, 92.8], itemStyle: { color: '#1e8449' }, label: { show: true, position: 'top', formatter: '{c}%', color: '#1e8449', fontSize: 12 } }
+  ]
+});
+
+var c5 = echarts.init(document.getElementById('c5'));
+c5.setOption({
+  tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+  legend: { data: ['PE(TTM)', 'PB(TTM)', '股息率'], bottom: 0, textStyle: AXIS, itemWidth: 12, itemHeight: 12 },
+  grid: { left: 55, right: 55, top: 30, bottom: 52 },
+  xAxis: { type: 'category', data: ['CVS 西维斯健康', 'UNH 联合健康', 'CI 信诺'], axisLabel: AXIS, axisLine: { lineStyle: { color: '#d5dae1' } } },
+  yAxis: [
+    { type: 'value', name: '倍数 (×)', nameTextStyle: AXIS, axisLabel: AXIS, splitLine: SPLIT },
+    { type: 'value', name: '股息率 (%)', nameTextStyle: AXIS, min: 0, max: 4, axisLabel: { formatter: '{value}%', color: '#4a5260', fontSize: 12 }, splitLine: { show: false } }
+  ],
+  series: [
+    { name: 'PE(TTM)', type: 'bar', barWidth: '24%', data: [25.75, 25.47, 11.71], itemStyle: { color: '#1f5fbf' }, label: { show: true, position: 'top', color: '#1f5fbf', fontSize: 11 } },
+    { name: 'PB(TTM)', type: 'bar', barWidth: '24%', data: [1.57, 3.61, 1.75], itemStyle: { color: '#9dbde5' }, label: { show: true, position: 'top', color: '#4a5260', fontSize: 11 } },
+    { name: '股息率', type: 'line', yAxisIndex: 1, symbolSize: 9, lineStyle: { width: 2, type: 'dashed' }, data: [2.73, 2.29, 2.19], itemStyle: { color: '#e08a2e' }, label: { show: true, formatter: '{c}%', color: '#e08a2e', fontSize: 11 } }
+  ]
+});
+
+var c6 = echarts.init(document.getElementById('c6'));
+c6.setOption({
+  tooltip: { trigger: 'axis', valueFormatter: function (v) { return v + '%'; } },
+  grid: { left: 70, right: 40, top: 24, bottom: 40 },
+  xAxis: { type: 'category', data: ['CI 信诺', 'UNH 联合健康', 'CVS 西维斯健康'], axisLabel: AXIS, axisLine: { lineStyle: { color: '#d5dae1' } } },
+  yAxis: { type: 'value', name: 'YTD (%)', nameTextStyle: AXIS, axisLabel: { formatter: '{value}%', color: '#4a5260', fontSize: 12 }, splitLine: SPLIT },
+  series: [{
+    type: 'bar', barWidth: '42%',
+    data: [
+      { value: 4.02, itemStyle: { color: '#c0392b' } },
+      { value: 21.68, itemStyle: { color: '#c0392b' } },
+      { value: 25.87, itemStyle: { color: '#c0392b' } }
+    ],
+    label: { show: true, position: 'top', formatter: '{c}%', color: '#c0392b', fontSize: 13, fontWeight: 'bold' }
+  }]
+});
+
+var c7 = echarts.init(document.getElementById('c7'));
+c7.setOption({
+  tooltip: { trigger: 'axis', valueFormatter: function (v) { return v + '×'; } },
+  grid: { left: 130, right: 70, top: 24, bottom: 40 },
+  xAxis: { type: 'value', name: 'PE 倍数 (×)', nameTextStyle: AXIS, axisLabel: AXIS, splitLine: SPLIT },
+  yAxis: {
+    type: 'category',
+    axisLabel: { color: '#4a5260', fontSize: 12 },
+    axisLine: { lineStyle: { color: '#d5dae1' } },
+    data: ['CI 信诺 (TTM)', 'CVS 按 2027E 下限 $8.44', 'CVS 按 2026E 上限 $8.10', 'CVS 按 2026E 中值 $8.00', 'CVS 按 2026E 下限 $7.90', 'UNH 联合健康 (TTM)', 'CVS PE (TTM，失真)']
+  },
+  series: [{
+    type: 'bar', barWidth: '52%',
+    data: [
+      { value: 11.71, itemStyle: { color: '#2d7a5f' } },
+      { value: 11.56, itemStyle: { color: '#2d7a5f' } },
+      { value: 12.05, itemStyle: { color: '#4a9d7a' } },
+      { value: 12.20, itemStyle: { color: '#1f5fbf' } },
+      { value: 12.35, itemStyle: { color: '#4a9d7a' } },
+      { value: 25.47, itemStyle: { color: '#9dbde5' } },
+      { value: 25.75, itemStyle: { color: '#c0392b' } }
+    ],
+    label: { show: true, position: 'right', formatter: '{c}×', color: '#4a5260', fontSize: 12, fontWeight: 'bold' }
+  }]
+});
+
+window.addEventListener('resize', function () {
+  c1.resize(); c2.resize(); c3.resize(); c4.resize(); c5.resize(); c6.resize(); c7.resize();
+});
+</script>
+
+</body>
+</html>

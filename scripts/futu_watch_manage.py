@@ -8,10 +8,11 @@
   quote_modify_user_security(...)        -> 增删成分
 
 用法：
-  python scripts/futu_watch_manage.py list                      # 列出所有分组
-  python scripts/futu_watch_manage.py members 月差               # 列出分组成分
-  python scripts/futu_watch_manage.py add 月差 US.CL2610/CL2611 ...   # 加成分
-  python scripts/futu_watch_manage.py del 月差 US.CL2610/CL2611 ...   # 删成分
+  python scripts/futu_watch_manage.py list                          # 列出所有分组
+  python scripts/futu_watch_manage.py members 原油月差               # 列出分组成分
+  python scripts/futu_watch_manage.py add 馏分油月差 US.HO2610/HO2611 ...   # 加成分
+  python scripts/futu_watch_manage.py move_out 原油月差 US.HO2610/HO2611 ... # 仅移出该分组
+  python scripts/futu_watch_manage.py del_all US.HO2610/HO2611 ...          # 从所有分组删除
 """
 import json
 import subprocess
@@ -19,8 +20,12 @@ import time
 import os
 import sys
 
-BASE = r"C:\Users\Administrator\Desktop\stock"
-CRED = r"C:\Users\Administrator\.workbuddy\connectors\2e7b65ad-3a22-424a-a190-5066a615e2dc\.credentials.v3.json"
+# 凭据候选：Mac 授权落地文件优先，Windows 机兜底
+_CRED_CANDIDATES = [
+    os.path.expanduser("~/.workbuddy/futu_credentials.json"),   # Mac（2026-09-11 授权）
+    r"C:\Users\Administrator\.workbuddy\connectors\2e7b65ad-3a22-424a-a190-5066a615e2dc\.credentials.v3.json",
+]
+CRED = next((p for p in _CRED_CANDIDATES if os.path.exists(p)), _CRED_CANDIDATES[0])
 TOKEN_URL = "https://mcp.futunn.com/mcp"
 AUTH_WELLKNOWN = "https://mcp.futunn.com/.well-known/oauth-authorization-server"
 
@@ -29,7 +34,8 @@ sys.stdout.reconfigure(encoding="utf-8")
 
 def get_token():
     cred = json.load(open(CRED, encoding="utf-8"))
-    key = "futu-mcp|e818c1846070ff2a"
+    # key 动态取：Mac 凭据 key=futu-mcp|<授予的 client_id>；Windows 旧凭据 key=futu-mcp|e818c1846070ff2a
+    key = next(iter(cred.get("mcpOAuth", {})), "futu-mcp|e818c1846070ff2a")
     oa = cred["mcpOAuth"][key]
     now_ms = int(time.time() * 1000)
     exp = oa.get("expiresAt") or 0
@@ -41,6 +47,8 @@ def get_token():
         raise RuntimeError("无 refreshToken")
     ci = (cred.get("mcpClientInfo", {}).get(key) or {})
     client_id = ci.get("client_id") or oa.get("client_id")
+    if not client_id and CRED.endswith("futu_credentials.json"):
+        client_id = cred.get("client_id")
     body = {"grant_type": "refresh_token", "refresh_token": refresh}
     if client_id:
         body["client_id"] = client_id
@@ -135,16 +143,21 @@ def main():
         for g in groups():
             print(f"{g.get('group_name')}  [{g.get('group_type')}]")
     elif cmd == "members":
-        gn = sys.argv[2] if len(sys.argv) > 2 else "月差"
+        gn = sys.argv[2] if len(sys.argv) > 2 else "原油月差"
         m = members(gn)
         print(json.dumps(m, ensure_ascii=False, indent=1))
-    elif cmd in ("add", "del"):
+    elif cmd in ("add", "move_out", "del_all"):
+        # 富途 schema 的 op 枚举只有 ADD / MOVE_OUT / DEL（DEL=从所有分组删，无需 group_name）
         gn = sys.argv[2]
         codes = sys.argv[3:]
-        print(f"{cmd} 分组[{gn}] codes={len(codes)} 个")
-        r = tool("quote_modify_user_security",
-                 {"group_name": gn, "op": "ADD" if cmd == "add" else "DEL",
-                  "code_list": codes})
+        if cmd == "del_all":
+            print(f"del_all（从所有分组删除） codes={len(codes)} 个")
+            r = tool("quote_modify_user_security", {"op": "DEL", "code_list": codes})
+        else:
+            op = "ADD" if cmd == "add" else "MOVE_OUT"
+            print(f"{cmd} 分组[{gn}] codes={len(codes)} 个")
+            r = tool("quote_modify_user_security",
+                     {"group_name": gn, "op": op, "code_list": codes})
         print(json.dumps(r, ensure_ascii=False, indent=1))
     else:
         print("未知命令:", cmd)
