@@ -199,7 +199,7 @@ HTML = f'''<!DOCTYPE html>
     <h1>白糖各国产量全景（2000–2026）：两个国家的增量、一个集团的萎缩，与产量—贸易集中度的剪刀差</h1>
     <div class="meta">报告编号 96 ｜ 数据源：USDA FAS PSD（2026-09-11 快照，本地 psd_sugar_all.csv）｜ 单位：千吨·原糖当量（raw value）｜ 2026-09-18 · 与 94 号《白糖可贸易国家全景》同源同格式</div>
     <div class="sub">结论一句话：<b>
-    2000–2026 年全球糖产量从 {f(w00)} 千吨增至 {f(w26)} 千吨（{pc(prod_growth,0)}，绝对增量 {f(w26-w00)} 千吨），
+    2000–2026 年全球糖产量从 {f(w00)} 千吨增至 {f(w26)} 千吨（{pc(prod_growth,1)}，绝对增量 {f(w26-w00)} 千吨），
     但这 {f(w26-w00)} 千吨增量里有 <b class="red">{br_share_of_growth:.0f}% 来自巴西、{bi_share_of_growth:.0f}% 来自巴西+印度</b>；
     与此同时<b>欧盟是唯一大幅萎缩的产糖主体</b>（{f(eu['p2000'])} → {f(eu['p2026'])}，{pc(eu['pct'],0)}）。
     产量集中度确实在上升（Top5 {t5_00}% → {t5_26}%），但<b class="red">远比贸易集中度温和</b>——
@@ -210,12 +210,12 @@ HTML = f'''<!DOCTYPE html>
 
   <div class="cards">
     <div class="kcard"><div class="lab">全球产量（2026）</div><div class="val">{f(w26)}</div>
-      <div class="note">千吨·原糖当量 ｜ 2000 年 {f(w00)}（{pc(prod_growth,0)}）</div></div>
+      <div class="note">千吨·原糖当量 ｜ 2000 年 {f(w00)}（{pc(prod_growth,1)}）</div></div>
     <div class="kcard"><div class="lab">巴西+印度 占全球增量</div><div class="val red">{bi_share_of_growth:.0f}%</div>
       <div class="note">巴西一国家贡献 {br_share_of_growth:.0f}%（{f(br['delta'])} 千吨）</div></div>
     <div class="kcard"><div class="lab">产量 Top5 份额（2026）</div><div class="val">{t5_26}%</div>
       <div class="note">2000 年 {t5_00}% ｜ 出口端 Top4 已达 75.1%</div></div>
-    <div class="kcard"><div class="lab">欧盟产量变化</div><div class="val green">{pc(eu['pct'],0)}</div>
+    <div class="kcard"><div class="lab">欧盟产量变化</div><div class="val green">{pc(eu['pct'],1)}</div>
       <div class="note">{f(eu['p2000'])} → {f(eu['p2026'])} 千吨 ｜ 自给率降至 {eu['self_suff']:.0f}%</div></div>
   </div>
 
@@ -237,7 +237,7 @@ HTML = f'''<!DOCTYPE html>
     <ul>
       <li><b>产量的绝对增量极不均匀</b>：全球 +{f(w26-w00)} 千吨，而巴西一国 +{f(br['delta'])} 千吨（占 {br_share_of_growth:.0f}%）、印度 +{f(ind['delta'])} 千吨（占 {100*ind['delta']/tot_delta:.0f}%）。两者合计 {bi_share_of_growth:.0f}%——<b>全球糖产量增长在统计上基本等于「巴西 + 印度 + 其他」</b>。</li>
       <li><b>增长的第二梯队是甜菜糖国</b>：俄罗斯 {pc(russia['pct'],0)}（{f(russia['p2000'])} → {f(russia['p2026'])}）、巴基斯坦 {pc(pak['pct'],0)}、中国 {pc(ch['pct'],0)}、泰国 {pc(th['pct'],0)}。俄罗斯与巴基斯坦是「进口替代型增长」，中国与泰国是「需求驱动型增长」。</li>
-      <li><b>唯一的结构性萎缩来自欧盟</b>：{f(eu['p2000'])} → {f(eu['p2026'])} 千吨（{pc(eu['pct'],0)}），份额从 {SS['European Union'][0]}% 降至 {SS['European Union'][26]}%；这不是产量波动，是<b>配额制取消后连续两轮糖价暴跌→甜菜面积系统性退出的政策后果</b>（见第三节）。</li>
+      <li><b>唯一的结构性萎缩来自欧盟</b>：{f(eu['p2000'])} → {f(eu['p2026'])} 千吨（{pc(eu['pct'],1)}），份额从 {SS['European Union'][0]}% 降至 {SS['European Union'][26]}%；这不是产量波动，是<b>配额制取消后连续两轮糖价暴跌→甜菜面积系统性退出的政策后果</b>（见第三节）。</li>
     </ul>
   </div>
 
@@ -386,8 +386,8 @@ HTML = f'''<!DOCTYPE html>
 
     <h3>[关键数据与依据]</h3>
     <ul>
-      <li><b>总量</b>：全球产量 {f(w00)} → {f(w26)} 千吨（{pc(prod_growth,0)}），绝对增量 {f(w26-w00)} 千吨；消费 {f(cons00)} → {f(cons26)}；库消比 {stu00:.1f}% → {stu26:.1f}%。</li>
-      <li><b>增量归属</b>：巴西 +{f(br['delta'])} 千吨（占全球增量 {br_share_of_growth:.0f}%）、印度 +{f(ind['delta'])}（{100*ind['delta']/tot_delta:.0f}%）、俄罗斯 +{f(russia['delta'])}、中国 +{f(ch['delta'])}、泰国 +{f(th['delta'])}；<b>欧盟 −{abs(eu['delta']):,.0f} 千吨（{pc(eu['pct'],0)}）是唯一大幅负贡献的主要主体</b>。</li>
+      <li><b>总量</b>：全球产量 {f(w00)} → {f(w26)} 千吨（{pc(prod_growth,1)}），绝对增量 {f(w26-w00)} 千吨；消费 {f(cons00)} → {f(cons26)}；库消比 {stu00:.1f}% → {stu26:.1f}%。</li>
+      <li><b>增量归属</b>：巴西 +{f(br['delta'])} 千吨（占全球增量 {br_share_of_growth:.0f}%）、印度 +{f(ind['delta'])}（{100*ind['delta']/tot_delta:.0f}%）、俄罗斯 +{f(russia['delta'])}、中国 +{f(ch['delta'])}、泰国 +{f(th['delta'])}；<b>欧盟 −{abs(eu['delta']):,.0f} 千吨（{pc(eu['pct'],1)}）是唯一大幅负贡献的主要主体</b>。</li>
       <li><b>集中度</b>：产量 Top3 {t3_00}%→{t3_26}%、Top5 {t5_00}%→{t5_26}%（+{t5_26-t5_00:.1f}pp）、Top10 {t10_00}%→{t10_26}%、HHI {hhi_00:,.0f}→{hhi_26:,.0f}；对照 94 号出口端 Top4 40.5%→75.1%（+34.6pp）。</li>
       <li><b>结构</b>：甘蔗糖占比 {ST['cane_share'][0]:.1f}%→{ST['cane_share'][-1]:.1f}%，甜菜糖 {beet_share_00:.1f}%→{beet_share_26:.1f}%；但甜菜糖绝对量为 {f(ST['beet'][0])}→{f(ST['beet'][-1])}，<b>是相对衰退</b>。</li>
       <li><b>自给率</b>：巴西 {br['self_suff']:.0f}%、澳大利亚 {G['Australia']['self_suff']:.0f}%、泰国 {th['self_suff']:.0f}% 对马来西亚/伊拉克/黎巴嫩 0%、孟加拉 1.8%。<b>中国（{ch['self_suff']:.0f}%）与欧盟（{eu['self_suff']:.0f}%）虽产量排名前列，实为净进口方。</b></li>
@@ -405,8 +405,8 @@ HTML = f'''<!DOCTYPE html>
     ④<b>巴西的分歧在制糖比而非产量</b>——USDA 4,250 万 vs Itau BBA 3,940 万的差距（±7%）全部来自糖/乙醇比价假设。</p>
 
     <h3>[结论与置信度]</h3>
-    <p><b>结论：</b>2000–2026 全球糖产量增长 {pc(prod_growth,0)}，但增量高度集中于巴西与印度（合计 {bi_share_of_growth:.0f}%），
-    并伴随欧盟的结构性退出（{pc(eu['pct'],0)}）。产量集中度温和上升（Top5 +{t5_26-t5_00:.1f}pp），
+    <p><b>结论：</b>2000–2026 全球糖产量增长 {pc(prod_growth,1)}，但增量高度集中于巴西与印度（合计 {bi_share_of_growth:.0f}%），
+    并伴随欧盟的结构性退出（{pc(eu['pct'],1)}）。产量集中度温和上升（Top5 +{t5_26-t5_00:.1f}pp），
     <b>显著慢于贸易集中度（+34.6pp），构成「产量分散 / 贸易集中」的剪刀差</b>——这正是 94 号「糖变得更可贸易」结论的上游镜像。
     2026/27 的边际方向明确转向<b>减产与短缺</b>：欧盟 −15%（EC）、泰国 −15%（StoneX）、全球由过剩转缺口（ISO/StoneX/Czarnikow 方向一致）。
     <b>置信度：高</b>（总量与集中度可逐点对账、世界序列与 94 号完全一致）；<b>中</b>（分国 2026 预测值受 PSD vintage 限制，欧盟/泰国已可确认偏乐观）；<b>低-中</b>（巴西制糖比与 2026/27 最终缺口幅度，机构分歧 ±7% 且依赖天气）。
