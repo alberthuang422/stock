@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>95 · 厄尔尼诺与欧洲夏季高温 · 定量归因（2026-09-18）</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<style>
+:root{
+  --red:#D55E00;        /* 涨/正异常 - Okabe-Ito vermilion */
+  --green:#009E73;      /* 跌/负异常 - Okabe-Ito bluish green */
+  --blue:#0072B2;
+  --orange:#E69F00;
+  --sky:#56B4E9;
+  --purple:#CC79A7;
+  --yellow:#F0E442;
+  --ink:#1a1a1a;
+  --ink2:#4a4a4a;
+  --ink3:#7a7a7a;
+  --line:#e2e2e2;
+  --bg:#fbfaf7;
+  --card:#ffffff;
+  --hl:#fff8e6;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;padding:0;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  font-size:14px;line-height:1.75;
+}
+.wrap{max-width:1060px;margin:0 auto;padding:34px 26px 70px;}
+h1{font-size:25px;margin:0 0 6px;font-weight:700;letter-spacing:-.3px;}
+h2{font-size:18px;margin:38px 0 12px;padding-bottom:7px;border-bottom:2px solid var(--ink);
+   font-weight:700;letter-spacing:-.2px;}
+h3{font-size:15px;margin:24px 0 9px;font-weight:700;color:var(--ink);}
+h4{font-size:13.5px;margin:16px 0 6px;font-weight:700;color:var(--ink2);}
+p{margin:9px 0;}
+.sub{color:var(--ink3);font-size:12.5px;margin:0 0 4px;}
+.meta-bar{color:var(--ink3);font-size:12.5px;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:6px;}
+.meta-bar b{color:var(--ink2);font-weight:600;}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:16px 19px;margin:14px 0;}
+.card.hl{background:var(--hl);border-color:#f0dfae;}
+.verdict{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--red);
+  border-radius:6px;padding:15px 20px;margin:16px 0;}
+.verdict .lead{font-size:15.5px;font-weight:700;margin:0 0 8px;}
+
+table{width:100%;border-collapse:collapse;margin:11px 0;font-size:12.8px;}
+th,td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:right;}
+th{background:#f4f2ee;font-weight:700;color:var(--ink2);font-size:12px;text-align:right;
+   position:sticky;top:0;}
+th:first-child,td:first-child{text-align:left;}
+tbody tr:hover{background:#faf8f4;}
+td.pos{color:var(--red);font-weight:600;}
+td.neg{color:var(--green);font-weight:600;}
+td.dim{color:var(--ink3);}
+.small{font-size:11.8px;color:var(--ink3);}
+.chart{width:100%;height:330px;margin:6px 0 2px;}
+.chart.tall{height:400px;}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+@media(max-width:760px){.two{grid-template-columns:1fr;}}
+.tag{display:inline-block;font-size:11px;padding:1.5px 7px;border-radius:3px;margin-right:5px;
+  font-weight:700;vertical-align:middle;border:1px solid;}
+.tag.no{background:#fdeeee;color:#a83232;border-color:#f0c6c6;}
+.tag.yes{background:#eaf6f1;color:#1c7a55;border-color:#bfe0d2;}
+.tag.warn{background:#fff6e0;color:#9a6a00;border-color:#f0dcae;}
+.tag.info{background:#eef4fa;color:#1a5f96;border-color:#c8dced;}
+ul,ol{margin:8px 0 8px 0;padding-left:22px;}
+li{margin:5px 0;}
+code{background:#f2f0ec;padding:1px 5px;border-radius:3px;font-size:12.3px;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
+.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0;}
+.kv .item{background:#f7f5f1;border-radius:6px;padding:9px 12px;border:1px solid var(--line);}
+.kv .item .k{font-size:11.5px;color:var(--ink3);}
+.kv .item .v{font-size:19px;font-weight:700;letter-spacing:-.4px;margin-top:1px;}
+.kv .item .u{font-size:11.5px;color:var(--ink3);font-weight:400;}
+.note{background:#f7f5f1;border-left:3px solid var(--ink3);padding:9px 14px;margin:12px 0;
+  font-size:12.6px;color:var(--ink2);border-radius:0 4px 4px 0;}
+.term{border-bottom:1px dashed var(--ink3);cursor:help;position:relative;}
+.term:hover::after{
+  content:attr(data-tip);position:absolute;left:0;top:130%;z-index:99;
+  background:#2b2b2b;color:#fff;font-size:12px;padding:7px 11px;border-radius:5px;
+  width:270px;line-height:1.6;font-weight:400;box-shadow:0 4px 14px rgba(0,0,0,.22);
+}
+.footer{margin-top:46px;padding-top:16px;border-top:1px solid var(--line);
+  font-size:11.8px;color:var(--ink3);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>厄尔尼诺与 2026 年欧洲夏季高温 —— 定量归因</h1>
+<div class="meta-bar">
+  <b>报告编号</b> 95 &nbsp;·&nbsp; <b>日期</b> 2026-09-18 &nbsp;·&nbsp;
+  <b>样本</b> 1948–2026（n=79 年）&nbsp;·&nbsp;
+  <b>数据</b> NOAA CPC ONI / NOAA PSL Niño3.4 长序列 / HadCRUT5 &amp; CRUTEM5 v5.1（CRU + UK Met Office，更新至 2026-07）
+</div>
+
+<div class="verdict">
+  <p class="lead">结论：关系存在，但不是主因。厄尔尼诺只能解释 2026 年欧洲（北半球）夏季高温异常的约 1/4–1/3，且这一份额主要是在全球尺度上成立的；对「欧洲」这一特定区域，历史证据显示其解释力接近 0。</p>
+  <p style="margin:0;font-size:13.4px;">
+    核心机制错配：<b>ENSO 对欧洲的直接影响窗口是秋冬季，不是夏季</b>；2026 年夏季的重灾窗口（6–7 月）恰好是厄尔尼诺刚刚成形、几乎还未产生大气响应的时点。
+    真正的主导变量是<b>持久阻塞高压（"热穹顶"）+ 土壤干旱正反馈 + 海洋热浪</b>，三者叠加在全球变暖抬高的基线上。
+  </p>
+</div>
+
+<h2>一、问题的正确提法：先拆成三个可检验的子问题</h2>
+
+<p>「欧洲很热，和厄尔尼诺有多大关系」这个提法本身是模糊的，因为至少混进了三种不同的因果路径。分开检验才有意义：</p>
+
+<table>
+<thead><tr><th>路径</th><th>机制</th><th>可检验性</th><th>本报告对应章节</th></tr></thead>
+<tbody>
+<tr><td><b>P1 局地直接调制</b></td><td>ENSO 遥相关改变欧洲上空环流（阻塞高压频率）</td><td>可用欧洲/北半球气温长序列直接检验相关性</td><td>第三节、第四节</td></tr>
+<tr><td><b>P2 全球热量叠加</b></td><td>ENSO 抬高全球平均温度，欧洲作为其中一部分被动抬升</td><td>可用全球气温序列检验，但需剔除共同趋势</td><td>第五节</td></tr>
+<tr><td><b>P3 时序错配</b></td><td>ENSO 信号滞后 3–6 个月释放，其峰值落在冬春季</td><td>用提前量相关 + 事件时间线检验</td><td>第六节</td></tr>
+</tbody>
+</table>
+
+<div class="note">
+<b>关键前提校验：</b>2026 年的 ENSO 是一次「夏成形、冬达峰」的事件。CPC 于 6 月 11 日才宣布厄尔尼诺条件成立；ONI 从 1–3 月的 −0.21 升至 5–7 月的 +1.39（本报告用长序列口径：3–5 月 +0.46 → 5–7 月 +1.47 → 6–8 月 +1.80）。
+欧洲热浪的重灾月是 <b>6 月和 7 月</b>（西欧 6–7 月均温 21.62 °C，较 1991–2020 均值高 2.79 °C，破 2022 年记录）。
+也就是说：<b>ENSO 增温效应尚未展开时，欧洲的高温格局就已经建立</b>。这是一条纯时序上的、无需统计检验就能提出的反证。
+</div>
+
+<h2>二、样本与口径</h2>
+
+<div class="kv">
+  <div class="item"><div class="k">样本长度</div><div class="v">79 <span class="u">年</span></div></div>
+  <div class="item"><div class="k">ENSO 指标</div><div class="v">Niño3.4 <span class="u">ONI 季均</span></div></div>
+  <div class="item"><div class="k">气温口径</div><div class="v">HadCRUT5 <span class="u">/ CRUTEM5</span></div></div>
+  <div class="item"><div class="k">置信区间方法</div><div class="v">块自助 <span class="u">block=5, 4000 次</span></div></div>
+</div>
+
+<h3>为什么选北半球而非「欧洲」作为主目标</h3>
+<p>HadCRUT5 提供全球／南北半球／陆地／海洋的<b>长序列（1850 起）</b>，但没有「欧洲」这个现成区域序列。本报告采用两级代理：</p>
+<ul>
+  <li><b>北半球陆地（CRUTEM5 NH）</b>——大陆性最强、对热浪最敏感的代理，也是欧洲所属的半球尺度；</li>
+  <li><b>北半球整体 + 全球</b>——用于分解「区域效应」与「全球热量叠加」的分量差异。</li>
+</ul>
+<p class="small">⚠️ 诚实声明：这是<b>半球尺度的代理</b>，不是欧洲本地序列。若 ENSO 对欧洲有区域特异信号，会被半球平均稀释。因此下述「相关性弱」的结论，其量级应理解为<b>上界</b>——真实欧洲局地相关性只会更弱或更不稳定。这一点在第四节的事件证据里得到反向确认。</p>
+
+<h3>三口径并行，避免「共同趋势伪相关」</h3>
+<p>ENSO 强度与全球气温在近几十年<b>同时在上升</b>。若直接做原始相关，会把「全球变暖趋势」误记成「ENSO 的功劳」。因此每个相关系数都给三个版本：</p>
+<ol>
+  <li><b>r_raw</b>：原始水平值相关</li>
+  <li><b>r_detrend</b>：双方各自剔除线性趋势后的残差相关</li>
+  <li><b>r_diff</b>：双方取一阶差分（年度变化量）后的相关</li>
+</ol>
+
+<h2>三、主结果：原始相关看起来显著，去趋势后基本消失</h2>
+
+<table>
+<thead><tr><th>预测变量</th><th>目标</th><th>r_raw</th><th>p_raw</th><th>r_detrend</th><th>p_detrend</th><th>r_diff</th><th>p_diff</th><th>n</th></tr></thead>
+<tbody>
+<tr><td>ENSO AMJ</td><td>NH 陆地 夏季</td><td class="pos">+0.380</td><td>0.0006</td><td class="dim">+0.153</td><td class="dim">0.180</td><td class="pos">+0.250</td><td>0.028</td><td>78</td></tr>
+<tr><td>ENSO AMJ</td><td>NH 整体 夏季</td><td class="pos">+0.438</td><td>0.0001</td><td class="pos">+0.288</td><td>0.011</td><td class="pos">+0.431</td><td>0.000</td><td>78</td></tr>
+<tr><td>ENSO AMJ</td><td>全球 夏季</td><td class="pos">+0.445</td><td>0.0000</td><td class="pos">+0.319</td><td>0.004</td><td class="pos">+0.449</td><td>0.000</td><td>78</td></tr>
+<tr style="background:#faf8f4"><td>ENSO MJJ</td><td><b>NH 陆地 夏季</b></td><td class="pos">+0.362</td><td>0.001</td><td class="dim">+0.077</td><td class="dim"><b>0.504</b></td><td class="dim">+0.091</td><td class="dim">0.434</td><td>78</td></tr>
+<tr><td>ENSO JJA</td><td>NH 陆地 夏季</td><td class="pos">+0.321</td><td>0.004</td><td class="dim">+0.018</td><td class="dim"><b>0.873</b></td><td class="dim">+0.004</td><td class="dim">0.969</td><td>78</td></tr>
+<tr><td>ENSO DJF(y−1)</td><td>NH 陆地 夏季</td><td class="dim">+0.087</td><td class="dim">0.454</td><td class="dim">−0.115</td><td class="dim">0.321</td><td class="neg">−0.248</td><td>0.032</td><td>76</td></tr>
+<tr><td>ENSO SON(y−1)</td><td>NH 陆地 夏季</td><td class="pos">+0.327</td><td>0.004</td><td class="dim">+0.211</td><td class="dim">0.066</td><td class="pos">+0.516</td><td class="dim">0.000</td><td>77</td></tr>
+</tbody>
+</table>
+<p class="small">「y−1」表示上年季节。块自助法（处理序列自相关）给出的 p 值普遍在 0.43–0.53，<b>全部不显著</b>——即原始的 OLS p 值被序列自相关高估了显著性。</p>
+
+<h3>3.1 最关键的三个数字</h3>
+<div class="kv">
+  <div class="item"><div class="k">NH陆地·原始相关</div><div class="v">+0.362</div><div class="u">p=0.001（看似强）</div></div>
+  <div class="item"><div class="k">NH陆地·去趋势后</div><div class="v" style="color:var(--green)">+0.077</div><div class="u">p=0.504（<b>完全消失</b>）</div></div>
+  <div class="item"><div class="k">NH陆地·一阶差分后</div><div class="v" style="color:var(--green)">+0.091</div><div class="u">p=0.434（不显著）</div></div>
+</div>
+
+<p><b>解读。</b>NH 陆地夏季气温里，ENSO 原始相关 0.362 的部分，<b>去趋势后只剩 0.077 且 p=0.504</b>。这直接说明：那个"0.362"绝大部分来自 ENSO 强度与北半球气温在 1948–2026 间共同的上升趋势，而非逐年的一一对应关系。作为对照，同为 ENSO 相关的目标 <b>全球</b>夏季气温去趋势后仍保留 +0.319（p=0.004），NH 整体保留 +0.288（p=0.011）——<b>ENSO 的痕迹在越靠近热带/全球尺度越清晰，越靠近中高纬陆地越模糊</b>。这正是教科书中 ENSO 遥相关随纬度衰减的标准形态。</p>
+
+<h2>四、方差分解：ENSO 的增量贡献 = 0.13%</h2>
+
+<p>把「时间趋势」与「ENSO」同时放进模型，看 ENSO 能带来多少<b>增量</b>解释力。这是比相关系数更严格的检验——它直接回答「除了全球变暖，ENSO 还额外告诉我们什么」。</p>
+
+<table>
+<thead><tr><th>目标</th><th>仅趋势 R²</th><th>仅 ENSO R²</th><th>趋势+ENSO R²</th><th>ENSO 增量 R²</th><th>ENSO 偏相关</th><th>偏 p 值</th><th>趋势 β</th><th>ENSO β</th></tr></thead>
+<tbody>
+<tr><td><b>NH 陆地 夏季</b></td><td>0.774</td><td>0.131</td><td>0.775</td><td class="neg"><b>+0.0013</b></td><td class="dim">+0.077</td><td class="dim"><b>0.507</b></td><td>+0.204/十年</td><td>+0.039</td></tr>
+<tr><td>NH 整体 夏季</td><td>0.785</td><td>0.183</td><td>0.796</td><td class="warn">+0.0108</td><td>+0.225</td><td>0.050</td><td>+0.166/十年</td><td>+0.093</td></tr>
+<tr><td>全球 夏季</td><td>0.834</td><td>0.198</td><td>0.846</td><td class="warn">+0.0125</td><td>+0.274</td><td>0.016</td><td>+0.138/十年</td><td>+0.081</td></tr>
+</tbody>
+</table>
+
+<div class="card hl">
+<p style="margin:0;"><b>三层结论，量级明确：</b></p>
+<ul style="margin:8px 0 0;">
+  <li><b>线性趋势单独就解释了 NH 陆地夏季气温 77.4% 的方差</b>（每十年 +0.204 °C）。</li>
+  <li>ENSO 单独看有 13.1%，但那是<b>搭趋势便车</b>的产物。</li>
+  <li>叠加 ENSO 后 R² 只从 0.774 升到 0.775，<b>增量 0.13%，偏 p = 0.507</b>——统计上等同于零贡献。</li>
+  <li>换到全球尺度，ENSO 增量才升到 1.25%（p=0.016），说明其真实作用主要在<b>全球热量收支</b>，而非欧洲区域环流。</li>
+</ul>
+</div>
+
+<h2>五、反事实估算：ENSO 最多占 28–44%，且越「局地」占比越低</h2>
+
+<p>用历史条件均值差做反推：取 3–5 月 ENSO 处于偏暖档（ONI +0.5~+1.5）的年份样本（n=10），与中性年（n=50）相比，同期夏季气温平均高多少。再用这个效应去除以 2026 年的实际异常量。</p>
+
+<table>
+<thead><tr><th>口径</th><th>2026 实测（3–7 月均）</th><th>1991–2020 基准</th><th>总异常</th><th>ENSO 条件均值效应</th><th>ENSO 可解释占比</th></tr></thead>
+<tbody>
+<tr><td><b>NH 陆地</b>（最接近欧洲）</td><td class="pos">+1.685</td><td>+0.772</td><td class="pos">+0.913</td><td>+0.255</td><td class="neg"><b>28.0%</b></td></tr>
+<tr><td>NH 整体</td><td class="pos">+1.360</td><td>+0.658</td><td class="pos">+0.702</td><td>+0.254</td><td class="warn"><b>36.1%</b></td></tr>
+<tr><td>全球</td><td class="pos">+1.058</td><td>+0.509</td><td class="pos">+0.549</td><td>+0.241</td><td class="warn"><b>44.0%</b></td></tr>
+</tbody>
+</table>
+
+<p><b>注意这个单调序列。</b>越往局地（北半球陆地）走，ENSO 可解释占比越低（28%）；越往全球尺度走，占比越高（44%）。这正是「ENSO 主要是一个全球尺度的热量项，而不是欧洲区域的环流开关」的定量表达。</p>
+<p>更重要的是：<b>这个 28% 还是上界</b>。它用的是「同期」ENSO 关系，而 2026 年 6–7 月欧洲高温格局建立时，ENSO 尚未成形（见第七节时序表）。真实可用于解释 6–7 月热浪的份额，远低于 28%。</p>
+
+<h2>六、事件研究：强厄尔尼诺年 → 北半球夏季气温</h2>
+
+<p>不做连续相关，改看成组对比。把 1948–2026 按冬季 ENSO 强度分五档，看同期夏季气温的分布。</p>
+
+<table>
+<thead><tr><th>ENSO 冬档（ONI）</th><th>n</th><th>NH 陆地夏季 均值</th><th>中位数</th><th>标准差</th><th>NH 整体夏季 均值</th><th>全球夏季 均值</th></tr></thead>
+<tbody>
+<tr><td>超强厄尔尼诺 ≥ +1.5</td><td>4</td><td class="pos"><b>+1.059</b></td><td>+1.134</td><td>0.604</td><td class="pos">+0.866</td><td class="pos">+0.702</td></tr>
+<tr><td>中等厄尔尼诺 +0.5~+1.5</td><td>15</td><td class="pos">+0.550</td><td>+0.589</td><td>0.502</td><td class="pos">+0.490</td><td class="pos">+0.365</td></tr>
+<tr><td><b>中性</b></td><td>27</td><td>+0.246</td><td>+0.096</td><td>0.358</td><td>+0.218</td><td>+0.163</td></tr>
+<tr><td>超强拉尼娜 ≤ −1.5</td><td>4</td><td>+0.139</td><td>+0.066</td><td>0.459</td><td>+0.121</td><td>+0.092</td></tr>
+<tr><td>中等拉尼娜 −0.5~−1.5</td><td>27</td><td>+0.414</td><td>+0.076</td><td>0.630</td><td>+0.334</td><td>+0.261</td></tr>
+</tbody>
+</table>
+
+<p><b>方向确实存在，但强度与显著性都不足以支撑「主因」。</b></p>
+<ul>
+  <li>超强厄尔尼诺组（n=4）比中性组高 <b>+0.813 °C</b>，t=2.62，<b>p=0.071</b>——未达 0.05 显著线，且 n=4 功效极低。</li>
+  <li>超强拉尼娜组比中性组低 <b>−0.107 °C</b>，<b>p=0.681</b>——拉尼娜的"降温"效应在北半球陆地上几乎测不出来，印证了文献中「ENSO 效应非对称」的结论。</li>
+  <li>组内标准差 0.36–0.63，<b>远大于组间均值差 0.81</b>。这意味着单看一个强厄尔尼诺年，夏季气温的落点跨度极大，预测价值有限。</li>
+</ul>
+
+<h3>6.1 四次超强厄尔尼诺的「成绩单」——最有说服力的证据</h3>
+<p>1983、1998、2016、2024 是 1948 年以来仅有的四个超强档（冬季 ONI ≥ +1.5）。看它们对应的北半球陆地夏季气温：</p>
+
+<table>
+<thead><tr><th>冬季年份</th><th>冬季 ONI</th><th>NH 陆地夏季</th><th>NH 陆地次年夏季</th><th>NH 整体夏季</th><th>全球夏季</th><th>评价</th></tr></thead>
+<tbody>
+<tr><td>1983</td><td class="pos">+1.59</td><td>+0.274</td><td>+0.076</td><td>+0.185</td><td>+0.184</td><td class="dim">偏冷年份</td></tr>
+<tr><td>1998</td><td class="pos">+1.71</td><td>+0.955</td><td>+0.490</td><td>+0.779</td><td>+0.655</td><td>偏暖但非极端</td></tr>
+<tr><td>2016</td><td class="pos">+2.04</td><td>+1.313</td><td>+1.117</td><td>+1.099</td><td>+0.823</td><td>偏暖</td></tr>
+<tr><td>2024</td><td class="pos">+1.60</td><td>+1.693</td><td>+1.437</td><td>+1.402</td><td>+1.147</td><td>偏暖</td></tr>
+</tbody>
+</table>
+
+<div class="note">
+<b>读法。</b>四个超强档里，<b>1983 年的北半球陆地夏季气温只有 +0.274 °C，比中性组均值 +0.246 几乎没差别</b>；1998 年 +0.955 °C 也只是「偏暖」。
+这四年的数值更是<b>逐年递升的</b>（0.27 → 0.96 → 1.31 → 1.69），清晰地呈现出<b>背景增温趋势</b>的烙印，而非 ENSO 强度的烙印（因为四者的 ONI 强度排序与气温排序并不对应：ONI 最高的是 2016 年 +2.04，但气温最高的是 2024 年）。
+</div>
+
+<h3>6.2 反过来看：史上最热的几个初夏，ENSO 在哪？</h3>
+<p>把 1960–2026 的北半球陆地 3–7 月均温排序，取前 10 名：</p>
+
+<table>
+<thead><tr><th>排名</th><th>年份</th><th>NH 陆地 3–7月</th><th>当年 3–7月 ONI</th><th>当年冬季 ONI</th><th>ENSO 状态</th></tr></thead>
+<tbody>
+<tr><td>1</td><td><b>2026</b></td><td class="pos">+1.685</td><td class="pos">+1.47</td><td class="dim">−0.27</td><td class="warn">夏成形（热浪在前）</td></tr>
+<tr><td>2</td><td>2024</td><td class="pos">+1.645</td><td class="dim">+0.42</td><td class="pos">+1.60</td><td>冬强夏衰</td></tr>
+<tr><td>3</td><td>2023</td><td class="pos">+1.448</td><td class="dim">+0.77</td><td class="dim">−0.56</td><td class="neg">拉尼娜残余</td></tr>
+<tr><td>4</td><td>2025</td><td class="pos">+1.430</td><td class="dim">+0.12</td><td class="dim">−0.53</td><td class="neg">中性偏冷</td></tr>
+<tr><td>5</td><td>2021</td><td class="pos">+1.382</td><td class="neg">−0.15</td><td class="neg">−1.05</td><td class="neg"><b>拉尼娜</b></td></tr>
+<tr><td>6</td><td>2016</td><td class="pos">+1.277</td><td class="dim">+0.34</td><td class="pos">+2.04</td><td>超强（滞后）</td></tr>
+<tr><td>7</td><td>2022</td><td class="pos">+1.274</td><td class="neg">−0.60</td><td class="neg">−0.67</td><td class="neg"><b>拉尼娜</b></td></tr>
+<tr><td>8</td><td>2020</td><td class="pos">+1.247</td><td class="dim">+0.03</td><td class="dim">+0.75</td><td>中性</td></tr>
+<tr><td>9</td><td>2012</td><td class="pos">+1.237</td><td class="dim">+0.02</td><td class="neg">−0.85</td><td class="neg">拉尼娜</td></tr>
+<tr><td>10</td><td>2018</td><td class="pos">+1.150</td><td class="dim">+0.29</td><td class="dim">−0.59</td><td class="neg">拉尼娜</td></tr>
+</tbody>
+</table>
+
+<div class="card hl">
+<p style="margin:0;"><b>这张表基本终结了「厄尔尼诺导致欧洲热」的叙事：</b></p>
+<ul style="margin:8px 0 0;">
+  <li>前 10 热年里，<b>有 4 年（2021、2022、2012、2018）当年夏季处于拉尼娜状态</b>，另有 2 年 ENSO 接近中性——<b>共 6/10 与厄尔尼诺无关</b>。</li>
+  <li>最强的厄尔尼诺年（2016 冬 ONI +2.04）只排到第 <b>6</b> 位。</li>
+  <li>10 年里 8 年集中在 2012 年之后——<b>时间聚集性远强于 ENSO 相关性</b>，指向背景增温。</li>
+  <li>2026 年自身：冬季 ONI 为 <b>−0.27（偏冷）</b>，当年的厄尔尼诺是在 3 月以后才快速建立的。</li>
+</ul>
+</div>
+
+<h2>七、时序证据：热浪发生在厄尔尼诺「成形之前」</h2>
+
+<div id="chart_timeline" class="chart tall"></div>
+<p class="small">红=北半球陆地 3–7 月气温异常；蓝=Niño3.4 指数（3–7 月均）。注意 2026 年红线创历史新高时，蓝线刚刚从负值抬升——ENSO 的大气响应需要 3–6 个月滞后，落在秋季。</p>
+
+<table>
+<thead><tr><th>时点（2026）</th><th>ENSO 状态（Niño3.4 季均）</th><th>分位</th><th>欧洲事件</th></tr></thead>
+<tbody>
+<tr><td>1–3 月</td><td>−0.21</td><td>44 分位</td><td class="dim">冬季，无异常</td></tr>
+<tr><td>3–5 月</td><td>+0.46</td><td>89 分位</td><td>5 月起首轮热浪</td></tr>
+<tr><td><b>4–6 月</b></td><td>+0.95</td><td><b>99 分位</b></td><td><b>6 月西欧史上最热 6 月</b></td></tr>
+<tr><td><b>5–7 月</b></td><td>+1.39（本序列口径 +1.47）</td><td><b>99 分位</b></td><td><b>6–7 月合并破纪录（21.62 °C，+2.79 °C）</b></td></tr>
+<tr><td>6–8 月</td><td>+1.80（CPC 口径）</td><td>99 分位</td><td>8 月野火、干旱、河道断航；<b>此时才进入 ENSO 强响应期</b></td></tr>
+</tbody>
+</table>
+
+<p><b>时序上的核心矛盾：</b>欧洲 6–7 月高温格局建立时，ENSO 才从 +0.95 爬到 +1.39；而 ENSO 对欧洲的遥相关（通过削弱极涡、促成 NAO 负位相）季节窗口集中在<b>秋冬季（1–3 月峰值）</b>，夏季是全年信号最弱、最不稳定的季节。用一句可核验的话概括：<b>2026 年 ENSO 的增温贡献，其兑现窗口是 2026 年秋冬到 2027 年春，而不是 2026 年 6–7 月。</b></p>
+
+<h2>八、那么真正的驱动是什么？三层结构</h2>
+
+<p>本节整合权威机构归因（Copernicus / ECMWF、UK Met Office、Meteolux、Crisis24 等）与前述定量结果，把 2026 年欧洲高温拆成三层：</p>
+
+<table>
+<thead><tr><th>层级</th><th>因子</th><th>作用</th><th>证据</th></tr></thead>
+<tbody>
+<tr><td><b>底色</b><br>（抬高基线）</td><td>人为全球变暖</td><td>相同环流配置下产出更极端的温度</td><td>UK Met Office：今夏英国均温 16.5 °C 创 1884 年来记录，<b>该气温"被人为气候变化放大了约 130 倍的出现概率"</b>；欧洲增温速率约为全球 2 倍</td></tr>
+<tr><td><b>开关</b><br>（决定今年热不热）</td><td>持久阻塞高压<br>（"热穹顶"）</td><td>下沉气流增温 + 云量减少 + 向北输送北非/伊比利亚暖空气</td><td>Copernicus/ECMWF（Burgess）："持续性高压系统把热量困在西欧上空"；Meteolux："本夏由持续阻塞与高压系统主导"</td></tr>
+<tr><td><b>放大器</b><br>（越热越干、越干越热）</td><td>土壤干旱正反馈<br>+ 海洋热浪</td><td>土壤失水丧失蒸散冷却能力 → 更多能量用于加热地表</td><td>Burgess："土壤变干后失去自然冷却能力，使热量更易累积"；西欧 7 月土壤湿度显著低于 2022 年；英吉利海峡西部连续 3 年多海洋热浪，7 月局地海温偏高达 7 °C</td></tr>
+<tr><td class="dim">（间接）</td><td class="dim">厄尔尼诺</td><td class="dim">抬高全球平均温度，通过大尺度遥相关略微增加西欧高压倾向</td><td class="dim">Copernicus 明确指出 ENSO「部分推动」的是<b>全球海表温度</b>创纪录（7 月 20.96 °C），而非直接解释西欧高温</td></tr>
+</tbody>
+</table>
+
+<div class="note">
+<b>一个被广泛误读的 Copernicus 表述。</b>Copernicus 8 月 10 日公报的原话是：7 月全球海表温度创纪录（20.96 °C）<b>"partly fuelled by developing El Niño conditions"</b>。这句话的主语是<b>全球海温</b>，不是欧洲陆地气温。
+媒体在转述时普遍把它压缩成"厄尔尼诺驱动高温"，从而把「全球海洋热量」的归因错误地安到了「欧洲热浪」头上。这是一个可以从原文直接核验的口径错误。
+</div>
+
+<h3>8.1 非对称的佐证：为什么 2021/2022 拉尼娜年仍然挤进前 10 热</h3>
+<p>如果 ENSO 是主因，拉尼娜年应当明显偏冷。但 2021（NH 陆地 3–7 月 +1.382，第 5 热）与 2022（+1.274，第 7 热）都发生在持续拉尼娜背景下，且这两年正是欧洲干旱与热浪频发的年份。这一反例说明：<b>在足够强的背景增温与环流阻塞条件下，ENSO 的信号可以被完全压制。</b></p>
+
+<h2>九、结论与置信度</h2>
+
+<div class="card">
+<h4 style="margin-top:0">直接回答「有多大关系」</h4>
+<table>
+<thead><tr><th>问题层面</th><th>答案</th><th>置信度</th></tr></thead>
+<tbody>
+<tr><td>ENSO 与北半球/欧洲夏季高温存在统计关系吗？</td><td>存在正向但弱且不稳健</td><td><span class="tag yes">高</span></td></tr>
+<tr><td>这个关系是否独立于全球变暖趋势？</td><td><b>否。</b>去趋势后 NH 陆地相关从 +0.362 降至 +0.077（p=0.504），增量 R² = 0.13%</td><td><span class="tag yes">高</span></td></tr>
+<tr><td>2026 年欧洲 6–7 月热浪，ENSO 的解释份额</td><td><b>显著低于 28%</b>（28% 是同期上界；6–7 月格局建立时 ENSO 未成形）</td><td><span class="tag yes">高</span></td></tr>
+<tr><td>2026 年全球平均温度/海温创新高，ENSO 的解释份额</td><td>约 44%（MJJ 口径），且随 ENSO 在秋冬季达峰还将上升</td><td><span class="tag yes">高</span></td></tr>
+<tr><td>ENSO 对欧洲夏季的直接影响机制</td><td><b>季节窗口错配</b>：影响集中在秋冬季，夏季信号最弱且非平稳</td><td><span class="tag yes">高</span></td></tr>
+<tr><td>对 2027 年欧洲夏季的预测价值</td><td><b>低。</b>单个强 ENSO 年组内标准差（0.60）远超组间均值差（0.81），且 2027 年大概率已转入 ENSO 衰退期</td><td><span class="tag warn">中</span></td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>9.1 一句话总结</h3>
+<div class="verdict" style="border-left-color:var(--blue)">
+<p class="lead" style="font-size:15px;">2026 年欧洲的酷暑，厄尔尼诺是「背景里的配角」，不是「台上的主角」。它贡献了全球热量池的额外一批热量，也因此在统计上与世界温度纪录相关；但决定欧洲今年热不热的是热穹顶这个开关，决定热到什么程度的是全球变暖这条抬高的基线和土壤干旱这个放大器。</p>
+<p style="margin:0;font-size:13.2px;color:var(--ink2);">
+定量表达：<b>ENSO 对北半球陆地夏季气温的独立贡献 ≈ 0.13% 的方差增量（p=0.507）；对 2026 年 6–7 月欧洲热浪的解释份额显著低于 28%。</b>
+而全球变暖的线性趋势单项就解释了 77.4% 的方差。
+</p>
+</div>
+
+<h3>9.2 需要警惕的反向风险</h3>
+<ul>
+  <li><b>2026 年秋冬 – 2027 年春。</b>这才是 ENSO 效应的真正兑现窗口。CPC 9 月 10 日维持 El Niño Advisory，<b>秋冬达"very strong"（ONI ≥ +2.0）概率 &gt; 90%</b>，10–12 月出现历史级事件（RONI ≥ +2.5）概率 <b>75%</b>（8 月口径为 69%）。届时西北欧可能转向「更湿、更多风暴」的格局，而非高温。</li>
+  <li><b>2027 年全球气温。</b>ENSO 增温滞后兑现，叠加既有基线，2027 年有可能刷新全球最热年记录。这是与欧洲夏季高温问题最直接相关的推论，且方向与「ENSO 造成 2026 夏热」相反。</li>
+  <li><b>观测口径变更风险。</b>CPC 同时在用 ONI 与 RONI。二者对历史事件的排序不同（RONI 剔除了热带海洋自身增暖）。引用"史上最强"时须注明所用指数。</li>
+</ul>
+
+<h3>9.3 本报告的局限（须明示）</h3>
+<ol>
+  <li><b>无欧洲本地长序列。</b>用北半球/北半球陆地作代理，会稀释区域特异信号——因此相关性结论的量级应视作上界。但事件证据（第 6.1、6.2 节）显示即便按最宽松的代理口径，ENSO 也不占主导，方向性结论不受此限制影响。</li>
+  <li><b>强事件样本极小。</b>超强档仅 4 个（1983/1998/2016/2024）。t 检验 p=0.071 未达显著线，且功效极低；不应据此做方向性下注。</li>
+  <li><b>非平稳性未完全处理。</b>ENSO-欧洲遥相关在 1980 年代前后发生结构性变化（文献：夏季信号本就弱且非平稳）。本报告用非线性/差分处理了趋势，但未做滚动窗口的结构断点检验，这会使 79 年单一相关系数带有平均化偏差。</li>
+  <li><b>8 月气温数据尚未纳入。</b>HadCRUT5 更新至 2026-07，故 2026 年 JJA 值缺失，反事实估算使用 MJJ 口径。</li>
+  <li><b>Copernicus 官方归因文本</b>为定性表述（"partly fuelled"），本报告未获得其定量分解（如最优指纹法的 ENSO 分量），因此第 8 节的三层结构是<b>机构共识整合 + 本报告定量检验的合成</b>，非单一来源的官方定量归因。</li>
+</ol>
+
+<h2>十、方法与可复现</h2>
+<div class="card">
+<h4 style="margin-top:0">数据源</h4>
+<table>
+<thead><tr><th>数据</th><th>来源</th><th>覆盖</th><th>本地文件</th></tr></thead>
+<tbody>
+<tr><td>ONI 季均（CPC 官方）</td><td>NOAA CPC</td><td>1950–2026-08</td><td><code>data/cotton/raw/oni_latest.txt</code></td></tr>
+<tr><td>Niño3.4 月异常长序列</td><td>NOAA PSL</td><td>1948-01 – 2026-08</td><td><code>data/enso/nina34.anom.data</code></td></tr>
+<tr><td>HadCRUT5 气温（NH/SH/GL）</td><td>CRU + UK Met Office v5.1</td><td>1850-01 – 2026-07</td><td><code>data/enso/cru_nh.txt</code> 等</td></tr>
+<tr><td>CRUTEM5 陆面气温</td><td>CRU + UK Met Office v5.1</td><td>1850-01 – 2026-07</td><td><code>data/enso/cru_nh_land.txt</code></td></tr>
+<tr><td>DMI（印度洋偶极子，对照）</td><td>HadISST via NOAA PSL</td><td>1870-01 – 2026-05</td><td><code>data/enso/dmi_had.long.data</code></td></tr>
+</tbody>
+</table>
+
+<h4>方法要点</h4>
+<ul>
+  <li><b>季节窗</b>：3 个月滚动平均，标签取窗口末月所属年份。DJF 以 1 月年份标记。</li>
+  <li><b>趋势剔除</b>：OLS 线性去趋势；以及一阶年度差分。两者并行使结论稳健。</li>
+  <li><b>显著性</b>：除常规 OLS t 检验外，对每个相关系数做<b>块自助法</b>（block length = 5，4000 次重采样），以处理年度序列的自相关导致的伪显著。</li>
+  <li><b>方差分解</b>：R²_趋势（仅时间）、R²_ENSO（仅 ENSO）、R²_联合（双变量 OLS），增量 = 联合 − 趋势；并给出控制趋势后的 ENSO 偏相关与偏 t 值。</li>
+  <li><b>事件分组</b>：按冬季 ONI 分五档（≥1.5 / 0.5~1.5 / −0.5~0.5 / −1.5~−0.5 / ≤−1.5），Welch t 检验。</li>
+  <li><b>反事实</b>：ENSO 条件均值效应 ÷ 2026 实测异常（相对 1991–2020 基准）。</li>
+</ul>
+
+<h4>复现</h4>
+<p style="margin:4px 0;"><code>C:\Users\Administrator\.workbuddy\binaries\python\envs\default\Scripts\python.exe scripts/enso_europe_summer.py</code></p>
+<p class="small" style="margin:4px 0;">输出：<code>results/enso_europe_summer.json</code>（全部统计量）、<code>results/enso_europe_seasonal_table.csv</code>（1948–2026 年度季表）。</p>
+</div>
+
+<h2>十一、年度数据表（1960–2026 摘录）</h2>
+<div style="max-height:420px;overflow:auto;border:1px solid var(--line);border-radius:6px;">
+<table id="tbl_ann" style="margin:0;">
+<thead><tr><th>年份</th><th>冬季 ONI</th><th>3–7月 ONI</th><th>NH陆地 3–7月</th><th>NH整体 夏季</th><th>全球 夏季</th></tr></thead>
+<tbody></tbody>
+</table>
+</div>
+<p class="small">完整 1948–2026 见 <code>results/enso_europe_seasonal_table.csv</code>。气温为距平值（相对各序列基准），单位 °C。</p>
+
+<div class="footer">
+报告 95 · 厄尔尼诺与 2026 年欧洲夏季高温定量归因 · 2026-09-18<br>
+数据：NOAA CPC / NOAA PSL / CRU + UK Met Office HadCRUT5·CRUTEM5 v5.1 ｜ 方法：趋势剔除 + 块自助 + 方差分解 + 事件研究<br>
+本报告仅为数据研究，不构成任何投资建议。无法核实之处已逐条标注。
+</div>
+
+</div>
+
+<script>
+const ANN = {"1960": {"MJJ": -0.363, "DJF": -0.337, "T_nh_land_MJJ": 0.009, "T_nh_JJA": 0.074, "T_gl_JJA": -0.079}, "1961": {"MJJ": -0.237, "DJF": -0.28, "T_nh_land_MJJ": 0.082, "T_nh_JJA": 0.032, "T_gl_JJA": 0.017}, "1962": {"MJJ": -0.537, "DJF": -0.593, "T_nh_land_MJJ": -0.077, "T_nh_JJA": -0.052, "T_gl_JJA": -0.088}, "1963": {"MJJ": -0.067, "DJF": -0.663, "T_nh_land_MJJ": -0.083, "T_nh_JJA": 0.041, "T_gl_JJA": 0.051}, "1964": {"MJJ": -0.937, "DJF": 0.443, "T_nh_land_MJJ": -0.15, "T_nh_JJA": -0.189, "T_gl_JJA": -0.22}, "1965": {"MJJ": 0.267, "DJF": -0.837, "T_nh_land_MJJ": -0.264, "T_nh_JJA": -0.236, "T_gl_JJA": -0.21}, "1966": {"MJJ": -0.04, "DJF": 0.753, "T_nh_land_MJJ": -0.056, "T_nh_JJA": 0.05, "T_gl_JJA": -0.064}, "1967": {"MJJ": -0.24, "DJF": -0.697, "T_nh_land_MJJ": -0.037, "T_nh_JJA": -0.037, "T_gl_JJA": -0.091}, "1968": {"MJJ": -0.177, "DJF": -0.65, "T_nh_land_MJJ": -0.244, "T_nh_JJA": -0.118, "T_gl_JJA": -0.155}, "1969": {"MJJ": 0.183, "DJF": 0.8, "T_nh_land_MJJ": -0.102, "T_nh_JJA": -0.071, "T_gl_JJA": -0.054}, "1970": {"MJJ": -0.397, "DJF": 0.27, "T_nh_land_MJJ": -0.046, "T_nh_JJA": -0.109, "T_gl_JJA": -0.148}, "1971": {"MJJ": -0.953, "DJF": -1.45, "T_nh_land_MJJ": -0.233, "T_nh_JJA": -0.217, "T_gl_JJA": -0.206}, "1972": {"MJJ": 0.427, "DJF": -0.58, "T_nh_land_MJJ": -0.204, "T_nh_JJA": -0.124, "T_gl_JJA": -0.017}, "1973": {"MJJ": -0.897, "DJF": 1.087, "T_nh_land_MJJ": 0.137, "T_nh_JJA": 0.016, "T_gl_JJA": 0.035}, "1974": {"MJJ": -0.883, "DJF": -1.94, "T_nh_land_MJJ": -0.169, "T_nh_JJA": -0.165, "T_gl_JJA": -0.072}, "1975": {"MJJ": -1.173, "DJF": -0.707, "T_nh_land_MJJ": -0.008, "T_nh_JJA": -0.119, "T_gl_JJA": -0.128}, "1976": {"MJJ": -0.337, "DJF": -1.583, "T_nh_land_MJJ": -0.317, "T_nh_JJA": -0.235, "T_gl_JJA": -0.212}, "1977": {"MJJ": 0.147, "DJF": 0.393, "T_nh_land_MJJ": 0.2, "T_nh_JJA": 0.108, "T_gl_JJA": 0.162}, "1978": {"MJJ": -0.383, "DJF": 0.48, "T_nh_land_MJJ": -0.183, "T_nh_JJA": -0.15, "T_gl_JJA": -0.085}, "1979": {"MJJ": -0.08, "DJF": 0.063, "T_nh_land_MJJ": 0.006, "T_nh_JJA": 0.044, "T_gl_JJA": 0.059}, "1980": {"MJJ": 0.21, "DJF": 0.423, "T_nh_land_MJJ": 0.156, "T_nh_JJA": 0.132, "T_gl_JJA": 0.163}, "1981": {"MJJ": -0.39, "DJF": -0.257, "T_nh_land_MJJ": 0.143, "T_nh_JJA": 0.179, "T_gl_JJA": 0.271}, "1982": {"MJJ": 0.557, "DJF": -0.06, "T_nh_land_MJJ": -0.034, "T_nh_JJA": -0.025, "T_gl_JJA": 0.007}, "1983": {"MJJ": 0.32, "DJF": 1.59, "T_nh_land_MJJ": 0.135, "T_nh_JJA": 0.185, "T_gl_JJA": 0.184}, "1984": {"MJJ": -0.683, "DJF": -0.677, "T_nh_land_MJJ": 0.133, "T_nh_JJA": 0.027, "T_gl_JJA": 0.024}, "1985": {"MJJ": -0.74, "DJF": -0.947, "T_nh_land_MJJ": -0.064, "T_nh_JJA": -0.049, "T_gl_JJA": 0.077}, "1986": {"MJJ": -0.05, "DJF": -0.357, "T_nh_land_MJJ": 0.067, "T_nh_JJA": 0.017, "T_gl_JJA": 0.054}, "1987": {"MJJ": 0.817, "DJF": 0.893, "T_nh_land_MJJ": 0.216, "T_nh_JJA": 0.236, "T_gl_JJA": 0.27}, "1988": {"MJJ": -1.24, "DJF": 0.593, "T_nh_land_MJJ": 0.473, "T_nh_JJA": 0.328, "T_gl_JJA": 0.278}, "1989": {"MJJ": -0.603, "DJF": -1.64, "T_nh_land_MJJ": 0.249, "T_nh_JJA": 0.256, "T_gl_JJA": 0.201}, "1990": {"MJJ": 0.147, "DJF": 0.137, "T_nh_land_MJJ": 0.437, "T_nh_JJA": 0.394, "T_gl_JJA": 0.32}, "1991": {"MJJ": 0.58, "DJF": 0.453, "T_nh_land_MJJ": 0.452, "T_nh_JJA": 0.419, "T_gl_JJA": 0.418}, "1992": {"MJJ": 0.637, "DJF": 1.31, "T_nh_land_MJJ": -0.123, "T_nh_JJA": -0.027, "T_gl_JJA": 0.063}, "1993": {"MJJ": 0.483, "DJF": 0.26, "T_nh_land_MJJ": 0.159, "T_nh_JJA": 0.163, "T_gl_JJA": 0.132}, "1994": {"MJJ": 0.317, "DJF": 0.157, "T_nh_land_MJJ": 0.423, "T_nh_JJA": 0.328, "T_gl_JJA": 0.219}, "1995": {"MJJ": 0.037, "DJF": 0.907, "T_nh_land_MJJ": 0.504, "T_nh_JJA": 0.512, "T_gl_JJA": 0.4}, "1996": {"MJJ": -0.273, "DJF": -0.7, "T_nh_land_MJJ": 0.321, "T_nh_JJA": 0.254, "T_gl_JJA": 0.295}, "1997": {"MJJ": 0.947, "DJF": -0.24, "T_nh_land_MJJ": 0.465, "T_nh_JJA": 0.525, "T_gl_JJA": 0.411}, "1998": {"MJJ": -0.127, "DJF": 1.707, "T_nh_land_MJJ": 0.917, "T_nh_JJA": 0.779, "T_gl_JJA": 0.655}, "1999": {"MJJ": -0.81, "DJF": -1.47, "T_nh_land_MJJ": 0.474, "T_nh_JJA": 0.358, "T_gl_JJA": 0.308}, "2000": {"MJJ": -0.643, "DJF": -1.367, "T_nh_land_MJJ": 0.602, "T_nh_JJA": 0.46, "T_gl_JJA": 0.348}, "2001": {"MJJ": -0.003, "DJF": -0.777, "T_nh_land_MJJ": 0.777, "T_nh_JJA": 0.599, "T_gl_JJA": 0.483}, "2002": {"MJJ": 0.57, "DJF": -0.037, "T_nh_land_MJJ": 0.751, "T_nh_JJA": 0.621, "T_gl_JJA": 0.502}, "2003": {"MJJ": 0.04, "DJF": 0.837, "T_nh_land_MJJ": 0.746, "T_nh_JJA": 0.665, "T_gl_JJA": 0.504}, "2004": {"MJJ": 0.343, "DJF": 0.407, "T_nh_land_MJJ": 0.496, "T_nh_JJA": 0.507, "T_gl_JJA": 0.334}, "2005": {"MJJ": 0.193, "DJF": 0.69, "T_nh_land_MJJ": 0.879, "T_nh_JJA": 0.761, "T_gl_JJA": 0.567}, "2006": {"MJJ": 0.157, "DJF": -0.657, "T_nh_land_MJJ": 0.929, "T_nh_JJA": 0.718, "T_gl_JJA": 0.559}, "2007": {"MJJ": -0.163, "DJF": 0.68, "T_nh_land_MJJ": 0.876, "T_nh_JJA": 0.697, "T_gl_JJA": 0.545}, "2008": {"MJJ": -0.49, "DJF": -1.553, "T_nh_land_MJJ": 0.741, "T_nh_JJA": 0.63, "T_gl_JJA": 0.453}, "2009": {"MJJ": 0.453, "DJF": -0.75, "T_nh_land_MJJ": 0.678, "T_nh_JJA": 0.694, "T_gl_JJA": 0.638}, "2010": {"MJJ": -0.393, "DJF": 1.373, "T_nh_land_MJJ": 1.131, "T_nh_JJA": 0.881, "T_gl_JJA": 0.621}, "2011": {"MJJ": -0.283, "DJF": -1.3, "T_nh_land_MJJ": 0.921, "T_nh_JJA": 0.752, "T_gl_JJA": 0.61}, "2012": {"MJJ": 0.023, "DJF": -0.847, "T_nh_land_MJJ": 1.237, "T_nh_JJA": 0.87, "T_gl_JJA": 0.612}, "2013": {"MJJ": -0.253, "DJF": -0.227, "T_nh_land_MJJ": 0.9, "T_nh_JJA": 0.738, "T_gl_JJA": 0.626}, "2014": {"MJJ": 0.357, "DJF": -0.213, "T_nh_land_MJJ": 0.934, "T_nh_JJA": 0.885, "T_gl_JJA": 0.641}, "2015": {"MJJ": 1.227, "DJF": 0.693, "T_nh_land_MJJ": 1.103, "T_nh_JJA": 1.029, "T_gl_JJA": 0.754}, "2016": {"MJJ": 0.337, "DJF": 2.043, "T_nh_land_MJJ": 1.277, "T_nh_JJA": 1.099, "T_gl_JJA": 0.823}, "2017": {"MJJ": 0.41, "DJF": -0.06, "T_nh_land_MJJ": 1.072, "T_nh_JJA": 0.967, "T_gl_JJA": 0.748}, "2018": {"MJJ": 0.293, "DJF": -0.59, "T_nh_land_MJJ": 1.15, "T_nh_JJA": 0.867, "T_gl_JJA": 0.728}, "2019": {"MJJ": 0.76, "DJF": 0.95, "T_nh_land_MJJ": 1.125, "T_nh_JJA": 1.115, "T_gl_JJA": 0.832}, "2020": {"MJJ": 0.027, "DJF": 0.747, "T_nh_land_MJJ": 1.247, "T_nh_JJA": 1.122, "T_gl_JJA": 0.814}, "2021": {"MJJ": -0.153, "DJF": -1.047, "T_nh_land_MJJ": 1.382, "T_nh_JJA": 1.082, "T_gl_JJA": 0.773}, "2022": {"MJJ": -0.6, "DJF": -0.667, "T_nh_land_MJJ": 1.274, "T_nh_JJA": 1.096, "T_gl_JJA": 0.833}, "2023": {"MJJ": 0.773, "DJF": -0.557, "T_nh_land_MJJ": 1.448, "T_nh_JJA": 1.387, "T_gl_JJA": 1.144}, "2024": {"MJJ": 0.423, "DJF": 1.597, "T_nh_land_MJJ": 1.645, "T_nh_JJA": 1.402, "T_gl_JJA": 1.147}, "2025": {"MJJ": 0.12, "DJF": -0.527, "T_nh_land_MJJ": 1.43, "T_nh_JJA": 1.131, "T_gl_JJA": 0.943}, "2026": {"MJJ": 1.467, "DJF": -0.27, "T_nh_land_MJJ": 1.685, "T_nh_JJA": null, "T_gl_JJA": null}};
+
+const okabe = {red:'#D55E00', green:'#009E73', blue:'#0072B2', orange:'#E69F00', sky:'#56B4E9', purple:'#CC79A7'};
+const FONT = '-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif';
+
+/* ---- 时序图：双轴 ---- */
+(function(){
+  const el = document.getElementById('chart_timeline');
+  if(!el) return;
+  const ch = echarts.init(el);
+  const yrs = Object.keys(ANN);
+  const T = yrs.map(y => ANN[y].T_nh_land_MJJ);
+  const N = yrs.map(y => ANN[y].MJJ);
+  ch.setOption({
+    animation: true, animationDuration: 700,
+    textStyle: {fontFamily: FONT},
+    grid: {left: 56, right: 60, top: 52, bottom: 40},
+    legend: {top: 6, textStyle:{fontSize:12, fontFamily:FONT},
+      data:['北半球陆地 3–7月气温异常（°C）','Niño3.4 指数（3–7月均）']},
+    tooltip: {trigger:'axis', axisPointer:{type:'cross'},
+      backgroundColor:'rgba(255,255,255,.97)', borderColor:'#e2e2e2',
+      textStyle:{color:'#1a1a1a', fontSize:12.5, fontFamily:FONT},
+      formatter: function(ps){
+        let s = '<b>'+ps[0].axisValue+'</b><br/>';
+        ps.forEach(p=>{
+          const v = (p.value===null||p.value===undefined) ? 'N/A' : p.value.toFixed(3);
+          s += p.marker + p.seriesName + '：<b>' + v + '</b><br/>';
+        });
+        return s;
+      }},
+    xAxis: {type:'category', data:yrs, axisLabel:{fontSize:10.5, interval:4, fontFamily:FONT},
+      axisLine:{lineStyle:{color:'#c9c9c9'}}, axisTick:{show:false}},
+    yAxis: [
+      {type:'value', name:'气温异常 °C', nameTextStyle:{fontSize:11, fontFamily:FONT},
+       axisLabel:{fontSize:10.5, formatter:v=>v.toFixed(1), fontFamily:FONT},
+       splitLine:{lineStyle:{color:'#efece7'}}, scale:true},
+      {type:'value', name:'Niño3.4', nameTextStyle:{fontSize:11, fontFamily:FONT},
+       axisLabel:{fontSize:10.5, formatter:v=>v.toFixed(1), fontFamily:FONT},
+       splitLine:{show:false}, scale:true}
+    ],
+    series: [
+      {name:'北半球陆地 3–7月气温异常（°C）', type:'line', data:T, yAxisIndex:0,
+       lineStyle:{width:2.4, color:okabe.red}, itemStyle:{color:okabe.red},
+       symbol:'circle', symbolSize:4.5, showSymbol:false, smooth:false,
+       markLine:{silent:true, symbol:'none',
+         lineStyle:{type:'dashed', color:'#999', width:1},
+         label:{formatter:'趋势 +0.204°C/十年', fontSize:10.5, color:'#777', fontFamily:FONT, position:'insideEndTop'},
+         data:[{type:'average'}]},
+       emphasis:{focus:'series'}},
+      {name:'Niño3.4 指数（3–7月均）', type:'line', data:N, yAxisIndex:1,
+       lineStyle:{width:2, color:okabe.blue, type:'solid'}, itemStyle:{color:okabe.blue},
+       symbol:'triangle', symbolSize:5, showSymbol:false, smooth:false,
+       emphasis:{focus:'series'}}
+    ]
+  });
+  window.addEventListener('resize', ()=>ch.resize());
+})();
+
+/* ---- 年度表 ---- */
+(function(){
+  const tb = document.querySelector('#tbl_ann tbody');
+  if(!tb) return;
+  const yrs = Object.keys(ANN).reverse();
+  let html = '';
+  yrs.forEach(y=>{
+    const d = ANN[y];
+    const cls = v => (v===null) ? 'dim' : (v>0 ? 'pos' : 'neg');
+    const f = v => (v===null||v===undefined) ? '—' : v.toFixed(3);
+    const hl = ['1998','2016','2024','2026'].includes(y) ? ' style="background:#fff8e6"' : '';
+    html += `<tr${hl}><td><b>${y}</b></td>`
+      + `<td class="${cls(d.DJF)}">${f(d.DJF)}</td>`
+      + `<td class="${cls(d.MJJ)}">${f(d.MJJ)}</td>`
+      + `<td class="${cls(d.T_nh_land_MJJ)}">${f(d.T_nh_land_MJJ)}</td>`
+      + `<td class="${cls(d.T_nh_JJA)}">${f(d.T_nh_JJA)}</td>`
+      + `<td class="${cls(d.T_gl_JJA)}">${f(d.T_gl_JJA)}</td></tr>`;
+  });
+  tb.innerHTML = html;
+})();
+</script>
+</body>
+</html>
