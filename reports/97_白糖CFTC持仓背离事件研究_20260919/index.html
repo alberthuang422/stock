@@ -1,0 +1,166 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8">
+<title>97 · 白糖 CFTC 持仓变动 × 价格变动 背离事件研究（2012-2026）</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<style>
+:root{--bg:#f6f5f1;--card:#ffffff;--ink:#1a1a1a;--muted:#6b6b6b;--line:#e2e0da;
+--blue:#0072b2;--orange:#e69f00;--sky:#56b4e9;--purple:#cc79a7;--ver:#d55e00;--teal:#009e73;--gold:#f0e442}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:"Microsoft YaHei",system-ui,sans-serif;line-height:1.65;font-size:15px}
+.wrap{max-width:1080px;margin:0 auto;padding:32px 20px 80px}
+h1{font-size:26px;margin-bottom:4px}
+h2{font-size:20px;margin:36px 0 12px;border-left:4px solid var(--blue);padding-left:10px}
+h3{font-size:16px;margin:20px 0 8px}
+.meta{color:var(--muted);font-size:13px;margin-bottom:24px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:16px 0}
+table{border-collapse:collapse;width:100%;font-size:13.5px;margin:10px 0}
+th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:right}
+th:first-child,td:first-child{text-align:left}
+th{background:#fafaf8;font-weight:600}
+.sig-hi{color:var(--ver);font-weight:700}
+.sig-md{color:var(--blue);font-weight:700}
+.sig-lo{color:var(--muted)}
+.note{background:#fdf7ec;border:1px solid #f0e0c0;border-radius:8px;padding:12px 16px;font-size:13.5px;margin:12px 0}
+.concl{background:#f0f7f4;border:1px solid #cfe5dc;border-radius:10px;padding:16px 20px;margin:20px 0}
+.concl b{color:var(--teal)}
+.chart{width:100%;height:430px}
+.tag{display:inline-block;background:var(--blue);color:#fff;border-radius:4px;padding:2px 8px;font-size:12px;margin-right:6px}
+.tag.c{background:var(--orange)}
+.foot{color:var(--muted);font-size:12px;margin-top:40px;border-top:1px solid var(--line);padding-top:12px}
+</style></head><body><div class="wrap">
+
+<h1>白糖 CFTC 持仓变动 × 价格变动 背离事件研究</h1>
+<div class="meta">97 号 · 2026-09-19 · 数据：CFTC Futures-Only（报告窗口周二对周二，1986-01 起全历史，本分析截取 2012-01-01 起）× ICE SB1! 日线（2011-12-23 ~ 2026-09-18，下载自 TradingView 编辑磁盘数据，无 &gt;7 日缺口）· 报告期至 2026-09-08</div>
+
+<div class="concl">
+<b>结论一（先说否定的）：在 2012-2026 ICE 糖样本里，「CFTC 非商业持仓异常挪动而价格未跟随」（背离）对未来 4/8/13 周价格走势<b>没有统计显著的信息量</b>。所有阈值档位 (5%/10%/15% × 价格分位 30%/40%) 的胜率提升 lift 在 −9.2 到 +11.9 pp 之间漂移，单尾二项检验 p 全部 ≥0.10，最接近显著的一格 (非商业 15% 档 fwd4，win +11.9pp，p=0.125) 仍不显著。</b>
+</div>
+
+<div class="concl">
+<b>结论二（条件弱信号，但有独立报警价值）：主口径 (|Δnet|/OI ≥ 5% + |Δnet|≥1 万手 + |价格周变动| 后 30% 分位) 下，n=7 的极小样本里 fwd4 胜率 57.1% (+11.0pp)、fwd8 胜率 42.9% (−4.4pp)，方向<b>相互矛盾、时间上方向反转</b>（4周微偏多 → 8周微偏空）。这不是一个可执行信号，是一个「回报时应再复核」的观察名单机制。</b>
+</div>
+
+<div class="note">⚠️ 显著性三档约定：p&lt;0.05 [ High] 高置信；p&lt;0.20 [中] 中等信号；p≥0.20—[低] 无法区分噪声。本报告所有组合最大的一格 p=0.10，&lt;b&gt;没有任何一个触及高信档</b>。</div>
+
+<h2>一、方法（讨论锁定口径）</h2>
+<div class="card">
+<ul style="margin-left:18px">
+<li>主指标：<b>Δ净头寸/持仓量(|Δnet|/OI)</b>，非商业主口径 Δnc_net，商业主口径 Δc_net 对照；多头单边变动只作参考</li>
+<li>异常增仓：|Δnet|/OI 进入全样本 <b>前 5% 分位</b>，且 |Δnet| ≥ <b>10,000 手</b>（双门槛，滤除早期低 OI 时代的占比虚高噪音）</li>
+<li>背离：以上满足 且 <b>|价格周变动| 处于全样本后 30% 分位</b>（价格未按持仓方向走）</li>
+<li>事件簇：相邻触发周间隔 &lt;4 周合并，<b>取簇首</b>。</li>
+<li>窗口：周二对周二（CFTC 报告窗口），fwd = 触发周二收盘 → +28/56/91 日收盘</li>
+</ul>
+</div>
+
+<h2>二、主口径结果（前 5% × 价格后 30%）</h2>
+<div class="card">
+<h3>非商业（Δnc_net）— n=7 事件</h3>
+<table>
+<tr><th>前瞻窗口</th><th>n</th><th>均值%</th><th>中位%</th><th>胜率</th><th>胜率 lift (pp)</th><th>p（单尾二项）</th><th>置信档</th></tr>
+<tr><td>fwd4 (28日)</td><td>7</td><td>+0.00</td><td>+1.39</td><td>57.1%</td><td class="sig-lo">+11.0</td><td>0.419</td><td class="sig-lo">低</td></tr>
+<tr><td>fwd8 (56日)</td><td>7</td><td>−1.83</td><td>−4.44</td><td>42.9%</td><td class="sig-lo">−4.4</td><td>0.730</td><td class="sig-lo">低</td></tr>
+<tr><td>fwd13 (91日)</td><td>7</td><td>−2.13</td><td>+0.10</td><td>57.1%</td><td class="sig-lo">+11.8</td><td>0.403</td><td class="sig-lo">低</td></tr>
+</table>
+<h3>商业（Δc_net）— n=7 事件</h3>
+<table>
+<tr><th>前瞻窗口</th><th>n</th><th>均值%</th><th>中位%</th><th>胜率</th><th>lift(pp)</th><th>p</th><th>档</th></tr>
+<tr><td>fwd4</td><td>7</td><td>−0.16</td><td>+1.39</td><td>57.1%</td><td>+11.0</td><td>0.419</td><td class="sig-lo">低</td></tr>
+<tr><td>fwd8</td><td>7</td><td>+0.12</td><td>+3.35</td><td>57.1%</td><td>+9.8</td><td>0.443</td><td class="sig-lo">低</td></tr>
+<tr><td>fwd13</td><td>7</td><td>−1.33</td><td>+0.10</td><td>57.1%</td><td>+11.8</td><td>0.403</td><td class="sig-lo">低</td></tr>
+</table>
+<div class="meta" style="margin-top:8px">注：非商业与商业触发周在 2014-06-24/2019-11-19/2022-07-26/2022-10-11/2024-04-16/2024-09-24 几乎完全重合——糖市里商业套保与非商业投机的巨量变动是同一事件的两面（价格异常被一头对冲掉）。</div>
+</div>
+
+<h2>三、全部事件明细（主口径，前 5%）</h2>
+<div class="card">
+<table>
+<tr><th>日期</th><th colspan="2">明细</th><th>|Δ|/OI</th><th>价格变动%</th><th>fwd4%</th><th>fwd8%</th><th>fwd13%</th><th>机制段</th></tr>
+<tr><td rowspan="5"><span class="tag">非商</span>事件</td><td colspan="8"></td></tr>
+<tr class="evrow"><td>2014-06-24</td><td>Δnc=+5.3万手</td><td>7.8%</td><td>−0.06</td><td>−3.5</td><td>−13.2</td><td>−20.6</td><td>熊市回落</td></tr>
+<tr class="evrow"><td>2019-11-19</td><td>Δnc=+3.4万手</td><td>5.8%</td><td>+0.71</td><td>+4.6</td><td>+12.8</td><td>+20.4</td><td>探底</td></tr>
+<tr class="evrow"><td>2022-07-26</td><td>Δnc=+7.2万手</td><td>8.7%</td><td>+1.26</td><td>+2.4</td><td>+4.1</td><td>+3.7</td><td>高位震荡</td></tr>
+<tr class="evrow"><td>2022-10-11</td><td>Δnc=+6.7万手</td><td>7.9%</td><td>−0.37</td><td>+1.4</td><td>+3.5</td><td>+4.8</td><td>高位震荡</td></tr>
+<tr class="evrow"><td>2024-04-16</td><td>Δnc=+3.3万手</td><td>5.3%</td><td>+1.33</td><td>−3.6</td><td>−4.4</td><td>+0.1</td><td>高位震荡</td></tr>
+<tr class="evrow"><td>2024-09-24</td><td>Δnc=−4.2万手</td><td>5.3%</td><td>−0.86</td><td>−6.3</td><td>−5.3</td><td>−15.9</td><td>高位震荡</td></tr>
+<tr class="evrow"><td>2025-09-09</td><td>Δnc=+4.4万手</td><td>5.6%</td><td>+0.25</td><td>+5.1</td><td>−10.3</td><td>−7.4</td><td>缺口定价</td></tr>
+</table>
+</div>
+
+<div id="evchart" class="chart"></div>
+
+<h2>四、稳健性网格（阈值敏感性）</h2>
+<div class="card">
+<p>规则太宽 → n 大但事件平庸；太严 → n=7 无功效。敏感性显示<b>「加仓异常且价格不动」这个组合本身不产生稳定可押的未来漂移</b>——几乎所有格子的 fwd8、fwd13 胜率 lift 走向都不一致。</p>
+<table>
+<tr><th>档位</th><th colspan="2">非商业 (Δnc_net)</th><th colspan="2">商业 (Δc_net)</th></tr>
+<tr><th></th><th>组合</th><th>fwd4 胜率/lift/p</th><th>组合</th><th>fwd4 胜率/lift/p</th></tr>
+<tr><td>5%×后30% (主)</td><td>n=7</td><td>57.1% / +11.0pp / p=0.42</td><td>n=7</td><td>57.1% / +11.0pp / p=0.42</td></tr>
+<tr><td>10%×后40%</td><td>n=22</td><td>50.0% / +3.9pp / p=0.44</td><td>n=22</td><td>54.5% / +8.4pp / p=0.28</td></tr>
+<tr><td>15%×后40%</td><td>n=31</td><td>58.1% / +11.9pp / p=0.12</td><td>n=30</td><td>50.0% / +3.9pp / p=0.40</td></tr>
+<tr><td>基准率（全样本周）</td><td colspan="2" style="text-align:center">fwd4 n=763 胜率 46.1% · fwd8 n=759 胜率 47.3% · fwd13 n=754 胜率 45.4%</td><td colspan="2" style="text-align:center"></td></tr>
+</table>
+<div class="note">⚠️ 值得点名的反例：<b>15% 档非商业 fwd4 lift +11.9pp 是全表最大值，但同一档的 fwd8 lift 变成 −0.6pp、fwd13 变成 +2.9pp</b> —— 信号在窗口间自相矛盾，不支持「背离 = 稳定看多/看空」的单方向结论。商业档也在 10% 档出现 fwd4 +8.4pp / fwd8 −4.4pp / fwd13 +7.0pp 的锯齿形，同样不构成可执行信号。</div>
+</div>
+
+<h2>五、机制段拆解（主口径 7 事件）</h2>
+<div class="card">
+<table>
+<tr><th>机制段</th><th>n</th><th>事件</th><th>行为模式</th></tr>
+<tr><td>2012-2016 熊市回落+反弹</td><td>1</td><td>2014-06-24 (+7.8% OI)</td><td>熊市中背离后 13 周 <span class="sig-hi">−20.6%</span>，破坏性案例</td></tr>
+<tr><td>2017-2019 底部探底区间</td><td>1</td><td>2019-11-19 (+5.8%)</td><td>底部成功信号，fwd13 <span class="sig-hi">+20.4%</span></td></tr>
+<tr><td>2020-2024 上行与高位震荡</td><td>4</td><td>2022×2 / 2024×2</td><td>4 次中 2022 年两次全部正收益，2024 年两次全部负收益 — <b>同一机制段内部都不稳定</b></td></tr>
+<tr><td>2025+ 缺口定价行情</td><td>1</td><td>2025-09-09 (+5.6%)</td><td>fwd4 +5.1% → fwd8 <span class="sig-hi">−10.3%</span>，本格上行段被完全反转</td></tr>
+</table>
+</div>
+
+<h2>六、关键否证与短板</h2>
+<div class="note">
+1. <b>样本功效绝对不足</b>：n=7 的胜率 lift 围绕 ±11pp 波动，噪声下限就在这个量级，单尾二项检验计算 z≈0.8，检出 11pp 偏离需要 n≥40。事后可以肯定说<b>「两版各 7 个事件 + 全部 p&gt;0.4」的结果本身不是证据，是数据还欠就够了</b>。<br>
+2. <b>窗口延展受限</b>：免费 TradingView SB1! 历史只到 2011 年底。要 40 年长口子需换源（富途主力/或价格库存存档）。延长非商业套利（商业版 7 个事件中 4 个 = 非商业同一个星期触发）联合非独立统计，<b>商业版并不提供独立的对照证据</b>——第 4 个事件和非商业重叠。<br>
+3. <b>事件重叠残留</b>：4 周簇聚类后剩 7 个独立样本，但 fwd8 前瞻窗口仍会从上一次触发周向前延伸 4 周，有<b>残余重叠</b>；8 周聚类作为下一次延展（本次未实施）。<br>
+4. <b>数据源单一</b>：单一合约 SB1!，未做换月拼接校验；CFTC 为 Futures Only，无期权合并端。<br>
+5. <b>宏背景被剥夺</b>：没有叠加 2014-2016 厄尔尼诺、2025-2026 欧盟缺口的具体宏观标注 — 事件看价格未包含背景气候/贸易差异，外部效度另议。
+</div>
+
+<div class="concl">
+<b>总评（操作含义）：不建议把「CFTC 持仓挪动 vs 价格背离」当独立下单信号用。它是高成本高噪声观察项 — 白糖这个品种上，位置上商业/非商业 2 个对手盘的极端挪动常常互相镜像（同一事件的套保 vs 投机两面），不如做「商业空头极端 + 非商业同步极端」的<b>双极极端重合表</b>（不标发展方向，只标事件生态位），未来缺宏观数据时看极端事件历史片段是否有附带价值。</b><br>
+<span style="font-size:13px">后续可做：8 周严格聚类 独立事件复算；换源拉长 SB1!/SB 主力价格到 2000 年，扩样本到 2 倍；单只用 5 事件逐步补充</span>
+</div>
+
+<div class="foot">数据源：CFTC Widget（data/sugar/sugar_cftc_futonly_1986_2026.csv，报告日 2026-09-08）× TradingView SB1! 日线（下载 2026-09-19，data/sugar/sb_price_daily.csv，2011-12-23~2026-09-18）。脚本：scripts/cftc_sugar_divergence.py、scripts/cftc_sugar_divergence_robust.py。口径锁定见 scripts 源码头注释。本报告是统计研究，非交易策略回测，未含手续费/滑点/保证金约束。</div>
+
+<script>
+(() => {
+  // Okabe-Ito: Ver odor https://clauswilke.com/dataviz/colorblind
+  const ev = [
+    ["2014-06-24",7.8,-0.06,-3.5,-13.2,-20.6],
+    ["2019-11-19",5.8,0.71,4.6,12.8,20.4],
+    ["2022-07-26",8.7,1.26,2.4,4.1,3.7],
+    ["2022-10-11",7.9,-0.37,1.4,3.5,4.8],
+    ["2024-04-16",5.3,1.33,-3.6,-4.4,0.1],
+    ["2024-09-24",5.3,-0.86,-6.3,-5.3,-15.9],
+    ["2025-09-09",5.6,0.25,5.1,-10.3,-7.4]
+  ];
+  const el = document.getElementById('evchart');
+  if (!el || typeof echarts==='undefined'){ el.innerHTML='<div style="padding:28px">ECharts CDN 未加载，数值请看表格。</div>'; return; }
+  const c = echarts.init(el);
+  const labels = ev.map(e=>e[0]);
+  c.setOption({
+    title:{text:'主口径 7 个背离事件：触发周价格变动 vs 前瞻收益（%）',subtext:'红=涨 绿=跌 (A股配色规范)；事件柱旁标注 |Δnet|/OI',left:'center',top:6,textStyle:{fontSize:14}},
+    tooltip:{trigger:'axis'},
+    legend:{top:32,data:['触发周价','fwd4','fwd8','fwd13']},
+    grid:{top:70,left:50,right:30,bottom:60},
+    xAxis:{type:'category',data:labels,axisLabel:{rotate:40,fontSize:11}},
+    yAxis:{type:'value',name:'%',splitLine:{lineStyle:{color:'#eee'}}},
+    series:[
+      {name:'触发周价',type:'bar',data:ev.map(e=>({value:e[2],itemStyle:{color:e[2]>=0?'#d55e00':'#009e73'}})),barWidth:12},
+      {name:'fwd4',type:'bar',data:ev.map(e=>({value:e[3],itemStyle:{color:e[3]>=0?'#e69f00':'#009e73',opacity:.85}})),barWidth:12},
+      {name:'fwd8',type:'bar',data:ev.map(e=>({value:e[4],itemStyle:{color:e[4]>=0?'#d55e00':'#0072b2',opacity:.75}})),barWidth:12},
+      {name:'fwd13',type:'bar',data:ev.map(e=>({value:e[5],itemStyle:{color:e[5]>=0?'#cc79a7':'#56b4e9',opacity:.65}})),barWidth:12}
+    ]
+  });
+  window.addEventListener('resize',()=>c.resize());
+})();
+</script>
+
+</div></body></html>
